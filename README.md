@@ -4,7 +4,7 @@
 This is the github repository that we use for CMPE352.
 
 ## Group Members
-* İhsan Gökcül
+* [İhsan Gökcül](https://github.com/ihsangkcl)
 * Refika Kalyoncu
 * Zahit Batuhan Tongarlak
 * Adalet Veyis Turgut
