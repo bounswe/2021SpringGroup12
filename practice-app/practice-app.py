@@ -63,3 +63,6 @@ def not_found(error):
     # a friendlier error handling message
     #return make_response(jsonify({'error': 'Task was not found'}), 404)
     return "404"
+
+if __name__ == '__main__':
+    app.run(debug=True)
