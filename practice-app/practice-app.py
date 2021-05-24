@@ -20,8 +20,7 @@ to read query parameters:  request.args.get(<argname>) or request.query_string.d
 
 
 @app.route('/')
-def get_tasks():
-    # get all tasks
+def home():
     return "group12 practice-app"
 
 
