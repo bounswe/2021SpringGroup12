@@ -4,7 +4,7 @@ import json
 
 
 class HelperTest(unittest.TestCase):
-    def test_make_issue(self):
+    def test_make_issue_git_response(self):
         git_issue = json.loads("""{
     "url": "https://api.github.com/repos/bounswe/2021SpringGroup12/issues/96",
     "repository_url": "https://api.github.com/repos/bounswe/2021SpringGroup12",
@@ -118,6 +118,16 @@ class HelperTest(unittest.TestCase):
             'labels': ['documentation', 'priority: high'],
             'state': 'closed'
         }
+        self.assertDictEqual(issue, expected_issue)
+
+    def test_make_issue_empty_dict(self):
+        git_issue = {
+            'deneme': 'hop',
+            'fail': 'za'
+        }
+        issue = make_issue(git_issue)
+        expected_issue = {}
+
         self.assertDictEqual(issue, expected_issue)
 
 
