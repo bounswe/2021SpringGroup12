@@ -12,3 +12,20 @@ def make_issue(git_issue):
         }
     except Exception:
         return {}
+
+
+def get_issue(json_issue):
+    ret_issue = {
+        'number': json_issue['number'],
+        'assignees': [],
+        'description': json_issue['description'],
+        'labels': [],
+        'state': json_issue['state']
+    }
+    if 'assignees' in json_issue:
+        ret_issue['assignees'] = json_issue['assignees']
+
+    if 'labels' in json_issue:
+        ret_issue['labels'] = json_issue['labels']
+
+    return ret_issue

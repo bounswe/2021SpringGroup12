@@ -7,7 +7,8 @@ from flask import Flask, jsonify
 from flask import json
 from flask import request
 import requests
-from com.helper import ALL_ISSUES, make_issue
+import helper
+from com.helper import ALL_ISSUES
 
 app = Flask(__name__)
 
@@ -56,8 +57,8 @@ def get_books():
     return json.dumps(r)
 
 
-@app.route('/download_issues/', methods=['GET'])
-def get_issues():
+@app.route('/download_issues', methods=['GET'])
+def download_issues():
     param = {**request.args,
              'per_page': 100}
     if 'state' not in param:
@@ -65,9 +66,30 @@ def get_issues():
     r = requests.get("https://api.github.com/repos/bounswe/2021SpringGroup12/issues",
                      params=param).json()
     for element in r:
-        issue = make_issue(element)
+        issue = helper.make_issue(element)
         ALL_ISSUES[issue['number']] = issue
     return f'{len(r)} issues are downloaded. There are total {len(ALL_ISSUES)} issues in the system'
+
+
+@app.route('/issue', methods=['POST'])
+def post_issue():
+    issue = helper.get_issue(request.get_json())
+    ALL_ISSUES[issue['number']] = issue
+    return f'There are total {len(ALL_ISSUES)} issues in the system'
+
+
+@app.route('/issue/<int:number>', methods=['GET'])
+def get_issue(number: int):
+    issue = ALL_ISSUES[number]
+    return jsonify(issue)
+
+
+@app.route('/issue', methods=['GET'])
+def get_all_issues():
+    if request.args.get("max_results") is not None:
+        return jsonify(list(ALL_ISSUES.values())[:min(len(ALL_ISSUES), int(request.args.get("max_results")))])
+    return jsonify(ALL_ISSUES.values())
+
 
 @app.errorhandler(404)
 def not_found(error):
