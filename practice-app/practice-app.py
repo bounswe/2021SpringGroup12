@@ -5,6 +5,7 @@
 
 from flask import Flask
 from flask import json
+from flask import jsonify
 from flask import make_response
 from flask import abort
 from flask import request
@@ -36,6 +37,8 @@ def get_books():
         max_results = int(request.args.get("max_results"))
         r["num_results"] = max_results
         r["results"] = r["results"][:max_results]
+
+
     
     ## TODO: implement other query parameters like sorting wrt to publish date, excluding isbn, etc.
 
@@ -57,9 +60,24 @@ def get_books():
     return json.dumps(r)
 
 
+@app.route('/convert/', methods=['GET'])
+def convert_currency():
+
+    from_curr = request.args.get("from").title().replace(" ","+")
+    to_curr = request.args.get("to").title().replace(" ","+")
+    #amount = request.args.get("amount").title().replace(" ","+")
+    r = requests.get('https://api.exchangerate.host/convert?from={}&to={}'.format(from_curr, to_curr))
+    r = r.json()
+
+    #data = json.loads(r)
+    return r  #jsonify({'result' : data['rate']})
+
 
 @app.errorhandler(404)
 def not_found(error):
     # a friendlier error handling message
     #return make_response(jsonify({'error': 'Task was not found'}), 404)
     return "404"
+
+if __name__ == '__main__':
+    app.run(debug=True)
