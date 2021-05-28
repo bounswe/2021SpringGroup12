@@ -24,4 +24,4 @@ Here we have an API, written using The Flask framework.
 * Go to the browser and open that link just you seen in the terminal.  (likely http://127.0.0.1:5000/)
 * Clone the repo to your local and branch out. 
 * Write your own endpoints using different existing API's.
-* Test your endpoints using Postman. Try to use query-path parameters, request bodies, etc. 
+* Test you endpoint using Postman. Try to use query-path parameters, request bodies, etc. 
