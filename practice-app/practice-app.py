@@ -126,7 +126,7 @@ def convert_currency():
         pass
     con.commit()
     con.close()
-    #calculate money with amount if wanted
+    #calculate money with amount value if wanted
     if "amount" in request.args:
         amount = float(request.args.get("amount"))
         rate = r["info"]["rate"]
@@ -140,7 +140,7 @@ def convert_currency():
 def create_currency_hist():
 
     curr_fields = request.get_json()
-    #check if the necessary information for record is given or not
+    #check if the necessary information for the record is given or not
     if "rate" not in curr_fields.keys():
         return Response("Please provide the currency rate value!", status=400)
     if "to" not in curr_fields.keys():
