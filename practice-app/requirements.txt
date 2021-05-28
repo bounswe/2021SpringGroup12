@@ -3,6 +3,7 @@
 
 # Flask Framework
 Flask==2.0.1
+pydantic==1.8.2
 
 #  requests
 requests==2.25.1
