@@ -11,6 +11,7 @@ from flask import request
 import requests
 from pydantic import BaseModel
 import schemas, mapper
+import random
 
 app = Flask(__name__)
 
@@ -47,7 +48,20 @@ def get_books():
         r = schemas.BookResponse(copyright =r["copyright"], num_results = r["num_results"],books=[mapper.book_mapper(s).__dict__ for s in r["results"]]).__dict__
     return r
 
-
+@app.route('/quotes/', methods=['GET'])
+def get_quotes():
+    t = requests.get("https://quote-garden.herokuapp.com/api/v3/genres")
+    t = t.json()
+    t = t['data']
+    # we get all genres and select one randomly to call
+    rnd = int(random.uniform(0,len(t)))
+    
+    r = requests.get("https://quote-garden.herokuapp.com/api/v3/quotes?genre={}".format(t[rnd]))
+    r = r.json()
+    #r = r['data']
+    r = schemas.QuoteResponse(data = [mapper.quote_mapper(s).__dict__ for s in r['data']]).__dict__
+    
+    return r 
 
 @app.errorhandler(404)
 def not_found(error):

@@ -26,3 +26,13 @@ class BookResponse(BaseModel):
     copyright: Optional[str]
     num_results: int
     books: List[dict]
+
+class Quote(BaseModel):
+    id: str
+    quoteAuthor: str
+    quoteGenre: str
+    quoteText: str
+    #last: int
+    
+class QuoteResponse(BaseModel):
+    data: List[dict]

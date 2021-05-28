@@ -1,4 +1,4 @@
-from schemas import CreateBook, Book
+from schemas import CreateBook, Book, Quote
 
 def book_mapper(book: dict) -> Book:
     return Book(
@@ -12,3 +12,11 @@ def book_mapper(book: dict) -> Book:
         isbn13= book["isbn13"] if 'isbn13' in book.keys() else [],
         )
 
+def quote_mapper(quote: dict) -> Quote:
+    return Quote(
+        id= quote["_id"],
+        quoteAuthor= quote["quoteAuthor"],
+        quoteGenre= quote["quoteGenre"],
+        quoteText= quote["quoteText"],
+        #last = quote["__v"]
+        )
