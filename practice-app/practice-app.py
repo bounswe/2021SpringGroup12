@@ -165,30 +165,7 @@ def create_currency_hist():
     return "You have successfully inserted your data to db"
 
 
-# @app.route('/convert/', methods=['POST'])
-# def create_currency_hist():
-#     curr_fields = request.get_json()
-#     # if "rate" not in curr_fields.keys():
-#     #     return Response("Please provide the currency rate!", status=400)
-#     # if "to" not in curr_fields.keys():
-#     #     return Response("Please provide the 'to' of the currency rate!", status=400)
-#     # if "date" not in curr_fields.keys():
-#     #     return Response("Please provide the date of the currency rate!", status=400)
-#     # if "from" not in curr_fields.keys():
-#     #     return Response("Please provide the 'from' of the currency rate!", status=400)
-#     from_curr = curr_fields["from"]
-#     to_curr = curr_fields["to"]
-#     date = curr_fields["date"]
-#     rate = curr_fields["rate"]
-#
-#     con = sqlite3.connect("./sqlfiles/practice-app.db")
-#     cur = con.cursor()
-#     cur.execute("INSERT INTO Currency_History (date, from_curr, to_curr, rate) VALUES (?,?,?,?)",
-#                 (date, from_curr, to_curr, rate))
-#     con.commit()
-#     con.close()
-#
-#     return "Added to database successfuly"
+
 
 @app.errorhandler(404)
 def not_found(error):
