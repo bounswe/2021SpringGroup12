@@ -19,3 +19,17 @@ CREATE TABLE IF NOT EXISTS BookISBNs (
     UNIQUE(book_id,isbn)   -- restrict the same isbn of the book to be added multiple times
 );
 
+CREATE TABLE IF NOT EXISTS Movie (
+    movie_id            INTEGER,
+  	display_title       TEXT NOT NULL,
+    byline              TEXT NOT NULL,
+    mpaa_rating         TEXT,
+    critics_pick        INTEGER,
+    headline            TEXT,
+    summary_short       TEXT,
+    link                TEXT NOT NULL,
+	PRIMARY KEY(movie_id)
+);
+
+ 
+ Movie(display_title, mpaa_rating, critics_pick, byline, headline,summary_short, link)
