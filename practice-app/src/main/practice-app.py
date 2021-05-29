@@ -139,6 +139,103 @@ def get_all_issues():
     return jsonify(ALL_ISSUES.values())
 
 
+# Uses Agify api which is on https://api.agify.io/
+# Here the assumption that "Agify returns the average age calculated from the data" is made
+@app.route('/name_information', methods=['GET'])
+def get_name_information():
+    name = request.args.get("name")
+    country = request.args.get("country")
+    onApi = False
+    onDB = False
+    countryBased = False
+    
+    if name == None or name.strip() == "":
+        return Response("Please provide the name!", status=400)
+    
+    api_url = f'https://api.agify.io/?name={name}'
+    
+    if country != None and country.strip()!="":
+        countryBased = True
+        api_url+=f'&country_id={country}'
+    
+    r = requests.get(api_url)
+    response = r.json()
+    
+    if response["age"] != None:
+        onApi = True
+        countOnApi = response["count"]
+        ageOnApi = response["age"]
+    
+    
+    #Check db for matching entries to add to the results coming from Agify api
+    con = sqlite3.connect("../../sqlfiles/practice-app.db")
+    cur = con.cursor()
+    
+    if countryBased:
+        cur.execute("SELECT AVG(age) as average_age, COUNT(age) as cnt FROM Name_Infos WHERE name = ? AND country = ?",
+                           (name, country))
+    else:
+        cur.execute("SELECT AVG(age) as average_age, COUNT(age) as cnt FROM Name_Infos WHERE name = ?",
+                           [name])
+                           
+    dbData = cur.fetchone()
+    con.close()
+    print(dbData)
+    
+    ageOnDB = dbData[0]
+    countOnDB = dbData[1]
+    onDB = countOnDB != 0
+    
+    #Combine results coming from api and db
+    if onApi and onDB:
+        resultCount = countOnApi + countOnDB
+        resultAge = ((countOnApi*ageOnApi)+(countOnDB*ageOnDB))/resultCount
+    elif onApi:
+        resultCount = countOnApi
+        resultAge = ageOnApi
+    elif onDB:
+        resultCount = countOnDB
+        resultAge = ageOnDB
+    else:
+        return Response("No registered data for this querry", status=200)
+        
+    result = f'Name: {name}\nAverage Age: {int(resultAge)}\nCount: {resultCount}'
+    if countryBased:
+        result+=f'\nCountry: {country}'
+        
+    return Response(result, status=200) 
+    
+    
+@app.route('/put_name_information', methods=['POST'])
+def save_new_name_ino():
+    body = request.get_json()
+
+    if body==None:
+        return Response("Please provide correct information in body as json", status=400)
+    # make sure that necessary information are given
+    if "name" not in body:
+        return Response("Please provide your name to save to the database!", status=400)
+    if "age" not in body:
+        return Response("Please provide your age to save to the database!", status=400)
+    if "country" not in body:
+        return Response("Please provide your country to save to the database!", status=400)
+    
+    con = sqlite3.connect("../../sqlfiles/practice-app.db")
+    cur = con.cursor()
+    
+    try:
+        cur.execute(
+            "INSERT INTO Name_Infos(name, age, country) VALUES (?,?,?)",
+            (body["name"] ,body["age"], body["country"]))
+    except Exception as err:
+        return Response(str(err), status=403)
+    
+    con.commit()
+    con.close()
+
+    return Response("Your name information has been added to database!", status=200) 
+
+
 @app.errorhandler(404)
 def not_found(error):
     # a friendlier error handling message
