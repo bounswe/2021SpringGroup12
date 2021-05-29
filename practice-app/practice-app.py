@@ -171,7 +171,7 @@ def get_quote_opt():
     temp = ''
     for i in t:
         temp = temp + i + ', '
-    #select one of them diyip şeedebiliriz
+    #select one of them denilebilir html'e geçince ?!?
     if "genre" not in request.args:
         temp = "Please provide an genre name! Possible genres: " + temp
         return Response(temp, status=400)
