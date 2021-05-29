@@ -207,7 +207,7 @@ def get_name_information():
     
     
 @app.route('/put_name_information', methods=['POST'])
-def save_new_name_ino():
+def save_new_name_info():
     body = request.get_json()
 
     if body==None:
