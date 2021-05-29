@@ -101,31 +101,6 @@ def create_book():
 
 
 
-@app.route('/randomQuotes/', methods=['GET'])
-def get_quotes():
-    t = requests.get("https://quote-garden.herokuapp.com/api/v3/genres")
-    t = t.json()
-    t = t['data']
-    # we get all genres and select one randomly to call
-    rnd = int(random.uniform(0,len(t)))
-    
-    r = requests.get("https://quote-garden.herokuapp.com/api/v3/quotes?genre={}".format(t[rnd]))
-    r = r.json()
-    #r = r['data']
-    #r = schemas.QuoteResponse(data = [mapper.quote_mapper(s).__dict__ for s in r['data']]).__dict__
-    quotes = [mapper.quote_mapper(s) for s in r['data']]
-    con = sqlite3.connect("./sqlfiles/practice-app.db")
-    cur = con.cursor()
-    for quote in quotes:
-        print(quote.quoteId)
-        try:
-            cur.execute("INSERT INTO Quotes(quoteId, quoteAuthor, quoteGenre, quoteText) VALUES (?,?,?,?)", (quote.quoteId, quote.quoteAuthor, quote.quoteGenre, quote.quoteText)) 
-        except:
-            continue
-    con.commit()
-    con.close()
-
-    return schemas.QuoteResponse(data = quotes).__dict__ 
 
 @app.route('/quotes/', methods=['POST'])
 def add_quote():
@@ -172,12 +147,18 @@ def get_quote_opt():
     for i in t:
         temp = temp + i + ', '
     #select one of them denilebilir html'e geçince ?!?
-    if "genre" not in request.args:
-        temp = "Please provide an genre name! Possible genres: " + temp
+
+    if request.args.get("random") is not None:
+        rnd = int(random.uniform(0,len(t)))
+        r = requests.get("https://quote-garden.herokuapp.com/api/v3/quotes?genre={}".format(t[rnd]))
+        r = r.json()
+    elif request.args.get("genre") is not None:   
+        genre_type = request.args.get("genre")
+        r = requests.get("https://quote-garden.herokuapp.com/api/v3/quotes?genre={}".format(genre_type))
+        r = r.json()
+    else:
+        temp = "Please provide an genre name or indicate it is random! Possible genres: " + temp
         return Response(temp, status=400)
-    genre_type = request.args.get("genre")
-    r = requests.get("https://quote-garden.herokuapp.com/api/v3/quotes?genre={}".format(genre_type))
-    r = r.json()
     quotes = [mapper.quote_mapper(s) for s in r['data']]
     con = sqlite3.connect("./sqlfiles/practice-app.db")
     cur = con.cursor()
