@@ -1,5 +1,5 @@
 import unittest
-from com.helper import make_issue
+from helpers.issue_helper import make_issue
 import json
 
 
