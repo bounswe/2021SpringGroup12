@@ -33,7 +33,7 @@ def get_books():
         return Response("Please provide an author name!", status=400)
     # now we are sure name parameter is supplied, request books of this author from NYTimes API.
     author_name = request.args.get("name").title().replace(" ","+")
-    r = requests.get("https://api.nytimes.com/svc/books/v3/reviews.json?author={}&api-key=Ug3r4KRJxcd69bNw5i89CWxArqiGlrGB".format(author_name))
+    r = requests.get("https://api.nytimes.com/svc/books/v3/reviews.json?author={}&api-key=uCt3VnXcNJbM0PZpPToDZO1GOOEGHVWE".format(author_name))
     r = r.json()
     # now we have books of this author in r.
     books = [mapper.book_mapper(s) for s in r["results"]]
