@@ -19,3 +19,10 @@ CREATE TABLE IF NOT EXISTS BookISBNs (
     UNIQUE(book_id,isbn)   -- restrict the same isbn of the book to be added multiple times
 );
 
+CREATE TABLE IF NOT EXISTS Quotes (
+    quoteId            TEXT NOT NULL,
+  	quoteAuthor        TEXT NOT NULL,
+    quoteGenre         TEXT NOT NULL,
+    quoteText          TEXT,
+	PRIMARY KEY(quoteID)
+);
