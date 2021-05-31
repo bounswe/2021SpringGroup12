@@ -2,7 +2,7 @@
 
 import sqlite3
 
-con = sqlite3.connect("./sqlfiles/practice-app.db")
+con = sqlite3.connect("../../../sqlfiles/practice-app.db")
 cur = con.cursor()
-cur.executescript(open("./sqlfiles/create_tables.sql", "r").read())
+cur.executescript(open("../../../sqlfiles/create_tables.sql", "r").read())
 con.close()

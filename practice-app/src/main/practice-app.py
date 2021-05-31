@@ -3,18 +3,14 @@
 ##
 # NOTE: Remember you have to set your virtual environment and install flask
 
-from flask import Flask, jsonify, Response, json, make_response, abort, request
+from flask import Flask, jsonify, Response, request
 import requests
-from pydantic import BaseModel
-from werkzeug.exceptions import HTTPException
 from db import schemas, mapper
-import random
 import sqlite3
-import os
-
-
+from helpers import issue_helper
+from helpers.issue_helper import ALL_ISSUES
+import random
 app = Flask(__name__)
-
 
 """
 to read body: request.get_json() or request.form
@@ -34,8 +30,10 @@ def get_books():
     if "name" not in request.args:
         return Response("Please provide an author name!", status=400)
     # now we are sure name parameter is supplied, request books of this author from NYTimes API.
-    author_name = request.args.get("name").title().replace(" ","+")
-    r = requests.get("https://api.nytimes.com/svc/books/v3/reviews.json?author={}&api-key=uCt3VnXcNJbM0PZpPToDZO1GOOEGHVWE".format(author_name))
+    author_name = request.args.get("name").title().replace(" ", "+")
+    r = requests.get(
+        "https://api.nytimes.com/svc/books/v3/reviews.json?author={}&api-key=Ug3r4KRJxcd69bNw5i89CWxArqiGlrGB".format(
+            author_name))
     r = r.json()
     # now we have books of this author in r.
     books = [mapper.book_mapper(s) for s in r["results"]]
@@ -44,8 +42,11 @@ def get_books():
     cur = con.cursor()
     for book in books:
         try:
-            cur.execute("INSERT INTO Books(book_title, book_author, url, publication_dt, summary, uuid, uri) VALUES (?,?,?,?,?,?,?)", (book.book_title, book.book_author, book.url, book.publication_dt, book.summary, book.uuid, book.uri))
-            cur.execute("SELECT book_id FROM Books WHERE book_title = ? AND book_author = ?", (book.book_title, book.book_author))
+            cur.execute(
+                "INSERT INTO Books(book_title, book_author, url, publication_dt, summary, uuid, uri) VALUES (?,?,?,?,?,?,?)",
+                (book.book_title, book.book_author, book.url, book.publication_dt, book.summary, book.uuid, book.uri))
+            cur.execute("SELECT book_id FROM Books WHERE book_title = ? AND book_author = ?",
+                        (book.book_title, book.book_author))
             book_id = cur.fetchone()[0]
             for isbn in book.isbn13:
                 cur.execute("INSERT INTO BookISBNs(book_id, isbn) VALUES (?,?)", (book_id, isbn))
@@ -56,15 +57,16 @@ def get_books():
     con.close()
     # if user wants to remove copyright content, make it empty string.
     if request.args.get("no_copyright") == "1":
-        r["copyright"] =""
+        r["copyright"] = ""
 
     ## don't return all books, return just as much as user wants
     if request.args.get("max_results") is not None and int(r["num_results"]) > int(request.args.get("max_results")):
         max_results = int(request.args.get("max_results"))
         r["num_results"] = max_results
         books = books[:max_results]
-   
-    return schemas.BookResponse(copyright =r["copyright"], num_results = r["num_results"],books=books).__dict__
+
+    return schemas.BookResponse(copyright=r["copyright"], num_results=r["num_results"], books=books).__dict__
+
 
 @app.route('/books/', methods=['POST'])
 def create_book():
@@ -84,24 +86,57 @@ def create_book():
     cur = con.cursor()
     # try to insert book to DB, return forbidden upon failure
     try:
-        cur.execute("INSERT INTO Books(book_title, book_author, url, publication_dt, summary, uuid, uri) VALUES (?,?,?,?,?,?,?)", (Book.book_title, Book.book_author, Book.url, Book.publication_dt, Book.summary, Book.uuid, Book.uri))
+        cur.execute(
+            "INSERT INTO Books(book_title, book_author, url, publication_dt, summary, uuid, uri) VALUES (?,?,?,?,?,?,?)",
+            (Book.book_title, Book.book_author, Book.url, Book.publication_dt, Book.summary, Book.uuid, Book.uri))
     except Exception as err:
         return Response(str(err), status=403)
     # since isbn's can be a list. Insert those to a seperate table.
     cur.execute("select * from Books")
     if Book.isbn13 is not []:
-        data = cur.execute("SELECT book_id FROM Books WHERE book_title = ? AND book_author = ?", (Book.book_title,Book.book_author))
+        data = cur.execute("SELECT book_id FROM Books WHERE book_title = ? AND book_author = ?",
+                           (Book.book_title, Book.book_author))
         book_id = data.fetchone()[0]
         for isbn in list(set(Book.isbn13)):
-            cur.execute("INSERT INTO BookISBNs(book_id, isbn) VALUES (?,?)", (book_id,isbn))
-    
+            cur.execute("INSERT INTO BookISBNs(book_id, isbn) VALUES (?,?)", (book_id, isbn))
+
     con.commit()
     con.close()
-    return Response("Book added succesfully!" ,status=200)
-    
+    return Response("Book added succesfully!", status=200)
 
 
+@app.route('/download_issues', methods=['GET'])
+def download_issues():
+    param = {**request.args,
+             'per_page': 100}
+    if 'state' not in param:
+        param['state'] = 'all'
+    r = requests.get("https://api.github.com/repos/bounswe/2021SpringGroup12/issues",
+                     params=param).json()
+    for element in r:
+        issue = issue_helper.make_issue(element)
+        ALL_ISSUES[issue['number']] = issue
+    return f'{len(r)} issues are downloaded. There are total {len(ALL_ISSUES)} issues in the system'
 
+
+@app.route('/issue', methods=['POST'])
+def post_issue():
+    issue = issue_helper.get_issue(request.get_json())
+    ALL_ISSUES[issue['number']] = issue
+    return f'There are total {len(ALL_ISSUES)} issues in the system'
+
+
+@app.route('/issue/<int:number>', methods=['GET'])
+def get_issue(number: int):
+    issue = ALL_ISSUES[number]
+    return jsonify(issue)
+
+
+@app.route('/issue', methods=['GET'])
+def get_all_issues():
+    if request.args.get("max_results") is not None:
+        return jsonify(list(ALL_ISSUES.values())[:min(len(ALL_ISSUES), int(request.args.get("max_results")))])
+    return jsonify(ALL_ISSUES.values())
 
 @app.route('/quotes/', methods=['POST'])
 def add_quote():
@@ -116,19 +151,17 @@ def add_quote():
     if "quoteText" not in quote_fields.keys():
         return Response("Please provide the quote", status=400)
     try:
-        print("here1")
         quote = mapper.quote_mapper(quote_fields)
     except Exception as err:
         return Response(str(err), status=409)
 
     # connect to Database
     print(quote)
-    con = sqlite3.connect("./sqlfiles/practice-app.db")
+    con = sqlite3.connect("../../sqlfiles/practice-app.db")
     cur = con.cursor()
     # try to insert quote to DB, return forbidden upon failure
     try:
         cur.execute("INSERT INTO Quotes(quoteId, quoteAuthor, quoteGenre, quoteText) VALUES (?,?,?,?)", (quote.quoteId, quote.quoteAuthor, quote.quoteGenre, quote.quoteText))
-        print("here3")
     except Exception as err:
         return Response(str(err), status=403)
     con.commit()
@@ -159,7 +192,7 @@ def get_quote_opt():
         temp = "Please provide an genre name or indicate it is random! Possible genres: " + temp
         return Response(temp, status=400)
     quotes = [mapper.quote_mapper(s) for s in r['data']]
-    con = sqlite3.connect("./sqlfiles/practice-app.db")
+    con = sqlite3.connect("../../sqlfiles/practice-app.db")
     cur = con.cursor()
     for quote in quotes:
         print(quote.quoteId)
@@ -176,7 +209,7 @@ def get_quote_opt():
 @app.errorhandler(404)
 def not_found(error):
     # a friendlier error handling message
-    #return make_response(jsonify({'error': 'Task was not found'}), 404)
+    # return make_response(jsonify({'error': 'Task was not found'}), 404)
     return "404"
 
 

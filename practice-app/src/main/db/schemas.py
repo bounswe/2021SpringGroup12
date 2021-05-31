@@ -11,7 +11,8 @@ class Book(BaseModel):
     uuid: str
     uri: str
     isbn13: List[str]
-    
+
+
 class BookResponse(BaseModel):
     copyright: Optional[str] = ""
     num_results: int
@@ -26,5 +27,6 @@ class Quote(BaseModel):
     
 class QuoteResponse(BaseModel):
     data: List[dict]
+
 class ErrorResponse(BaseModel):
-    message: Optional[str] =""
+    message: Optional[str] = ""
