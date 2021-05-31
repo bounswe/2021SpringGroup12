@@ -10,6 +10,7 @@ import sqlite3
 from helpers import issue_helper
 from helpers.issue_helper import ALL_ISSUES
 import random
+
 app = Flask(__name__)
 
 """
@@ -138,6 +139,7 @@ def get_all_issues():
         return jsonify(list(ALL_ISSUES.values())[:min(len(ALL_ISSUES), int(request.args.get("max_results")))])
     return jsonify(ALL_ISSUES.values())
 
+
 @app.route('/quotes/', methods=['POST'])
 def add_quote():
     quote_fields = request.get_json()
@@ -205,6 +207,7 @@ def get_quote_opt():
 
     
     return schemas.QuoteResponse(data = quotes).__dict__
+
 
 @app.errorhandler(404)
 def not_found(error):

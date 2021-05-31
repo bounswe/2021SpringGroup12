@@ -28,5 +28,6 @@ class Quote(BaseModel):
 class QuoteResponse(BaseModel):
     data: List[dict]
 
+
 class ErrorResponse(BaseModel):
     message: Optional[str] = ""

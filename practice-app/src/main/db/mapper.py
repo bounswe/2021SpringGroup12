@@ -1,4 +1,6 @@
+
 from db.schemas import Book, Quote
+
 
 
 def book_mapper(book: dict) -> Book:
@@ -13,6 +15,7 @@ def book_mapper(book: dict) -> Book:
         isbn13=book["isbn13"] if 'isbn13' in book.keys() else [],
     )
 
+
 def quote_mapper(quote: dict) -> Quote:
     return Quote(
         quoteId= quote["_id"],
@@ -21,3 +24,4 @@ def quote_mapper(quote: dict) -> Quote:
         quoteText= quote["quoteText"],
         #last = quote["__v"]
         )
+
