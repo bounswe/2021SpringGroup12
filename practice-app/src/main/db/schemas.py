@@ -14,7 +14,6 @@ class Book(BaseModel):
 
 
 class BookResponse(BaseModel):
-    copyright: Optional[str] = ""
     num_results: int
     books: List[dict]
 

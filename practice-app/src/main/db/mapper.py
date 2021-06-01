@@ -1,4 +1,6 @@
-from db.schemas import Book, Issue
+import sys
+sys.path.append("..") 
+from .schemas import Book, Issue
 from helpers import issue_helper
 
 
