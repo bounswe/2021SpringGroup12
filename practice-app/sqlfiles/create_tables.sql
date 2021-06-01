@@ -38,3 +38,10 @@ CREATE TABLE IF NOT EXISTS Labels (
 	UNIQUE(issue_number,label)
 );
 
+CREATE TABLE IF NOT EXISTS Quotes (
+    quoteId            TEXT NOT NULL,
+  	quoteAuthor        TEXT NOT NULL,
+    quoteGenre         TEXT NOT NULL,
+    quoteText          TEXT,
+	PRIMARY KEY(quoteID)
+);
