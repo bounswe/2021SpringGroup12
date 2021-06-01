@@ -17,6 +17,16 @@ class BookResponse(BaseModel):
     num_results: int
     books: List[dict]
 
+class Quote(BaseModel):
+    quoteId: str
+    quoteAuthor: str
+    quoteGenre: str
+    quoteText: str
+    #last: int
+    
+class QuoteResponse(BaseModel):
+    data: List[dict]
+
 
 class ErrorResponse(BaseModel):
     message: Optional[str] = ""
