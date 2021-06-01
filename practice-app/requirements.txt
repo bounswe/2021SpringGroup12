@@ -4,6 +4,9 @@
 # Flask Framework
 Flask==2.0.1
 
+#Flask Cors
+flask-cors==3.0.10
+
 pydantic==1.8.2
 
 #  requests
