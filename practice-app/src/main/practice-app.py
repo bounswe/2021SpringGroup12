@@ -12,6 +12,7 @@ from helpers.issue_helper import ALL_ISSUES
 import random
 
 app = Flask(__name__)
+app.config['JSON_SORT_KEYS'] = False
 
 """
 to read body: request.get_json() or request.form
@@ -114,30 +115,33 @@ def download_issues():
         param['state'] = 'all'
     r = requests.get("https://api.github.com/repos/bounswe/2021SpringGroup12/issues",
                      params=param).json()
-    for element in r:
-        issue = issue_helper.make_issue(element)
-        ALL_ISSUES[issue['number']] = issue
-    return f'{len(r)} issues are downloaded. There are total {len(ALL_ISSUES)} issues in the system'
+    issue_list = [mapper.git_issue_mapper(element) for element in r]
+    issue_helper.insert_multiple_issue(issue_list)
+    total_issue = issue_helper.get_issue_count()
+    return f'{len(r)} issues are downloaded. There are total {total_issue} issues in the system'
 
 
 @app.route('/issue', methods=['POST'])
 def post_issue():
-    issue = issue_helper.get_issue(request.get_json())
-    ALL_ISSUES[issue['number']] = issue
-    return f'There are total {len(ALL_ISSUES)} issues in the system'
+    issue = mapper.issue_mapper(request.get_json())
+    issue_helper.insert_single_issue(issue)
+    total_issue = issue_helper.get_issue_count()
+    return f'There are total {total_issue} issues in the system'
 
 
 @app.route('/issue/<int:number>', methods=['GET'])
 def get_issue(number: int):
-    issue = ALL_ISSUES[number]
-    return jsonify(issue)
+    issue = issue_helper.get_issue(number)
+    return jsonify(issue.__dict__)
 
 
 @app.route('/issue', methods=['GET'])
 def get_all_issues():
+    max_results = 30
     if request.args.get("max_results") is not None:
-        return jsonify(list(ALL_ISSUES.values())[:min(len(ALL_ISSUES), int(request.args.get("max_results")))])
-    return jsonify(ALL_ISSUES.values())
+        max_results = request.args.get("max_results")
+    issue_list = issue_helper.get_all_issues(max_results)
+    return jsonify([issue.__dict__ for issue in issue_list])
 
 
 @app.route('/quotes/', methods=['POST'])

@@ -1,6 +1,5 @@
-
-from db.schemas import Book, Quote
-
+from db.schemas import Book, Issue
+from helpers import issue_helper
 
 
 def book_mapper(book: dict) -> Book:
@@ -16,6 +15,19 @@ def book_mapper(book: dict) -> Book:
     )
 
 
+def git_issue_mapper(git_issue: dict) -> Issue:
+    issue = issue_helper.make_issue(git_issue)
+    return issue_mapper(issue)
+
+
+def issue_mapper(issue: dict) -> Issue:
+    return Issue(
+        number=issue['number'],
+        assignees=issue['assignees'],
+        description=issue['description'],
+        labels=issue['labels'],
+        state=issue['state']
+    )
 def quote_mapper(quote: dict) -> Quote:
     return Quote(
         quoteId= quote["_id"],

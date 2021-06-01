@@ -31,3 +31,11 @@ class QuoteResponse(BaseModel):
 
 class ErrorResponse(BaseModel):
     message: Optional[str] = ""
+
+
+class Issue(BaseModel):
+    number: int
+    assignees: List[str]
+    description: str
+    labels: List[str]
+    state: str
