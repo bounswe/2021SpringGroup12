@@ -11,18 +11,30 @@ class Book(BaseModel):
     uuid: str
     uri: str
     isbn13: List[str]
-    
+
+
 class BookResponse(BaseModel):
-    copyright: Optional[str] = ""
     num_results: int
     books: List[dict]
 
+class Quote(BaseModel):
+    quoteId: str
+    quoteAuthor: str
+    quoteGenre: str
+    quoteText: str
+    #last: int
+    
+class QuoteResponse(BaseModel):
+    data: List[dict]
+
+
 class ErrorResponse(BaseModel):
-    message: Optional[str] =""
+    message: Optional[str] = ""
 
 
-class CurrencyRate(BaseModel):
-        date: str
-        from_curr: str
-        to_curr: str
-        rate: float
+class Issue(BaseModel):
+    number: int
+    assignees: List[str]
+    description: str
+    labels: List[str]
+    state: str

@@ -19,11 +19,29 @@ CREATE TABLE IF NOT EXISTS BookISBNs (
     UNIQUE(book_id,isbn)   -- restrict the same isbn of the book to be added multiple times
 );
 
-CREATE TABLE IF NOT EXISTS Currency_History (
-    date               TEXT,
-    from_curr          TEXT,
-    to_curr            TEXT,
-    rate               REAL,
-    PRIMARY KEY(date,from_curr,to_curr)
+CREATE TABLE IF NOT EXISTS Issues (
+    number             INTEGER,
+    description         TEXT,
+    state               TEXT,
+	PRIMARY KEY(number)
 );
 
+CREATE TABLE IF NOT EXISTS Assignees (
+    issue_number       INTEGER,
+    assignee           TEXT,
+	UNIQUE(issue_number,assignee)
+);
+
+CREATE TABLE IF NOT EXISTS Labels (
+    issue_number       INTEGER,
+    label           TEXT,
+	UNIQUE(issue_number,label)
+);
+
+CREATE TABLE IF NOT EXISTS Quotes (
+    quoteId            TEXT NOT NULL,
+  	quoteAuthor        TEXT NOT NULL,
+    quoteGenre         TEXT NOT NULL,
+    quoteText          TEXT,
+	PRIMARY KEY(quoteID)
+);
