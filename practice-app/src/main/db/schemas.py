@@ -38,3 +38,10 @@ class Issue(BaseModel):
     description: str
     labels: List[str]
     state: str
+
+
+class CurrencyRate(BaseModel):
+    date: str
+    from_curr: str
+    to_curr: str
+    rate: float
