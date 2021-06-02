@@ -1,6 +1,6 @@
 import sys
 sys.path.append("..") 
-from .schemas import Book, Issue
+from .schemas import Book, Issue, Quote, CurrencyRate
 from helpers import issue_helper
 
 
@@ -39,3 +39,10 @@ def quote_mapper(quote: dict) -> Quote:
         #last = quote["__v"]
         )
 
+def currency_rate_mapper(currency_rate: dict) -> CurrencyRate:
+    return CurrencyRate(
+        date= currency_rate["date"],
+        from_curr= currency_rate["query"]["from"] if 'query' in currency_rate.keys() else currency_rate["from"],
+        to_curr= currency_rate["query"]["to"] if 'query' in currency_rate.keys() else currency_rate["to"],
+        rate= currency_rate["info"]["rate"] if 'info' in currency_rate.keys() else currency_rate["rate"],
+    )
