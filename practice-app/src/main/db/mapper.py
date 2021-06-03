@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..") 
 from .schemas import Book, Issue, Quote
-from helpers import issue_helper
+from ..helpers import issue_helper
 
 
 def book_mapper(book: dict) -> Book:
