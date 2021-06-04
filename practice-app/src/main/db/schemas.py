@@ -14,10 +14,47 @@ class Book(BaseModel):
 
 
 class BookResponse(BaseModel):
-    copyright: Optional[str] = ""
     num_results: int
     books: List[dict]
+
+class Quote(BaseModel):
+    quoteId: str
+    quoteAuthor: str
+    quoteGenre: str
+    quoteText: str
+    #last: int
+    
+class QuoteResponse(BaseModel):
+    data: List[dict]
 
 
 class ErrorResponse(BaseModel):
     message: Optional[str] = ""
+
+
+class Issue(BaseModel):
+    number: int
+    assignees: List[str]
+    description: str
+    labels: List[str]
+    state: str
+
+
+class CurrencyRate(BaseModel):
+    date: str
+    from_curr: str
+    to_curr: str
+    rate: float
+
+class Cocktail(BaseModel):
+    cocktail_name: str
+    ingredient_1: str
+    ingredient_2: str
+    ingredient_3: str
+    ingredient_4: str
+    ingredient_4: str
+    glass: str
+    instructions: str
+    
+class CocktailResponse(BaseModel):
+    cocktails: List[dict]

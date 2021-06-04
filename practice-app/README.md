@@ -7,6 +7,7 @@ Here we have an API, written using The Flask framework.
 * Activate the virtual environment: 
   * Windows: `myenv\Scripts\activate`
   * Linux / MacOS:  `source myenv/bin/activate`
+* Clone the repo to your local and branch out. 
 * Install the requirements: `pip install -r requirements.txt`
 * Execute the API:
   * Windows:
@@ -22,6 +23,6 @@ Here we have an API, written using The Flask framework.
     * `export FLASK_ENV=development`
     * `flask run` 
 * Go to the browser and open that link just you seen in the terminal.  (likely http://127.0.0.1:5000/)
-* Clone the repo to your local and branch out. 
+
 * Write your own endpoints using different existing API's.
 * Test you endpoint using Postman. Try to use query-path parameters, request bodies, etc. 
