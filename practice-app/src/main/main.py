@@ -29,7 +29,6 @@ def get_tasks():
 
 @app.route('/books/', methods=['GET'])
 def get_books():
-    print(request.args)
     # validate parameters
     x = books_helper.validate_input(request.args)
     if x is not None:

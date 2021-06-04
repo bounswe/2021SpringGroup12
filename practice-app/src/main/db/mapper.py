@@ -1,6 +1,4 @@
-import sys
-sys.path.append("..") 
-from .schemas import Book, Issue
+from .schemas import Book, Issue, Quote
 from helpers import issue_helper
 
 
