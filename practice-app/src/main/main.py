@@ -7,14 +7,14 @@ from flask import Flask, jsonify, Response, request
 import requests
 from db import schemas, mapper
 import sqlite3
-
 from helpers import issue_helper, books_helper
 from helpers.issue_helper import ALL_ISSUES
 import random
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
-
+CORS(app)
 """
 to read body: request.get_json() or request.form
 to read query parameters:  request.args.get(<argname>) or request.args.to_dict() or request.query_string.decode("utf-8")
@@ -49,6 +49,7 @@ def get_books():
 def create_book():
     if request.get_json() is None:
         return Response("Body is empty!",status=400)
+    print(request.get_json())
     book = books_helper.validate_body(request.get_json())
     if type(book) is not schemas.Book:
         return book
@@ -167,7 +168,7 @@ def get_quote_opt():
 def not_found(error):
     # a friendlier error handling message
     # return make_response(jsonify({'error': 'Task was not found'}), 404)
-    return "404"
+    return "page not found :("
 
 
 if __name__ == '__main__':

@@ -7,6 +7,7 @@ from db.mapper import book_mapper
 
 # TODO change this variable in deployment phase!
 DB_PATH = "/home/veyis/Desktop/2021SpringGroup12/practice-app/sqlfiles"
+DB_PATH = "/home/veyis/Desktop/a2021SpringGroup12/practice-app/sqlfiles"
 
 
 def validate_input(params):
