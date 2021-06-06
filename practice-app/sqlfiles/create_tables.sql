@@ -25,3 +25,29 @@ CREATE TABLE IF NOT EXISTS Name_Infos (
 	country TEXT
 );
 
+CREATE TABLE IF NOT EXISTS Issues (
+    number             INTEGER,
+    description         TEXT,
+    state               TEXT,
+	PRIMARY KEY(number)
+);
+
+CREATE TABLE IF NOT EXISTS Assignees (
+    issue_number       INTEGER,
+    assignee           TEXT,
+	UNIQUE(issue_number,assignee)
+);
+
+CREATE TABLE IF NOT EXISTS Labels (
+    issue_number       INTEGER,
+    label           TEXT,
+	UNIQUE(issue_number,label)
+);
+
+CREATE TABLE IF NOT EXISTS Quotes (
+    quoteId            TEXT NOT NULL,
+  	quoteAuthor        TEXT NOT NULL,
+    quoteGenre         TEXT NOT NULL,
+    quoteText          TEXT,
+	PRIMARY KEY(quoteID)
+);

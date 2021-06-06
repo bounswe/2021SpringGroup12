@@ -7,14 +7,14 @@ from flask import Flask, jsonify, Response, request
 import requests
 from db import schemas, mapper
 import sqlite3
-
 from helpers import issue_helper, books_helper
 from helpers.issue_helper import ALL_ISSUES
 import random
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
-
+CORS(app)
 """
 to read body: request.get_json() or request.form
 to read query parameters:  request.args.get(<argname>) or request.args.to_dict() or request.query_string.decode("utf-8")
@@ -29,7 +29,6 @@ def get_tasks():
 
 @app.route('/books/', methods=['GET'])
 def get_books():
-    print(request.args)
     # validate parameters
     x = books_helper.validate_input(request.args)
     if x is not None:
@@ -50,6 +49,7 @@ def get_books():
 def create_book():
     if request.get_json() is None:
         return Response("Body is empty!",status=400)
+    print(request.get_json())
     book = books_helper.validate_body(request.get_json())
     if type(book) is not schemas.Book:
         return book
@@ -164,108 +164,11 @@ def get_quote_opt():
     return schemas.QuoteResponse(data = quotes).__dict__
 
 
-# Uses Agify api which is on https://api.agify.io/
-# Here the assumption that "Agify returns the average age calculated from the data" is made
-@app.route('/name_information', methods=['GET'])
-def get_name_information():
-    name = request.args.get("name")
-    country = request.args.get("country")
-    onApi = False
-    onDB = False
-    countryBased = False
-    
-    if name == None or name.strip() == "":
-        return Response("Please provide the name!", status=400)
-    
-    api_url = f'https://api.agify.io/?name={name}'
-    
-    if country != None and country.strip()!="":
-        countryBased = True
-        api_url+=f'&country_id={country}'
-    
-    r = requests.get(api_url)
-    response = r.json()
-    
-    if response["age"] != None:
-        onApi = True
-        countOnApi = response["count"]
-        ageOnApi = response["age"]
-    
-    
-    #Check db for matching entries to add to the results coming from Agify api
-    con = sqlite3.connect("../../sqlfiles/practice-app.db")
-    cur = con.cursor()
-    
-    if countryBased:
-        cur.execute("SELECT AVG(age) as average_age, COUNT(age) as cnt FROM Name_Infos WHERE name = ? AND country = ?",
-                           (name, country))
-    else:
-        cur.execute("SELECT AVG(age) as average_age, COUNT(age) as cnt FROM Name_Infos WHERE name = ?",
-                           [name])
-                           
-    dbData = cur.fetchone()
-    con.close()
-    print(dbData)
-    
-    ageOnDB = dbData[0]
-    countOnDB = dbData[1]
-    onDB = countOnDB != 0
-    
-    #Combine results coming from api and db
-    if onApi and onDB:
-        resultCount = countOnApi + countOnDB
-        resultAge = ((countOnApi*ageOnApi)+(countOnDB*ageOnDB))/resultCount
-    elif onApi:
-        resultCount = countOnApi
-        resultAge = ageOnApi
-    elif onDB:
-        resultCount = countOnDB
-        resultAge = ageOnDB
-    else:
-        return Response("No registered data for this querry", status=200)
-        
-    result = f'Name: {name}\nAverage Age: {int(resultAge)}\nCount: {resultCount}'
-    if countryBased:
-        result+=f'\nCountry: {country}'
-        
-    return Response(result, status=200) 
-    
-    
-@app.route('/put_name_information', methods=['POST'])
-def save_new_name_info():
-    body = request.get_json()
-
-    if body==None:
-        return Response("Please provide correct information in body as json", status=400)
-    # make sure that necessary information are given
-    if "name" not in body:
-        return Response("Please provide your name to save to the database!", status=400)
-    if "age" not in body:
-        return Response("Please provide your age to save to the database!", status=400)
-    if "country" not in body:
-        return Response("Please provide your country to save to the database!", status=400)
-    
-    con = sqlite3.connect("../../sqlfiles/practice-app.db")
-    cur = con.cursor()
-    
-    try:
-        cur.execute(
-            "INSERT INTO Name_Infos(name, age, country) VALUES (?,?,?)",
-            (body["name"] ,body["age"], body["country"]))
-    except Exception as err:
-        return Response(str(err), status=403)
-    
-    con.commit()
-    con.close()
-
-    return Response("Your name information has been added to database!", status=200) 
-
-
 @app.errorhandler(404)
 def not_found(error):
     # a friendlier error handling message
     # return make_response(jsonify({'error': 'Task was not found'}), 404)
-    return "404"
+    return "page not found :("
 
 
 if __name__ == '__main__':
