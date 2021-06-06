@@ -11,9 +11,11 @@ import sqlite3
 from helpers import issue_helper, books_helper, name_info_helper
 from helpers.issue_helper import ALL_ISSUES
 import random
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
+CORS(app)
 
 """
 to read body: request.get_json() or request.form
