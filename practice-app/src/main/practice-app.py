@@ -11,7 +11,6 @@ import sqlite3
 from helpers import issue_helper, books_helper
 from pydantic import ValidationError
 from flask_cors import CORS
-from helpers.issue_helper import ALL_ISSUES
 import random
 
 app = Flask(__name__)
@@ -76,7 +75,7 @@ def download_issues():
     return f'{len(r)} issues are downloaded. There are total {total_issue} issues in the system'
 
 
-@app.route('/issue', methods=['POST'])
+@app.route('/issues', methods=['POST'])
 def post_issue():
     issue = mapper.issue_mapper(request.get_json())
     issue_helper.insert_single_issue(issue)
@@ -84,18 +83,20 @@ def post_issue():
     return f'There are total {total_issue} issues in the system'
 
 
-@app.route('/issue/<int:number>', methods=['GET'])
+@app.route('/issues/<int:number>', methods=['GET'])
 def get_issue(number: int):
     issue = issue_helper.get_issue(number)
     return jsonify(issue.__dict__)
 
 
-@app.route('/issue', methods=['GET'])
+@app.route('/issues', methods=['GET'])
 def get_all_issues():
+    print("buradayım")
     max_results = 30
     if request.args.get("max_results") is not None:
         max_results = request.args.get("max_results")
     issue_list = issue_helper.get_all_issues(max_results)
+    print(len(issue_list))
     return jsonify([issue.__dict__ for issue in issue_list])
 
 ####################################### ANIME ####################################
@@ -219,7 +220,7 @@ def get_quote_opt():
     con.commit()
     con.close()
 
-    
+
     return schemas.QuoteResponse(data = quotes).__dict__
 
 

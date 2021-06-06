@@ -7,12 +7,36 @@ import AnimePost from '../anime/views/Post.vue';
 import BooksPostHome from '../books/pages/PostBook.vue';
 import BooksGetHome from '../books/pages/GetBook.vue';
 import BooksHome from '../books/pages/BooksHome.vue';
+import PostIssue from '../issues/pages/PostIssue.vue';
+import GetAll from '../issues/pages/GetAll.vue';
+import GetIssue from '../issues/pages/GetIssue.vue';
+import HomeIssue from '../issues/pages/IssuesHome.vue';
 
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: Home,
+  },
+    {
+    path: '/getall',
+    name: 'GetAll',
+    component: GetAll,
+  },
+  {
+    path: '/getissue',
+    name: 'GetIssue',
+    component: GetIssue,
+  },
+  {
+    path: '/postissues',
+    name: 'PostIssue',
+    component: PostIssue,
+  },
+  {
+    path: '/issues',
+    name: 'HomeIssue',
+    component: HomeIssue,
   },
   {
     path: '/getbooks',
