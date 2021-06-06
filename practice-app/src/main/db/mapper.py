@@ -1,6 +1,6 @@
 import sys
 sys.path.append("..") 
-from .schemas import Book, Issue, Genre, SearchResult, Anime, CreateAnime
+from .schemas import Book, Issue, Quote, Genre, SearchResult, Anime, CreateAnime
 from helpers import issue_helper
 
 
@@ -89,3 +89,12 @@ def create_anime_mapper(create_anime: dict) -> CreateAnime:
         type=create_anime["type"],
         synopsis=create_anime["synopsis"]
     )
+def quote_mapper(quote: dict) -> Quote:
+    return Quote(
+        quoteId= quote["_id"],
+        quoteAuthor= quote["quoteAuthor"],
+        quoteGenre= quote["quoteGenre"],
+        quoteText= quote["quoteText"],
+        #last = quote["__v"]
+        )
+
