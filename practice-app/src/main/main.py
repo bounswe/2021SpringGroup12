@@ -149,7 +149,7 @@ def get_quote_opt():
         temp = "Please provide an genre name or indicate it is random! Possible genres: " + temp
         return Response(temp, status=400)
     quotes = [mapper.quote_mapper(s) for s in r['data']]
-    con = sqlite3.connect("../../sqlfiles/practice-app.db")
+    con = sqlite3.connect("../../../sqlfiles/practice-app.db")
     cur = con.cursor()
     for quote in quotes:
         print(quote.quoteId)

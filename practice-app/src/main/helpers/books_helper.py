@@ -14,6 +14,10 @@ def validate_input(params):
     # if name parameter is not supplied, return 400
     if "name" not in params:
         return Response("Please provide an author name!", status=400)
+    else:
+        if params.get("name").replace(" ","") == "":
+            return Response("Please provide nonempty author name!", status=400)
+
 
 
 def call_nytimes(params):
