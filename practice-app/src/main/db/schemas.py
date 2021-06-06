@@ -43,3 +43,9 @@ class NameInfo(BaseModel):
     name: str
     age: int
     country: str
+    
+class NameInfoResponse():
+    name: str
+    age: int
+    country: str
+    count: int

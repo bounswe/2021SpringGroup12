@@ -214,15 +214,16 @@ def get_name_information():
         resultAge = ageOnDB
     else:
         return Response("No registered data for this querry", status=200)
-        
-    result = f'Name: {name}\nAverage Age: {int(resultAge)}\nCount: {resultCount}'
+    result = schemas.NameInfoResponse()
+    result.name=name
+    result.age=int(resultAge)
+    result.count=resultCount
     if countryBased:
-        result+=f'\nCountry: {country}'
-        
-    return Response(result, status=200) 
+        result.country = country
+    return jsonify(result.__dict__)
     
     
-@app.route('/put_name_information', methods=['POST'])
+@app.route('/name_information', methods=['POST'])
 def save_new_name_info():
     body = request.get_json()
 
@@ -236,10 +237,13 @@ def save_new_name_info():
     if "country" not in body:
         return Response("Please provide your country to save to the database!", status=400)
     
-    nameInfo = schemas.NameInfo(
-        name=body["name"],
-        age=body["age"],
-        country=body["country"])
+    try:
+        nameInfo = schemas.NameInfo(
+            name=body["name"],
+            age=body["age"],
+            country=body["country"])
+    except Exception:
+        return Response("Please provide correct information in body as json", status=400)
         
     success = name_info_helper.insert_name_info(nameInfo)
     
