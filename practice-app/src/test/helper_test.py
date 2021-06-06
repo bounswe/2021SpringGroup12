@@ -1,4 +1,6 @@
 import unittest
+import sys
+sys.path.append("../main")
 from helpers.issue_helper import make_issue
 import json
 
