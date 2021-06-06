@@ -38,3 +38,8 @@ class Issue(BaseModel):
     description: str
     labels: List[str]
     state: str
+    
+class NameInfo(BaseModel):
+    name: str
+    age: int
+    country: str

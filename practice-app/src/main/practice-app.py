@@ -8,7 +8,7 @@ import requests
 from db import schemas, mapper
 import sqlite3
 
-from helpers import issue_helper, books_helper
+from helpers import issue_helper, books_helper, name_info_helper
 from helpers.issue_helper import ALL_ISSUES
 import random
 
@@ -193,23 +193,14 @@ def get_name_information():
     
     
     #Check db for matching entries to add to the results coming from Agify api
-    con = sqlite3.connect("../../sqlfiles/practice-app.db")
-    cur = con.cursor()
+    dbData = name_info_helper.get_name_info(name, country, countryBased)
     
-    if countryBased:
-        cur.execute("SELECT AVG(age) as average_age, COUNT(age) as cnt FROM Name_Infos WHERE name = ? AND country = ?",
-                           (name, country))
-    else:
-        cur.execute("SELECT AVG(age) as average_age, COUNT(age) as cnt FROM Name_Infos WHERE name = ?",
-                           [name])
-                           
-    dbData = cur.fetchone()
-    con.close()
-    print(dbData)
     
-    ageOnDB = dbData[0]
-    countOnDB = dbData[1]
-    onDB = countOnDB != 0
+    onDB = dbData!=None and dbData[1] != 0
+    if onDB:
+        ageOnDB = dbData[0]
+        countOnDB = dbData[1]
+        print(dbData)
     
     #Combine results coming from api and db
     if onApi and onDB:
@@ -245,18 +236,15 @@ def save_new_name_info():
     if "country" not in body:
         return Response("Please provide your country to save to the database!", status=400)
     
-    con = sqlite3.connect("../../sqlfiles/practice-app.db")
-    cur = con.cursor()
+    nameInfo = schemas.NameInfo(
+        name=body["name"],
+        age=body["age"],
+        country=body["country"])
+        
+    success = name_info_helper.insert_name_info(nameInfo)
     
-    try:
-        cur.execute(
-            "INSERT INTO Name_Infos(name, age, country) VALUES (?,?,?)",
-            (body["name"] ,body["age"], body["country"]))
-    except Exception as err:
-        return Response(str(err), status=403)
-    
-    con.commit()
-    con.close()
+    if not success:
+        return Response("Your information couldnt be saved! Please try again later!", status=403)
 
     return Response("Your name information has been added to database!", status=200) 
 
