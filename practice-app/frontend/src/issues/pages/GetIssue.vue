@@ -13,7 +13,7 @@
     </form>
 <!--    <ResponseList v-if="!loading && !error" :issues="issues" />-->
 
-    <div class="ml-1" v-if="end">
+    <div class="ml-1" v-if="end && !error">
       <li>Number = {{data.number}}</li>
       <li>Assignees = {{data.assignees}}</li>
       <li>Description = {{data.description}}</li>
@@ -74,16 +74,6 @@ export default {
         const url = `http://127.0.0.1:5000/issues/${this.issue_number}`;
         const response = await axios.get(url,{ headers });
         this.data = response.data;
-        for (let i = 0; i < this.data.length; i++) {
-          let issue = this.data[i]
-          this.data[i] = {
-                Number: issue.number,
-                Assignees: issue.assignees,
-                Description: issue.description,
-                Labels: issue.labels,
-                State: issue.state
-              };
-        }
 
       } catch (err) {
         if (err.response) {

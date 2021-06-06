@@ -54,19 +54,6 @@ def insert_issue(cur: Cursor, issue: Issue):
             (issue.number, label))
 
 
-def insert_single_issue(issue: Issue):
-    con = sqlite3.connect(DB_LOC)
-    cur = con.cursor()
-    try:
-        insert_issue(cur, issue)
-    except Exception as e:
-        print(f"An exception occurred inserting issue {issue.number}")
-        raise e
-    finally:
-        con.commit()
-        con.close()
-
-
 def insert_multiple_issue(issue_list: List[Issue]):
     con = sqlite3.connect(DB_LOC)
     cur = con.cursor()
@@ -115,6 +102,7 @@ def get_issue(issue_number: int) -> Issue:
         con.commit()
         con.close()
 
+
 def get_all_issues(limit: int) -> List[Issue]:
     con = sqlite3.connect(DB_LOC)
     cur = con.cursor()
@@ -130,10 +118,10 @@ def get_all_issues(limit: int) -> List[Issue]:
             data = cur.execute("SELECT label FROM Labels WHERE issue_number=?", (issue_number,))
             labels = [row[0] for row in data.fetchall()]
             issue_list.append(Issue(number=issue_number,
-                 description=description,
-                 state=state,
-                 assignees=assignees,
-                 labels=labels)
+                                    description=description,
+                                    state=state,
+                                    assignees=assignees,
+                                    labels=labels)
                               )
     except Exception:
         print(f'An error occurred getting all issues')
@@ -141,5 +129,3 @@ def get_all_issues(limit: int) -> List[Issue]:
         con.commit()
         con.close()
         return issue_list
-
-
