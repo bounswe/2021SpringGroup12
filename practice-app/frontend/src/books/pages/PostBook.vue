@@ -79,7 +79,7 @@ export default {
       if (!this.user_body.isbn13s.length) {
         this.user_body.isbn13 = [];
       } else {
-        this.user_body.isbn13 = this.user_body.isbn13.split(",");
+        this.user_body.isbn13 = this.user_body.isbn13s.split(",");
       }
 
       const response = await axios
