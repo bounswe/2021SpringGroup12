@@ -53,3 +53,15 @@ CREATE TABLE IF NOT EXISTS Currency_History (
     rate               REAL,
     PRIMARY KEY(date,from_curr,to_curr)
 );
+
+  
+CREATE TABLE IF NOT EXISTS Cocktails (
+    cocktail_name TEXT,
+    ingredient_1  TEXT,
+    ingredient_2  TEXT,
+    ingredient_3  TEXT,
+    ingredient_4  TEXT,
+    glass TEXT,
+    instructions  TEXT,
+    PRIMARY KEY (cocktail_name)
+);

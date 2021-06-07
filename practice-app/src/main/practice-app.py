@@ -3,12 +3,13 @@
 ##
 # NOTE: Remember you have to set your virtual environment and install flask
 
-from flask import Flask, jsonify, Response, request
+from flask import Flask, jsonify, Response, request,render_template , url_for
 import requests
+from werkzeug.utils import redirect
 from db import schemas, mapper
 import sqlite3
 
-from helpers import issue_helper, books_helper, currency_helper
+from helpers import issue_helper, books_helper, currency_helper, cocktails_helper
 from helpers.issue_helper import ALL_ISSUES
 import random
 
@@ -204,73 +205,54 @@ def create_currency_hist():
 
     return db_response if db_response is not None else Response("You have successfully inserted your currency rate to db", status=200)
 
+@app.route('/cocktails/',methods=['GET','POST'])
+def go_get_or_post():
+    if request.method == 'POST':
+        if 'cocktail_name' in request.form:
+            x = cocktails_helper.validate_get_input(request.form)
+            if x is not None:
+                return x
+            cocktail_name = request.form.get('cocktail_name')
+            return redirect("http://127.0.0.1:5000/cocktails/get_cocktails/?cocktail_name="+cocktail_name)
+ 
+    return render_template('cocktailhome.html')
 
-@app.route('/cocktails/', methods=['GET'])
+@app.route('/cocktails/get_cocktails/', methods=['GET'])
 def get_cocktails():
-    # if name parameter is not supplied, return 400
-    if "cocktail_name" not in request.args:
-        return Response("Please type a Cocktail name :)", status=400)
-
+    x = cocktails_helper.validate_get_input(request.args)
+    if x is not None:
+        return x
+        #cocktail_name has captured
     cocktail_name = request.args.get("cocktail_name")
+        #taking data in json formats
     r = requests.get("http://www.thecocktaildb.com/api/json/v1/1/search.php?s={}".format(cocktail_name))
     r = r.json()
-
-    if r["drinks"] == None:
-        return Response("No cocktail including the keyword!", status=404)
-    cocktails = [mapper.cocktail_mapper(s) for s in r["drinks"]]
-    # We can have more than one cocktail including the cocktail name (margarita, blue margarita) or the keyword can be any place in the name of the cocktail.
-    con = sqlite3.connect("../../sqlfiles/practice-app.db")
     
-    cur = con.cursor()
-    for cocktail in cocktails:
-        try:
-            cur.execute("INSERT INTO Cocktails(cocktail_name, ingredient_1, ingredient_2, ingredient_3,ingredient_4, glass, instructions) VALUES (?,?,?,?,?,?,?)", (cocktail.cocktail_name, cocktail.ingredient_1, cocktail.ingredient_2, cocktail.ingredient_3, cocktail.ingredient_4, cocktail.glass, cocktail.instructions))
-        except:
-            # do nothing upon failure, this is not a critical process
-            continue
-    con.commit()
-    con.close()
+            
+    check = cocktails_helper.non_existing_cocktail_name_check(r)
+    if check is not None:
+        return check
+
+    cocktails = [mapper.cocktail_mapper(s) for s in r["drinks"]]
+    print("get:")
+    print(cocktails)
+            # We can have more than one cocktail including the cocktail name (margarita, blue margarita) or the keyword can be any place in the name of the cocktail.
+    cocktails_helper.add_cocktails_from_user(cocktails)
 
     return schemas.CocktailResponse(cocktails=cocktails).__dict__
 
 
-
-@app.route('/cocktails/', methods=['POST'])
+@app.route('/cocktails/create_cocktail/', methods=['GET','POST'])
 def create_cocktail():
-    cocktail_fields = request.get_json()
+    if 'strDrink' in request.form:
+        cocktail = cocktails_helper.validate_post_cocktail(request.form.to_dict(flat=True))
+        if type(cocktail) is not schemas.Cocktail:
+            return cocktail
+        # connect to Database
+        db_response=cocktails_helper.add_cocktail_from_user(cocktail)
 
-    # make sure that necessary information are given
-    if "strDrink" not in cocktail_fields.keys():
-        return Response("Please provide the name of the cocktail!", status=400)
-    if "strIngredient1" not in cocktail_fields.keys():
-        return Response("Please provide the name of the ingredient 1!", status=400)
-    if "strIngredient2" not in cocktail_fields.keys():
-        return Response("Please provide the name of the ingredient 2!", status=400)    
-    if "strIngredient3" not in cocktail_fields.keys():
-        return Response("Please provide the name of the ingredient 3!", status=400)
-    if "strIngredient4" not in cocktail_fields.keys():
-        return Response("Please provide the name of the ingredient 4!", status=400)
-    if "strGlass" not in cocktail_fields.keys():
-        return Response("Please provide the type of the glass!", status=400)                   
-    if "strInstructions" not in cocktail_fields.keys():
-        return Response("Please provide the instructions", status=400) 
-    try:
-        Cocktail = mapper.cocktail_mapper(cocktail_fields)
-    except Exception as err:
-        return Response(str(err), status=409)
-    # connect to Database
-    con = sqlite3.connect("../../sqlfiles/practice-app.db")
-    cur = con.cursor()
-
-    try:
-        cur.execute("INSERT INTO Cocktails(cocktail_name,ingredient_1, ingredient_2, ingredient_3,ingredient_4, glass, instructions) VALUES (?,?,?,?,?,?,?)", (Cocktail.cocktail_name, Cocktail.ingredient_1, Cocktail.ingredient_2, Cocktail.ingredient_3, Cocktail.ingredient_4, Cocktail.glass, Cocktail.instructions))
-    except Exception as err:
-        return Response(str(err), status=403)
-
-    con.commit()
-    con.close()
-    return Response("Cocktail added succesfully!" ,status=200)
-
+        return db_response if db_response is not None else Response("Cocktail added succesfully!", status=200)
+    return render_template('create_cocktail.html')
 
 @app.errorhandler(404)
 def not_found(error):

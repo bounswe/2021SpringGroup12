@@ -1,0 +1,42 @@
+<html>
+<body style="background-color:rgb(0, 121, 30);">   
+  <head>
+    <title>Flask Intro - Action2 page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Please type cocktail features</h1>
+      <br>
+      <form action="" method="post">
+
+        <input id="strDrink" type="strDrink" placeholder="strDrink" name="strDrink" >
+
+
+        <input id="strIngredient1" type="strIngredient1" placeholder="strIngredient1" name="strIngredient1" >
+
+
+        <input id="strIngredient2" type="strIngredient2" placeholder="strIngredient2" name="strIngredient2" >
+
+
+        <input id="strIngredient3" type="strIngredient3" placeholder="strIngredient3" name="strIngredient3" >
+
+
+        <input id="strIngredient4" type="strIngredient4" placeholder="strIngredient4" name="strIngredient4" >
+
+
+        <input id="strGlass" type="strGlass" placeholder="strGlass" name="strGlass" >
+
+
+        <input id="strInstructions" type="strInstructions" placeholder="strInstructions" name="strInstructions" >
+
+        <input class="btn btn-default" type="submit" value="Go!">
+
+      </form>
+      {% if error %}
+        <p class="error"><strong>Error:</strong> {{ error }}
+      {% endif %}
+    </div>
+  </body>
+</html>
