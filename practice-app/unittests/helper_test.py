@@ -1,7 +1,7 @@
+from __future__ import absolute_import
+
 import unittest
-import sys
-sys.path.append("../main")
-from helpers.issue_helper import make_issue
+from ..main.helpers.issue_helper import make_issue
 import json
 
 

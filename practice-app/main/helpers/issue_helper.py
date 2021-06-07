@@ -2,7 +2,7 @@ import sqlite3
 from sqlite3 import Cursor
 from typing import List
 
-from db.schemas import Issue
+from main.db.schemas import Issue
 
 ALL_ISSUES = {}
 

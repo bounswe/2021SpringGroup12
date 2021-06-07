@@ -2,10 +2,10 @@ import unittest
 from HtmlTestRunner import HTMLTestRunner
 from werkzeug.datastructures import ImmutableMultiDict
 import sqlite3
-from ..main.db.mapper import book_mapper
-from ..main.helpers import books_helper
+from main.db.mapper import book_mapper
+from main.helpers import books_helper
 import os
-from ..main import main
+from main import main
 
 
 class TestBooksEndpoint(unittest.TestCase):

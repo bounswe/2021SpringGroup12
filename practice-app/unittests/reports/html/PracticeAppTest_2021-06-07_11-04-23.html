@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Unittest Results</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h2 class="text-capitalize">Unittest Results</h2>
+                <p class='attribute'><strong>Start Time: </strong>2021-06-07 11:04:23</p>
+                <p class='attribute'><strong>Duration: </strong>6.83 s</p>
+                <p class='attribute'><strong>Summary: </strong>Total: 26, Pass: 18, Fail: 2, Error: 6</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-10 col-md-10">
+                <table class='table table-hover table-responsive'>
+                    <thead>
+                        <tr>
+                            <th>unittests.test_books.TestBooksEndpoint</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class='warning'>
+                            <td class="col-xs-10">test_add_book_from_user_correct_input</td>
+                            <td class="col-xs-1">
+                                <span class="label label-warning" style="display:block;width:40px;">Error</span>
+                            </td>
+                            <td class="col-xs-1">
+                                <button class="btn btn-default btn-xs">View</button>
+                            </td>
+                        </tr>
+                        <tr style="display:none;">
+                            <td class="col-xs-9" colspan="3"><p style="color:maroon;">OperationalError: unable to open database file</p><p style="color:maroon;">Traceback (most recent call last):
+  File "/home/veyis/Desktop/a2021SpringGroup12/practice-app/unittests/test_books.py", line 203, in test_add_book_from_user_correct_input
+    con = sqlite3.connect("/home/veyis/Desktop/2021SpringGroup12/practice-app/sqlfiles/practice-app.db")
+sqlite3.OperationalError: unable to open database file
+</p>
+                            </td>
+                        </tr>
+                        <tr class='success'>
+                            <td class="col-xs-10">test_add_book_from_user_wrong_input</td>
+                            <td class="col-xs-1">
+                                <span class="label label-success" style="display:block;width:40px;">Pass</span>
+                            </td>
+                            <td class="col-xs-1">
+                            </td>
+                        </tr>
+                        <tr class='warning'>
+                            <td class="col-xs-10">test_add_books_from_nytimes_correct_input</td>
+                            <td class="col-xs-1">
+                                <span class="label label-warning" style="display:block;width:40px;">Error</span>
+                            </td>
+                            <td class="col-xs-1">
+                                <button class="btn btn-default btn-xs">View</button>
+                            </td>
+                        </tr>
+                        <tr style="display:none;">
+                            <td class="col-xs-9" colspan="3"><p style="color:maroon;">OperationalError: unable to open database file</p><p style="color:maroon;">Traceback (most recent call last):
+  File "/home/veyis/Desktop/a2021SpringGroup12/practice-app/unittests/test_books.py", line 121, in test_add_books_from_nytimes_correct_input
+    con = sqlite3.connect("/home/veyis/Desktop/2021SpringGroup12/practice-app/sqlfiles/practice-app.db")
+sqlite3.OperationalError: unable to open database file
+</p>
+                            </td>
+                        </tr>
+                        <tr class='success'>
+                            <td class="col-xs-10">test_add_books_from_nytimes_wrong_input</td>
+                            <td class="col-xs-1">
+                                <span class="label label-success" style="display:block;width:40px;">Pass</span>
+                            </td>
+                            <td class="col-xs-1">
+                            </td>
+                        </tr>
+                        <tr class='success'>
+                            <td class="col-xs-10">test_call_nytimes_blank_input</td>
+                            <td class="col-xs-1">
+                                <span class="label label-success" style="display:block;width:40px;">Pass</span>
+                            </td>
+                            <td class="col-xs-1">
+                            </td>
+                        </tr>
+                        <tr class='success'>
+                            <td class="col-xs-10">test_call_nytimes_correct_input</td>
+                            <td class="col-xs-1">
+                                <span class="label label-success" style="display:block;width:40px;">Pass</span>
+                            </td>
+                            <td class="col-xs-1">
+                            </td>
+                        </tr>
+                        <tr class='success'>
+                            <td class="col-xs-10">test_call_nytimes_wrong_input</td>
+                            <td class="col-xs-1">
+                                <span class="label label-success" style="display:block;width:40px;">Pass</span>
+                            </td>
+                            <td class="col-xs-1">
+                            </td>
+                        </tr>
+                        <tr class='warning'>
+                            <td class="col-xs-10">test_get_endpoint_correct_1</td>
+                            <td class="col-xs-1">
+                                <span class="label label-warning" style="display:block;width:40px;">Error</span>
+                            </td>
+                            <td class="col-xs-1">
+                                <button class="btn btn-default btn-xs">View</button>
+                            </td>
+                        </tr>
+                        <tr style="display:none;">
+                            <td class="col-xs-9" colspan="3"><p style="color:maroon;">KeyError: 'results'</p><p style="color:maroon;">Traceback (most recent call last):
+  File "/home/veyis/Desktop/a2021SpringGroup12/practice-app/unittests/test_books.py", line 60, in test_get_endpoint_correct_1
+    return_value = self.app.get(f'/books/?name={self.input_books_from_nytimes[0].get("book_author")}')
+  File "/home/veyis/.local/lib/python3.8/site-packages/werkzeug/test.py", line 1127, in get
+    return self.open(*args, **kw)
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/testing.py", line 216, in open
+    return super().open(  # type: ignore
+  File "/home/veyis/.local/lib/python3.8/site-packages/werkzeug/test.py", line 1072, in open
+    response = self.run_wsgi_app(request.environ, buffered=buffered)
+  File "/home/veyis/.local/lib/python3.8/site-packages/werkzeug/test.py", line 943, in run_wsgi_app
+    rv = run_wsgi_app(self.application, environ, buffered=buffered)
+  File "/home/veyis/.local/lib/python3.8/site-packages/werkzeug/test.py", line 1229, in run_wsgi_app
+    app_rv = app(environ, start_response)
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 2088, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.handle_exception(e)
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/home/veyis/Desktop/a2021SpringGroup12/practice-app/main/main.py", line 37, in get_books
+    books = books_helper.call_nytimes(request.args.get("name"))
+  File "/home/veyis/Desktop/a2021SpringGroup12/practice-app/main/helpers/books_helper.py", line 31, in call_nytimes
+    return r["results"]
+KeyError: 'results'
+</p>
+                            </td>
+                        </tr>
+                        <tr class='warning'>
+                            <td class="col-xs-10">test_get_endpoint_correct_2</td>
+                            <td class="col-xs-1">
+                                <span class="label label-warning" style="display:block;width:40px;">Error</span>
+                            </td>
+                            <td class="col-xs-1">
+                                <button class="btn btn-default btn-xs">View</button>
+                            </td>
+                        </tr>
+                        <tr style="display:none;">
+                            <td class="col-xs-9" colspan="3"><p style="color:maroon;">KeyError: 'results'</p><p style="color:maroon;">Traceback (most recent call last):
+  File "/home/veyis/Desktop/a2021SpringGroup12/practice-app/unittests/test_books.py", line 66, in test_get_endpoint_correct_2
+    return_value = self.app.get(f'/books/?name={self.input_books_from_nytimes[0].get("book_author")}&max_results=1')
+  File "/home/veyis/.local/lib/python3.8/site-packages/werkzeug/test.py", line 1127, in get
+    return self.open(*args, **kw)
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/testing.py", line 216, in open
+    return super().open(  # type: ignore
+  File "/home/veyis/.local/lib/python3.8/site-packages/werkzeug/test.py", line 1072, in open
+    response = self.run_wsgi_app(request.environ, buffered=buffered)
+  File "/home/veyis/.local/lib/python3.8/site-packages/werkzeug/test.py", line 943, in run_wsgi_app
+    rv = run_wsgi_app(self.application, environ, buffered=buffered)
+  File "/home/veyis/.local/lib/python3.8/site-packages/werkzeug/test.py", line 1229, in run_wsgi_app
+    app_rv = app(environ, start_response)
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 2088, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.handle_exception(e)
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/home/veyis/Desktop/a2021SpringGroup12/practice-app/main/main.py", line 37, in get_books
+    books = books_helper.call_nytimes(request.args.get("name"))
+  File "/home/veyis/Desktop/a2021SpringGroup12/practice-app/main/helpers/books_helper.py", line 31, in call_nytimes
+    return r["results"]
+KeyError: 'results'
+</p>
+                            </td>
+                        </tr>
+                        <tr class='success'>
+                            <td class="col-xs-10">test_get_endpoint_wrong_1</td>
+                            <td class="col-xs-1">
+                                <span class="label label-success" style="display:block;width:40px;">Pass</span>
+                            </td>
+                            <td class="col-xs-1">
+                            </td>
+                        </tr>
+                        <tr class='warning'>
+                            <td class="col-xs-10">test_get_endpoint_wrong_2</td>
+                            <td class="col-xs-1">
+                                <span class="label label-warning" style="display:block;width:40px;">Error</span>
+                            </td>
+                            <td class="col-xs-1">
+                                <button class="btn btn-default btn-xs">View</button>
+                            </td>
+                        </tr>
+                        <tr style="display:none;">
+                            <td class="col-xs-9" colspan="3"><p style="color:maroon;">KeyError: 'results'</p><p style="color:maroon;">Traceback (most recent call last):
+  File "/home/veyis/Desktop/a2021SpringGroup12/practice-app/unittests/test_books.py", line 76, in test_get_endpoint_wrong_2
+    return_value = self.app.get('/books/?name=iamPrettySureThisIsNotAValidAuthorName&max_results=1')
+  File "/home/veyis/.local/lib/python3.8/site-packages/werkzeug/test.py", line 1127, in get
+    return self.open(*args, **kw)
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/testing.py", line 216, in open
+    return super().open(  # type: ignore
+  File "/home/veyis/.local/lib/python3.8/site-packages/werkzeug/test.py", line 1072, in open
+    response = self.run_wsgi_app(request.environ, buffered=buffered)
+  File "/home/veyis/.local/lib/python3.8/site-packages/werkzeug/test.py", line 943, in run_wsgi_app
+    rv = run_wsgi_app(self.application, environ, buffered=buffered)
+  File "/home/veyis/.local/lib/python3.8/site-packages/werkzeug/test.py", line 1229, in run_wsgi_app
+    app_rv = app(environ, start_response)
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 2088, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.handle_exception(e)
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/home/veyis/Desktop/a2021SpringGroup12/practice-app/main/main.py", line 37, in get_books
+    books = books_helper.call_nytimes(request.args.get("name"))
+  File "/home/veyis/Desktop/a2021SpringGroup12/practice-app/main/helpers/books_helper.py", line 31, in call_nytimes
+    return r["results"]
+KeyError: 'results'
+</p>
+                            </td>
+                        </tr>
+                        <tr class='warning'>
+                            <td class="col-xs-10">test_get_endpoint_wrong_3</td>
+                            <td class="col-xs-1">
+                                <span class="label label-warning" style="display:block;width:40px;">Error</span>
+                            </td>
+                            <td class="col-xs-1">
+                                <button class="btn btn-default btn-xs">View</button>
+                            </td>
+                        </tr>
+                        <tr style="display:none;">
+                            <td class="col-xs-9" colspan="3"><p style="color:maroon;">KeyError: 'results'</p><p style="color:maroon;">Traceback (most recent call last):
+  File "/home/veyis/Desktop/a2021SpringGroup12/practice-app/unittests/test_books.py", line 81, in test_get_endpoint_wrong_3
+    return_value = self.app.get('/books/?name=Cem Say&max_results=letsputastringhere')
+  File "/home/veyis/.local/lib/python3.8/site-packages/werkzeug/test.py", line 1127, in get
+    return self.open(*args, **kw)
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/testing.py", line 216, in open
+    return super().open(  # type: ignore
+  File "/home/veyis/.local/lib/python3.8/site-packages/werkzeug/test.py", line 1072, in open
+    response = self.run_wsgi_app(request.environ, buffered=buffered)
+  File "/home/veyis/.local/lib/python3.8/site-packages/werkzeug/test.py", line 943, in run_wsgi_app
+    rv = run_wsgi_app(self.application, environ, buffered=buffered)
+  File "/home/veyis/.local/lib/python3.8/site-packages/werkzeug/test.py", line 1229, in run_wsgi_app
+    app_rv = app(environ, start_response)
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 2088, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.handle_exception(e)
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/veyis/.local/lib/python3.8/site-packages/flask/app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/home/veyis/Desktop/a2021SpringGroup12/practice-app/main/main.py", line 37, in get_books
+    books = books_helper.call_nytimes(request.args.get("name"))
+  File "/home/veyis/Desktop/a2021SpringGroup12/practice-app/main/helpers/books_helper.py", line 31, in call_nytimes
+    return r["results"]
+KeyError: 'results'
+</p>
+                            </td>
+                        </tr>
+                        <tr class='success'>
+                            <td class="col-xs-10">test_get_n_blank_input</td>
+                            <td class="col-xs-1">
+                                <span class="label label-success" style="display:block;width:40px;">Pass</span>
+                            </td>
+                            <td class="col-xs-1">
+                            </td>
+                        </tr>
+                        <tr class='success'>
+                            <td class="col-xs-10">test_get_n_correct_input_1</td>
+                            <td class="col-xs-1">
+                                <span class="label label-success" style="display:block;width:40px;">Pass</span>
+                            </td>
+                            <td class="col-xs-1">
+                            </td>
+                        </tr>
+                        <tr class='success'>
+                            <td class="col-xs-10">test_get_n_correct_input_2</td>
+                            <td class="col-xs-1">
+                                <span class="label label-success" style="display:block;width:40px;">Pass</span>
+                            </td>
+                            <td class="col-xs-1">
+                            </td>
+                        </tr>
+                        <tr class='success'>
+                            <td class="col-xs-10">test_get_n_wrong_input</td>
+                            <td class="col-xs-1">
+                                <span class="label label-success" style="display:block;width:40px;">Pass</span>
+                            </td>
+                            <td class="col-xs-1">
+                            </td>
+                        </tr>
+                        <tr class='danger'>
+                            <td class="col-xs-10">test_post_endpoint_correct</td>
+                            <td class="col-xs-1">
+                                <span class="label label-danger" style="display:block;width:40px;">Fail</span>
+                            </td>
+                            <td class="col-xs-1">
+                                <button class="btn btn-default btn-xs">View</button>
+                            </td>
+                        </tr>
+                        <tr style="display:none;">
+                            <td class="col-xs-9" colspan="3"><p style="color:maroon;">AssertionError: '403 FORBIDDEN' != '200 OK'
+- 403 FORBIDDEN
++ 200 OK
+</p><p style="color:maroon;">Traceback (most recent call last):
+  File "/home/veyis/Desktop/a2021SpringGroup12/practice-app/unittests/test_books.py", line 96, in test_post_endpoint_correct
+    self.assertEqual(return_value.status, "200 OK")
+  File "/snap/pycharm-professional/244/plugins/python/helpers/pycharm/teamcity/diff_tools.py", line 32, in _patched_equals
+    old(self, first, second, msg)
+AssertionError: '403 FORBIDDEN' != '200 OK'
+- 403 FORBIDDEN
++ 200 OK
+
+</p>
+                            </td>
+                        </tr>
+                        <tr class='danger'>
+                            <td class="col-xs-10">test_post_endpoint_wrong_1</td>
+                            <td class="col-xs-1">
+                                <span class="label label-danger" style="display:block;width:40px;">Fail</span>
+                            </td>
+                            <td class="col-xs-1">
+                                <button class="btn btn-default btn-xs">View</button>
+                            </td>
+                        </tr>
+                        <tr style="display:none;">
+                            <td class="col-xs-9" colspan="3"><p style="color:maroon;">AssertionError: b'unable to open database file' != b'UNIQUE constraint failed: Books.book_title, Books.book_author'</p><p style="color:maroon;">Traceback (most recent call last):
+  File "/home/veyis/Desktop/a2021SpringGroup12/practice-app/unittests/test_books.py", line 88, in test_post_endpoint_wrong_1
+    self.assertEqual(return_value.data, b'UNIQUE constraint failed: Books.book_title, Books.book_author')
+  File "/snap/pycharm-professional/244/plugins/python/helpers/pycharm/teamcity/diff_tools.py", line 32, in _patched_equals
+    old(self, first, second, msg)
+AssertionError: b'unable to open database file' != b'UNIQUE constraint failed: Books.book_title, Books.book_author'
+</p>
+                            </td>
+                        </tr>
+                        <tr class='success'>
+                            <td class="col-xs-10">test_post_endpoint_wrong_2</td>
+                            <td class="col-xs-1">
+                                <span class="label label-success" style="display:block;width:40px;">Pass</span>
+                            </td>
+                            <td class="col-xs-1">
+                            </td>
+                        </tr>
+                        <tr class='success'>
+                            <td class="col-xs-10">test_validate_body_blank_input</td>
+                            <td class="col-xs-1">
+                                <span class="label label-success" style="display:block;width:40px;">Pass</span>
+                            </td>
+                            <td class="col-xs-1">
+                            </td>
+                        </tr>
+                        <tr class='success'>
+                            <td class="col-xs-10">test_validate_body_correct_input</td>
+                            <td class="col-xs-1">
+                                <span class="label label-success" style="display:block;width:40px;">Pass</span>
+                            </td>
+                            <td class="col-xs-1">
+                            </td>
+                        </tr>
+                        <tr class='success'>
+                            <td class="col-xs-10">test_validate_body_optional_correct_input</td>
+                            <td class="col-xs-1">
+                                <span class="label label-success" style="display:block;width:40px;">Pass</span>
+                            </td>
+                            <td class="col-xs-1">
+                            </td>
+                        </tr>
+                        <tr class='success'>
+                            <td class="col-xs-10">test_validate_body_wrong_input1</td>
+                            <td class="col-xs-1">
+                                <span class="label label-success" style="display:block;width:40px;">Pass</span>
+                            </td>
+                            <td class="col-xs-1">
+                            </td>
+                        </tr>
+                        <tr class='success'>
+                            <td class="col-xs-10">test_validate_body_wrong_input2</td>
+                            <td class="col-xs-1">
+                                <span class="label label-success" style="display:block;width:40px;">Pass</span>
+                            </td>
+                            <td class="col-xs-1">
+                            </td>
+                        </tr>
+                        <tr class='success'>
+                            <td class="col-xs-10">test_validate_input_correct_input</td>
+                            <td class="col-xs-1">
+                                <span class="label label-success" style="display:block;width:40px;">Pass</span>
+                            </td>
+                            <td class="col-xs-1">
+                            </td>
+                        </tr>
+                        <tr class='success'>
+                            <td class="col-xs-10">test_validate_input_wrong_input</td>
+                            <td class="col-xs-1">
+                                <span class="label label-success" style="display:block;width:40px;">Pass</span>
+                            </td>
+                            <td class="col-xs-1">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                Total: 26, Pass: 18, Fail: 2, Error: 6 -- Duration: 6.83 s
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('td').on('click', '.btn', function(e){
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                var $this = $(this);
+                var $nextRow = $this.closest('tr').next('tr');
+                $nextRow.slideToggle("fast");
+                $this.text(function(i, text){
+                    if (text === 'View') {
+                        return 'Hide';
+                    } else {
+                        return 'View';
+                    };
+                });
+            });
+        });
+    </script>
+</body>
+</html

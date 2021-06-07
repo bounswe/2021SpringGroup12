@@ -4,6 +4,7 @@ from .schemas import Book, Issue, Quote, Genre, SearchResult, Anime, CreateAnime
 from helpers import issue_helper
 
 
+
 def book_mapper(book: dict) -> Book:
     return Book(
         book_title=book["book_title"],
