@@ -11,6 +11,9 @@ import QuoteHome from '../quotes/pages/QuoteHome.vue';
 import PostQuote from '../quotes/pages/PostQuote.vue';
 import GetQuote from '../quotes/pages/GetQuote.vue';
 import RandomQuote from '../quotes/pages/RandomQuote.vue';
+import CocktailHome from '../cocktails/pages/CocktailHome.vue'
+import PostCocktail from '../cocktails/pages/PostCocktail.vue';
+import GetCocktails from '../cocktails/pages/GetCocktails.vue';
 
 const routes = [
   {
@@ -72,6 +75,21 @@ const routes = [
     path: '/quotes',
     name: 'QuoteHome',
     component: QuoteHome,
+  },
+  {
+    path: '/postcocktail',
+    name: 'PostCocktail',
+    component: PostCocktail,
+  },
+  {
+    path: '/getcocktails',
+    name: 'GetCocktails',
+    component: GetCocktails,
+  },
+  {
+    path: '/cocktails',
+    name: 'CocktailHome',
+    component: CocktailHome,
   },
 ];
 

@@ -7,7 +7,7 @@ from flask import Flask, jsonify, Response, request
 import requests
 from db import schemas, mapper
 import sqlite3
-from helpers import issue_helper, books_helper, quote_helper
+from helpers import issue_helper, books_helper, quote_helper, cocktail_helper
 from helpers.issue_helper import ALL_ISSUES
 import random
 from flask_cors import CORS
@@ -146,6 +146,41 @@ def not_found(error):
     # return make_response(jsonify({'error': 'Task was not found'}), 404)
     return "page not found :("
 
+@app.route('/cocktails/get_cocktails/', methods=['GET'])
+def get_cocktails():
+    x = cocktail_helper.validate_get_input(request.args)
+    if x is not None:
+        return x
+        #cocktail_name has captured
+    cocktail_name = request.args.get("cocktail_name")
+        #taking data in json formats
+    r = requests.get("http://www.thecocktaildb.com/api/json/v1/1/search.php?s={}".format(cocktail_name))
+    r = r.json()
+   
+    check = cocktail_helper.non_existing_cocktail_name_check(r)
+    if check is not None:
+        return check
 
+    cocktails = [mapper.cocktail_mapper(s) for s in r["drinks"]]
+
+            # We can have more than one cocktail including the cocktail name (margarita, blue margarita) or the keyword can be any place in the name of the cocktail.
+    cocktail_helper.add_cocktails_from_user(cocktails)
+
+    return schemas.CocktailResponse(cocktails=cocktails).__dict__ 
+
+
+@app.route('/cocktails/create_cocktail/', methods=['GET','POST'])
+def create_cocktail():
+    cocktail_fields=request.get_json()
+    if cocktail_fields is None:
+        return Response("Body is empty!",status=400)
+    cocktail = cocktail_helper.validate_post_cocktail(cocktail_fields)
+    if type(cocktail) is not schemas.Cocktail:
+        return cocktail
+        # connect to Database
+    db_response=cocktail_helper.add_cocktail_from_user(cocktail)
+
+    return db_response if db_response is not None else Response("Cocktail added succesfully!", status=200)
+    
 if __name__ == '__main__':
     app.run(debug=True)
