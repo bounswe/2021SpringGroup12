@@ -30,10 +30,9 @@ def issue_mapper(issue: dict) -> Issue:
     )
 def quote_mapper(quote: dict) -> Quote:
     return Quote(
-        quoteId= quote["_id"],
-        quoteAuthor= quote["quoteAuthor"],
-        quoteGenre= quote["quoteGenre"],
-        quoteText= quote["quoteText"],
-        #last = quote["__v"]
+        quoteId=quote["_id"],
+        quoteAuthor=quote["quoteAuthor"],
+        quoteGenre=quote["quoteGenre"],
+        quoteText=quote["quoteText"],
         )
 

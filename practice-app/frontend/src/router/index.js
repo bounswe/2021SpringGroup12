@@ -7,6 +7,9 @@ import AnimePost from '../anime/views/Post.vue';
 import BooksPostHome from '../books/pages/PostBook.vue';
 import BooksGetHome from '../books/pages/GetBook.vue';
 import BooksHome from '../books/pages/BooksHome.vue';
+import QuoteHome from '../quotes/pages/QuoteHome.vue';
+import PostQuote from '../quotes/pages/PostQuote.vue';
+import GetQuote from '../quotes/pages/GetQuote.vue';
 
 const routes = [
   {
@@ -48,6 +51,21 @@ const routes = [
     path: '/anime/post',
     name: 'Post',
     component: AnimePost,
+  },
+    {
+    path: '/getquotes',
+    name: 'GetQuote',
+    component: GetQuote,
+  },
+  {
+    path: '/postquotes',
+    name: 'PostQuote',
+    component: PostQuote,
+  },
+  {
+    path: '/quotes',
+    name: 'QuoteHome',
+    component: QuoteHome,
   },
 ];
 
