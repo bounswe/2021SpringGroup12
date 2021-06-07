@@ -13,12 +13,9 @@ def get_genres():
 
 
 def validate_input(params):
-    t = get_genres()
-    temp = ''
-    for i in t:
-        temp = temp + i + ', '
+
     if "genre" not in params:
-        temp = "Please provide an genre name! Possible genres: " + temp
+        temp = "Please provide a valid genre name!"
         return Response(temp, status=400)
 
 

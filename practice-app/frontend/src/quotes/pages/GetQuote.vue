@@ -11,6 +11,17 @@
       </label>
       <button type="submit">Get Quotes</button>
     </form>
+
+    <h3>Possible genres:</h3>
+      <p>age, alone, amazing, anger, anniversary, architecture, art, attitude, beauty, best, birthday,
+      business, car, change, communication, computers, cool, courage, dad, dating, death, design, diet, dreams, education,
+      environmental, equality, experience, failure, faith, family, famous, fear, finance, fitness, food, forgiveness,
+      freedom, friendship, funny, future, gardening, god, good, government, graduation, great, happiness, health, history,
+      home, hope, humor, imagination, inspirational, intelligence, jealousy, knowledge, leadership, learning, legal, life,
+      love, marriage, medical, men, mom, money, morning, motivational, movies, movingon, music, nature, parenting, patience,
+      patriotism, peace, pet, poetry, politics, positive, power, relationship, religion, respect, romantic, sad, science,
+      smile, society, sports, strength, success, sympathy, teacher, technology, teen, thankful, time, travel, trust,
+      truth, war, wedding</p>
 <!--    <ResponseList v-if="!loading && !error" :issues="issues" />-->
 
     <div class="mt-5" v-if="end">
