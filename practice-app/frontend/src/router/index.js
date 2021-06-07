@@ -10,6 +10,7 @@ import BooksHome from '../books/pages/BooksHome.vue';
 import QuoteHome from '../quotes/pages/QuoteHome.vue';
 import PostQuote from '../quotes/pages/PostQuote.vue';
 import GetQuote from '../quotes/pages/GetQuote.vue';
+import RandomQuote from '../quotes/pages/RandomQuote.vue';
 
 const routes = [
   {
@@ -61,6 +62,11 @@ const routes = [
     path: '/postquotes',
     name: 'PostQuote',
     component: PostQuote,
+  },
+  {
+    path: '/randomquote',
+    name: 'RandomQuote',
+    component: RandomQuote,
   },
   {
     path: '/quotes',

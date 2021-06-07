@@ -1,15 +1,9 @@
 <template>
   <Layout>
     <form v-if="!sent" class="postForm" @submit.prevent="getIssues">
-      <p>Get Quotes</p>
-      <label>
-        <input
-          type="text"
-          placeholder="required"
-          v-model="quote_type"
-        />
-      </label>
-      <button type="submit">Get Quotes</button>
+      <p>Get Random Quote</p>
+
+      <button type="submit">Get Random</button>
     </form>
 <!--    <ResponseList v-if="!loading && !error" :issues="issues" />-->
 
@@ -53,8 +47,7 @@ export default {
     return {
       error: null,
       end: false,
-      data: [],
-      quote_type : ""
+      data: []
     };
   },
   methods: {
@@ -79,7 +72,7 @@ export default {
       try {
         this.end = false;
         this.error = null;
-        const url = `http://127.0.0.1:5000/quotes/?genre=${this.quote_type}`;
+        const url = `http://127.0.0.1:5000/randomQuotes/`;
         const response = await axios.get(url,{ headers });
         this.data = response.data['data'];
         for (let i = 0; i < this.data.length; i++) {

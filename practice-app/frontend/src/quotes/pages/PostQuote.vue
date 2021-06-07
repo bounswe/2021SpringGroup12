@@ -1,34 +1,29 @@
 
 <template>
   <div class="login">
-    <b><mark>Post Quote</mark></b
+    <b><mark> Post Quote</mark></b
     ><br />
     <form v-if="!sent" class="postForm" @submit.prevent="postAddUser">
-      <p>Quote Id</p>
-      <input
-        type="text"
-        placeholder="required"
-        v-model="user_body._id"
-      />
-      <p>Quote Author</p>
-      <input
-        type="text"
-        placeholder="required"
-        v-model="user_body.quoteAuthor"
-      />
-      <p>Quote Genre</p>
-      <input
-        type="text"
-        placeholder="required"
-        v-model="user_body.quoteGenre"
-      />
-      <p>Quote Text</p>
-      <input
-        type="text"
-        placeholder="required"
-        v-model="user_body.quoteText"
-      />
-
+      <p>ID</p>
+      <label>
+        <input
+          type="text"
+          placeholder="required"
+          v-model="user_body._id"
+        />
+      </label>
+      <p>Author</p>
+      <label>
+        <input
+          type="text"
+          placeholder="required"
+          v-model="user_body.quoteAuthor"
+        />
+      </label>
+      <p>Genre</p>
+      <input type="text" placeholder="required" v-model="user_body.quoteGenre" />
+      <p>Text</p>
+      <input type="text" placeholder="required" v-model="user_body.quoteText" />
 
       <br /><br />
       <br />
@@ -54,10 +49,10 @@ export default {
       searchQuery: "",
       searchError: null,
       user_body: {
-        _id:"",
-        quoteAuthor:"",
-        quoteGenre:"",
-        quoteText:"",
+        _id: "",
+        quoteAuthor: "",
+        quoteGenre: "",
+        quoteText: "",
       },
     };
   },
@@ -68,7 +63,7 @@ export default {
       this.response = "";
       this.fail = false;
       this.error = null;
-      const url = `http://127.0.0.1:5000/addQuotes`;
+      const url = `http://127.0.0.1:5000/addQuotes/`;
 
 
       const response = await axios

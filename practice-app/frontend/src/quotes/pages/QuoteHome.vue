@@ -1,5 +1,6 @@
 <template>
   <div id="nav">
+    <router-link to="/randomquote">Get Random Quotes</router-link> |
     <router-link to="/getquotes">Get Quotes </router-link> |
     <router-link to="/postquotes">Post A Quote </router-link>
   </div>
