@@ -1,14 +1,48 @@
 <template>
   <Layout>
-    <ResponseFilter v-model="section" :fetch="fetchResponse" />
-    <ResponseList v-if="!loading && !error" :posts="posts" />
-    <!-- Start of loading animation -->
-    <div class="mt-40" v-if="loading">
-      <p class="text-6xl font-bold text-center text-gray-500 animate-pulse">
-        Loading...
+    <form v-if="!sent" class="postForm" @submit.prevent="getBooks">
+      <p>
+        Author Name
+        <label>
+          <input type="text" placeholder="required" v-model="name" />
+        </label>
       </p>
+      <p>
+        Max Result
+        <label>
+          <input type="text" placeholder="required" v-model="max_results" />
+        </label>
+      </p>
+      <button type="submit">Get Books</button>
+    </form>
+
+    <div class="mt-5" v-if="end">
+      <table border="1px solid black">
+        <tr>
+          <th>Number</th>
+          <th>Title</th>
+          <th>Author</th>
+          <th>URL</th>
+          <th>Publication Date</th>
+          <th>Summary</th>
+          <th>uuid</th>
+          <th>uri</th>
+          <th>Isbn13</th>
+        </tr>
+
+        <tr v-for="(book, index) in books">
+          <td>{{ index + 1 }}</td>
+          <td>{{ book.book_title }}</td>
+          <td>{{ book.book_author }}</td>
+          <td><a :href="book.url" >{{book.url}}</a></td>
+          <td>{{ book.publication_dt }}</td>
+          <td>{{ book.summary }}</td>
+          <td>{{ book.uuid }}</td>
+          <td>{{ book.uri }}</td>
+          <td>{{ book.isbn13 }}</td>
+        </tr>
+      </table>
     </div>
-    <!-- End of loading animation -->
 
     <!-- Start of error alert -->
     <div class="mt-12 bg-red-50" v-if="error">
@@ -24,77 +58,44 @@
 <script>
 import axios from "axios";
 import Layout from "../components/Layout.vue";
-import ResponseFilter from "../components/UserResponseFilter.vue";
-import ResponseList from "../components/ResponseList.vue";
-
 export default {
   components: {
     Layout,
-    ResponseFilter,
-    ResponseList,
   },
   data() {
     return {
-      section: [],
-      posts: [],
-      loading: false,
       error: null,
+      end: false,
+      books: [],
+      name: "",
+      max_results: "",
     };
   },
   methods: {
-    extractImage(post) {
-      const defaultImg = {
-        url: "http://placehold.it/210x140?text=N/A",
-        caption: post.title,
-      };
-      return defaultImg;
-    },
-    header(value) {
-      if (!value) return "";
-      value = value.toString();
-      return value;
-    },
-    async fetchResponse() {
+
+    async getBooks() {
       const headers = {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
       };
-
       try {
+        this.end = false;
         this.error = null;
-        this.loading = true;
-
-        console.log(this.section);
-        const response = axios
-          .get("http://127.0.0.1:5000/books/?" + this.section, { headers })
-          .then((value) => {
-
-            if (value.data.num_results == 0) {
-              this.posts = [{
-                no_result:"This author does not have any book in the system.",  
-              }];
-            } else {
-              this.posts = value.data.books.map((post) => ({
-                Author: post.book_author,
-                Title: post.book_title,
-                Publication_Date: post.publication_dt,
-                Summary: post.summary,
-                Uuid: post.uuid,
-                Uri: post.uri,
-                Isbn13: post.isbn13,
-              }));
-            }
-          })
-          .catch((reason) => {
-            console.log(reason);
-            this.posts = [
-              {
-                status: reason.response.status,
-                statusText: reason.response.statusText,
-                detail: reason.response.data,
-              },
-            ];
-          });
+        const url = `http://127.0.0.1:5000/books/?name=${this.name}&max_results=${this.max_results}`;
+        const response = await axios.get(url, { headers });
+        console.log(response);
+        this.data = response.data;
+        console.log(this.data);
+        this.books = response.data.books.map((book) => ({
+          book_title: book.book_title,
+          book_author: book.book_author,
+          url: book.url,
+          publication_dt: book.publication_dt,
+          summary: book.summary,
+          uuid: book.uuid,
+          uri: book.uri,
+          isbn13: book.isbn13,
+        }));
       } catch (err) {
         if (err.response) {
           // client received an error response (5xx, 4xx)
@@ -116,11 +117,8 @@ export default {
           };
         }
       }
-      this.loading = false;
+      this.end = true;
     },
-  },
-  mounted() {
-    this.fetchResponse();
   },
 };
 </script>

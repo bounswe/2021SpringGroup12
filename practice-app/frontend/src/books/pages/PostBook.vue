@@ -1,7 +1,7 @@
 
 <template>
   <div class="login">
-    <b><mark> Post Books</mark></b
+    <h2 v-if="!sent"><mark> Post Books</mark></h2
     ><br />
     <form v-if="!sent" class="postForm" @submit.prevent="postAddUser">
       <p>Author Name</p>
@@ -17,17 +17,21 @@
         v-model="user_body.book_title"
       />
       <p>url</p>
-      <input type="text" v-model="user_body.url" />
+      <textarea type="text" v-model="user_body.url" />
       <p>Publication Date</p>
-      <input type="text" v-model="user_body.publication_dt" />
+      <input
+        type="text"
+        placeholder="year-month-day"
+        v-model="user_body.publication_dt"
+      />
       <p>Summary</p>
-      <input type="text" v-model="user_body.summary" />
+      <textarea type="text" v-model="user_body.summary" />
       <p>UUID</p>
       <input type="text" v-model="user_body.uuid" />
       <p>Uri</p>
       <input type="text" v-model="user_body.uri" />
       <p>ISBN13</p>
-      <input
+      <textarea
         type="text"
         placeholder="comma seperated"
         v-model="user_body.isbn13s"
@@ -38,6 +42,9 @@
     </form>
 
     <h1 v-if="success">{{ this.response }}</h1>
+    <h3 v-if="success">
+      <a href="http://localhost:8080/postbooks">Post another book</a>
+    </h3>
     <h1 v-if="fail">{{ this.error }}</h1>
   </div>
 </template>
