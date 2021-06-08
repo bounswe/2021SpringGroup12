@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, NamedTuple
 from pydantic import BaseModel
 
 
@@ -39,9 +39,47 @@ class Issue(BaseModel):
     labels: List[str]
     state: str
 
+class SearchedAnime(BaseModel):
+    title: str
+    image: str
+    synopsis: str
+    type: str
+    start_date: str
+    end_date: str
+    score: float
+    rating: str
+    airing: bool
+    mal_id: int
 
-class CurrencyRate(BaseModel):
-    date: str
-    from_curr: str
-    to_curr: str
-    rate: float
+class RelatedAnime(NamedTuple):
+    title: str
+    mal_id: int
+
+class Anime(BaseModel):
+    title: str
+    mal_id: int
+    episodes: int 
+    image: str
+    airing: bool
+    start_date:Optional[str]
+    end_date:Optional[str]
+    score: int
+    rating: str
+    type: str
+    synopsis: str
+    duration: int
+    sequel: Optional[RelatedAnime]
+    prequel: Optional[RelatedAnime]
+    genres: List[str]
+
+class UserAnime(BaseModel):
+    title: str
+    episodes: int
+    image: str
+    airing: bool
+    start_date: str
+    end_date: str
+    score: float
+    rating: str
+    type: str
+    synopsis: str

@@ -1,8 +1,7 @@
 <template>
   <div id="nav">
     <router-link to="/">Home</router-link> |
-    <router-link to="/anime">Anime</router-link> | 
-    <router-link to="/books">Books</router-link>
+    <router-link to="/anime">Anime</router-link>
   </div>
   <router-view/>
 </template>
