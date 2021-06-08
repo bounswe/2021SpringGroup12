@@ -2,19 +2,19 @@
 # To run: read README.md
 ##
 # NOTE: Remember you have to set your virtual environment and install flask
-
+import sys
+sys.path.append(".")
 from flask import Flask, jsonify, Response, request
 import requests
-from db import schemas, mapper
+from main.db import schemas, mapper
 import sqlite3
-
-from helpers import issue_helper, books_helper, currency_helper
-from helpers.issue_helper import ALL_ISSUES
+from main.helpers import issue_helper, books_helper, anime_helper, currency_helper
 import random
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
-
+CORS(app)
 """
 to read body: request.get_json() or request.form
 to read query parameters:  request.args.get(<argname>) or request.args.to_dict() or request.query_string.decode("utf-8")
@@ -41,12 +41,14 @@ def get_books():
     # Let's store this book in database for further references.
     books_helper.add_books_from_nytimes(books)
     ## don't return all books, return just as much as user wants
-    books = books_helper.get_n(books,request.args.get("max_results"))
+    books = books_helper.get_n(books,request.args)
     return books if type(books) != list else schemas.BookResponse(num_results=len(books), books=books).__dict__
 
 
 @app.route('/books/', methods=['POST'])
 def create_book():
+    if request.get_json() is None:
+        return Response("Body is empty!",status=400)
     book = books_helper.validate_body(request.get_json())
     if type(book) is not schemas.Book:
         return book
@@ -146,7 +148,7 @@ def get_quote_opt():
         temp = "Please provide an genre name or indicate it is random! Possible genres: " + temp
         return Response(temp, status=400)
     quotes = [mapper.quote_mapper(s) for s in r['data']]
-    con = sqlite3.connect("../../sqlfiles/practice-app.db")
+    con = sqlite3.connect("../../../sqlfiles/practice-app.db")
     cur = con.cursor()
     for quote in quotes:
         print(quote.quoteId)
@@ -208,7 +210,49 @@ def create_currency_hist():
 def not_found(error):
     # a friendlier error handling message
     # return make_response(jsonify({'error': 'Task was not found'}), 404)
-    return "404"
+    return "page not found :("
+
+@app.route('/anime/search/', methods=['GET'])
+def search_anime():
+    params = request.args
+    #Validation
+    validation = anime_helper.validate_search_params(params)
+    if validation is not None:
+        return validation
+    #API Connection
+    search_result = anime_helper.jikan_api_search(params)
+    if type(search_result) != list:
+        return search_result
+    #Map result
+    searched_animes = [mapper.searched_anime_mapper(anime).dict() for anime in search_result]
+    #Return results
+    return jsonify(searched_animes)
+
+@app.route('/anime/<int:id>', methods=['GET'])
+def get_anime(id: int):
+    anime_helper.jikan_api_get(id)
+    #API Connection
+    result = anime_helper.jikan_api_get(id)
+    if type(result) == Response:
+        return result
+    #Map Result
+    anime = mapper.anime_mapper(result).dict()
+    #Add to DB
+    db_response = anime_helper.add_mal_anime_to_db(anime)
+    if type(db_response) == Response:
+        return db_response
+    #Return results
+    return anime
+
+@app.route('/anime/', methods=['POST'])
+def post_anime():
+    #Get the request body
+    requestBody = request.json
+    #Map to object
+    post_anime = mapper.create_anime_mapper(requestBody).dict()
+    #Add to DB
+    database_response = anime_helper.add_user_anime_to_db(post_anime)
+    return Response("Anime added successfully", status=200) if database_response is None else database_response
 
 
 if __name__ == '__main__':
