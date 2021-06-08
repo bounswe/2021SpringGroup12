@@ -1,5 +1,5 @@
-from .schemas import Book, Issue, Quote
-from helpers import issue_helper
+from main.db.schemas import Book, Issue, Quote
+from main.helpers import issue_helper
 
 
 def book_mapper(book: dict) -> Book:

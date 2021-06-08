@@ -2,13 +2,13 @@
 # To run: read README.md
 ##
 # NOTE: Remember you have to set your virtual environment and install flask
-
+import sys
+sys.path.append(".")
 from flask import Flask, jsonify, Response, request
 import requests
-from db import schemas, mapper
+from main.db import schemas, mapper
 import sqlite3
-from helpers import issue_helper, books_helper
-from helpers.issue_helper import ALL_ISSUES
+from main.helpers import issue_helper, books_helper
 import random
 from flask_cors import CORS
 
@@ -49,7 +49,6 @@ def get_books():
 def create_book():
     if request.get_json() is None:
         return Response("Body is empty!",status=400)
-    print(request.get_json())
     book = books_helper.validate_body(request.get_json())
     if type(book) is not schemas.Book:
         return book
@@ -149,7 +148,7 @@ def get_quote_opt():
         temp = "Please provide an genre name or indicate it is random! Possible genres: " + temp
         return Response(temp, status=400)
     quotes = [mapper.quote_mapper(s) for s in r['data']]
-    con = sqlite3.connect("../../sqlfiles/practice-app.db")
+    con = sqlite3.connect("../../../sqlfiles/practice-app.db")
     cur = con.cursor()
     for quote in quotes:
         print(quote.quoteId)
