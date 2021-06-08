@@ -46,9 +46,9 @@ export default {
         const anime = response.data;
         this.anime = {
           title: anime.title,
-          id: anime.id,
+          id: anime.mal_id,
           episodes: anime.episodes,
-          image: anime.image_url,
+          image: anime.image,
           airing: anime.airing,
           start_date: anime.start_date
             ? new Date(anime.start_date).toLocaleDateString('en-US', {
@@ -76,7 +76,6 @@ export default {
           title: 'error',
           message: err.response.data.msg,
         };
-        console.log(this.error);
       }
       this.loading = false;
     },
