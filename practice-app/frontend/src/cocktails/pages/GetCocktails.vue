@@ -2,10 +2,11 @@
   <Layout>
     <form v-if="!sent" class="postForm" @submit.prevent="getCocktails">
       <p>Get Cocktails</p>
+      <p>Run empty to see all cocktails!</p>
       <label>
         <input
           type="text"
-          placeholder="required"
+          placeholder="Cocktail Name"
           v-model="cocktail_type"
         />
       </label>
@@ -80,6 +81,7 @@ export default {
       return value;
     },
     async getCocktails() {
+      
       const headers = {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -91,6 +93,7 @@ export default {
         const url = `http://127.0.0.1:5000/cocktails/get_cocktails/?cocktail_name=${this.cocktail_type}`;
         const response = await axios.get(url,{ headers });
         this.data = response.data['cocktails'];
+        if(this.data != null ){
         for (let i = 0; i < this.data.length; i++) {
           let cocktail = this.data[i]
           this.data[i] = {
@@ -103,8 +106,15 @@ export default {
                 Instructions: cocktail.instructions,
               };
         }
+        }
+        else{
+          this.error = {
+            title: "There is no cocktail including this keyword!"
+          }
+        }
 
       } catch (err) {
+        console.log(err)
         if (err.response) {
           // client received an error response (5xx, 4xx)
           this.error = {

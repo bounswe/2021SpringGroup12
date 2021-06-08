@@ -1,3 +1,7 @@
+import os, sys
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
 import sqlite3
 from sqlite3 import Cursor
 from typing import List
@@ -19,7 +23,7 @@ def validate_get_input(params):
 def non_existing_cocktail_name_check(r):
     #check "to" field validity
     if r["drinks"] == None:
-        return Response("Please provide an existing cocktail name!", status=400)
+        return "Please provide an existing cocktail name!"
 
 def add_cocktails_from_user(cocktails):
     con = sqlite3.connect(DB_PATH+"practice-app.db")
@@ -40,7 +44,7 @@ def add_cocktail_from_user(Cocktail):
     try:
         cur.execute("INSERT INTO Cocktails(cocktail_name,ingredient_1, ingredient_2, ingredient_3,ingredient_4, glass, instructions) VALUES (?,?,?,?,?,?,?)", (Cocktail.cocktail_name, Cocktail.ingredient_1, Cocktail.ingredient_2, Cocktail.ingredient_3, Cocktail.ingredient_4, Cocktail.glass, Cocktail.instructions))
     except Exception as err:
-        return Response(str(err), status=403)
+        return "This cocktail name is taken already! Try different cocktail name."
     con.commit()
     con.close()
 

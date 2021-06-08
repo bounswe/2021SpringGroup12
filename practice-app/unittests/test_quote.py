@@ -1,9 +1,10 @@
 import unittest
 import os
 from main.helpers.quote_helper import *
+import requests
 import json
 from main import main
-import requests
+
 
 
 class TestQuotesEndpoint(unittest.TestCase):
@@ -14,10 +15,11 @@ class TestQuotesEndpoint(unittest.TestCase):
                 "quoteGenre": "basketball",
                 "quoteText": "basketball is great"
                 """
-
+    """
     def setUp(self):
         main.app.testing = True
         self.app = main.app.test_client()
+    """
     # test genres endpoint
     def test_other_endpoint_get_genres(self):
         t = requests.get("https://quote-garden.herokuapp.com/api/v3/genres")
@@ -49,9 +51,6 @@ class TestQuotesEndpoint(unittest.TestCase):
     def test_endpoint_post(self):
         return_value = self.app.post(f'/addQuotes/', json={})
         self.assertEqual(return_value.status, '400 BAD REQUEST')
-
-
-
 
 
 
