@@ -2,10 +2,10 @@ import sqlite3
 from sqlite3 import Cursor
 from typing import List
 
-from db.schemas import NameInfo
+from main.db.schemas import NameInfo
 
 
-DB_LOC = "../../sqlfiles/practice-app.db"
+DB_LOC = "C:/Users/fb_be/Documents/GitHub/2021SpringGroup12/practice-app/sqlfiles/practice-app.db"
 
 
 def insert_name_info(nameInfo: NameInfo):
