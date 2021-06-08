@@ -2,19 +2,20 @@
 # To run: read README.md
 ##
 # NOTE: Remember you have to set your virtual environment and install flask
-
+import sys
+sys.path.append(".")
 from flask import Flask, jsonify, Response, request
 import requests
-from db import schemas, mapper
+from main.db import schemas, mapper
 import sqlite3
 
 from helpers import issue_helper, books_helper, currency_helper
-from helpers.issue_helper import ALL_ISSUES
 import random
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
-
+CORS(app)
 """
 to read body: request.get_json() or request.form
 to read query parameters:  request.args.get(<argname>) or request.args.to_dict() or request.query_string.decode("utf-8")
@@ -41,12 +42,14 @@ def get_books():
     # Let's store this book in database for further references.
     books_helper.add_books_from_nytimes(books)
     ## don't return all books, return just as much as user wants
-    books = books_helper.get_n(books,request.args.get("max_results"))
+    books = books_helper.get_n(books,request.args)
     return books if type(books) != list else schemas.BookResponse(num_results=len(books), books=books).__dict__
 
 
 @app.route('/books/', methods=['POST'])
 def create_book():
+    if request.get_json() is None:
+        return Response("Body is empty!",status=400)
     book = books_helper.validate_body(request.get_json())
     if type(book) is not schemas.Book:
         return book
@@ -146,7 +149,7 @@ def get_quote_opt():
         temp = "Please provide an genre name or indicate it is random! Possible genres: " + temp
         return Response(temp, status=400)
     quotes = [mapper.quote_mapper(s) for s in r['data']]
-    con = sqlite3.connect("../../sqlfiles/practice-app.db")
+    con = sqlite3.connect("../../../sqlfiles/practice-app.db")
     cur = con.cursor()
     for quote in quotes:
         print(quote.quoteId)
@@ -208,7 +211,7 @@ def create_currency_hist():
 def not_found(error):
     # a friendlier error handling message
     # return make_response(jsonify({'error': 'Task was not found'}), 404)
-    return "404"
+    return "page not found :("
 
 
 if __name__ == '__main__':

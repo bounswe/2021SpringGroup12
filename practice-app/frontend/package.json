@@ -1,0 +1,33 @@
+{
+  "name": "test-client",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@tailwindcss/line-clamp": "^0.2.0",
+    "date-fns": "^2.17.0",
+    "axios": "^0.21.1",
+    "core-js": "^3.6.5",
+    "vue": "^3.0.0",
+    "vue-router": "^4.0.0-0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.0.0",
+    "@vue/eslint-config-airbnb": "^5.0.2",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-vue": "^7.0.0",
+    "autoprefixer": "^10.2.4",
+    "postcss": "^8.2.5",
+    "prettier": "^2.2.1",
+    "tailwindcss": "^2.0.3"
+  }
+}

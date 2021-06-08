@@ -1,7 +1,12 @@
+<<<<<<< HEAD:practice-app/src/main/db/mapper.py
 import sys
 sys.path.append("..") 
 from .schemas import Book, Issue, Quote, CurrencyRate
 from helpers import issue_helper
+=======
+from main.db.schemas import Book, Issue, Quote
+from main.helpers import issue_helper
+>>>>>>> veyis-practice-app-organized:practice-app/main/db/mapper.py
 
 
 def book_mapper(book: dict) -> Book:
