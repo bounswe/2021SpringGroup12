@@ -110,7 +110,6 @@ export default {
           isbn13: book.isbn13,
         }));
       } catch (err) {
-        console.log(err)
         if (err.response) {
           // client received an error response (5xx, 4xx)
           this.error = {
