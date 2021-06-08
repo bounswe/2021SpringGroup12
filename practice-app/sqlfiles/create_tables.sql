@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS BookISBNs (
     book_id             INTEGER,
   	isbn                TEXT,
 	PRIMARY KEY(book_id,isbn),
-    FOREIGN KEY(book_id) REFERENCES Books(book_id), -- todo: on delete vsvs
+    FOREIGN KEY(book_id) REFERENCES Books(book_id) ON DELETE CASCADE,
     UNIQUE(book_id,isbn)   -- restrict the same isbn of the book to be added multiple times
 );
 

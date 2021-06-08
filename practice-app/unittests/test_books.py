@@ -94,7 +94,7 @@ class TestBooksEndpoint(unittest.TestCase):
     def test_post_endpoint_correct(self):
         return_value = self.app.post("/books/", json={"book_title": "hello", "book_author": "world"})
         self.assertEqual(return_value.status, "200 OK")
-
+    
     ################### HELPERS ########################
     def test_validate_input_correct_input(self):
         request_args = ImmutableMultiDict([('name', 'aldous huxley')])
@@ -109,7 +109,7 @@ class TestBooksEndpoint(unittest.TestCase):
     def test_call_nytimes_correct_input(self):
         expected_output = self.input_books_from_nytimes
         output = books_helper.call_nytimes("aldous huxley")
-        self.assertListEqual(output, expected_output, msg="Couldn't parse correct input parameter.")
+        self.assertListEqual(output, expected_output, msg=f"Couldn't parse correct input parameter.Output: {output}")
 
     def test_call_nytimes_wrong_input(self):
         expected_output = []
@@ -118,7 +118,8 @@ class TestBooksEndpoint(unittest.TestCase):
 
     def test_add_books_from_nytimes_correct_input(self):
         books_helper.add_books_from_nytimes(self.input_books_from_nytimes)
-        con = sqlite3.connect("/home/veyis/Desktop/2021SpringGroup12/practice-app/sqlfiles/practice-app.db")
+        # TODO change this in deployment phase
+        con = sqlite3.connect("/home/veyis/Desktop/a2021SpringGroup12/practice-app/sqlfiles/practice-app.db")
         cur = con.cursor()
         cur.execute("SELECT * FROM Books WHERE book_author = 'Aldous Huxley'")
         books_from_db = cur.fetchall()
@@ -191,6 +192,7 @@ class TestBooksEndpoint(unittest.TestCase):
         self.input_book_from_user.pop("url")
         self.input_book_from_user["urll"] = ""
         book = books_helper.validate_body(self.input_book_from_user)
+        self.input_book_from_user["url"] = ""
         self.assertFalse(str(type(book)) == "<class 'flask.wrappers.Response'>")
 
     def test_validate_body_blank_input(self):
@@ -200,7 +202,8 @@ class TestBooksEndpoint(unittest.TestCase):
     def test_add_book_from_user_correct_input(self):
         book = book_mapper(self.input_book_from_user)
         books_helper.add_book_from_user(book)
-        con = sqlite3.connect("/home/veyis/Desktop/2021SpringGroup12/practice-app/sqlfiles/practice-app.db")
+        # TODO change this in deployment phase
+        con = sqlite3.connect("/home/veyis/Desktop/a2021SpringGroup12/practice-app/sqlfiles/practice-app.db")
         cur = con.cursor()
         cur.execute("SELECT * FROM Books WHERE book_author = (?) AND book_title = (?)",
                     (self.input_book_from_user.get("book_author"), self.input_book_from_user.get("book_title")))
@@ -214,7 +217,7 @@ class TestBooksEndpoint(unittest.TestCase):
         book = book_mapper(self.input_book_from_user)
         response = books_helper.add_book_from_user(book)
         self.assertTrue(response.status_code == 403, msg="Failed to handle unique key constraint")
-
+    
     def tearDown(self):
         pass
 
