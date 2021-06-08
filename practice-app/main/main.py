@@ -2,17 +2,16 @@
 # To run: read README.md
 ##
 # NOTE: Remember you have to set your virtual environment and install flask
-import sys
-sys.path.append(".")
-from flask import Flask, jsonify, Response, request, make_response, abort
-import requests
-from db import schemas, mapper
-import sqlite3
-
-from helpers import issue_helper, books_helper
-from pydantic import ValidationError
 from flask_cors import CORS
 import random
+from main.helpers import issue_helper, books_helper, anime_helper, currency_helper
+from pydantic import ValidationError
+import sqlite3
+from main.db import schemas, mapper
+import requests
+from flask import Flask, jsonify, Response, request, make_response, abort
+import sys
+sys.path.append(".")
 
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
@@ -30,6 +29,8 @@ def get_tasks():
     # get all tasks
     return "group12 practice-app"
 
+################################ BOOKS ############################
+
 
 @app.route('/books/', methods=['GET'])
 def get_books():
@@ -45,7 +46,7 @@ def get_books():
     # now we have books of this author in books variable.
     # Let's store this book in database for further references.
     books_helper.add_books_from_nytimes(books)
-    ## don't return all books, return just as much as user wants
+    # don't return all books, return just as much as user wants
     books = books_helper.get_n(books, request.args)
     return books if type(books) != list else schemas.BookResponse(num_results=len(books), books=books).__dict__
 
@@ -60,6 +61,8 @@ def create_book():
     # try to insert book to DB, return forbidden upon failure
     db_response = books_helper.add_book_from_user(book)
     return db_response if db_response is not None else Response("Book added succesfully!", status=200)
+
+################################ ISSUES ############################
 
 
 @app.route('/download_issues', methods=['GET'])
@@ -105,67 +108,53 @@ def get_all_issues():
 
 
 ####################################### ANIME ####################################
-
 @app.route('/anime/search/', methods=['GET'])
 def search_anime():
-    search_query = request.args.get("query")
-    limit = request.args.get("limit")
-    r = requests.get(
-        'https://api.jikan.moe/v3/search/anime?q={}&page=1&limit={}'.format(search_query, limit)).json()
-    return schemas.SearchResponse(num_of_results=len(r["results"]),
-                                  animes=[mapper.search_mapper(a).dict() for a in r["results"]]).dict()
+    params = request.args
+    # Validation
+    validation = anime_helper.validate_search_params(params)
+    if validation is not None:
+        return validation
+    # API Connection
+    search_result = anime_helper.jikan_api_search(params)
+    if type(search_result) != list:
+        return search_result
+    # Map result
+    searched_animes = [mapper.searched_anime_mapper(
+        anime).dict() for anime in search_result]
+    # Return results
+    return jsonify(searched_animes)
 
 
-@app.route('/anime/<id>', methods=['GET'])
-def get_anime(id):
-    r = requests.get(
-        'https://api.jikan.moe/v3/anime/{}/'.format(id)
-    ).json()
-    print(r)
-
-    if (r["status"] == '404'):
-        abort(404, r["message"])
-    elif (r["status"] == '500'):
-        abort(500, r["message"])
-    elif (r["status"] == '429'):
-        abort(429, r["message"])
-
-    sequel = r["related"]["Sequel"][0] if "Sequel" in r["related"] else None
-    prequel = r["related"]["Prequel"][0] if "Prequel" in r["related"] else None
-    r["sequel"] = schemas.RelatedAnime(id=sequel["mal_id"], name=sequel["name"]).dict() if sequel is not None else None
-    r["prequel"] = schemas.RelatedAnime(id=prequel["mal_id"],
-                                        name=prequel["name"]).dict() if prequel is not None else None
-
-    return mapper.anime_mapper(r).dict()
+@app.route('/anime/<int:id>', methods=['GET'])
+def get_anime(id: int):
+    anime_helper.jikan_api_get(id)
+    # API Connection
+    result = anime_helper.jikan_api_get(id)
+    if type(result) == Response:
+        return result
+    # Map Result
+    anime = mapper.anime_mapper(result).dict()
+    # Add to DB
+    db_response = anime_helper.add_mal_anime_to_db(anime)
+    if type(db_response) == Response:
+        return db_response
+    # Return results
+    return anime
 
 
 @app.route('/anime/', methods=['POST'])
 def post_anime():
-    r = request.json
-    print(r)
-    create_anime = mapper.create_anime_mapper(r).dict()
-    return (create_anime)
+    # Get the request body
+    requestBody = request.json
+    # Map to object
+    post_anime = mapper.create_anime_mapper(requestBody).dict()
+    # Add to DB
+    database_response = anime_helper.add_user_anime_to_db(post_anime)
+    return Response("Anime added successfully", status=200) if database_response is None else database_response
 
 
-@app.errorhandler(ValidationError)
-def validation_error(error):
-    return make_response({"msg": "Validation error"}, 400)
-
-
-# @app.errorhandler(404)
-# def not_found(error):
-#     return make_response({"msg":"Resource not found"}, 404)
-
-@app.errorhandler(500)
-def internal_error(error):
-    return make_response({"msg": "Internal error"}, 500)
-
-
-@app.errorhandler(429)
-def rate_limit(error):
-    return make_response({"msg": "Api is rate limited please wait and try again"}, 429)
-
-
+################################ QUOTES ############################
 @app.route('/quotes/', methods=['POST'])
 def add_quote():
     quote_fields = request.get_json()
@@ -211,17 +200,19 @@ def get_quote_opt():
 
     if request.args.get("random") is not None:
         rnd = int(random.uniform(0, len(t)))
-        r = requests.get("https://quote-garden.herokuapp.com/api/v3/quotes?genre={}".format(t[rnd]))
+        r = requests.get(
+            "https://quote-garden.herokuapp.com/api/v3/quotes?genre={}".format(t[rnd]))
         r = r.json()
     elif request.args.get("genre") is not None:
         genre_type = request.args.get("genre")
-        r = requests.get("https://quote-garden.herokuapp.com/api/v3/quotes?genre={}".format(genre_type))
+        r = requests.get(
+            "https://quote-garden.herokuapp.com/api/v3/quotes?genre={}".format(genre_type))
         r = r.json()
     else:
         temp = "Please provide an genre name or indicate it is random! Possible genres: " + temp
         return Response(temp, status=400)
     quotes = [mapper.quote_mapper(s) for s in r['data']]
-    con = sqlite3.connect("../../sqlfiles/practice-app.db")
+    con = sqlite3.connect("../../../sqlfiles/practice-app.db")
     cur = con.cursor()
     for quote in quotes:
         print(quote.quoteId)
@@ -235,12 +226,77 @@ def get_quote_opt():
 
     return schemas.QuoteResponse(data=quotes).__dict__
 
+################################ CONVERT ############################
+
+
+@app.route('/convert/', methods=['GET'])
+def convert_currency():
+    # necesssary info check
+    x = currency_helper.validate_get_input(request.args)
+    if x is not None:
+        return x
+
+    from_curr = request.args.get("from").upper()
+    to_curr = request.args.get("to").upper()
+    # get data from exchangerate api
+    r = requests.get(
+        'https://api.exchangerate.host/convert?from={}&to={}'.format(from_curr, to_curr))
+    r = r.json()
+    # check "to" rate exitance
+    check = currency_helper.non_existing_curr_rate_check(r)
+    if check is not None:
+        return check
+
+    cr = mapper.currency_rate_mapper(r)
+
+    # save the currency rate record to db if it is not in db
+    currency_helper.add_db_from_exchangerate(cr)
+
+    # calculate money with amount value if wanted
+    r = currency_helper.calculate_amount(r, request.args)
+
+    r.pop("historical")
+    r.pop("motd")
+
+    return r
+
+
+@app.route('/convert/', methods=['POST'])
+def create_currency_hist():
+
+    # check if the necessary information for the record is given. Otherwise 400 error.
+    cr = currency_helper.validate_post_input(request.get_json())
+    if type(cr) is not schemas.CurrencyRate:
+        return cr
+
+    # try to insert record to db.
+    db_response = currency_helper.add_db_from_user(cr)
+
+    return db_response if db_response is not None else Response("You have successfully inserted your currency rate to db", status=200)
+
+
+################################ GENERAL RESPONSES ############################
 
 @app.errorhandler(404)
 def not_found(error):
     # a friendlier error handling message
     # return make_response(jsonify({'error': 'Task was not found'}), 404)
     return "404"
+
+
+@app.errorhandler(ValidationError)
+def validation_error(error):
+    return make_response({"msg": "Validation error"}, 400)
+
+
+@app.errorhandler(500)
+def internal_error(error):
+    return make_response({"msg": "Internal error"}, 500)
+
+
+@app.errorhandler(429)
+def rate_limit(error):
+    return make_response({"msg": "Api is rate limited please wait and try again"}, 429)
 
 
 if __name__ == '__main__':

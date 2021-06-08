@@ -1,8 +1,8 @@
 import unittest
-import sys
-sys.path.append("../main")
-from helpers.issue_helper import make_issue
+import os
+from main.helpers.issue_helper import make_issue
 import json
+current_directory = os.getcwd()
 
 
 class HelperTest(unittest.TestCase):
