@@ -11,15 +11,6 @@ from main import main
 
 class TestCocktailsEndpoint(unittest.TestCase):
 
-    mock_data = """ 
-                "cocktail_name": "batuhan's cocktail",
-                "ingredient_1": "Gin",
-                "ingredient_2": "Tonic",
-                "ingredient_3": "Lemon",
-                "ingredient_4": "Salt",
-                "glass": "Visky glass",
-                "instructions": "Mix all."
-                """
 
     def setUp(self):
         main.app.testing = True
