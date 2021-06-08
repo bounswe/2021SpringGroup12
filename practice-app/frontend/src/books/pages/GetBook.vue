@@ -16,7 +16,7 @@
       <button type="submit">Get Books</button>
     </form>
 
-    <div class="mt-5" v-if="end">
+    <div class="mt-5" v-if="end && success">
       <table border="1px solid black">
         <tr>
           <th>Number</th>
@@ -67,6 +67,7 @@ export default {
   data() {
     return {
       error: null,
+      success: false,
       end: false,
       books: [],
       name: "",
@@ -89,9 +90,15 @@ export default {
           url = `http://127.0.0.1:5000/books/?name=${this.name}&max_results=${this.max_results}`;
         }
         const response = await axios.get(url, { headers });
-        console.log(response);
+        if(response.data.num_results == 0){
+          this.error = {
+            title: "No result",
+            message: "Couldn't find any book of this author."
+          }
+        }else if(response.data.num_results > 0){
+          this.success = true
+        }
         this.data = response.data;
-        console.log(this.data);
         this.books = response.data.books.map((book) => ({
           book_title: book.book_title,
           book_author: book.book_author,
@@ -103,6 +110,7 @@ export default {
           isbn13: book.isbn13,
         }));
       } catch (err) {
+        console.log(err)
         if (err.response) {
           // client received an error response (5xx, 4xx)
           this.error = {
@@ -116,7 +124,7 @@ export default {
             message: err.message,
           };
         } else {
-          // There's probably an error in your code
+          // There's probably an error in the code
           this.error = {
             title: "Application Error",
             message: err.message,
