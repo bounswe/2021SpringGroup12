@@ -8,6 +8,8 @@ COPY . .
 
 # install dependencies
 RUN pip install --no-cache-dir -r ./requirements.txt
+#TODO run database_initializer.py here
+RUN python3 ./main/db/database_initializer.py
 ENV FLASK_APP=main/main.py
 ENV FLASK_ENV=development
 # tell the port number the container should expose
