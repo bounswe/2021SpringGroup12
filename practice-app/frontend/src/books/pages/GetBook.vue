@@ -10,7 +10,7 @@
       <p>
         Max Result
         <label>
-          <input type="text" placeholder="required" v-model="max_results" />
+          <input type="text" placeholder="optional" v-model="max_results" />
         </label>
       </p>
       <button type="submit">Get Books</button>
@@ -34,7 +34,9 @@
           <td>{{ index + 1 }}</td>
           <td>{{ book.book_title }}</td>
           <td>{{ book.book_author }}</td>
-          <td><a :href="book.url" >{{book.url}}</a></td>
+          <td>
+            <a :href="book.url">{{ book.url }}</a>
+          </td>
           <td>{{ book.publication_dt }}</td>
           <td>{{ book.summary }}</td>
           <td>{{ book.uuid }}</td>
@@ -72,7 +74,6 @@ export default {
     };
   },
   methods: {
-
     async getBooks() {
       const headers = {
         "Content-Type": "application/json",
@@ -81,7 +82,12 @@ export default {
       try {
         this.end = false;
         this.error = null;
-        const url = `http://127.0.0.1:5000/books/?name=${this.name}&max_results=${this.max_results}`;
+        var url = ""
+        if(this.max_results == ""){
+         url = `http://127.0.0.1:5000/books/?name=${this.name}`;
+        }else {
+          url = `http://127.0.0.1:5000/books/?name=${this.name}&max_results=${this.max_results}`;
+        }
         const response = await axios.get(url, { headers });
         console.log(response);
         this.data = response.data;
