@@ -103,3 +103,10 @@ CREATE TABLE IF NOT EXISTS UserAnimes(
     synopsis            TEXT NOT NULL,
     UNIQUE(title)
 );
+CREATE TABLE IF NOT EXISTS Currency_History (
+    date               TEXT,
+    from_curr          TEXT,
+    to_curr            TEXT,
+    rate               REAL,
+    PRIMARY KEY(date,from_curr,to_curr)
+);

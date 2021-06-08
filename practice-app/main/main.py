@@ -8,7 +8,7 @@ from flask import Flask, jsonify, Response, request
 import requests
 from main.db import schemas, mapper
 import sqlite3
-from main.helpers import issue_helper, books_helper, anime_helper
+from main.helpers import issue_helper, books_helper, anime_helper, currency_helper
 import random
 from flask_cors import CORS
 
@@ -162,6 +162,49 @@ def get_quote_opt():
     
     return schemas.QuoteResponse(data = quotes).__dict__
 
+
+@app.route('/convert/', methods=['GET'])
+def convert_currency():
+    #necesssary info check
+    x = currency_helper.validate_get_input(request.args)
+    if x is not None:
+        return x
+
+    from_curr = request.args.get("from").upper()
+    to_curr = request.args.get("to").upper()
+    #get data from exchangerate api
+    r = requests.get('https://api.exchangerate.host/convert?from={}&to={}'.format(from_curr, to_curr))
+    r = r.json()
+    #check "to" rate exitance
+    check = currency_helper.non_existing_curr_rate_check(r)
+    if check is not None:
+        return check
+
+    cr = mapper.currency_rate_mapper(r)
+
+    #save the currency rate record to db if it is not in db
+    currency_helper.add_db_from_exchangerate(cr)
+
+    #calculate money with amount value if wanted
+    r = currency_helper.calculate_amount(r, request.args)
+
+    r.pop("historical")
+    r.pop("motd")
+
+    return r
+
+@app.route('/convert/', methods=['POST'])
+def create_currency_hist():
+
+    #check if the necessary information for the record is given. Otherwise 400 error.
+    cr = currency_helper.validate_post_input(request.get_json())
+    if type(cr) is not schemas.CurrencyRate:
+        return cr
+
+    #try to insert record to db.
+    db_response = currency_helper.add_db_from_user(cr)
+
+    return db_response if db_response is not None else Response("You have successfully inserted your currency rate to db", status=200)
 
 @app.errorhandler(404)
 def not_found(error):
