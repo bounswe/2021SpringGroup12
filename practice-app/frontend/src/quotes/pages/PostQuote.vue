@@ -63,13 +63,8 @@ export default {
       this.response = "";
       this.fail = false;
       this.error = null;
-<<<<<<< HEAD
-      const url = `http://127.0.0.1:5000/addQuotes/`;
-
-=======
       //const url = `http://127.0.0.1:5000/addQuotes/`;
       const url = `http://localhost:5000/addQuotes/`;
->>>>>>> master
 
       const response = await axios
         .post(url, this.user_body)
