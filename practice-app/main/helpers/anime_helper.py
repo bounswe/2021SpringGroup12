@@ -5,6 +5,7 @@ import sqlite3
 from main.db.mapper import create_anime_mapper
 import json
 
+DB_PATH = "/home/veyis/Desktop/2021SpringGroup12-8e1c54b7896240a6d22027d0a291d6359b737675/practice-app/sqlfiles/practice-app.db"
 
 def validate_search_params(params):
     if "query" not in params:
@@ -38,7 +39,7 @@ def add_mal_anime_to_db(anime):
     try:
         sequel_id = None
         prequel_id = None
-        con = sqlite3.connect("/usr/src/app/./sqlfiles/practice-app.db")
+        con = sqlite3.connect(DB_PATH)
         cur = con.cursor()
         if anime["sequel"] != None:
           cur.execute("INSERT OR IGNORE INTO RelatedAnimes(title, mal_id) VALUES (?,?)",
@@ -87,7 +88,7 @@ def validate_and_map_user_anime(body):
 
 def add_user_anime_to_db(anime):
     try:
-        con = sqlite3.connect("/usr/src/app/./sqlfiles/practice-app.db")
+        con = sqlite3.connect(DB_PATH)
         cur = con.cursor()
         cur.execute("INSERT INTO UserAnimes(title,episodes,image,airing,start_date,end_date,score,rating,type,synopsis) VALUES (?,?,?,?,?,?,?,?,?,?)",
         (anime["title"], anime["episodes"], anime["image"], anime["airing"], anime["start_date"], anime["end_date"], anime["score"], anime["rating"], anime["type"], anime["synopsis"]))

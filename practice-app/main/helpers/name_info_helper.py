@@ -6,10 +6,11 @@ from main.db.schemas import NameInfo
 
 
 DB_LOC = "C:/Users/fb_be/Documents/GitHub/2021SpringGroup12/practice-app/sqlfiles/practice-app.db"
+DB_PATH = "/home/veyis/Desktop/2021SpringGroup12-8e1c54b7896240a6d22027d0a291d6359b737675/practice-app/sqlfiles/practice-app.db"
 
 
 def insert_name_info(nameInfo: NameInfo):
-    con = sqlite3.connect(DB_LOC)
+    con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
     try:
         cur.execute(
@@ -24,7 +25,7 @@ def insert_name_info(nameInfo: NameInfo):
 
 ##Returns a tuple of (name, age) represents name and average age for that name
 def get_name_info(name: str, country: str, countryBased: bool):
-    con = sqlite3.connect(DB_LOC)
+    con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
     
     try:
