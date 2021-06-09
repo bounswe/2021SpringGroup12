@@ -171,15 +171,7 @@ def get_quote_opt():
 
 @app.route('/movies_home/', methods=['GET', 'POST'])
 def movies_home():
-    if request.method == 'POST':
-        if request.form.get('action1') == 'Show reviews with keyword':
-            keyword = request.form.get('keyword')
-            s = (url_for('get_movies'))+"?keyword=" + keyword
-            return redirect(s)
-        elif request.form.get('action2') == 'Add new review':
-            return redirect(url_for('open_add_review'))
-    return "nljlşj"
-    # render_template("movies_home.html")
+    return
 
 
 @app.route('/movies/', methods=['GET'])
@@ -190,56 +182,42 @@ def get_movies():
     keyword = request.args.get("keyword").title().replace(" ", "+")
     r = requests.get(
         "https://api.nytimes.com/svc/movies/v2/reviews/search.json?query={}&api-key=gJkqRRyjYRV0YDiUDAEXwsa0uZLL6YLh".format(keyword))
-
     r = r.json()
-    # print(r)
 
     # now we have the movies.
     # storing movies in database for further references.
-    movies = [mapper.movie_mapper(s) for s in r["results"]]
-    con = sqlite3.connect(
-        "c:/Users/HP/Desktop/2021SpringGroup12/practice-app/sqlfiles/practice-app.db")
-    cur = con.cursor()
-    for movie in movies:
-        # -----------------------------------
-        try:
-            cur.execute("INSERT INTO Movie(display_title, mpaa_rating, critics_pick, byline, headline,summary_short, link) VALUES (?,?,?,?,?,?,?)",
-                        (movie.display_title, movie.mpaa_rating, movie.critics_pick, movie.byline, movie.headline, movie.summary_short, movie.link.url))
-        except:
-            # do nothing upon failure, this is not a critical process
-            continue
     dict = {}
-    for movie in movies:
-        display_title = movie.display_title
-        movie_info = {"display_title": movie.display_title, "mpaa_rating": movie.mpaa_rating, "critics_pick": movie.critics_pick,
-                      "byline": movie.byline, "headline": movie.headline, "summary_short":  movie.summary_short, "link": movie.link}
-        dict[display_title] = movie_info
+    if r["results"] != None:
+        movies = [mapper.movie_mapper(s) for s in r["results"]]
+        con = sqlite3.connect(
+            "c:/Users/HP/Desktop/2021SpringGroup12-son/practice-app/sqlfiles/practice-app.db")
+        cur = con.cursor()
+        for movie in movies:
+            # -----------------------------------
+            try:
+                cur.execute("INSERT INTO Movie(display_title, mpaa_rating, critics_pick, byline, headline,summary_short, link) VALUES (?,?,?,?,?,?,?)",
+                            (movie.display_title, movie.mpaa_rating, movie.critics_pick, movie.byline, movie.headline, movie.summary_short, movie.link.url))
+            except:
+                # do nothing upon failure, this is not a critical process
+                continue
+
+        for movie in movies:
+            display_title = movie.display_title
+            movie_info = {"display_title": movie.display_title, "mpaa_rating": movie.mpaa_rating, "critics_pick": movie.critics_pick,
+                          "byline": movie.byline, "headline": movie.headline, "summary_short":  movie.summary_short, "link": movie.link}
+            dict[display_title] = movie_info
     # print(jsonify(dict))
     return jsonify(dict)
 
 
-"""
-@app.route('/movies_table/', methods=['GET', 'POST'])
-def table():
-    return render_template('table.html')
-"""
-
-
-"""
-@ app.route('/movies_addReview/', methods=['GET'])
-def open_add_review():
-    return render_template("movies_addReview.html",  user=current_user)
-"""
-
-
-@ app.route('/movies_addReview/', methods=['GET', 'POST'])
+@ app.route('/movies_addReview/', methods=['POST'])
 def create_movie_review():
-    movie_review = request.form.to_dict(flat=True)
-    # if request.args.get("max_results") is not None:
-    # movie_review = request.get_json()
-    # print(movie_review)
+    #movie_review = request.form.to_dict(flat=True)
+    movie_review = request.get_json()
     # make sure that necessary information are given
     # title byline and url should be provided
+    if movie_review == {}:
+        return Response("Please provide the required information!", status=400)
     if "display_title" not in movie_review.keys():
         return Response("Please provide the title of the movie!", status=400)
     if "byline" not in movie_review.keys():
@@ -247,17 +225,18 @@ def create_movie_review():
     if "link" not in movie_review.keys():
         return Response("Please provide the link!", status=400)
     if "critics_pick" in movie_review.keys():
-        if movie_review['critics_pick'] != "1" and movie_review['critics_pick'] != "0":
+        if movie_review['critics_pick'] != 1 and movie_review['critics_pick'] != 0:
             return Response("Criticks pick must be 1 or 0")
     try:
         movie = mapper.movie_mapper2(movie_review)
     except Exception as err:
-        return Response(str(err), status=409)
+        return Response(str(err), status=400)
         # connect to Database
     con = sqlite3.connect(
-        "c:/Users/HP/Desktop/2021SpringGroup12/practice-app/sqlfiles/practice-app.db")
+        "c:/Users/HP/Desktop/test/practice-app/sqlfiles/practice-app.db")
     cur = con.cursor()
-    # try to insert book to DB, return forbidden upon failure
+
+    # try to insert movie to DB, return forbidden upon failure
     try:
         cur.execute("INSERT INTO Movie(display_title, mpaa_rating, critics_pick, byline, headline,summary_short, link) VALUES (?,?,?,?,?,?,?)",
                     (movie.display_title, movie.mpaa_rating, movie.critics_pick, movie.byline, movie.headline, movie.summary_short, movie.link))

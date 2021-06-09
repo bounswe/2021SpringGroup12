@@ -47,7 +47,7 @@ def movie_mapper(movie: dict) -> Movie:
         mpaa_rating=movie["mpaa_rating"] if 'mpaa_rating' in movie.keys(
         ) else "",
         critics_pick=movie["critics_pick"] if 'critics_pick' in movie.keys(
-        ) else "",
+        ) else 0,
         byline=movie["byline"],
         headline=movie["headline"] if 'headline' in movie.keys() else "",
         summary_short=movie["summary_short"] if 'summary_short' in movie.keys(

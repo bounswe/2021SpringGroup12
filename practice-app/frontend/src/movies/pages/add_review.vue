@@ -98,7 +98,7 @@ export default {
       this.response = "";
       this.fail = false;
       this.error = null;
-      const url = `http://127.0.0.1:5000/movies/`;
+      const url = `http://127.0.0.1:5000/movies_addReview/`;
       /*if (!this.user_body.assignees.length) {
         this.user_body.assignees = [];
       } else {
