@@ -99,7 +99,6 @@ export default {
         this.success = false;
         this.fail = true;
         this.error = err.response;
-        console.log(this.error)
       }
       this.sent = true;
     },
