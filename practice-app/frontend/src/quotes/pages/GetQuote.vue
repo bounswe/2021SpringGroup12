@@ -1,0 +1,131 @@
+<template>
+  <Layout>
+    <form v-if="!sent" class="postForm" @submit.prevent="getIssues">
+      <p>Get Quotes</p>
+      <label>
+        <input
+          type="text"
+          placeholder="required"
+          v-model="quote_type"
+        />
+      </label>
+      <button type="submit">Get Quotes</button>
+    </form>
+
+    <h3>Possible genres:</h3>
+      <p>age, alone, amazing, anger, anniversary, architecture, art, attitude, beauty, best, birthday,
+      business, car, change, communication, computers, cool, courage, dad, dating, death, design, diet, dreams, education,
+      environmental, equality, experience, failure, faith, family, famous, fear, finance, fitness, food, forgiveness,
+      freedom, friendship, funny, future, gardening, god, good, government, graduation, great, happiness, health, history,
+      home, hope, humor, imagination, inspirational, intelligence, jealousy, knowledge, leadership, learning, legal, life,
+      love, marriage, medical, men, mom, money, morning, motivational, movies, movingon, music, nature, parenting, patience,
+      patriotism, peace, pet, poetry, politics, positive, power, relationship, religion, respect, romantic, sad, science,
+      smile, society, sports, strength, success, sympathy, teacher, technology, teen, thankful, time, travel, trust,
+      truth, war, wedding</p>
+<!--    <ResponseList v-if="!loading && !error" :issues="issues" />-->
+
+    <div class="mt-5" v-if="end">
+      <table border= "1px solid black">
+        <tr>
+          <th>Author</th>
+          <th>Genre</th>
+          <th>Quote</th>
+        </tr>
+
+      <tr  v-for="(issue) in data">
+        <td>{{ issue.Author }}</td>
+        <td>{{ issue.Genre }}</td>
+        <td>{{ issue.Text }}</td>
+      </tr>
+        </table>
+    </div>
+    <!-- End of loading animation -->
+
+    <!-- Start of error alert -->
+    <div class="mt-12 bg-red-50" v-if="error">
+      <h3 class="px-4 py-1 text-4xl font-bold text-white bg-red-800">
+        {{ error.title }}
+      </h3>
+      <p class="p-4 text-lg font-bold text-red-900">{{ error.message }}</p>
+    </div>
+    <!-- End of error alert -->
+  </Layout>
+</template>
+
+<script>
+import axios from "axios";
+import Layout from "../components/Layout.vue";
+
+export default {
+  components: {
+    Layout,
+  },
+  data() {
+    return {
+      error: null,
+      end: false,
+      data: [],
+      quote_type : ""
+    };
+  },
+  methods: {
+    extractImage(issue) {
+      const defaultImg = {
+        url: "http://placehold.it/210x140?text=N/A",
+        caption: issue.description,
+      };
+      return defaultImg;
+    },
+    header(value) {
+      if (!value) return "";
+      value = value.toString();
+      return value;
+    },
+    async getIssues() {
+      const headers = {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      };
+
+      try {
+        this.end = false;
+        this.error = null;
+        //const url = `http://127.0.0.1:5000/quotes/?genre=${this.quote_type}`;
+        const url = `http://localhost:5000/quotes/?genre=${this.quote_type}`;
+        const response = await axios.get(url,{ headers });
+        this.data = response.data['data'];
+        for (let i = 0; i < this.data.length; i++) {
+          let issue = this.data[i]
+          this.data[i] = {
+                Author: issue.quoteAuthor,
+                Genre: issue.quoteGenre,
+                Text: issue.quoteText
+              };
+        }
+
+      } catch (err) {
+        if (err.response) {
+          // client received an error response (5xx, 4xx)
+          this.error = {
+            title: "Server Response",
+            message: err.message,
+          };
+        } else if (err.request) {
+          // client never received a response, or request never left
+          this.error = {
+            title: "Unable to Reach Server",
+            message: err.message,
+          };
+        } else {
+          // There's probably an error in your code
+          this.error = {
+            title: "Application Error",
+            message: err.message,
+          };
+        }
+      }
+      this.end = true;
+    },
+  }
+};
+</script>
