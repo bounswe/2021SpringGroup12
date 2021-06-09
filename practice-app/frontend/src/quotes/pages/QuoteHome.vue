@@ -1,14 +1,8 @@
 <template>
   <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/anime">Anime</router-link> | 
-    <router-link to="/books">Books</router-link> |
-	<router-link to="/homenameinfo">Name/Age information</router-link>|
-
-    <router-link to="/issues">Issues</router-link> |
-    <router-link to="/convert">Currency Conversion</router-link> |
-    <router-link to="/quotes">Quotes</router-link> |
-
+    <router-link to="/randomquote">Get Random Quotes</router-link> |
+    <router-link to="/getquotes">Get Quotes </router-link> |
+    <router-link to="/postquotes">Post A Quote </router-link>
   </div>
   <router-view/>
 </template>

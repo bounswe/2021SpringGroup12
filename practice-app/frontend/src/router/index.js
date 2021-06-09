@@ -3,9 +3,6 @@ import Home from '../views/Home.vue';
 import SearchResults from '../anime/views/SearchResults.vue';
 import Detail from '../anime/views/Detail.vue';
 import AnimeHome from '../anime/views/AnimeHome.vue';
-import BooksPostHome from '../books/pages/PostBook.vue';
-import BooksGetHome from '../books/pages/GetBook.vue';
-import BooksHome from '../books/pages/BooksHome.vue';
 import NameInfoHome from '../nameinfo/pages/Home.vue';
 import NameInfoGet from '../nameinfo/pages/GetNameInfo.vue';
 import NameInfoPost from '../nameinfo/pages/PostNameInfo.vue';
@@ -18,6 +15,10 @@ import GetAll from '../issues/pages/GetAll.vue';
 import GetIssue from '../issues/pages/GetIssue.vue';
 import HomeIssue from '../issues/pages/IssuesHome.vue';
 import ConvertHome from '../convert/views/ConvertHome.vue';
+import QuoteHome from '../quotes/pages/QuoteHome.vue';
+import PostQuote from '../quotes/pages/PostQuote.vue';
+import GetQuote from '../quotes/pages/GetQuote.vue';
+import RandomQuote from '../quotes/pages/RandomQuote.vue';
 
 const routes = [
   {
@@ -99,6 +100,26 @@ const routes = [
     path: '/convert',
     name: 'ConvertHome',
     component: ConvertHome
+  },
+        {
+    path: '/getquotes',
+    name: 'GetQuote',
+    component: GetQuote,
+  },
+  {
+    path: '/postquotes',
+    name: 'PostQuote',
+    component: PostQuote,
+  },
+  {
+    path: '/randomquote',
+    name: 'RandomQuote',
+    component: RandomQuote,
+  },
+  {
+    path: '/quotes',
+    name: 'QuoteHome',
+    component: QuoteHome,
   },
 ];
 
