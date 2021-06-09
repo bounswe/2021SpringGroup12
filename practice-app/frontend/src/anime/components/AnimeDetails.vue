@@ -37,10 +37,10 @@
           <div
             class="prequel"
             v-if="anime.prequel"
-            @click="$emit('clicked-related', anime.prequel.id)"
+            @click="$emit('clicked-related', anime.prequel[1])"
           >
             Prequel
-            <p>{{ anime.prequel.name }}</p>
+            <p>{{ anime.prequel[0] }}</p>
           </div>
           <div class="prequel-null" v-else>
             Prequel
@@ -49,10 +49,10 @@
           <div
             class="sequel"
             v-if="anime.sequel"
-            @click="$emit('clicked-related', anime.sequel.id)"
+            @click="$emit('clicked-related', anime.sequel[1])"
           >
             Sequel
-            <p>{{ anime.sequel.name }}</p>
+            <p>{{ anime.sequel[0] }}</p>
           </div>
           <div class="sequel-null" v-else>
             Sequel

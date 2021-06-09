@@ -100,32 +100,28 @@ def searched_anime_mapper(anime: dict) -> SearchedAnime:
         mal_id=anime["mal_id"] if anime["mal_id"] != None else 0
     )
 
-
 def anime_mapper(anime: dict) -> Anime:
     return Anime(
         title=anime["title"],
         mal_id=anime["mal_id"],
-        episodes=anime["episodes"] if "episodes" in anime else 0,
-        image=anime["image_url"] if "image_url" in anime else "",
-        airing=anime["airing"] if "airing" in anime else False,
+        episodes=anime["episodes"] if anime["episodes"] != None else 0,
+        image=anime["image_url"] if anime["image_url"] != None else "",
+        airing=anime["airing"] if anime["airing"] != None else False,
         start_date=anime["aired"]["from"],
         end_date=anime["aired"]["to"],
-        score=anime["score"] if "score" in anime else 0.0,
-        rating=anime["rating"] if "rating" in anime else "",
-        type=anime["type"] if "type" in anime else "",
+        score=anime["score"] if anime["score"] != None else 0.0,
+        rating=anime["rating"] if anime["rating"] != None else "",
+        type=anime["type"] if anime["type"] != None else "",
         synopsis=anime["synopsis"] if anime["synopsis"] != None else "",
         duration=(int(anime["duration"].split(' ')[0])
-                  if not anime["duration"].split(" ")[1] == "hr"
-                  else int(anime["duration"].split(" ")[0])*60+int(anime["duration"].split(" ")[2]))
-        if anime["duration"] and anime["duration"] != "Unknown"
-        else 0,
-        sequel=RelatedAnime(title=anime["related"]["Sequel"][0]["name"], mal_id=anime["related"]
-                            ["Sequel"][0]["mal_id"]) if "Sequel" in anime["related"] else None,
-        prequel=RelatedAnime(title=anime["related"]["Prequel"][0]["name"], mal_id=anime["related"]
-                             ["Prequel"][0]["mal_id"]) if "Prequel" in anime["related"] else None,
+            if not anime["duration"].split(" ")[1] == "hr"
+            else int(anime["duration"].split(" ")[0])*60+int(anime["duration"].split(" ")[2])) 
+                if anime["duration"] and anime["duration"] != "Unknown" 
+                else 0,
+        sequel=RelatedAnime(title=anime["related"]["Sequel"][0]["name"], mal_id=anime["related"]["Sequel"][0]["mal_id"]) if "Sequel" in anime["related"] else None,
+        prequel=RelatedAnime(title=anime["related"]["Prequel"][0]["name"], mal_id=anime["related"]["Prequel"][0]["mal_id"]) if "Prequel" in anime["related"] else None,
         genres=[genre["name"] for genre in anime["genres"]]
     )
-
 
 def create_anime_mapper(anime: dict) -> UserAnime:
     return UserAnime(

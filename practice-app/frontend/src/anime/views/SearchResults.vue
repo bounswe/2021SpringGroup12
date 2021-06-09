@@ -48,13 +48,13 @@ export default {
           image: anime.image,
           synopsis: anime.synopsis,
           type: anime.type,
-          start_date: false
+          start_date: anime.start_date
             ? new Date(anime.start_date).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'short',
             })
             : null,
-          end_date: false
+          end_date: anime.end_date
             ? new Date(anime.end_date).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'short',
