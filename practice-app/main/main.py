@@ -8,16 +8,8 @@ from flask import Flask, jsonify, Response, request
 import requests
 from main.db import schemas, mapper
 import sqlite3
-<<<<<<< HEAD
-from main.helpers import issue_helper, books_helper, name_info_helper
-=======
-<<<<<<< HEAD
+from main.helpers import issue_helper, books_helper, name_info_helper, anime_helper, currency_helper
 
-from helpers import issue_helper, books_helper, currency_helper
-=======
-from main.helpers import issue_helper, books_helper, anime_helper, currency_helper
->>>>>>> 68600fc1d4c916a3dd957e0c20667b36af469ce4
->>>>>>> master
 import random
 from flask_cors import CORS
 
