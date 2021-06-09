@@ -1,16 +1,5 @@
 <template>
   <Layout>
-<<<<<<< HEAD
-    <ResponseFilter v-model="section" :fetch="fetchResponse" />
-    <ResponseList v-if="!loading && !error" :posts="posts" />
-    <!-- Start of loading animation -->
-    <div class="mt-40" v-if="loading">
-      <p class="text-6xl font-bold text-center text-gray-500 animate-pulse">
-        Loading...
-      </p>
-    </div>
-    <!-- End of loading animation -->
-=======
     <form v-if="!sent" class="postForm" @submit.prevent="getBooks">
       <p>
         Author Name
@@ -56,7 +45,6 @@
         </tr>
       </table>
     </div>
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 
     <!-- Start of error alert -->
     <div class="mt-12 bg-red-50" v-if="error">

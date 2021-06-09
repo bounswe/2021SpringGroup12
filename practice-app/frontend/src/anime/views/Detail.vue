@@ -76,10 +76,6 @@ export default {
           title: 'error',
           message: err.response.data.msg,
         };
-<<<<<<< HEAD
-        console.log(this.error);
-=======
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
       }
       this.loading = false;
     },
