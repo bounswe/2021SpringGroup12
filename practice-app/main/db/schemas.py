@@ -83,3 +83,10 @@ class UserAnime(BaseModel):
     rating: str
     type: str
     synopsis: str
+
+
+class CurrencyRate(BaseModel):
+    date: str
+    from_curr: str
+    to_curr: str
+    rate: float
