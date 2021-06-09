@@ -6,7 +6,7 @@ from main.db.mapper import create_anime_mapper
 import json
 
 DB_PATH = "/home/veyis/Desktop/2021SpringGroup12-8e1c54b7896240a6d22027d0a291d6359b737675/practice-app/sqlfiles/practice-app.db"
-
+DB_PATH = "/usr/src/app/./sqlfiles/practice-app.db"
 def validate_search_params(params):
     if "query" not in params:
         return Response("Please enter a query string", status=400)

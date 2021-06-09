@@ -15,7 +15,7 @@ from main.helpers import issue_helper, books_helper, name_info_helper, anime_hel
 import random
 from flask_cors import CORS
 DB_PATH = "/home/veyis/Desktop/2021SpringGroup12-8e1c54b7896240a6d22027d0a291d6359b737675/practice-app/sqlfiles/practice-app.db"
-
+DB_PATH = "/usr/src/app/./sqlfiles/practice-app.db"
 
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False

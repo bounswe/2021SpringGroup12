@@ -5,9 +5,8 @@ import time
 from main.db.mapper import book_mapper
 
 # TODO change this variable in deployment phase!
-DB_PATH = "/home/veyis/Desktop/2021SpringGroup12/practice-app/sqlfiles"
 DB_PATH = "/home/veyis/Desktop/2021SpringGroup12-8e1c54b7896240a6d22027d0a291d6359b737675/practice-app/sqlfiles/practice-app.db"
-
+DB_PATH = "/usr/src/app/./sqlfiles/practice-app.db"
 
 def validate_input(params):
     # if name parameter is not supplied, return 400
