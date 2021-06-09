@@ -38,7 +38,6 @@ class Issue(BaseModel):
     description: str
     labels: List[str]
     state: str
-<<<<<<< HEAD
     
 class NameInfo(BaseModel):
     name: str
@@ -50,7 +49,6 @@ class NameInfoResponse():
     age: int
     country: str
     count: int
-=======
 
 class SearchedAnime(BaseModel):
     title: str
@@ -96,4 +94,10 @@ class UserAnime(BaseModel):
     rating: str
     type: str
     synopsis: str
->>>>>>> master
+
+
+class CurrencyRate(BaseModel):
+    date: str
+    from_curr: str
+    to_curr: str
+    rate: float

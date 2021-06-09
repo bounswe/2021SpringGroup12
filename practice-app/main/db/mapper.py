@@ -91,3 +91,11 @@ def create_anime_mapper(anime: dict) -> UserAnime:
         type=anime["type"],
         synopsis=anime["synopsis"]
     )
+
+def currency_rate_mapper(currency_rate: dict) -> CurrencyRate:
+    return CurrencyRate(
+        date= currency_rate["date"],
+        from_curr= currency_rate["query"]["from"] if 'query' in currency_rate.keys() else currency_rate["from"],
+        to_curr= currency_rate["query"]["to"] if 'query' in currency_rate.keys() else currency_rate["to"],
+        rate= currency_rate["info"]["rate"] if 'info' in currency_rate.keys() else currency_rate["rate"],
+    )
