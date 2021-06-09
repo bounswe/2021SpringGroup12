@@ -2,11 +2,7 @@ import sqlite3
 from sqlite3 import Cursor
 from typing import List
 
-<<<<<<< HEAD
-from db.schemas import Issue
-=======
 from main.db.schemas import Issue
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 
 ALL_ISSUES = {}
 

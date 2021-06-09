@@ -72,39 +72,6 @@
 <script>
 import axios from "axios";
 import Layout from "../components/Layout.vue";
-<<<<<<< HEAD
-import ResponseFilter from "../components/UserResponseFilter.vue";
-import ResponseList from "../components/ResponseList.vue";
-
-export default {
-  components: {
-    Layout,
-    ResponseFilter,
-    ResponseList,
-  },
-  data() {
-    return {
-      section: [],
-      posts: [],
-      loading: false,
-      error: null,
-    };
-  },
-  methods: {
-    extractImage(post) {
-      const defaultImg = {
-        url: "http://placehold.it/210x140?text=N/A",
-        caption: post.title,
-      };
-      return defaultImg;
-    },
-    header(value) {
-      if (!value) return "";
-      value = value.toString();
-      return value;
-    },
-    async fetchResponse() {
-=======
 export default {
   components: {
     Layout,
@@ -121,49 +88,10 @@ export default {
   },
   methods: {
     async getBooks() {
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
       const headers = {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
       };
-<<<<<<< HEAD
-
-      try {
-        this.error = null;
-        this.loading = true;
-
-        console.log(this.section);
-        const response = axios
-          .get("http://127.0.0.1:5000/books/?" + this.section, { headers })
-          .then((value) => {
-
-            if (value.data.num_results == 0) {
-              this.posts = [{
-                no_result:"This author does not have any book in the system.",  
-              }];
-            } else {
-              this.posts = value.data.books.map((post) => ({
-                Author: post.book_author,
-                Title: post.book_title,
-                Publication_Date: post.publication_dt,
-                Summary: post.summary,
-                Uuid: post.uuid,
-                Uri: post.uri,
-                Isbn13: post.isbn13,
-              }));
-            }
-          })
-          .catch((reason) => {
-            console.log(reason);
-            this.posts = [
-              {
-                status: reason.response.status,
-                statusText: reason.response.statusText,
-                detail: reason.response.data,
-              },
-            ];
-          });
-=======
       try {
         this.end = false;
         this.error = null;
@@ -193,7 +121,6 @@ export default {
           uri: book.uri,
           isbn13: book.isbn13,
         }));
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
       } catch (err) {
         if (err.response) {
           // client received an error response (5xx, 4xx)
@@ -208,30 +135,15 @@ export default {
             message: err.message,
           };
         } else {
-<<<<<<< HEAD
-          // There's probably an error in your code
-=======
           // There's probably an error in the code
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
           this.error = {
             title: "Application Error",
             message: err.message,
           };
         }
       }
-<<<<<<< HEAD
-      this.loading = false;
-    },
-  },
-  mounted() {
-    this.fetchResponse();
-  },
-};
-</script>
-=======
       this.end = true;
     },
   },
 };
 </script>
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af

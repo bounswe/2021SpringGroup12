@@ -50,7 +50,6 @@ CREATE TABLE IF NOT EXISTS Quotes (
 	PRIMARY KEY(quoteID)
 );
 
-<<<<<<< HEAD
 CREATE TABLE IF NOT EXISTS Movie (
     movie_id            INTEGER,
   	display_title       TEXT NOT NULL,
@@ -61,7 +60,6 @@ CREATE TABLE IF NOT EXISTS Movie (
     summary_short       TEXT,
     link                TEXT NOT NULL,
 	PRIMARY KEY(movie_id)
-=======
 CREATE TABLE IF NOT EXISTS RelatedAnimes(
     id INTEGER PRIMARY KEY,
     title TEXT NOT NULL,
@@ -125,5 +123,4 @@ CREATE TABLE IF NOT EXISTS Currency_History (
     to_curr            TEXT,
     rate               REAL,
     PRIMARY KEY(date,from_curr,to_curr)
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 );

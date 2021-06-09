@@ -1,21 +1,12 @@
 import sqlite3
 from flask import Response
 import requests
-<<<<<<< HEAD
-
-from db.schemas import Book
-from db.mapper import book_mapper
-
-# TODO change this variable in deployment phase!
-DB_PATH = "practice-app\sqlfiles"
-=======
 import time
 from main.db.mapper import book_mapper
 
 # TODO change this variable in deployment phase!
 DB_PATH = "/home/veyis/Desktop/2021SpringGroup12/practice-app/sqlfiles"
 DB_PATH = "/home/veyis/Desktop/a2021SpringGroup12/practice-app/sqlfiles"
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 
 
 def validate_input(params):
@@ -31,11 +22,6 @@ def call_nytimes(params):
     # now we are sure name parameter is supplied, request books of this author from NYTimes API.
     author_name = params.title().replace(" ", "+")
     r = requests.get(
-<<<<<<< HEAD
-        f"https://api.nytimes.com/svc/books/v3/reviews.json?author={author_name}&api-key=uCt3VnXcNJbM0PZpPToDZO1GOOEGHVWE")
-    if r.status_code == 400:
-        return Response(f"Author \"{author_name}\" could not found in database!", status=400)
-=======
         f"https://api.nytimes.com/svc/books/v3/reviews.json?author={author_name}&api-key=gJkqRRyjYRV0YDiUDAEXwsa0uZLL6YLh")
     if r.status_code >= 500:
         # server is crashed, there is nothing I can do.
@@ -51,7 +37,6 @@ def call_nytimes(params):
             return Response(f"Author \"{author_name}\" could not found in database!", status=400)
         if r.status_code == 429:
             return Response(f"You have sent too many request recently, please wait!", status=429)
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
     r = r.json()
     return r["results"]
 
@@ -59,11 +44,7 @@ def call_nytimes(params):
 def add_book_from_user(book):
     # connect to Database
     try:
-<<<<<<< HEAD
-        con = sqlite3.connect("/practice-app.db")
-=======
         con = sqlite3.connect(DB_PATH + "/practice-app.db")
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
         cur = con.cursor()
         cur.execute(
             "INSERT INTO Books(book_title, book_author, url, publication_dt, summary, uuid, uri) VALUES (?,?,?,?,?,?,?)",

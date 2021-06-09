@@ -1,14 +1,10 @@
-<<<<<<< HEAD
-from db.schemas import Book, Issue, Quote, Movie
+from main.helpers import issue_helper
+from main.db.schemas import Book, Issue, Quote, CurrencyRate, SearchedAnime, UserAnime, Anime, RelatedAnime
+from main.db.schemas import Book, Issue, Quote, Movie
 from helpers import issue_helper
-=======
 
 import sys
-sys.path.append("..") 
-
-from main.db.schemas import Book, Issue, Quote, CurrencyRate, SearchedAnime, UserAnime, Anime, RelatedAnime
-from main.helpers import issue_helper
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
+sys.path.append("..")
 
 
 def book_mapper(book: dict) -> Book:
@@ -16,12 +12,8 @@ def book_mapper(book: dict) -> Book:
         book_title=book["book_title"],
         book_author=book["book_author"],
         url=book["url"] if 'url' in book.keys() else "",
-<<<<<<< HEAD
         publication_dt=book["publication_dt"] if 'publication_dt' in book.keys(
         ) else "",
-=======
-        publication_dt=book["publication_dt"] if 'publication_dt' in book.keys() else "",
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
         summary=book["summary"] if 'summary' in book.keys() else "",
         uuid=book["uuid"] if 'uuid' in book.keys() else "",
         uri=book["uri"] if 'uri' in book.keys() else "",
@@ -42,7 +34,6 @@ def issue_mapper(issue: dict) -> Issue:
         labels=issue['labels'],
         state=issue['state']
     )
-<<<<<<< HEAD
 
 
 def quote_mapper(quote: dict) -> Quote:
@@ -83,15 +74,17 @@ def movie_mapper2(movie: dict) -> Movie:
         ) else "",
         link=movie["link"]
     )
-=======
+
+
 def quote_mapper(quote: dict) -> Quote:
     return Quote(
-        quoteId= quote["_id"],
-        quoteAuthor= quote["quoteAuthor"],
-        quoteGenre= quote["quoteGenre"],
-        quoteText= quote["quoteText"],
+        quoteId=quote["_id"],
+        quoteAuthor=quote["quoteAuthor"],
+        quoteGenre=quote["quoteGenre"],
+        quoteText=quote["quoteText"],
         #last = quote["__v"]
-        )
+    )
+
 
 def searched_anime_mapper(anime: dict) -> SearchedAnime:
     return SearchedAnime(
@@ -107,6 +100,7 @@ def searched_anime_mapper(anime: dict) -> SearchedAnime:
         mal_id=anime["mal_id"] if anime["mal_id"] != None else 0
     )
 
+
 def anime_mapper(anime: dict) -> Anime:
     return Anime(
         title=anime["title"],
@@ -121,14 +115,17 @@ def anime_mapper(anime: dict) -> Anime:
         type=anime["type"] if "type" in anime else "",
         synopsis=anime["synopsis"] if anime["synopsis"] != None else "",
         duration=(int(anime["duration"].split(' ')[0])
-            if not anime["duration"].split(" ")[1] == "hr"
-            else int(anime["duration"].split(" ")[0])*60+int(anime["duration"].split(" ")[2])) 
-                if anime["duration"] and anime["duration"] != "Unknown" 
-                else 0,
-        sequel=RelatedAnime(title=anime["related"]["Sequel"][0]["name"], mal_id=anime["related"]["Sequel"][0]["mal_id"]) if "Sequel" in anime["related"] else None,
-        prequel=RelatedAnime(title=anime["related"]["Prequel"][0]["name"], mal_id=anime["related"]["Prequel"][0]["mal_id"]) if "Prequel" in anime["related"] else None,
+                  if not anime["duration"].split(" ")[1] == "hr"
+                  else int(anime["duration"].split(" ")[0])*60+int(anime["duration"].split(" ")[2]))
+        if anime["duration"] and anime["duration"] != "Unknown"
+        else 0,
+        sequel=RelatedAnime(title=anime["related"]["Sequel"][0]["name"], mal_id=anime["related"]
+                            ["Sequel"][0]["mal_id"]) if "Sequel" in anime["related"] else None,
+        prequel=RelatedAnime(title=anime["related"]["Prequel"][0]["name"], mal_id=anime["related"]
+                             ["Prequel"][0]["mal_id"]) if "Prequel" in anime["related"] else None,
         genres=[genre["name"] for genre in anime["genres"]]
     )
+
 
 def create_anime_mapper(anime: dict) -> UserAnime:
     return UserAnime(
@@ -144,11 +141,14 @@ def create_anime_mapper(anime: dict) -> UserAnime:
         synopsis=anime["synopsis"]
     )
 
+
 def currency_rate_mapper(currency_rate: dict) -> CurrencyRate:
     return CurrencyRate(
-        date= currency_rate["date"],
-        from_curr= currency_rate["query"]["from"] if 'query' in currency_rate.keys() else currency_rate["from"],
-        to_curr= currency_rate["query"]["to"] if 'query' in currency_rate.keys() else currency_rate["to"],
-        rate= currency_rate["info"]["rate"] if 'info' in currency_rate.keys() else currency_rate["rate"],
+        date=currency_rate["date"],
+        from_curr=currency_rate["query"]["from"] if 'query' in currency_rate.keys(
+        ) else currency_rate["from"],
+        to_curr=currency_rate["query"]["to"] if 'query' in currency_rate.keys(
+        ) else currency_rate["to"],
+        rate=currency_rate["info"]["rate"] if 'info' in currency_rate.keys(
+        ) else currency_rate["rate"],
     )
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af

@@ -93,10 +93,7 @@ export default {
         this.success = true;
         this.fail = false;
       } catch (err) {
-<<<<<<< HEAD
         console.log(err);
-=======
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
         this.success = false;
         this.fail = true;
         this.error = err.response.data.msg;
@@ -105,10 +102,7 @@ export default {
     },
     search() {
       if (this.searchQuery.length >= 3) {
-<<<<<<< HEAD
         console.log(this.searchQuery);
-=======
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
         this.$router.push({ name: 'Search', params: { query: this.searchQuery } });
       }
 

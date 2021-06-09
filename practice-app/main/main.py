@@ -4,32 +4,20 @@
 # NOTE: Remember you have to set your virtual environment and install flask
 from flask_cors import CORS
 import random
-<<<<<<< HEAD
-from helpers import issue_helper, books_helper
-import sqlite3
-from db import schemas, mapper
-import requests
-from flask import Flask, jsonify, Response, request
-=======
 from main.helpers import issue_helper, books_helper, anime_helper, currency_helper
 from pydantic import ValidationError
 import sqlite3
 from main.db import schemas, mapper
 import requests
 from flask import Flask, jsonify, Response, request, make_response, abort
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 import sys
 sys.path.append(".")
 
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
-<<<<<<< HEAD
-CORS(app)
-=======
 
 CORS(app)
 
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 """
 to read body: request.get_json() or request.form
 to read query parameters:  request.args.get(<argname>) or request.args.to_dict() or request.query_string.decode("utf-8")
@@ -41,18 +29,12 @@ def get_tasks():
     # get all tasks
     return "group12 practice-app"
 
-<<<<<<< HEAD
-
-@app.route('/books/', methods=['GET'])
-def get_books():
-=======
 ################################ BOOKS ############################
 
 
 @app.route('/books/', methods=['GET'])
 def get_books():
     print(request.args)
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
     # validate parameters
     x = books_helper.validate_input(request.args)
     if x is not None:
@@ -80,11 +62,8 @@ def create_book():
     db_response = books_helper.add_book_from_user(book)
     return db_response if db_response is not None else Response("Book added succesfully!", status=200)
 
-<<<<<<< HEAD
-=======
 ################################ ISSUES ############################
 
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 
 @app.route('/download_issues', methods=['GET'])
 def download_issues():
@@ -100,12 +79,6 @@ def download_issues():
     return f'{len(r)} issues are downloaded. There are total {total_issue} issues in the system'
 
 
-<<<<<<< HEAD
-@app.route('/issue', methods=['POST'])
-def post_issue():
-    issue = mapper.issue_mapper(request.get_json())
-    issue_helper.insert_single_issue(issue)
-=======
 @app.route('/issues', methods=['POST'])
 def post_issue():
     try:
@@ -113,20 +86,10 @@ def post_issue():
     except:
         return Response(f'An error occurred while posting json. Json = {request.get_json()}', status=400)
     issue_helper.insert_multiple_issue([issue])
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
     total_issue = issue_helper.get_issue_count()
     return f'There are total {total_issue} issues in the system'
 
 
-<<<<<<< HEAD
-@app.route('/issue/<int:number>', methods=['GET'])
-def get_issue(number: int):
-    issue = issue_helper.get_issue(number)
-    return jsonify(issue.__dict__)
-
-
-@app.route('/issue', methods=['GET'])
-=======
 @app.route('/issues/<int:number>', methods=['GET'])
 def get_issue(number: int):
     issue = issue_helper.get_issue(number)
@@ -136,7 +99,6 @@ def get_issue(number: int):
 
 
 @app.route('/issues', methods=['GET'])
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 def get_all_issues():
     max_results = 30
     if request.args.get("max_results") is not None:
@@ -145,8 +107,6 @@ def get_all_issues():
     return jsonify([issue.__dict__ for issue in issue_list])
 
 
-<<<<<<< HEAD
-=======
 ####################################### ANIME ####################################
 @app.route('/anime/search/', methods=['GET'])
 def search_anime():
@@ -195,7 +155,6 @@ def post_anime():
 
 
 ################################ QUOTES ############################
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 @app.route('/quotes/', methods=['POST'])
 def add_quote():
     quote_fields = request.get_json()
@@ -267,7 +226,6 @@ def get_quote_opt():
 
     return schemas.QuoteResponse(data=quotes).__dict__
 
-<<<<<<< HEAD
 
 # ----------------------------------------------------------------------REFIKA----------------------------------------------------------------------
 
@@ -355,7 +313,6 @@ def not_found(error):
     # a friendlier error handling message
     # return make_response(jsonify({'error': 'Task was not found'}), 404)
     return "page not found :("
-=======
 ################################ CONVERT ############################
 
 
@@ -427,7 +384,6 @@ def internal_error(error):
 @app.errorhandler(429)
 def rate_limit(error):
     return make_response({"msg": "Api is rate limited please wait and try again"}, 429)
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 
 
 if __name__ == '__main__':
