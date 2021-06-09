@@ -3,10 +3,6 @@
 
 # Flask Framework
 Flask==2.0.1
-<<<<<<< HEAD
-=======
-
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 Werkzeug==2.0.1
 pydantic==1.8.2
 

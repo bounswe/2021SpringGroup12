@@ -115,6 +115,9 @@ const routes = [
     name: 'Post',
     component: AnimePost,
   },
+<<<<<<< HEAD
+    {
+=======
   
   {
     path: '/movies_home/',
@@ -138,6 +141,7 @@ const routes = [
     component: ConvertHome
   },
         {
+>>>>>>> master
     path: '/getquotes',
     name: 'GetQuote',
     component: GetQuote,
@@ -157,6 +161,24 @@ const routes = [
     name: 'QuoteHome',
     component: QuoteHome,
   },
+<<<<<<< HEAD
+  {
+    path: '/postcocktail',
+    name: 'PostCocktail',
+    component: PostCocktail,
+  },
+  {
+    path: '/getcocktails',
+    name: 'GetCocktails',
+    component: GetCocktails,
+  },
+  {
+    path: '/cocktails',
+    name: 'CocktailHome',
+    component: CocktailHome,
+  },
+=======
+>>>>>>> master
 ];
 
 const router = createRouter({
