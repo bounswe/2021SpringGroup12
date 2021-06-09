@@ -3,7 +3,7 @@ import Home from '../views/Home.vue';
 import SearchResults from '../anime/views/SearchResults.vue';
 import Detail from '../anime/views/Detail.vue';
 import AnimeHome from '../anime/views/AnimeHome.vue';
-import AnimePost from '../anime/views/Post.vue';
+import Post from '../anime/views/Post.vue';
 import BooksPostHome from '../books/pages/PostBook.vue';
 import BooksGetHome from '../books/pages/GetBook.vue';
 import BooksHome from '../books/pages/BooksHome.vue';
@@ -11,6 +11,7 @@ import PostIssue from '../issues/pages/PostIssue.vue';
 import GetAll from '../issues/pages/GetAll.vue';
 import GetIssue from '../issues/pages/GetIssue.vue';
 import HomeIssue from '../issues/pages/IssuesHome.vue';
+import ConvertHome from '../convert/views/ConvertHome.vue';
 
 const routes = [
   {
@@ -57,6 +58,11 @@ const routes = [
     path: '/anime/post',
     name: 'Post',
     component: Post,
+  },
+  {
+    path: '/convert',
+    name: 'ConvertHome',
+    component: ConvertHome
   },
 ];
 

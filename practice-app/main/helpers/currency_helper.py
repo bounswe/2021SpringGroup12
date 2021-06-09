@@ -1,29 +1,28 @@
 import sqlite3
-from sqlite3 import Cursor
-from typing import List
 from flask import Response
-import requests
+from main.db.mapper import currency_rate_mapper
 
-from db.schemas import CurrencyRate
-from db.mapper import currency_rate_mapper
+# TODO change this variable in deployment phase!
+DB_PATH = "C:/Users/ihsan/PycharmProjects/2021SpringGroup12/practice-app/sqlfiles/practice-app.db"
+
 
 def validate_get_input(params):
     # necesssary info check
     if "from" not in params:
-        return Response("Please provide the 'from' of the currency rate!", status=400)
+        return Response("Please provide the -from- field of the currency rate!", status=400)
     if "to" not in params:
-        return Response("Please provide the 'to' of the currency rate!", status=400)
+        return Response("Please provide the -to- field of the currency rate!", status=400)
 
 
 def non_existing_curr_rate_check(r):
     #check "to" field validity
     if r["result"] == None:
-        return Response("Please provide a legal 'to' of the currency rate!", status=400)
+        return Response("Please provide a legal -to- of the currency rate!", status=400)
 
 
 def add_db_from_exchangerate(cr):
     # save the currency rate record to db if it is not in db
-    con = sqlite3.connect("../../sqlfiles/practice-app.db")
+    con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
     try:
         cur.execute("INSERT INTO Currency_History (date, from_curr, to_curr, rate) VALUES (?,?,?,?)",
@@ -44,7 +43,7 @@ def calculate_amount(r, params):
 
 def add_db_from_user(cr):
     # try to insert record to db.
-    con = sqlite3.connect("../../sqlfiles/practice-app.db")
+    con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
     try:
         cur.execute("INSERT INTO Currency_History (date, from_curr, to_curr, rate) VALUES (?,?,?,?)",
