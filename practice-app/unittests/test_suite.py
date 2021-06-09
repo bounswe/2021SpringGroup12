@@ -1,11 +1,11 @@
+from unittests import test_books
+from unittests import helper_test
+import HtmlTestRunner  # Import the HTMLTestRunner Module
+import os
 import unittest
 import sys
 sys.path.append(".")
 sys.path.append("../main")
-import os
-import HtmlTestRunner  # Import the HTMLTestRunner Module
-from unittests import helper_test
-from unittests import test_books
 
 # Get the Present Working Directory to store the report
 
@@ -31,5 +31,7 @@ class HTML_TestRunner_TestSuite(unittest.TestCase):
 
 # main function to call unittests
 
+
 if __name__ == '__main__':
-    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output='reports/html/'))
+    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(
+        output='reports/html/'))

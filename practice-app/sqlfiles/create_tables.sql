@@ -52,6 +52,16 @@ CREATE TABLE IF NOT EXISTS Quotes (
 	PRIMARY KEY(quoteID)
 );
 
+CREATE TABLE IF NOT EXISTS Movie (
+    movie_id            INTEGER,
+  	display_title       TEXT NOT NULL,
+    byline              TEXT NOT NULL,
+    mpaa_rating         TEXT,
+    critics_pick        INTEGER,
+    headline            TEXT,
+    summary_short       TEXT,
+    link                TEXT NOT NULL,
+	PRIMARY KEY(movie_id)
 CREATE TABLE IF NOT EXISTS RelatedAnimes(
     id INTEGER PRIMARY KEY,
     title TEXT NOT NULL,

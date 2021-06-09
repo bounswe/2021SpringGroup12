@@ -93,6 +93,7 @@ export default {
         this.success = true;
         this.fail = false;
       } catch (err) {
+        console.log(err);
         this.success = false;
         this.fail = true;
         this.error = err.response.data.msg;
@@ -101,6 +102,7 @@ export default {
     },
     search() {
       if (this.searchQuery.length >= 3) {
+        console.log(this.searchQuery);
         this.$router.push({ name: 'Search', params: { query: this.searchQuery } });
       }
 
