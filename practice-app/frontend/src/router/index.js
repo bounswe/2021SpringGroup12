@@ -3,13 +3,13 @@ import Home from '../views/Home.vue';
 import SearchResults from '../anime/views/SearchResults.vue';
 import Detail from '../anime/views/Detail.vue';
 import AnimeHome from '../anime/views/AnimeHome.vue';
-import AnimePost from '../anime/views/Post.vue';
 import BooksPostHome from '../books/pages/PostBook.vue';
 import BooksGetHome from '../books/pages/GetBook.vue';
 import BooksHome from '../books/pages/BooksHome.vue';
 import NameInfoHome from '../nameinfo/pages/Home.vue';
 import NameInfoGet from '../nameinfo/pages/GetNameInfo.vue';
 import NameInfoPost from '../nameinfo/pages/PostNameInfo.vue';
+import Post from '../anime/views/Post.vue';
 
 const routes = [
   {
@@ -65,7 +65,7 @@ const routes = [
   {
     path: '/anime/post',
     name: 'Post',
-    component: AnimePost,
+    component: Post,
   },
 ];
 

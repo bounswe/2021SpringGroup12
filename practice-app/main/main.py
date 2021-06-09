@@ -8,7 +8,16 @@ from flask import Flask, jsonify, Response, request
 import requests
 from main.db import schemas, mapper
 import sqlite3
+<<<<<<< HEAD
 from main.helpers import issue_helper, books_helper, name_info_helper
+=======
+<<<<<<< HEAD
+
+from helpers import issue_helper, books_helper, currency_helper
+=======
+from main.helpers import issue_helper, books_helper, anime_helper, currency_helper
+>>>>>>> 68600fc1d4c916a3dd957e0c20667b36af469ce4
+>>>>>>> master
 import random
 from flask_cors import CORS
 
@@ -254,11 +263,96 @@ def save_new_name_info():
     return Response("Your name information has been added to database!", status=200) 
     
 
+@app.route('/convert/', methods=['GET'])
+def convert_currency():
+    #necesssary info check
+    x = currency_helper.validate_get_input(request.args)
+    if x is not None:
+        return x
+
+    from_curr = request.args.get("from").upper()
+    to_curr = request.args.get("to").upper()
+    #get data from exchangerate api
+    r = requests.get('https://api.exchangerate.host/convert?from={}&to={}'.format(from_curr, to_curr))
+    r = r.json()
+    #check "to" rate exitance
+    check = currency_helper.non_existing_curr_rate_check(r)
+    if check is not None:
+        return check
+
+    cr = mapper.currency_rate_mapper(r)
+
+    #save the currency rate record to db if it is not in db
+    currency_helper.add_db_from_exchangerate(cr)
+
+    #calculate money with amount value if wanted
+    r = currency_helper.calculate_amount(r, request.args)
+
+    r.pop("historical")
+    r.pop("motd")
+
+    return r
+
+@app.route('/convert/', methods=['POST'])
+def create_currency_hist():
+
+    #check if the necessary information for the record is given. Otherwise 400 error.
+    cr = currency_helper.validate_post_input(request.get_json())
+    if type(cr) is not schemas.CurrencyRate:
+        return cr
+
+    #try to insert record to db.
+    db_response = currency_helper.add_db_from_user(cr)
+
+    return db_response if db_response is not None else Response("You have successfully inserted your currency rate to db", status=200)
+
 @app.errorhandler(404)
 def not_found(error):
     # a friendlier error handling message
     # return make_response(jsonify({'error': 'Task was not found'}), 404)
     return "page not found :("
+
+@app.route('/anime/search/', methods=['GET'])
+def search_anime():
+    params = request.args
+    #Validation
+    validation = anime_helper.validate_search_params(params)
+    if validation is not None:
+        return validation
+    #API Connection
+    search_result = anime_helper.jikan_api_search(params)
+    if type(search_result) != list:
+        return search_result
+    #Map result
+    searched_animes = [mapper.searched_anime_mapper(anime).dict() for anime in search_result]
+    #Return results
+    return jsonify(searched_animes)
+
+@app.route('/anime/<int:id>', methods=['GET'])
+def get_anime(id: int):
+    anime_helper.jikan_api_get(id)
+    #API Connection
+    result = anime_helper.jikan_api_get(id)
+    if type(result) == Response:
+        return result
+    #Map Result
+    anime = mapper.anime_mapper(result).dict()
+    #Add to DB
+    db_response = anime_helper.add_mal_anime_to_db(anime)
+    if type(db_response) == Response:
+        return db_response
+    #Return results
+    return anime
+
+@app.route('/anime/', methods=['POST'])
+def post_anime():
+    #Get the request body
+    requestBody = request.json
+    #Map to object
+    post_anime = mapper.create_anime_mapper(requestBody).dict()
+    #Add to DB
+    database_response = anime_helper.add_user_anime_to_db(post_anime)
+    return Response("Anime added successfully", status=200) if database_response is None else database_response
 
 
 if __name__ == '__main__':

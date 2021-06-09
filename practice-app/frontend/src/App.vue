@@ -1,9 +1,13 @@
 <template>
   <div id="nav">
     <router-link to="/">Home</router-link> |
+<<<<<<< HEAD
     <router-link to="/anime">Anime</router-link> | 
     <router-link to="/books">Books</router-link> |
 	<router-link to="/homenameinfo">Name/Age information</router-link>
+=======
+    <router-link to="/anime">Anime</router-link>
+>>>>>>> master
   </div>
   <router-view/>
 </template>
