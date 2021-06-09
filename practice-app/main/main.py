@@ -420,7 +420,7 @@ def create_currency_hist():
 
     return db_response if db_response is not None else Response("You have successfully inserted your currency rate to db", status=200)
 
-################################ COCKTAIL ############################
+################################ COCKTAIL ###############################
 
 
 @app.route('/cocktails/get_cocktails/', methods=['GET'])
