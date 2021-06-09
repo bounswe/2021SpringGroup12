@@ -7,13 +7,32 @@ import AnimePost from '../anime/views/Post.vue';
 import BooksPostHome from '../books/pages/PostBook.vue';
 import BooksGetHome from '../books/pages/GetBook.vue';
 import BooksHome from '../books/pages/BooksHome.vue';
+<<<<<<< HEAD
+=======
+import NameInfoHome from '../nameinfo/pages/Home.vue';
+import NameInfoGet from '../nameinfo/pages/GetNameInfo.vue';
+import NameInfoPost from '../nameinfo/pages/PostNameInfo.vue';
+import Post from '../anime/views/Post.vue';
+import Movies from '../movies/pages/movie_home.vue';
+import MoviesReview from '../movies/pages/add_review.vue';
+import MoviesKeyword from '../movies/pages/keyword2.vue';
+import Post from '../anime/views/Post.vue';
+import PostIssue from '../issues/pages/PostIssue.vue';
+import GetAll from '../issues/pages/GetAll.vue';
+import GetIssue from '../issues/pages/GetIssue.vue';
+import HomeIssue from '../issues/pages/IssuesHome.vue';
+import ConvertHome from '../convert/views/ConvertHome.vue';
+>>>>>>> master
 import QuoteHome from '../quotes/pages/QuoteHome.vue';
 import PostQuote from '../quotes/pages/PostQuote.vue';
 import GetQuote from '../quotes/pages/GetQuote.vue';
 import RandomQuote from '../quotes/pages/RandomQuote.vue';
+<<<<<<< HEAD
 import CocktailHome from '../cocktails/pages/CocktailHome.vue'
 import PostCocktail from '../cocktails/pages/PostCocktail.vue';
 import GetCocktails from '../cocktails/pages/GetCocktails.vue';
+=======
+>>>>>>> master
 
 const routes = [
   {
@@ -35,6 +54,55 @@ const routes = [
     path: '/books',
     name: 'Bookshome',
     component: BooksHome,
+    {
+    path: '/getall',
+    name: 'GetAll',
+    component: GetAll,
+  },
+  {
+    path: '/getissue',
+    name: 'GetIssue',
+    component: GetIssue,
+  },
+  {
+    path: '/postissues',
+    name: 'PostIssue',
+    component: PostIssue,
+  },
+  {
+    path: '/issues',
+    name: 'HomeIssue',
+    component: HomeIssue,
+  },
+  {
+    path: '/getbooks',
+    name: 'BooksGetHome',
+    component: BooksGetHome,
+  },
+  {
+    path: '/postbooks',
+    name: 'BooksPostHome',
+    component: BooksPostHome,
+  },
+  {
+    path: '/books',
+    name: 'Bookshome',
+    component: BooksHome,
+  },
+  {
+    path: '/getnameinfo',
+    name: 'NameInfoGet',
+    component: NameInfoGet,
+  },
+  {
+    path: '/postnameinfo',
+    name: 'NameInfoPost',
+    component: NameInfoPost,
+  },
+  {
+    path: '/homenameinfo',
+    name: 'NameInfoHome',
+    component: NameInfoHome,
   },
   {
     path: '/anime',
@@ -56,7 +124,33 @@ const routes = [
     name: 'Post',
     component: AnimePost,
   },
+<<<<<<< HEAD
     {
+=======
+  
+  {
+    path: '/movies_home/',
+    name: 'MoviesHome',
+    component: Movies,
+  },
+  {
+    path: '/movies/',
+    name: 'MoviesKeyword',
+    component: MoviesKeyword,
+  },
+  {
+    path: '/movies_addReview/',
+    name: 'MoviesReview',
+    component: MoviesReview,
+    component: Post,
+  },
+  {
+    path: '/convert',
+    name: 'ConvertHome',
+    component: ConvertHome
+  },
+        {
+>>>>>>> master
     path: '/getquotes',
     name: 'GetQuote',
     component: GetQuote,
@@ -76,6 +170,7 @@ const routes = [
     name: 'QuoteHome',
     component: QuoteHome,
   },
+<<<<<<< HEAD
   {
     path: '/postcocktail',
     name: 'PostCocktail',
@@ -91,6 +186,8 @@ const routes = [
     name: 'CocktailHome',
     component: CocktailHome,
   },
+=======
+>>>>>>> master
 ];
 
 const router = createRouter({

@@ -42,11 +42,10 @@ export default {
         this.loading = true;
         const url = `${process.env.VUE_APP_API_URL}/anime/search?query=${this.$route.params.query}&limit=15`;
         const response = await axios.get(url);
-        console.log(response);
-        const { animes } = response.data;
+        const animes = response.data;
         this.animes = animes.map((anime) => ({
           title: anime.title,
-          image: anime.image_url,
+          image: anime.image,
           synopsis: anime.synopsis,
           type: anime.type,
           start_date: anime.start_date
@@ -64,10 +63,9 @@ export default {
           score: anime.score,
           rating: anime.rating,
           airing: anime.airing,
-          id: anime.id,
+          id: anime.mal_id,
         }));
       } catch (err) {
-        console.log(err);
         this.error = {
           title: 'error',
           message: err.msg,
@@ -80,7 +78,6 @@ export default {
     },
     search() {
       if (this.searchQuery.length >= 3) {
-        console.log(this.searchQuery);
         this.$router.push({ name: 'Search', params: { query: this.searchQuery } });
       }
 

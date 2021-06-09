@@ -33,9 +33,15 @@
         </tr>
 
       <tr  v-for="(issue) in data">
+<<<<<<< HEAD
         <td>{{ issue.Assignees }}</td>
         <td>{{ issue.Description }}</td>
         <td>{{ issue.Labels }}</td>
+=======
+        <td>{{ issue.Author }}</td>
+        <td>{{ issue.Genre }}</td>
+        <td>{{ issue.Text }}</td>
+>>>>>>> master
       </tr>
         </table>
     </div>
@@ -90,15 +96,26 @@ export default {
       try {
         this.end = false;
         this.error = null;
+<<<<<<< HEAD
         const url = `http://127.0.0.1:5000/quotes/?genre=${this.quote_type}`;
+=======
+        //const url = `http://127.0.0.1:5000/quotes/?genre=${this.quote_type}`;
+        const url = `http://localhost:5000/quotes/?genre=${this.quote_type}`;
+>>>>>>> master
         const response = await axios.get(url,{ headers });
         this.data = response.data['data'];
         for (let i = 0; i < this.data.length; i++) {
           let issue = this.data[i]
           this.data[i] = {
+<<<<<<< HEAD
                 Assignees: issue.quoteAuthor,
                 Description: issue.quoteGenre,
                 Labels: issue.quoteText
+=======
+                Author: issue.quoteAuthor,
+                Genre: issue.quoteGenre,
+                Text: issue.quoteText
+>>>>>>> master
               };
         }
 

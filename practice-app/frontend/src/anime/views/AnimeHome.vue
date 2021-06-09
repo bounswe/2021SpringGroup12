@@ -27,7 +27,6 @@ export default {
   methods: {
     search() {
       if (this.searchQuery.length >= 3) {
-        console.log(this.searchQuery);
         this.$router.push({ name: 'Search', params: { query: this.searchQuery } });
       }
 

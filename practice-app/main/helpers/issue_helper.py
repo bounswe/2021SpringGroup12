@@ -2,7 +2,7 @@ import sqlite3
 from sqlite3 import Cursor
 from typing import List
 
-from db.schemas import Issue
+from main.db.schemas import Issue
 
 ALL_ISSUES = {}
 
@@ -98,11 +98,14 @@ def get_issue(issue_number: int) -> Issue:
     cur = con.cursor()
 
     try:
-        data = cur.execute("SELECT * FROM Issues WHERE number=?", (issue_number,))
+        data = cur.execute(
+            "SELECT * FROM Issues WHERE number=?", (issue_number,))
         _, description, state = data.fetchone()
-        data = cur.execute("SELECT assignee FROM Assignees WHERE issue_number=?", (issue_number,))
+        data = cur.execute(
+            "SELECT assignee FROM Assignees WHERE issue_number=?", (issue_number,))
         assignees = [row[0] for row in data.fetchall()]
-        data = cur.execute("SELECT label FROM Labels WHERE issue_number=?", (issue_number,))
+        data = cur.execute(
+            "SELECT label FROM Labels WHERE issue_number=?", (issue_number,))
         labels = [row[0] for row in data.fetchall()]
         return Issue(number=issue_number,
                      description=description,
@@ -115,6 +118,7 @@ def get_issue(issue_number: int) -> Issue:
         con.commit()
         con.close()
 
+
 def get_all_issues(limit: int) -> List[Issue]:
     con = sqlite3.connect(DB_LOC)
     cur = con.cursor()
@@ -125,15 +129,17 @@ def get_all_issues(limit: int) -> List[Issue]:
         data = cur.execute("SELECT * FROM Issues LIMIT ?", (limit,))
         issues = data.fetchall()
         for issue_number, description, state in issues:
-            data = cur.execute("SELECT assignee FROM Assignees WHERE issue_number=?", (issue_number,))
+            data = cur.execute(
+                "SELECT assignee FROM Assignees WHERE issue_number=?", (issue_number,))
             assignees = [row[0] for row in data.fetchall()]
-            data = cur.execute("SELECT label FROM Labels WHERE issue_number=?", (issue_number,))
+            data = cur.execute(
+                "SELECT label FROM Labels WHERE issue_number=?", (issue_number,))
             labels = [row[0] for row in data.fetchall()]
             issue_list.append(Issue(number=issue_number,
-                 description=description,
-                 state=state,
-                 assignees=assignees,
-                 labels=labels)
+                                    description=description,
+                                    state=state,
+                                    assignees=assignees,
+                                    labels=labels)
                               )
     except Exception:
         print(f'An error occurred getting all issues')
@@ -141,5 +147,3 @@ def get_all_issues(limit: int) -> List[Issue]:
         con.commit()
         con.close()
         return issue_list
-
-

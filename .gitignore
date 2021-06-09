@@ -3,3 +3,5 @@ __pycache__/
 .idea/
 **/node_modules/
 **/dist/
+**/myenv2/
+yarn.lock

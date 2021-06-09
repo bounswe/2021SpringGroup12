@@ -1,7 +1,7 @@
 import sqlite3
 from flask import Response
 import requests
-from db.mapper import quote_mapper
+from main.db.mapper import quote_mapper
 
 DB_PATH = "C:\\Users\gokay\\Desktop\\TERM-6\\2021SpringGroup12\\practice-app\\sqlfiles"
 
