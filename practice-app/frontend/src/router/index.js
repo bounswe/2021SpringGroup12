@@ -3,7 +3,17 @@ import Home from '../views/Home.vue';
 import SearchResults from '../anime/views/SearchResults.vue';
 import Detail from '../anime/views/Detail.vue';
 import AnimeHome from '../anime/views/AnimeHome.vue';
+<<<<<<< HEAD
 import AnimePost from '../anime/views/Post.vue';
+=======
+import BooksPostHome from '../books/pages/PostBook.vue';
+import BooksGetHome from '../books/pages/GetBook.vue';
+import BooksHome from '../books/pages/BooksHome.vue';
+import NameInfoHome from '../nameinfo/pages/Home.vue';
+import NameInfoGet from '../nameinfo/pages/GetNameInfo.vue';
+import NameInfoPost from '../nameinfo/pages/PostNameInfo.vue';
+import Post from '../anime/views/Post.vue';
+>>>>>>> master
 import BooksPostHome from '../books/pages/PostBook.vue';
 import BooksGetHome from '../books/pages/GetBook.vue';
 import BooksHome from '../books/pages/BooksHome.vue';
@@ -56,6 +66,36 @@ const routes = [
     path: '/issues',
     name: 'HomeIssue',
     component: HomeIssue,
+  },
+  {
+    path: '/getbooks',
+    name: 'BooksGetHome',
+    component: BooksGetHome,
+  },
+  {
+    path: '/postbooks',
+    name: 'BooksPostHome',
+    component: BooksPostHome,
+  },
+  {
+    path: '/books',
+    name: 'Bookshome',
+    component: BooksHome,
+  },
+  {
+    path: '/getnameinfo',
+    name: 'NameInfoGet',
+    component: NameInfoGet,
+  },
+  {
+    path: '/postnameinfo',
+    name: 'NameInfoPost',
+    component: NameInfoPost,
+  },
+  {
+    path: '/homenameinfo',
+    name: 'NameInfoHome',
+    component: NameInfoHome,
   },
   {
     path: '/anime',

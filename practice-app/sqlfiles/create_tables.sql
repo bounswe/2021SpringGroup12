@@ -23,6 +23,12 @@ CREATE TABLE IF NOT EXISTS BookISBNs (
     UNIQUE(book_id,isbn)   -- restrict the same isbn of the book to be added multiple times
 );
 
+CREATE TABLE IF NOT EXISTS Name_Infos (
+	name    TEXT,
+	age     INTEGER,
+	country TEXT
+);
+
 CREATE TABLE IF NOT EXISTS Issues (
     number             INTEGER,
     description         TEXT,

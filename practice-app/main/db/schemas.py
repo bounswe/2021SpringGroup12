@@ -40,6 +40,17 @@ class Issue(BaseModel):
     description: str
     labels: List[str]
     state: str
+    
+class NameInfo(BaseModel):
+    name: str
+    age: int
+    country: str
+    
+class NameInfoResponse():
+    name: str
+    age: int
+    country: str
+    count: int
 
 
 class Movie(BaseModel):
