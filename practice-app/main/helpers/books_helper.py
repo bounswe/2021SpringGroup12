@@ -6,7 +6,7 @@ from main.db.mapper import book_mapper
 
 # TODO change this variable in deployment phase!
 DB_PATH = "/home/veyis/Desktop/2021SpringGroup12/practice-app/sqlfiles"
-DB_PATH = "/home/veyis/Desktop/a2021SpringGroup12/practice-app/sqlfiles"
+DB_PATH = "/home/veyis/Desktop/2021SpringGroup12-8e1c54b7896240a6d22027d0a291d6359b737675/practice-app/sqlfiles/practice-app.db"
 
 
 def validate_input(params):
@@ -44,7 +44,7 @@ def call_nytimes(params):
 def add_book_from_user(book):
     # connect to Database
     try:
-        con = sqlite3.connect(DB_PATH + "/practice-app.db")
+        con = sqlite3.connect(DB_PATH)
         cur = con.cursor()
         cur.execute(
             "INSERT INTO Books(book_title, book_author, url, publication_dt, summary, uuid, uri) VALUES (?,?,?,?,?,?,?)",
@@ -65,20 +65,20 @@ def add_book_from_user(book):
 
 
 def add_books_from_nytimes(books):
-    con = sqlite3.connect(DB_PATH + "/practice-app.db")
+    con = sqlite3.connect(DB_PATH )
     cur = con.cursor()
     for book in books:
         try:
             cur.execute(
                 "INSERT INTO Books(book_title, book_author, url, publication_dt, summary, uuid, uri) VALUES (?,?,?,?,?,?,?)",
-                (book.book_title, book.book_author, book.url, book.publication_dt, book.summary, book.uuid, book.uri))
+                (book["book_title"], book["book_author"], book["url"], book["publication_dt"], book["summary"], book["uuid"], book["uri"]))
             cur.execute("SELECT book_id FROM Books WHERE book_title = ? AND book_author = ?",
-                        (book.book_title, book.book_author))
+                        (book["book_title"], book["book_author"]))
             book_id = cur.fetchone()[0]
-            for isbn in book.isbn13:
+            for isbn in book["isbn13"]:
                 cur.execute(
                     "INSERT INTO BookISBNs(book_id, isbn) VALUES (?,?)", (book_id, isbn))
-        except:
+        except Exception as err:
             # do nothing upon failure, this is not a critical process
             continue
     con.commit()

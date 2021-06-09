@@ -3,6 +3,7 @@ from sqlite3 import Cursor
 from typing import List
 
 from main.db.schemas import Issue
+DB_PATH = "/home/veyis/Desktop/2021SpringGroup12-8e1c54b7896240a6d22027d0a291d6359b737675/practice-app/sqlfiles/practice-app.db"
 
 ALL_ISSUES = {}
 
@@ -37,9 +38,6 @@ def get_simple_issue(json_issue):
     return ret_issue
 
 
-DB_LOC = "C:/GIT/2021SpringGroup12/practice-app/sqlfiles/practice-app.db"
-
-
 def insert_issue(cur: Cursor, issue: Issue):
     cur.execute(
         "INSERT OR IGNORE INTO Issues(number, description, state) VALUES (?,?,?)",
@@ -55,7 +53,7 @@ def insert_issue(cur: Cursor, issue: Issue):
 
 
 def insert_single_issue(issue: Issue):
-    con = sqlite3.connect(DB_LOC)
+    con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
     try:
         insert_issue(cur, issue)
@@ -68,7 +66,7 @@ def insert_single_issue(issue: Issue):
 
 
 def insert_multiple_issue(issue_list: List[Issue]):
-    con = sqlite3.connect(DB_LOC)
+    con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
     for issue in issue_list:
         try:
@@ -80,7 +78,7 @@ def insert_multiple_issue(issue_list: List[Issue]):
 
 
 def get_issue_count() -> int:
-    con = sqlite3.connect(DB_LOC)
+    con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
     try:
         data = cur.execute("select count(*) from Issues")
@@ -94,7 +92,7 @@ def get_issue_count() -> int:
 
 
 def get_issue(issue_number: int) -> Issue:
-    con = sqlite3.connect(DB_LOC)
+    con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
 
     try:
@@ -120,7 +118,7 @@ def get_issue(issue_number: int) -> Issue:
 
 
 def get_all_issues(limit: int) -> List[Issue]:
-    con = sqlite3.connect(DB_LOC)
+    con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
 
     issue_list = []

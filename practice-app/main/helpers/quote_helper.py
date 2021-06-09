@@ -4,6 +4,7 @@ import requests
 from main.db.mapper import quote_mapper
 
 DB_PATH = "C:\\Users\gokay\\Desktop\\TERM-6\\2021SpringGroup12\\practice-app\\sqlfiles"
+DB_PATH = "/home/veyis/Desktop/2021SpringGroup12-8e1c54b7896240a6d22027d0a291d6359b737675/practice-app/sqlfiles/practice-app.db"
 
 
 def get_genres():
@@ -29,7 +30,7 @@ def call_quote_api(params):
 
 
 def add_quotes_quote_garden(quotes):
-    con = sqlite3.connect(DB_PATH + "/practice-app.db")
+    con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
     for quote in quotes:
         try:
@@ -42,7 +43,7 @@ def add_quotes_quote_garden(quotes):
 
 def add_quote_from_user(quote):
     try:
-        con = sqlite3.connect(DB_PATH + "/practice-app.db")
+        con = sqlite3.connect(DB_PATH )
         cur = con.cursor()
         # try to insert quote to DB, return forbidden upon failure
         cur.execute("INSERT INTO Quotes(quoteId, quoteAuthor, quoteGenre, quoteText) VALUES (?,?,?,?)",

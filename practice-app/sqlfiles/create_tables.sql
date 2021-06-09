@@ -1,3 +1,4 @@
+------------------- BOOKS --------------
 CREATE TABLE IF NOT EXISTS Books (
     book_id             INTEGER,
   	book_title          TEXT NOT NULL,
@@ -19,12 +20,14 @@ CREATE TABLE IF NOT EXISTS BookISBNs (
     UNIQUE(book_id,isbn)   -- restrict the same isbn of the book to be added multiple times
 );
 
+------------------- NAME-AGE --------------
 CREATE TABLE IF NOT EXISTS Name_Infos (
 	name    TEXT,
 	age     INTEGER,
 	country TEXT
 );
 
+------------------- ISSUE--------------
 CREATE TABLE IF NOT EXISTS Issues (
     number             INTEGER,
     description         TEXT,
@@ -44,6 +47,7 @@ CREATE TABLE IF NOT EXISTS Labels (
 	UNIQUE(issue_number,label)
 );
 
+------------------- QUOTE --------------
 CREATE TABLE IF NOT EXISTS Quotes (
     quoteId            TEXT NOT NULL,
   	quoteAuthor        TEXT NOT NULL,
@@ -52,6 +56,7 @@ CREATE TABLE IF NOT EXISTS Quotes (
 	PRIMARY KEY(quoteID)
 );
 
+------------------- MOVIES --------------
 CREATE TABLE IF NOT EXISTS Movie (
     movie_id            INTEGER,
   	display_title       TEXT NOT NULL,
@@ -62,6 +67,8 @@ CREATE TABLE IF NOT EXISTS Movie (
     summary_short       TEXT,
     link                TEXT NOT NULL,
 	PRIMARY KEY(movie_id)
+);
+------------------- ANIME --------------
 CREATE TABLE IF NOT EXISTS RelatedAnimes(
     id INTEGER PRIMARY KEY,
     title TEXT NOT NULL,
@@ -119,10 +126,24 @@ CREATE TABLE IF NOT EXISTS UserAnimes(
     synopsis            TEXT NOT NULL,
     UNIQUE(title, type)
 );
+
+------------------- CURRENCY --------------
 CREATE TABLE IF NOT EXISTS Currency_History (
     date               TEXT,
     from_curr          TEXT,
     to_curr            TEXT,
     rate               REAL,
     PRIMARY KEY(date,from_curr,to_curr)
+);
+
+-------------------  COCKTAIL --------------
+CREATE TABLE IF NOT EXISTS Cocktails (
+    cocktail_name TEXT,
+    ingredient_1  TEXT,
+    ingredient_2  TEXT,
+    ingredient_3  TEXT,
+    ingredient_4  TEXT,
+    glass TEXT,
+    instructions  TEXT,
+    PRIMARY KEY (cocktail_name)
 );

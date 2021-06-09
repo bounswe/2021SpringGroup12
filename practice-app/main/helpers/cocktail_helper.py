@@ -13,6 +13,7 @@ from db.schemas import Cocktail
 from db.mapper import cocktail_mapper
 
 DB_PATH="/Users/batuhan_mac/Desktop/cmpe/Cmpe352/week9/cocktails/2021SpringGroup12/practice-app/sqlfiles/"
+DB_PATH = "/home/veyis/Desktop/2021SpringGroup12-8e1c54b7896240a6d22027d0a291d6359b737675/practice-app/sqlfiles/practice-app.db"
 
 def validate_get_input(params):
     # necesssary info check
@@ -26,7 +27,7 @@ def non_existing_cocktail_name_check(r):
         return "Please provide an existing cocktail name!"
 
 def add_cocktails_from_user(cocktails):
-    con = sqlite3.connect(DB_PATH+"practice-app.db")
+    con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
     for cocktail in cocktails:
         try:
@@ -39,7 +40,7 @@ def add_cocktails_from_user(cocktails):
 
 def add_cocktail_from_user(Cocktail):
     # connect to Database
-    con = sqlite3.connect(DB_PATH+"practice-app.db")
+    con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
     try:
         cur.execute("INSERT INTO Cocktails(cocktail_name,ingredient_1, ingredient_2, ingredient_3,ingredient_4, glass, instructions) VALUES (?,?,?,?,?,?,?)", (Cocktail.cocktail_name, Cocktail.ingredient_1, Cocktail.ingredient_2, Cocktail.ingredient_3, Cocktail.ingredient_4, Cocktail.glass, Cocktail.instructions))
