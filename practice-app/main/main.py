@@ -4,7 +4,6 @@
 # NOTE: Remember you have to set your virtual environment and install flask
 from flask_cors import CORS
 import random
-from main.helpers import issue_helper, books_helper, anime_helper, currency_helper
 from pydantic import ValidationError
 import sqlite3
 from main.db import schemas, mapper
@@ -12,6 +11,11 @@ import requests
 from flask import Flask, jsonify, Response, request, make_response, abort
 import sys
 sys.path.append(".")
+from main.helpers import issue_helper, books_helper, name_info_helper, anime_helper, currency_helper
+
+import random
+from flask_cors import CORS
+
 
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
@@ -228,6 +232,97 @@ def get_quote_opt():
 
 ################################ CONVERT ############################
 
+# Uses Agify api which is on https://api.agify.io/
+# Here the assumption that "Agify returns the average age calculated from the data" is made
+@app.route('/name_information', methods=['GET'])
+def get_name_information():
+    name = request.args.get("name")
+    country = request.args.get("country")
+    onApi = False
+    onDB = False
+    countryBased = False
+    
+    if name == None or name.strip() == "":
+        return Response("Please provide the name!", status=400)
+    
+    api_url = f'https://api.agify.io/?name={name}'
+    
+    if country != None and country.strip()!="":
+        countryBased = True
+        api_url+=f'&country_id={country}'
+    
+    try:
+        r = requests.get(api_url)
+        response = r.json()
+        
+        if response["age"] != None:
+            onApi = True
+            countOnApi = response["count"]
+            ageOnApi = response["age"]
+    except Exception:
+        print("Agify.io unreachable!")
+    
+    
+    #Check db for matching entries to add to the results coming from Agify api
+    dbData = name_info_helper.get_name_info(name, country, countryBased)
+    
+    
+    onDB = dbData!=None and dbData[1] != 0
+    if onDB:
+        ageOnDB = dbData[0]
+        countOnDB = dbData[1]
+        print(dbData)
+    
+    #Combine results coming from api and db
+    if onApi and onDB:
+        resultCount = countOnApi + countOnDB
+        resultAge = ((countOnApi*ageOnApi)+(countOnDB*ageOnDB))/resultCount
+    elif onApi:
+        resultCount = countOnApi
+        resultAge = ageOnApi
+    elif onDB:
+        resultCount = countOnDB
+        resultAge = ageOnDB
+    else:
+        return Response("No registered data for this querry", status=200)
+    result = schemas.NameInfoResponse()
+    result.name=name
+    result.age=int(resultAge)
+    result.count=resultCount
+    if countryBased:
+        result.country = country
+    return jsonify(result.__dict__)
+    
+    
+@app.route('/name_information', methods=['POST'])
+def save_new_name_info():
+    body = request.get_json()
+
+    if body==None:
+        return Response("Please provide correct information in body as json", status=400)
+    # make sure that necessary information are given
+    if "name" not in body:
+        return Response("Please provide your name to save to the database!", status=400)
+    if "age" not in body:
+        return Response("Please provide your age to save to the database!", status=400)
+    if "country" not in body:
+        return Response("Please provide your country to save to the database!", status=400)
+    
+    try:
+        nameInfo = schemas.NameInfo(
+            name=body["name"],
+            age=body["age"],
+            country=body["country"])
+    except Exception:
+        return Response("Please provide correct information in body as json", status=400)
+        
+    success = name_info_helper.insert_name_info(nameInfo)
+    
+    if not success:
+        return Response("Your information couldnt be saved! Please try again later!", status=403)
+
+    return Response("Your name information has been added to database!", status=200) 
+    
 
 @app.route('/convert/', methods=['GET'])
 def convert_currency():
