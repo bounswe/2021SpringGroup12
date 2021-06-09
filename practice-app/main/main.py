@@ -181,13 +181,16 @@ def get_name_information():
         countryBased = True
         api_url+=f'&country_id={country}'
     
-    r = requests.get(api_url)
-    response = r.json()
-    
-    if response["age"] != None:
-        onApi = True
-        countOnApi = response["count"]
-        ageOnApi = response["age"]
+    try:
+        r = requests.get(api_url)
+        response = r.json()
+        
+        if response["age"] != None:
+            onApi = True
+            countOnApi = response["count"]
+            ageOnApi = response["age"]
+    except Exception:
+        print("Agify.io unreachable!")
     
     
     #Check db for matching entries to add to the results coming from Agify api

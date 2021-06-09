@@ -71,8 +71,8 @@ export default {
 
       const response = await axios
         .post(url, this.request)
-        .then((value) => {
-          console.log(value);
+        .then((value) => 
+		{
           if (value.status == 200) {
 			this.message = value.data;
             this.success = true;
@@ -80,16 +80,10 @@ export default {
           }
         })
         .catch((value) => {
-          console.log(value.response);
-          console.log(value.response.status);
-          console.log(value.status);
-          console.log(value.data);
-          console.log(value.response.data);
           this.success = false;
           this.fail = true;
           this.messsage = value.response.data;
         });
-      console.log(response);
     },
   },
 };

@@ -55,17 +55,6 @@ export default {
     };
   },
   methods: {
-    buttonclick(){
-		this.error = {
-            title: "Bad Move",
-            message: "Dont touch this",
-          };
-		this.result = {
-            name: "berk",
-            count: 20000,
-			country: "Turkey"
-          };
-	},
     async fetchData() {
 
       try {
@@ -87,7 +76,6 @@ export default {
           .then((value) => {
 			
             if (value.status === 200) {
-				console.log(value)
               this.result = {
 				name: value.data.name,
 				age: value.data.age,
@@ -100,7 +88,6 @@ export default {
               
             }
           }, (error) => {
-			console.log("d"+error.status);
 			this.result = null;
             this.error = 
               {
@@ -133,6 +120,6 @@ export default {
         }
       }
     },
-  }
+  },
 };
 </script>
