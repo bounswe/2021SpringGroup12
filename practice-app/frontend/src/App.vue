@@ -3,11 +3,12 @@
     <router-link to="/">Home</router-link> |
     <router-link to="/anime">Anime</router-link> | 
     <router-link to="/books">Books</router-link> |
-    <router-link to="/movies_home/">Movies</router-link> | 
-	<router-link to="/homenameinfo">Name/Age information</router-link>
 
+	<router-link to="/homenameinfo">Name/Age information</router-link>|
+    <router-link to="/movies_home/">Movies</router-link> | 
     <router-link to="/issues">Issues</router-link> |
-    <router-link to="/convert">Currency Conversion</router-link>
+    <router-link to="/convert">Currency Conversion</router-link> |
+    <router-link to="/quotes">Quotes</router-link> |
 
   </div>
   <router-view/>

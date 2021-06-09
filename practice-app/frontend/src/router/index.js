@@ -20,6 +20,10 @@ import GetAll from '../issues/pages/GetAll.vue';
 import GetIssue from '../issues/pages/GetIssue.vue';
 import HomeIssue from '../issues/pages/IssuesHome.vue';
 import ConvertHome from '../convert/views/ConvertHome.vue';
+import QuoteHome from '../quotes/pages/QuoteHome.vue';
+import PostQuote from '../quotes/pages/PostQuote.vue';
+import GetQuote from '../quotes/pages/GetQuote.vue';
+import RandomQuote from '../quotes/pages/RandomQuote.vue';
 
 const routes = [
   {
@@ -132,6 +136,26 @@ const routes = [
     path: '/convert',
     name: 'ConvertHome',
     component: ConvertHome
+  },
+        {
+    path: '/getquotes',
+    name: 'GetQuote',
+    component: GetQuote,
+  },
+  {
+    path: '/postquotes',
+    name: 'PostQuote',
+    component: PostQuote,
+  },
+  {
+    path: '/randomquote',
+    name: 'RandomQuote',
+    component: RandomQuote,
+  },
+  {
+    path: '/quotes',
+    name: 'QuoteHome',
+    component: QuoteHome,
   },
 ];
 

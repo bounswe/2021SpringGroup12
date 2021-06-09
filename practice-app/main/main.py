@@ -2,8 +2,7 @@
 # To run: read README.md
 ##
 # NOTE: Remember you have to set your virtual environment and install flask
-from flask_cors import CORS
-import random
+
 from pydantic import ValidationError
 import sqlite3
 from main.db import schemas, mapper
@@ -11,7 +10,7 @@ import requests
 from flask import Flask, jsonify, Response, request, make_response, abort
 import sys
 sys.path.append(".")
-from main.helpers import issue_helper, books_helper, name_info_helper, anime_helper, currency_helper
+from main.helpers import issue_helper, books_helper, name_info_helper, anime_helper, currency_helper, quote_helper
 
 import random
 from flask_cors import CORS
@@ -159,76 +158,49 @@ def post_anime():
 
 
 ################################ QUOTES ############################
-@app.route('/quotes/', methods=['POST'])
+@app.route('/addQuotes/', methods=['POST'])
 def add_quote():
-    quote_fields = request.get_json()
-    # make sure that necessary information are given
-    if "_id" not in quote_fields.keys():
-        return Response("Please provide an Id for the quote", status=400)
-    if "quoteAuthor" not in quote_fields.keys():
-        return Response("Please provide the name of the author!", status=400)
-    if "quoteGenre" not in quote_fields.keys():
-        return Response("Please provide a genre for your quote", status=400)
-    if "quoteText" not in quote_fields.keys():
-        return Response("Please provide the quote", status=400)
-    try:
-        quote = mapper.quote_mapper(quote_fields)
-    except Exception as err:
-        return Response(str(err), status=409)
+    if request.get_json() is None:
+        return Response("Body is empty!",status=400)
+    quote = quote_helper.quote_validate(request.get_json())
+    if type(quote) is not schemas.Quote:
+        return quote
 
-    # connect to Database
-    print(quote)
-    con = sqlite3.connect("../../sqlfiles/practice-app.db")
-    cur = con.cursor()
-    # try to insert quote to DB, return forbidden upon failure
-    try:
-        cur.execute("INSERT INTO Quotes(quoteId, quoteAuthor, quoteGenre, quoteText) VALUES (?,?,?,?)",
-                    (quote.quoteId, quote.quoteAuthor, quote.quoteGenre, quote.quoteText))
-    except Exception as err:
-        return Response(str(err), status=403)
-    con.commit()
-    con.close()
+    db_response = quote_helper.add_quote_from_user(quote)
 
-    return Response("Quote added succesfully!", status=200)
+    return db_response if db_response is not None else Response("Quote added succesfully!", status=200)
 
 
 @app.route('/quotes/', methods=['GET'])
 def get_quote_opt():
-    t = requests.get("https://quote-garden.herokuapp.com/api/v3/genres")
-    t = t.json()
-    t = t['data']
-    temp = ''
-    for i in t:
-        temp = temp + i + ', '
-    # select one of them denilebilir html'e geçince ?!?
+    x = quote_helper.validate_input(request.args)
+    if x is not None:
+        return x
 
-    if request.args.get("random") is not None:
-        rnd = int(random.uniform(0, len(t)))
-        r = requests.get(
-            "https://quote-garden.herokuapp.com/api/v3/quotes?genre={}".format(t[rnd]))
-        r = r.json()
-    elif request.args.get("genre") is not None:
-        genre_type = request.args.get("genre")
-        r = requests.get(
-            "https://quote-garden.herokuapp.com/api/v3/quotes?genre={}".format(genre_type))
-        r = r.json()
-    else:
-        temp = "Please provide an genre name or indicate it is random! Possible genres: " + temp
-        return Response(temp, status=400)
-    quotes = [mapper.quote_mapper(s) for s in r['data']]
-    con = sqlite3.connect("../../../sqlfiles/practice-app.db")
-    cur = con.cursor()
-    for quote in quotes:
-        print(quote.quoteId)
-        try:
-            cur.execute("INSERT INTO Quotes(quoteId, quoteAuthor, quoteGenre, quoteText) VALUES (?,?,?,?)",
-                        (quote.quoteId, quote.quoteAuthor, quote.quoteGenre, quote.quoteText))
-        except:
-            continue
-    con.commit()
-    con.close()
+    quoted = quote_helper.call_quote_api(request.args.get("genre"))
+    if type(quoted) != list:
+        return quoted
 
-    return schemas.QuoteResponse(data=quotes).__dict__
+    quotes = [mapper.quote_mapper(s) for s in quoted]
+
+    quote_helper.add_quotes_quote_garden(quotes)
+
+    return quotes if type(quotes) != list else schemas.QuoteResponse(data = quotes).__dict__
+
+
+@app.route('/randomQuotes/', methods=['GET'])
+def get_quotes():
+    t = quote_helper.get_genres()
+    # we get all genres and select one randomly to call
+    rnd = int(random.uniform(0, len(t)))
+
+    quoted = quote_helper.call_quote_api(t[rnd])
+    if type(quoted) != list:
+        return quoted
+
+    quotes = [mapper.quote_mapper(s) for s in quoted]
+    quote_helper.add_quotes_quote_garden(quotes)
+    return quotes if type(quotes) != list else schemas.QuoteResponse(data=quotes).__dict__
 
 
 # ----------------------------------------------------------------------REFIKA----------------------------------------------------------------------
