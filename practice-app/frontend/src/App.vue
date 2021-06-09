@@ -3,12 +3,9 @@
     <router-link to="/">Home</router-link> |
     <router-link to="/anime">Anime</router-link> | 
     <router-link to="/books">Books</router-link> |
-<<<<<<< HEAD
     <router-link to="/movies_home/">Movies</router-link> | 
-=======
 	<router-link to="/homenameinfo">Name/Age information</router-link>
 
->>>>>>> master
     <router-link to="/issues">Issues</router-link> |
     <router-link to="/convert">Currency Conversion</router-link>
 
