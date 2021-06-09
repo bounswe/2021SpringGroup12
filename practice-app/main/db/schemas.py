@@ -79,21 +79,19 @@ class SearchedAnime(BaseModel):
     airing: bool
     mal_id: int
 
-
 class RelatedAnime(NamedTuple):
     title: str
     mal_id: int
 
-
 class Anime(BaseModel):
     title: str
     mal_id: int
-    episodes: int
+    episodes: int 
     image: str
     airing: bool
-    start_date: Optional[str]
-    end_date: Optional[str]
-    score: int
+    start_date:Optional[str]
+    end_date:Optional[str]
+    score: float
     rating: str
     type: str
     synopsis: str
@@ -101,7 +99,6 @@ class Anime(BaseModel):
     sequel: Optional[RelatedAnime]
     prequel: Optional[RelatedAnime]
     genres: List[str]
-
 
 class UserAnime(BaseModel):
     title: str

@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS UserAnimes(
     rating              TEXT NOT NULL,
     type                TEXT NOT NULL,
     synopsis            TEXT NOT NULL,
-    UNIQUE(title)
+    UNIQUE(title, type)
 );
 CREATE TABLE IF NOT EXISTS Currency_History (
     date               TEXT,
