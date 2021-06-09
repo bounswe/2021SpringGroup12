@@ -17,13 +17,15 @@ class BookResponse(BaseModel):
     num_results: int
     books: List[dict]
 
+
 class Quote(BaseModel):
     quoteId: str
     quoteAuthor: str
     quoteGenre: str
     quoteText: str
     #last: int
-    
+
+
 class QuoteResponse(BaseModel):
     data: List[dict]
 
@@ -50,6 +52,21 @@ class NameInfoResponse():
     country: str
     count: int
 
+
+class Movie(BaseModel):
+    display_title: str
+    mpaa_rating: str
+    critics_pick: int
+    byline: str
+    headline: str
+    summary_short: str
+    link: str
+
+
+class MovieResponse(BaseModel):
+    movies: List[dict]
+
+
 class SearchedAnime(BaseModel):
     title: str
     image: str
@@ -62,18 +79,20 @@ class SearchedAnime(BaseModel):
     airing: bool
     mal_id: int
 
+
 class RelatedAnime(NamedTuple):
     title: str
     mal_id: int
 
+
 class Anime(BaseModel):
     title: str
     mal_id: int
-    episodes: int 
+    episodes: int
     image: str
     airing: bool
-    start_date:Optional[str]
-    end_date:Optional[str]
+    start_date: Optional[str]
+    end_date: Optional[str]
     score: int
     rating: str
     type: str
@@ -82,6 +101,7 @@ class Anime(BaseModel):
     sequel: Optional[RelatedAnime]
     prequel: Optional[RelatedAnime]
     genres: List[str]
+
 
 class UserAnime(BaseModel):
     title: str

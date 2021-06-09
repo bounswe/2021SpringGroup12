@@ -60,7 +60,7 @@ class TestBooksEndpoint(unittest.TestCase):
         return_value = self.app.get(
             f'/books/?name={self.input_books_from_nytimes[0].get("book_author")}')
         self.assertIn(return_value.status, ['200 OK', '429 Too Many Requests', '500 Internal Server Error',
-                      '502 Bad Gateway', '503 Service Unavailable', '504 Gateway Timeout'])
+                                            '502 Bad Gateway', '503 Service Unavailable', '504 Gateway Timeout'])
         if return_value.status == 200:
             self.assertEqual(return_value.json,
                              {"num_results": len(self.input_books_from_nytimes), "books": self.input_books_from_nytimes})
@@ -69,10 +69,10 @@ class TestBooksEndpoint(unittest.TestCase):
         return_value = self.app.get(
             f'/books/?name={self.input_books_from_nytimes[0].get("book_author")}&max_results=1')
         self.assertIn(return_value.status, ['200 OK', '429 Too Many Requests', '500 Internal Server Error',
-                      '502 Bad Gateway', '503 Service Unavailable', '504 Gateway Timeout'])
+                                            '502 Bad Gateway', '503 Service Unavailable', '504 Gateway Timeout'])
         if return_value.status == 200:
             self.assertEqual(return_value.json, {
-                         "num_results": 1, "books": self.input_books_from_nytimes[:1]})
+                "num_results": 1, "books": self.input_books_from_nytimes[:1]})
 
     def test_get_endpoint_wrong_1(self):
         return_value = self.app.get('/books/')
@@ -104,7 +104,8 @@ class TestBooksEndpoint(unittest.TestCase):
     def test_post_endpoint_correct(self):
         return_value = self.app.post(
             "/books/", json={"book_title": "hello", "book_author": "world"})
-        self.assertEqual(return_value.status, "200 OK", msg="probably this is failed because the book is already in the database")
+        self.assertEqual(return_value.status, "200 OK",
+                         msg="probably this is failed because the book is already in the database")
 
     ################### HELPERS ########################
     def test_validate_input_correct_input(self):

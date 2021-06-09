@@ -230,6 +230,93 @@ def get_quote_opt():
 
     return schemas.QuoteResponse(data=quotes).__dict__
 
+
+# ----------------------------------------------------------------------REFIKA----------------------------------------------------------------------
+
+
+@app.route('/movies_home/', methods=['GET', 'POST'])
+def movies_home():
+    return
+
+
+@app.route('/movies/', methods=['GET'])
+def get_movies():
+    if "keyword" not in request.args:
+        return Response("Please provide a keyword!", status=400)
+    # now we are sure keyword parameter is supplied, request rewiew the moves with the keywords from NYTimes API.
+    keyword = request.args.get("keyword").title().replace(" ", "+")
+    r = requests.get(
+        "https://api.nytimes.com/svc/movies/v2/reviews/search.json?query={}&api-key=gJkqRRyjYRV0YDiUDAEXwsa0uZLL6YLh".format(keyword))
+    r = r.json()
+
+    # now we have the movies.
+    # storing movies in database for further references.
+    dict = {}
+    if r["results"] != None:
+        movies = [mapper.movie_mapper(s) for s in r["results"]]
+        con = sqlite3.connect(
+            "c:/Users/HP/Desktop/2021SpringGroup12-son/practice-app/sqlfiles/practice-app.db")
+        cur = con.cursor()
+        for movie in movies:
+            # -----------------------------------
+            try:
+                cur.execute("INSERT INTO Movie(display_title, mpaa_rating, critics_pick, byline, headline,summary_short, link) VALUES (?,?,?,?,?,?,?)",
+                            (movie.display_title, movie.mpaa_rating, movie.critics_pick, movie.byline, movie.headline, movie.summary_short, movie.link.url))
+            except:
+                # do nothing upon failure, this is not a critical process
+                continue
+
+        for movie in movies:
+            display_title = movie.display_title
+            movie_info = {"display_title": movie.display_title, "mpaa_rating": movie.mpaa_rating, "critics_pick": movie.critics_pick,
+                          "byline": movie.byline, "headline": movie.headline, "summary_short":  movie.summary_short, "link": movie.link}
+            dict[display_title] = movie_info
+    # print(jsonify(dict))
+    return jsonify(dict)
+
+
+@ app.route('/movies_addReview/', methods=['POST'])
+def create_movie_review():
+    #movie_review = request.form.to_dict(flat=True)
+    movie_review = request.get_json()
+    # make sure that necessary information are given
+    # title byline and url should be provided
+    if movie_review == {}:
+        return Response("Please provide the required information!", status=400)
+    if "display_title" not in movie_review.keys():
+        return Response("Please provide the title of the movie!", status=400)
+    if "byline" not in movie_review.keys():
+        return Response("Please provide the reviewer of the movie!", status=400)
+    if "link" not in movie_review.keys():
+        return Response("Please provide the link!", status=400)
+    if "critics_pick" in movie_review.keys():
+        if movie_review['critics_pick'] != 1 and movie_review['critics_pick'] != 0:
+            return Response("Criticks pick must be 1 or 0")
+    try:
+        movie = mapper.movie_mapper2(movie_review)
+    except Exception as err:
+        return Response(str(err), status=400)
+        # connect to Database
+    con = sqlite3.connect(
+        "c:/Users/HP/Desktop/test/practice-app/sqlfiles/practice-app.db")
+    cur = con.cursor()
+
+    # try to insert movie to DB, return forbidden upon failure
+    try:
+        cur.execute("INSERT INTO Movie(display_title, mpaa_rating, critics_pick, byline, headline,summary_short, link) VALUES (?,?,?,?,?,?,?)",
+                    (movie.display_title, movie.mpaa_rating, movie.critics_pick, movie.byline, movie.headline, movie.summary_short, movie.link))
+    except Exception as err:
+        return Response(str(err), status=403)
+    con.commit()
+    con.close()
+    return Response("Movie Review added succesfully!", status=200)
+
+
+@ app.errorhandler(404)
+def not_found(error):
+    # a friendlier error handling message
+    # return make_response(jsonify({'error': 'Task was not found'}), 404)
+    return "page not found :("
 ################################ CONVERT ############################
 
 # Uses Agify api which is on https://api.agify.io/
