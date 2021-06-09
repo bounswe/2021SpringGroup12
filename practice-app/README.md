@@ -12,6 +12,7 @@ Here we have an API, written using The Flask framework.
 * Execute the API:
   * Windows:
     * Powershell:
+<<<<<<< HEAD
       * `$env:FLASK_APP = "practice-app"`
       * `python -m flask run`
     * cmd: 
@@ -22,6 +23,19 @@ Here we have an API, written using The Flask framework.
     * `export FLASK_APP=practice-app.py`
     * `export FLASK_ENV=development`
     * `flask run` 
+=======
+      * `$env:FLASK_APP = "main"`
+      * `python -m flask run`
+    * cmd: 
+      * `set FLASK_APP=main.py`
+      * `set FLASK_ENV=development`
+      * `flask run`
+  * Linux / MacOS:
+    * `export FLASK_APP=main.py`
+    * `export FLASK_ENV=development`
+    * `python -m flask run`
+
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 * Go to the browser and open that link just you seen in the terminal.  (likely http://127.0.0.1:5000/)
 
 * Write your own endpoints using different existing API's.

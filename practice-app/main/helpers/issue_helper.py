@@ -2,7 +2,11 @@ import sqlite3
 from sqlite3 import Cursor
 from typing import List
 
+<<<<<<< HEAD
 from db.schemas import Issue
+=======
+from main.db.schemas import Issue
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 
 ALL_ISSUES = {}
 
@@ -54,6 +58,7 @@ def insert_issue(cur: Cursor, issue: Issue):
             (issue.number, label))
 
 
+<<<<<<< HEAD
 def insert_single_issue(issue: Issue):
     con = sqlite3.connect(DB_LOC)
     cur = con.cursor()
@@ -67,6 +72,8 @@ def insert_single_issue(issue: Issue):
         con.close()
 
 
+=======
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 def insert_multiple_issue(issue_list: List[Issue]):
     con = sqlite3.connect(DB_LOC)
     cur = con.cursor()
@@ -98,6 +105,7 @@ def get_issue(issue_number: int) -> Issue:
     cur = con.cursor()
 
     try:
+<<<<<<< HEAD
         data = cur.execute(
             "SELECT * FROM Issues WHERE number=?", (issue_number,))
         _, description, state = data.fetchone()
@@ -106,6 +114,13 @@ def get_issue(issue_number: int) -> Issue:
         assignees = [row[0] for row in data.fetchall()]
         data = cur.execute(
             "SELECT label FROM Labels WHERE issue_number=?", (issue_number,))
+=======
+        data = cur.execute("SELECT * FROM Issues WHERE number=?", (issue_number,))
+        _, description, state = data.fetchone()
+        data = cur.execute("SELECT assignee FROM Assignees WHERE issue_number=?", (issue_number,))
+        assignees = [row[0] for row in data.fetchall()]
+        data = cur.execute("SELECT label FROM Labels WHERE issue_number=?", (issue_number,))
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
         labels = [row[0] for row in data.fetchall()]
         return Issue(number=issue_number,
                      description=description,
@@ -129,11 +144,17 @@ def get_all_issues(limit: int) -> List[Issue]:
         data = cur.execute("SELECT * FROM Issues LIMIT ?", (limit,))
         issues = data.fetchall()
         for issue_number, description, state in issues:
+<<<<<<< HEAD
             data = cur.execute(
                 "SELECT assignee FROM Assignees WHERE issue_number=?", (issue_number,))
             assignees = [row[0] for row in data.fetchall()]
             data = cur.execute(
                 "SELECT label FROM Labels WHERE issue_number=?", (issue_number,))
+=======
+            data = cur.execute("SELECT assignee FROM Assignees WHERE issue_number=?", (issue_number,))
+            assignees = [row[0] for row in data.fetchall()]
+            data = cur.execute("SELECT label FROM Labels WHERE issue_number=?", (issue_number,))
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
             labels = [row[0] for row in data.fetchall()]
             issue_list.append(Issue(number=issue_number,
                                     description=description,

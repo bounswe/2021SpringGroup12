@@ -15,7 +15,11 @@ CREATE TABLE IF NOT EXISTS BookISBNs (
     book_id             INTEGER,
   	isbn                TEXT,
 	PRIMARY KEY(book_id,isbn),
+<<<<<<< HEAD
     FOREIGN KEY(book_id) REFERENCES Books(book_id), -- todo: on delete vsvs
+=======
+    FOREIGN KEY(book_id) REFERENCES Books(book_id) ON DELETE CASCADE,
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
     UNIQUE(book_id,isbn)   -- restrict the same isbn of the book to be added multiple times
 );
 
@@ -46,6 +50,7 @@ CREATE TABLE IF NOT EXISTS Quotes (
 	PRIMARY KEY(quoteID)
 );
 
+<<<<<<< HEAD
 CREATE TABLE IF NOT EXISTS Movie (
     movie_id            INTEGER,
   	display_title       TEXT NOT NULL,
@@ -56,4 +61,69 @@ CREATE TABLE IF NOT EXISTS Movie (
     summary_short       TEXT,
     link                TEXT NOT NULL,
 	PRIMARY KEY(movie_id)
+=======
+CREATE TABLE IF NOT EXISTS RelatedAnimes(
+    id INTEGER PRIMARY KEY,
+    title TEXT NOT NULL,
+    mal_id INTEGER NOT NULL,
+    UNIQUE(title, mal_id)
+);
+
+CREATE TABLE IF NOT EXISTS Genres(
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    UNIQUE(name)
+);
+
+CREATE TABLE IF NOT EXISTS MalAnimes (
+    id                  INTEGER PRIMARY KEY,
+    title               TEXT NOT NULL,
+    mal_id              INTEGER NOT NULL,
+    episodes            INTEGER NOT NULL,
+    image               TEXT NOT NULL,
+    airing              BOOLEAN NOT NULL,
+    start_date          DATE,
+    end_date            DATE,
+    score               REAL NOT NULL,
+    rating              TEXT NOT NULL,
+    type                TEXT NOT NULL,
+    synopsis            TEXT NOT NULL,
+    duration            INTEGER NOT NULL,
+    sequel              INTEGER,
+    prequel             INTEGER,
+    UNIQUE(title, mal_id),
+    FOREIGN KEY (sequel) REFERENCES RelatedAnimes(id),
+    FOREIGN KEY (prequel) REFERENCES RelatedAnimes(id)
+);
+
+CREATE TABLE IF NOT EXISTS GenreRelation(
+    id INTEGER PRIMARY KEY,
+    anime_id INTEGER NOT NULL,
+    genre_id INTEGER NOT NULL,
+    UNIQUE(anime_id, genre_id)
+    FOREIGN KEY (anime_id) REFERENCES MalAnimes(id),
+    FOREIGN KEY (genre_id) REFERENCES Genres(id)
+);
+
+CREATE TABLE IF NOT EXISTS UserAnimes(
+    id                  INTEGER PRIMARY KEY,
+    title               TEXT NOT NULL,
+    episodes            INTEGER NOT NULL,
+    image               TEXT NOT NULL,
+    airing              BOOLEAN NOT NULL,
+    start_date          DATE,
+    end_date            DATE,
+    score               REAL NOT NULL,
+    rating              TEXT NOT NULL,
+    type                TEXT NOT NULL,
+    synopsis            TEXT NOT NULL,
+    UNIQUE(title)
+);
+CREATE TABLE IF NOT EXISTS Currency_History (
+    date               TEXT,
+    from_curr          TEXT,
+    to_curr            TEXT,
+    rate               REAL,
+    PRIMARY KEY(date,from_curr,to_curr)
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 );

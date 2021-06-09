@@ -185,6 +185,7 @@ class TestMoviesEndpoint(unittest.TestCase):
         self.assertEqual(return_value.status, "400 BAD REQUEST")
         self.assertEqual(
             return_value.data, b'Please provide the required information!')
+        ##
 
 
 def tearDown(self):

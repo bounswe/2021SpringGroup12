@@ -1,15 +1,8 @@
 <template>
   <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/anime">Anime</router-link> | 
-    <router-link to="/books">Books</router-link> |
-<<<<<<< HEAD
-    <router-link to="/movies_home/">Movies</router-link>
-=======
-    <router-link to="/issues">Issues</router-link> |
-    <router-link to="/convert">Currency Conversion</router-link>
-
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
+    <router-link to="/getall">Get Issues </router-link> |
+    <router-link to="/getissue">Get A Issue </router-link> |
+    <router-link to="/postissues">Post A Issue </router-link>
   </div>
   <router-view/>
 </template>

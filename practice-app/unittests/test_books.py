@@ -57,6 +57,7 @@ class TestBooksEndpoint(unittest.TestCase):
 
     ################### ENDPOINTS #####################
     def test_get_endpoint_correct_1(self):
+<<<<<<< HEAD
         return_value = self.app.get(f'/books/?name={self.input_books_from_nytimes[0].get("book_author")}')
         self.assertEqual(return_value.status, '200 OK')
         self.assertEqual(return_value.json,
@@ -66,6 +67,24 @@ class TestBooksEndpoint(unittest.TestCase):
         return_value = self.app.get(f'/books/?name={self.input_books_from_nytimes[0].get("book_author")}&max_results=1')
         self.assertEqual(return_value.status, '200 OK')
         self.assertEqual(return_value.json, {"num_results": 1, "books": self.input_books_from_nytimes[:1]})
+=======
+        return_value = self.app.get(
+            f'/books/?name={self.input_books_from_nytimes[0].get("book_author")}')
+        self.assertIn(return_value.status, ['200 OK', '429 Too Many Requests', '500 Internal Server Error',
+                      '502 Bad Gateway', '503 Service Unavailable', '504 Gateway Timeout'])
+        if return_value.status == 200:
+            self.assertEqual(return_value.json,
+                             {"num_results": len(self.input_books_from_nytimes), "books": self.input_books_from_nytimes})
+
+    def test_get_endpoint_correct_2(self):
+        return_value = self.app.get(
+            f'/books/?name={self.input_books_from_nytimes[0].get("book_author")}&max_results=1')
+        self.assertIn(return_value.status, ['200 OK', '429 Too Many Requests', '500 Internal Server Error',
+                      '502 Bad Gateway', '503 Service Unavailable', '504 Gateway Timeout'])
+        if return_value.status == 200:
+            self.assertEqual(return_value.json, {
+                         "num_results": 1, "books": self.input_books_from_nytimes[:1]})
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 
     def test_get_endpoint_wrong_1(self):
         return_value = self.app.get('/books/')
@@ -73,27 +92,48 @@ class TestBooksEndpoint(unittest.TestCase):
         self.assertEqual(return_value.data, b'Please provide an author name!')
 
     def test_get_endpoint_wrong_2(self):
+<<<<<<< HEAD
         return_value = self.app.get('/books/?name=iamPrettySureThisIsNotAValidAuthorName&max_results=1')
+=======
+        return_value = self.app.get(
+            '/books/?name=iamPrettySureThisIsNotAValidAuthorName&max_results=1')
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
         self.assertEqual(return_value.status, '200 OK')
         self.assertEqual(return_value.json, {"num_results": 0, "books": []})
 
     def test_get_endpoint_wrong_3(self):
+<<<<<<< HEAD
         return_value = self.app.get('/books/?name=Cem Say&max_results=letsputastringhere')
+=======
+        return_value = self.app.get(
+            '/books/?name=Cem Say&max_results=letsputastringhere')
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
         self.assertEqual(return_value.status, '400 BAD REQUEST')
         self.assertEqual(return_value.data, b'max_results should be integer!')
 
     def test_post_endpoint_wrong_1(self):
         return_value = self.app.post("/books/", json=self.input_book_from_user)
         self.assertEqual(return_value.status, "403 FORBIDDEN")
+<<<<<<< HEAD
         self.assertEqual(return_value.data, b'UNIQUE constraint failed: Books.book_title, Books.book_author')
+=======
+        self.assertEqual(
+            return_value.data, b'UNIQUE constraint failed: Books.book_title, Books.book_author')
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 
     def test_post_endpoint_wrong_2(self):
         return_value = self.app.post("/books/", json={})
         self.assertEqual(return_value.status, "400 BAD REQUEST")
 
     def test_post_endpoint_correct(self):
+<<<<<<< HEAD
         return_value = self.app.post("/books/", json={"book_title": "hello", "book_author": "world"})
         self.assertEqual(return_value.status, "200 OK")
+=======
+        return_value = self.app.post(
+            "/books/", json={"book_title": "hello", "book_author": "world"})
+        self.assertEqual(return_value.status, "200 OK", msg="probably this is failed because the book is already in the database")
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 
     ################### HELPERS ########################
     def test_validate_input_correct_input(self):
@@ -104,26 +144,52 @@ class TestBooksEndpoint(unittest.TestCase):
     def test_validate_input_wrong_input(self):
         request_args = ImmutableMultiDict([])
         response = books_helper.validate_input(request_args)
+<<<<<<< HEAD
         self.assertTrue(response.status_code == 400, msg="Couldn't handle empty name parameter")
+=======
+        self.assertTrue(response.status_code == 400,
+                        msg="Couldn't handle empty name parameter")
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 
     def test_call_nytimes_correct_input(self):
         expected_output = self.input_books_from_nytimes
         output = books_helper.call_nytimes("aldous huxley")
+<<<<<<< HEAD
         self.assertListEqual(output, expected_output, msg="Couldn't parse correct input parameter.")
+=======
+        self.assertListEqual(
+            output, expected_output, msg=f"Couldn't parse correct input parameter.Output: {output}")
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 
     def test_call_nytimes_wrong_input(self):
         expected_output = []
         output = books_helper.call_nytimes("aldoushuxley")
+<<<<<<< HEAD
         self.assertListEqual(output, expected_output, msg="Couldn't parse correct input parameter.")
 
     def test_add_books_from_nytimes_correct_input(self):
         books_helper.add_books_from_nytimes(self.input_books_from_nytimes)
         con = sqlite3.connect("/home/veyis/Desktop/2021SpringGroup12/practice-app/sqlfiles/practice-app.db")
+=======
+        self.assertListEqual(output, expected_output,
+                             msg="Couldn't parse correct input parameter.")
+
+    def test_add_books_from_nytimes_correct_input(self):
+        books_helper.add_books_from_nytimes(self.input_books_from_nytimes)
+        # TODO change this in deployment phase
+        con = sqlite3.connect(
+            "/home/veyis/Desktop/a2021SpringGroup12/practice-app/sqlfiles/practice-app.db")
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
         cur = con.cursor()
         cur.execute("SELECT * FROM Books WHERE book_author = 'Aldous Huxley'")
         books_from_db = cur.fetchall()
         for book in books_from_db:
+<<<<<<< HEAD
             self.assertTrue(book[2] == "Aldous Huxley", msg="Couldn't add the book to database.")
+=======
+            self.assertTrue(book[2] == "Aldous Huxley",
+                            msg="Couldn't add the book to database.")
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
             self.assertTrue(book[1] in [s["book_title"] for s in self.input_books_from_nytimes],
                             msg="Couldn't add the book to database.")
 
@@ -134,21 +200,41 @@ class TestBooksEndpoint(unittest.TestCase):
     def test_call_nytimes_blank_input(self):
         # send blank input
         output = books_helper.call_nytimes("")
+<<<<<<< HEAD
         self.assertTrue(output.status_code == 400, msg="Couldn't handle wrong input.")
 
     def test_get_n_correct_input_1(self):
         request_args = ImmutableMultiDict([('name', 'aldous huxley'), ('max_results', '3')])
 
         output_books = books_helper.get_n(self.input_books_from_nytimes, request_args)
+=======
+        self.assertTrue(output.status_code == 400,
+                        msg="Couldn't handle wrong input.")
+
+    def test_get_n_correct_input_1(self):
+        request_args = ImmutableMultiDict(
+            [('name', 'aldous huxley'), ('max_results', '3')])
+
+        output_books = books_helper.get_n(
+            self.input_books_from_nytimes, request_args)
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
         length = len(self.input_books_from_nytimes) if len(self.input_books_from_nytimes) < int(
             request_args.get('max_results')) else int(
             request_args.get('max_results'))
         self.assertTrue(len(output_books) == length)
 
     def test_get_n_correct_input_2(self):
+<<<<<<< HEAD
         request_args = ImmutableMultiDict([('name', 'aldous huxley'), ('max_results', '1')])
 
         output_books = books_helper.get_n(self.input_books_from_nytimes, request_args)
+=======
+        request_args = ImmutableMultiDict(
+            [('name', 'aldous huxley'), ('max_results', '1')])
+
+        output_books = books_helper.get_n(
+            self.input_books_from_nytimes, request_args)
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
         length = len(self.input_books_from_nytimes) if len(self.input_books_from_nytimes) < int(
             request_args.get('max_results')) else int(
             request_args.get(
@@ -157,6 +243,7 @@ class TestBooksEndpoint(unittest.TestCase):
 
     def test_get_n_wrong_input(self):
         # input is string, it should have been int. Let's see if we can handle
+<<<<<<< HEAD
         request_args = ImmutableMultiDict([('name', 'aldous huxley'), ('max_results', 'a')])
 
         output_books = books_helper.get_n(self.input_books_from_nytimes, request_args)
@@ -170,6 +257,27 @@ class TestBooksEndpoint(unittest.TestCase):
     def test_validate_body_correct_input(self):
         book = books_helper.validate_body(self.input_book_from_user)
         self.assertFalse(str(type(book)) == "<class 'flask.wrappers.Response'>")
+=======
+        request_args = ImmutableMultiDict(
+            [('name', 'aldous huxley'), ('max_results', 'a')])
+
+        output_books = books_helper.get_n(
+            self.input_books_from_nytimes, request_args)
+        self.assertTrue(output_books.status_code == 400,
+                        msg="Couldn't handle wrong input.")
+
+    def test_get_n_blank_input(self):
+        request_args = ImmutableMultiDict([('name', 'aldous huxley')])
+        output_books = books_helper.get_n(
+            self.input_books_from_nytimes, request_args)
+        self.assertListEqual(output_books, self.input_books_from_nytimes,
+                             msg="Couldn't handle blank max_results")
+
+    def test_validate_body_correct_input(self):
+        book = books_helper.validate_body(self.input_book_from_user)
+        self.assertFalse(str(type(book)) ==
+                         "<class 'flask.wrappers.Response'>")
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 
     def test_validate_body_optional_correct_input(self):
         optional_json = {
@@ -178,42 +286,78 @@ class TestBooksEndpoint(unittest.TestCase):
             "book_author": "Cem Say"
         }
         book = books_helper.validate_body(optional_json)
+<<<<<<< HEAD
         self.assertFalse(str(type(book)) == "<class 'flask.wrappers.Response'>")
+=======
+        self.assertFalse(str(type(book)) ==
+                         "<class 'flask.wrappers.Response'>")
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 
     def test_validate_body_wrong_input1(self):
         name = self.input_book_from_user.get("book_title")
         self.input_book_from_user.pop("book_title")
         book = books_helper.validate_body(self.input_book_from_user)
         self.input_book_from_user["book_title"] = name
+<<<<<<< HEAD
         self.assertTrue(book.status_code == 400, msg="Couldn't handle nonexistent key")
+=======
+        self.assertTrue(book.status_code == 400,
+                        msg="Couldn't handle nonexistent key")
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 
     def test_validate_body_wrong_input2(self):
         self.input_book_from_user.pop("url")
         self.input_book_from_user["urll"] = ""
         book = books_helper.validate_body(self.input_book_from_user)
+<<<<<<< HEAD
         self.assertFalse(str(type(book)) == "<class 'flask.wrappers.Response'>")
 
     def test_validate_body_blank_input(self):
         book = books_helper.validate_body({})
         self.assertTrue(book.status_code == 400, msg="Couldn't handle blank request")
+=======
+        self.input_book_from_user["url"] = ""
+        self.assertFalse(str(type(book)) ==
+                         "<class 'flask.wrappers.Response'>")
+
+    def test_validate_body_blank_input(self):
+        book = books_helper.validate_body({})
+        self.assertTrue(book.status_code == 400,
+                        msg="Couldn't handle blank request")
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 
     def test_add_book_from_user_correct_input(self):
         book = book_mapper(self.input_book_from_user)
         books_helper.add_book_from_user(book)
+<<<<<<< HEAD
         con = sqlite3.connect("/home/veyis/Desktop/2021SpringGroup12/practice-app/sqlfiles/practice-app.db")
+=======
+        # TODO change this in deployment phase
+        con = sqlite3.connect(
+            "/home/veyis/Desktop/a2021SpringGroup12/practice-app/sqlfiles/practice-app.db")
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
         cur = con.cursor()
         cur.execute("SELECT * FROM Books WHERE book_author = (?) AND book_title = (?)",
                     (self.input_book_from_user.get("book_author"), self.input_book_from_user.get("book_title")))
         book_from_db = cur.fetchone()
         self.assertTrue(book_from_db[2] == self.input_book_from_user.get("book_author") and book_from_db[
             1] == self.input_book_from_user.get("book_title"),
+<<<<<<< HEAD
                         msg="Couldn't add the book to database.")
+=======
+            msg="Couldn't add the book to database.")
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 
     def test_add_book_from_user_wrong_input(self):
         # try to add same book to the database, aka fail unique key constraint
         book = book_mapper(self.input_book_from_user)
         response = books_helper.add_book_from_user(book)
+<<<<<<< HEAD
         self.assertTrue(response.status_code == 403, msg="Failed to handle unique key constraint")
+=======
+        self.assertTrue(response.status_code == 403,
+                        msg="Failed to handle unique key constraint")
+>>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af
 
     def tearDown(self):
         pass
