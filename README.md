@@ -1,7 +1,7 @@
 # CMPE352 Group-12
 ### Description
 
-This is the github repository that we use for CMPE352 as Group-12. You can see more details on our [Wiki](https://github.com/bounswe/2021SpringGroup12/wiki) page.
+This is the github repository that we use for CMPE352 as Group-12. You can see more details on our [Wiki](https://github.com/bounswe/2021SpringGroup12/wiki) page
 
 ## Group Members
 * [Adalet Veyis Turgut](https://github.com/bounswe/2021SpringGroup12/wiki/Adalet-Veyis-Turgut)
