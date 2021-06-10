@@ -49,7 +49,7 @@ def add_book_from_user(book):
             "INSERT INTO Books(book_title, book_author, url, publication_dt, summary, uuid, uri) VALUES (?,?,?,?,?,?,?)",
             (book["book_title"], book["book_author"], book["url"], book["publication_dt"], book["summary"], book["uuid"], book["uri"]))
         # since isbn's can be a list. Insert those to a seperate table.
-        if book.isbn13 != []:
+        if book["isbn13"] != []:
             cur.execute("select * from Books")
             data = cur.execute("SELECT book_id FROM Books WHERE book_title = ? AND book_author = ?",
                                (book["book_title"], book["book_author"]))
