@@ -1,7 +1,9 @@
 from __future__ import absolute_import
 
 import unittest
-from ..main.helpers.issue_helper import make_issue
+
+import os
+from main.helpers.issue_helper import make_issue
 import json
 
 

@@ -1,8 +1,5 @@
-import sys
-sys.path.append("..") 
-from .schemas import Book, Issue, Quote, Genre, SearchResult, Anime, CreateAnime
-from helpers import issue_helper
-
+from main.db.schemas import Book, Issue, Quote, CurrencyRate, SearchedAnime, UserAnime, Anime, RelatedAnime
+from main.helpers import issue_helper
 
 
 def book_mapper(book: dict) -> Book:
@@ -31,65 +28,6 @@ def issue_mapper(issue: dict) -> Issue:
         labels=issue['labels'],
         state=issue['state']
     )
-
-def genre_mapper(genre: dict) -> Genre:
-    return Genre(
-        id=genre["mal_id"],
-        type=genre["type"],
-        name=genre["name"]
-    )
-
-
-def search_mapper(anime: dict) -> SearchResult:
-    return SearchResult(
-        title=anime["title"],
-        episodes=anime["episodes"],
-        id=anime["mal_id"],
-        image_url=anime["image_url"],
-        airing=anime["airing"],
-        start_date=anime["start_date"],
-        end_date=anime["end_date"],
-        score=anime["score"],
-        rating=anime["rated"] if anime["rated"] else "None",
-        type=anime["type"],
-        synopsis=anime["synopsis"]
-    )
-
-
-def anime_mapper(anime: dict) -> Anime:
-    return Anime(
-        title=anime["title"],
-        episodes=anime["episodes"] if anime["episodes"] else 0,
-        id=anime["mal_id"],
-        image_url=anime["image_url"],
-        airing=anime["airing"],
-        start_date=anime["aired"]["from"],
-        end_date=anime["aired"]["to"],
-        score=anime["score"],
-        rating=anime["rating"].split(' -')[0],
-        type=anime["type"],
-        synopsis=anime["synopsis"],
-        duration=(int(anime["duration"].split(' ')[0]) if not anime["duration"].split(" ")[
-            1] == "hr" else int(anime["duration"].split(" ")[0])*60+int(anime["duration"].split(" ")[2])) if anime["duration"] and anime["duration"] != "Unknown" else 0,
-        sequel=anime["sequel"],
-        prequel=anime["prequel"],
-        genres=[genre_mapper(g).dict() for g in anime["genres"]]
-    )
-
-def create_anime_mapper(create_anime: dict) -> CreateAnime:
-    return CreateAnime(
-        title= create_anime["title"],
-        episodes=create_anime["episodes"],
-        id=create_anime["id"],
-        image_url=create_anime["image_url"],
-        airing=create_anime["airing"],
-        start_date=create_anime["start_date"],
-        end_date=create_anime["end_date"],
-        score=create_anime["score"],
-        rating=create_anime["rating"],
-        type=create_anime["type"],
-        synopsis=create_anime["synopsis"]
-    )
 def quote_mapper(quote: dict) -> Quote:
     return Quote(
         quoteId= quote["_id"],
@@ -99,3 +37,53 @@ def quote_mapper(quote: dict) -> Quote:
         #last = quote["__v"]
         )
 
+def searched_anime_mapper(anime: dict) -> SearchedAnime:
+    return SearchedAnime(
+        title=anime["title"],
+        image=anime["image_url"],
+        synopsis=anime["synopsis"] if anime["synopsis"] != None else "",
+        type=anime["type"] if anime["type"] != None else "",
+        start_date=anime["start_date"] if anime["start_date"] != None else "",
+        end_date=anime["end_date"] if anime["end_date"] != None else "",
+        score=anime["score"] if anime["score"] != None else 0.0,
+        rating=anime["rated"] if anime["rated"] != None else "",
+        airing=anime["airing"] if anime["airing"] != None else False,
+        mal_id=anime["mal_id"] if anime["mal_id"] != None else 0
+    )
+
+def anime_mapper(anime: dict) -> Anime:
+    return Anime(
+        title=anime["title"],
+        mal_id=anime["mal_id"],
+        episodes=anime["episodes"] if "episodes" in anime else 0,
+        image=anime["image_url"] if "image_url" in anime else "",
+        airing=anime["airing"] if "airing" in anime else False,
+        start_date=anime["aired"]["from"],
+        end_date=anime["aired"]["to"],
+        score=anime["score"] if "score" in anime else 0.0,
+        rating=anime["rating"] if "rating" in anime else "",
+        type=anime["type"] if "type" in anime else "",
+        synopsis=anime["synopsis"] if anime["synopsis"] != None else "",
+        duration=(int(anime["duration"].split(' ')[0])
+            if not anime["duration"].split(" ")[1] == "hr"
+            else int(anime["duration"].split(" ")[0])*60+int(anime["duration"].split(" ")[2])) 
+                if anime["duration"] and anime["duration"] != "Unknown" 
+                else 0,
+        sequel=RelatedAnime(title=anime["related"]["Sequel"][0]["name"], mal_id=anime["related"]["Sequel"][0]["mal_id"]) if "Sequel" in anime["related"] else None,
+        prequel=RelatedAnime(title=anime["related"]["Prequel"][0]["name"], mal_id=anime["related"]["Prequel"][0]["mal_id"]) if "Prequel" in anime["related"] else None,
+        genres=[genre["name"] for genre in anime["genres"]]
+    )
+
+def create_anime_mapper(anime: dict) -> UserAnime:
+    return UserAnime(
+        title=anime["title"],
+        episodes=anime["episodes"],
+        image=anime["image"],
+        airing=anime["airing"],
+        start_date=anime["start_date"],
+        end_date=anime["end_date"] if anime["end_date"] != None else "",
+        score=anime["score"],
+        rating=anime["rating"],
+        type=anime["type"],
+        synopsis=anime["synopsis"]
+    )

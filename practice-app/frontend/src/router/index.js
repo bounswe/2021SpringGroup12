@@ -39,21 +39,6 @@ const routes = [
     component: HomeIssue,
   },
   {
-    path: '/getbooks',
-    name: 'BooksGetHome',
-    component: BooksGetHome,
-  },
-  {
-    path: '/postbooks',
-    name: 'BooksPostHome',
-    component: BooksPostHome,
-  },
-  {
-    path: '/books',
-    name: 'Bookshome',
-    component: BooksHome,
-  },
-  {
     path: '/anime',
     name: 'Animehome',
     component: AnimeHome,
@@ -71,7 +56,7 @@ const routes = [
   {
     path: '/anime/post',
     name: 'Post',
-    component: AnimePost,
+    component: Post,
   },
 ];
 
