@@ -11,7 +11,7 @@ services:
     build: 
       context: "./frontend"
       args:
-        - VUE_APP_API_URL=flask
+        - VUE_APP_API_URL=3.67.188.109:5000
     ports:
       - "80:80"
 
