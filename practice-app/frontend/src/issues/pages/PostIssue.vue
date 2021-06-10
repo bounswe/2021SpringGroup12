@@ -1,7 +1,7 @@
 
 <template>
   <div class="login">
-    <b><mark> Post Books</mark></b
+    <b><mark> Post Issue</mark></b
     ><br />
     <form v-if="!sent" class="postForm" @submit.prevent="postAddUser">
       <p>Number</p>
@@ -76,12 +76,12 @@ export default {
       if (!this.user_body.assignees.length) {
         this.user_body.assignees = [];
       } else {
-        this.user_body.assignees = this.user_body.assignees.split(",");
+        this.user_body.assignees = this.user_body.assignees.toString().split(",");
       }
       if (!this.user_body.labels.length) {
         this.user_body.labels = [];
       } else {
-        this.user_body.labels = this.user_body.labels.split(",");
+        this.user_body.labels = this.user_body.labels.toString().split(",");
       }
 
       const response = await axios

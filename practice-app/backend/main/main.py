@@ -78,7 +78,7 @@ def download_issues():
     issue_list = [mapper.git_issue_mapper(element) for element in r]
     issue_helper.insert_multiple_issue(issue_list)
     total_issue = issue_helper.get_issue_count()
-    return f'{len(r)} issues are downloaded. There are total {total_issue} issues in the system'
+    return Response(f'{len(r)} issues are downloaded. There are total {total_issue} issues in the system', 200)
 
 
 @app.route('/issues', methods=['POST'])
@@ -89,13 +89,14 @@ def post_issue():
         return Response(f'An error occurred while posting json. Json = {request.get_json()}', status=400)
     issue_helper.insert_multiple_issue([issue])
     total_issue = issue_helper.get_issue_count()
-    return f'There are total {total_issue} issues in the system'
+    return Response(f'There are total {total_issue} issues in the system', 200)
 
 
 @app.route('/issues/<int:number>', methods=['GET'])
 def get_issue(number: int):
     issue = issue_helper.get_issue(number)
     if issue is None:
+        print("Buradayım")
         return Response(f"Issue number {number} not found!", status=400)
     return jsonify(issue.__dict__)
 
