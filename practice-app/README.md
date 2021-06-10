@@ -1,31 +1,14 @@
-To gain experience with development of a project as a team, we will build a practice app here.
-
+To gain experience with development of a project as a team, we built a practice app here.
 
 Here we have an API, written using The Flask framework.
 
-* Create a virtual environment: `virtualenv myenv`
-* Activate the virtual environment: 
-  * Windows: `myenv\Scripts\activate`
-  * Linux / MacOS:  `source myenv/bin/activate`
-* Clone the repo to your local and branch out. 
-* Install the requirements: `pip install -r requirements.txt`
-* Execute the API:
-  * Windows:
-    * Powershell:
-
-      * `$env:FLASK_APP = "main"`
-      * `python -m flask run`
-    * cmd: 
-      * `set FLASK_APP=main.py`
-      * `set FLASK_ENV=development`
-      * `flask run`
-  * Linux / MacOS:
-    * `export FLASK_APP=main.py`
-    * `export FLASK_ENV=development`
-    * `python -m flask run`
-
-    
-* Go to the browser and open that link just you seen in the terminal.  (likely http://127.0.0.1:5000/)
-
-* Write your own endpoints using different existing API's.
-* Test you endpoint using Postman. Try to use query-path parameters, request bodies, etc. 
+### How To Run
+* Open a terminal.
+* Clone the repository: `git clone https://github.com/bounswe/2021SpringGroup12.git;
+* Enter the folder: `cd 2021SpringGroup12/practice-up`
+* Make sure docker is installed, if not follow: https://docs.docker.com/get-docker/
+* To run on your computer, change `        - VUE_APP_API_URL=18.184.69.221:5000` to `         - VUE_APP_API_URL=127.0.0.1:5000` in docker-compose.yml file.
+* To run on an AWS instance, change  `        - VUE_APP_API_URL=18.184.69.221:5000` to `         - VUE_APP_API_URL={public_ip_of_the_instance}:5000` in docker-compose.yml file.
+* Type `docker-compose build`
+* Type `docker-compose up`
+* Open up browser, and go `127.0.0.1` if you run on your local or "ip address of the instance" if you run on AWS instance.
