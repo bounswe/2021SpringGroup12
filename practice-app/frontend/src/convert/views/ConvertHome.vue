@@ -47,7 +47,7 @@ export default {
     this.error = '';
     this.result = '';
     try{
-      const url = `${process.env.VUE_APP_API_URL}/convert/?from=${this.fromQuery}&to=${this.toQuery}&amount=${this.amountQuery}`;
+      const url = `http://${process.env.VUE_APP_API_URL}/convert/?from=${this.fromQuery}&to=${this.toQuery}&amount=${this.amountQuery}`;
       let response = await axios.get(url);
       if(response.status != 200){
         console.log("Error: ", JSON.stringify(response.data));
@@ -63,7 +63,7 @@ export default {
     try{
     this.error = '';
     this.result = '';
-      const url = `${process.env.VUE_APP_API_URL}/convert/`;
+      const url = `http://${process.env.VUE_APP_API_URL}/convert/`;
       let response = await axios.post(url, {
         date: this.date,
         from: this.from,

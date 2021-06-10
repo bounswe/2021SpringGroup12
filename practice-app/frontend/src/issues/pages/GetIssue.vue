@@ -71,7 +71,7 @@ export default {
       try {
         this.end = false;
         this.error = null;
-        const url = `http://127.0.0.1:5000/issues/${this.issue_number}`;
+        const url = `http://${process.env.VUE_APP_API_URL}/issues/${this.issue_number}`;
         const response = await axios.get(url,{ headers });
         this.data = response.data;
 

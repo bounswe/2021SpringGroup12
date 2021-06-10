@@ -85,9 +85,9 @@ export default {
         this.error = null;
         var url = ""
         if(this.max_results == ""){
-         url = `http://127.0.0.1:5000/books/?name=${this.name}`;
+         url = `http://${process.env.VUE_APP_API_URL}/books/?name=${this.name}`;
         }else {
-          url = `http://127.0.0.1:5000/books/?name=${this.name}&max_results=${this.max_results}`;
+          url = `http://${process.env.VUE_APP_API_URL}/books/?name=${this.name}&max_results=${this.max_results}`;
         }
         const response = await axios.get(url, { headers });
         if(response.data.num_results == 0){

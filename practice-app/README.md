@@ -23,6 +23,8 @@ Here we have an API, written using The Flask framework.
     * `export FLASK_APP=main.py`
     * `export FLASK_ENV=development`
     * `python -m flask run`
+
+    
 * Go to the browser and open that link just you seen in the terminal.  (likely http://127.0.0.1:5000/)
 
 * Write your own endpoints using different existing API's.

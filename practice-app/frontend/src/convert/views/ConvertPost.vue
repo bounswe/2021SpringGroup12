@@ -32,7 +32,7 @@ export default {
   methods: {
     async convert() {
     try{
-      const url = `${process.env.VUE_APP_API_URL}/convert/`;
+      const url = `http://${process.env.VUE_APP_API_URL}/convert/`;
       let response = await axios.post(url, {
         date: this.date,
         from: this.from,

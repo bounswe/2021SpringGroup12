@@ -8,7 +8,7 @@
     <router-link to="/issues">Issues</router-link> |
     <router-link to="/convert">Currency Conversion</router-link> |
     <router-link to="/quotes">Quotes</router-link> |
-    <router-link to="/cocktails">Cocktails</router-link> |
+    <router-link to="/cocktails">Cocktails</router-link>
   </div>
   <router-view />
 </template>

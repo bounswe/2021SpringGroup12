@@ -82,7 +82,7 @@ export default {
       this.response = "";
       this.fail = false;
       this.error = null;
-      const url = `http://127.0.0.1:5000/books/`;
+      const url = `http://${process.env.VUE_APP_API_URL}/books/`;
       //change isbn numbers from comma seperated string to Array
       if (!this.user_body.isbn13s.length) {
         this.user_body.isbn13 = [];

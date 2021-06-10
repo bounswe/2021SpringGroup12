@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-vue.js:
-
-* first install yarn
-* `yarn install` in frontend folder
-* finally `yarn run` `serve`
-=======
 # test-client
 
 ## Project setup
@@ -29,4 +22,3 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
->>>>>>> 82ae232e71606912b38e247e84aba32f5eeed0af

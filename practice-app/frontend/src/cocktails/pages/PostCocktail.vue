@@ -71,7 +71,7 @@ export default {
       this.response = "";
       this.fail = false;
       this.error = null;
-      const url = `http://127.0.0.1:5000/cocktails/create_cocktail/`;
+      const url = `http://${process.env.VUE_APP_API_URL}/cocktails/create_cocktail/`;
 
 
       const response = await axios

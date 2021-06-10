@@ -64,7 +64,7 @@ export default {
       this.fail = false;
       this.error = null;
       //const url = `http://127.0.0.1:5000/addQuotes/`;
-      const url = `http://localhost:5000/addQuotes/`;
+      const url = `http://${process.env.VUE_APP_API_URL}/addQuotes/`;
 
       const response = await axios
         .post(url, this.user_body)

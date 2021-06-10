@@ -80,7 +80,7 @@ export default {
       user_body: {
         display_title: "",
         mpaa_rating: "",
-        critics_pick: 0,
+        critics_pick: "0",
         byline: "",
         headline: "",
         summary_short: "",
@@ -98,7 +98,34 @@ export default {
       this.response = "";
       this.fail = false;
       this.error = null;
-      const url = `http://127.0.0.1:5000/movies_addReview/`;
+      const url = `http://${process.env.VUE_APP_API_URL}/movies_addReview/`;
+
+
+      if (
+        !this.user_body.display_title.replace(" ", "").length ||
+        !this.user_body.link.replace(" ", "").length ||
+        !this.user_body.byline.replace(" ", "").length
+      ) {
+        this.success = false;
+        this.fail = true;
+        this.error = "Please fill title,reviewer name and link fields!";
+      }
+      else {
+        const response = await axios
+          .post(url, this.user_body)
+          .then((value) => {
+            if (value.status == 200) {
+              this.response = value.data;
+              this.success = true;
+              this.fail = false;
+            }
+          })
+          .catch((value) => {
+            this.success = false;
+            this.fail = true;
+            this.error = value.response.data;
+          });
+      }
       /*if (!this.user_body.assignees.length) {
         this.user_body.assignees = [];
       } else {
@@ -109,28 +136,6 @@ export default {
       } else {
         this.user_body.labels = this.user_body.labels.split(",");
       }*/
-
-      const response = await axios
-        .post(url, this.user_body)
-        .then((value) => {
-          console.log(value);
-          if (value.status == 200) {
-            this.response = value.data;
-            this.success = true;
-            this.fail = false;
-          }
-        })
-        .catch((value) => {
-          console.log(value.response);
-          console.log(value.response.status);
-          console.log(value.status);
-          console.log(value.data);
-          console.log(value.response.data);
-          this.success = false;
-          this.fail = true;
-          this.error = value.response.data;
-        });
-      console.log(response);
 
       if (this.success) {
         this.sent = true;

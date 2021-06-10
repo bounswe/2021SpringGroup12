@@ -1,6 +1,5 @@
 # Practice-app Flask Application
 # To run: read README.md
-##
 # NOTE: Remember you have to set your virtual environment and install flask
 
 from pydantic import ValidationError
@@ -8,7 +7,7 @@ import sqlite3
 from main.db import schemas, mapper
 import requests
 from flask import Flask, jsonify, Response, request, make_response, abort
-import sys
+import sys, os
 sys.path.append(".")
 from main.helpers import issue_helper, books_helper, name_info_helper, anime_helper, currency_helper, quote_helper, cocktail_helper
 
@@ -16,7 +15,9 @@ import random
 from flask_cors import CORS
 DB_PATH = "/home/veyis/Desktop/2021SpringGroup12-8e1c54b7896240a6d22027d0a291d6359b737675/practice-app/sqlfiles/practice-app.db"
 DB_PATH = "/usr/src/app/./sqlfiles/practice-app.db"
-
+## todo, delete j
+DB_PATH = os.getenv("DB_PATH","/usr/src/app/./sqlfiles/practice-appj.db")
+print(DB_PATH)
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
 
@@ -202,9 +203,7 @@ def get_quotes():
     quote_helper.add_quotes_quote_garden(quotes)
     return quotes if type(quotes) != list else schemas.QuoteResponse(data=quotes).__dict__
 
-
-# ----------------------------------------------------------------------REFIKA----------------------------------------------------------------------
-
+################################ MOVIES ############################
 
 @app.route('/movies_home/', methods=['GET', 'POST'])
 def movies_home():
@@ -245,7 +244,7 @@ def get_movies():
     return jsonify(dict)
 
 
-@ app.route('/movies_addReview/', methods=['POST'])
+@ app.route('/movies_addReview/', methods=['GET', 'POST'])
 def create_movie_review():
     #movie_review = request.form.to_dict(flat=True)
     movie_review = request.get_json()
@@ -260,10 +259,11 @@ def create_movie_review():
     if "link" not in movie_review.keys():
         return Response("Please provide the link!", status=400)
     if "critics_pick" in movie_review.keys():
-        if movie_review['critics_pick'] != 1 and movie_review['critics_pick'] != 0:
+        if movie_review['critics_pick'] != "1" and movie_review['critics_pick'] != "0":
             return Response("Criticks pick must be 1 or 0")
     try:
         movie = mapper.movie_mapper2(movie_review)
+        print(movie)
     except Exception as err:
         return Response(str(err), status=400)
         # connect to Database
@@ -280,7 +280,7 @@ def create_movie_review():
     con.close()
     return Response("Movie Review added succesfully!", status=200)
 
-################################ CONVERT ############################
+################################ NAME-AGE ############################
 
 # Uses Agify api which is on https://api.agify.io/
 # Here the assumption that "Agify returns the average age calculated from the data" is made

@@ -91,7 +91,7 @@ export default {
         this.body.start_date = (new Date(this.body.start_date)).toISOString();
         this.body.end_date = (new Date(this.body.end_date)).toISOString();
 
-        const url = `${process.env.VUE_APP_API_URL}/anime/`;
+        const url = `http://${process.env.VUE_APP_API_URL}/anime/`;
         await axios.post(url, this.body);
         this.success = true;
         this.fail = false;

@@ -72,7 +72,7 @@ export default {
 
 	
         const response = axios
-          .get("http://127.0.0.1:5000/name_information?name=" + this.name + countryParam, { headers })
+          .get("http://${process.env.VUE_APP_API_URL}/name_information?name=" + this.name + countryParam, { headers })
           .then((value) => {
 			
             if (value.status === 200) {

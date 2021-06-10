@@ -85,7 +85,7 @@ export default {
       try {
         this.end = false;
         this.error = null;
-        const url = `http://127.0.0.1:5000/issues?max_results=${this.max_results}`;
+        const url = `http://${process.env.VUE_APP_API_URL}/issues?max_results=${this.max_results}`;
         const response = await axios.get(url,{ headers });
         this.data = response.data;
         for (let i = 0; i < this.data.length; i++) {

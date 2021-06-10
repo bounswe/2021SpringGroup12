@@ -90,7 +90,7 @@ export default {
       try {
         this.end = false;
         this.error = null;
-        const url = `http://127.0.0.1:5000/cocktails/get_cocktails/?cocktail_name=${this.cocktail_type}`;
+        const url = `http://${process.env.VUE_APP_API_URL}/cocktails/get_cocktails/?cocktail_name=${this.cocktail_type}`;
         const response = await axios.get(url,{ headers });
         this.data = response.data['cocktails'];
         if(this.data != null ){

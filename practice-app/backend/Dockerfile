@@ -12,6 +12,9 @@ RUN pip install --no-cache-dir -r ./requirements.txt
 RUN python3 ./main/db/database_initializer.py
 ENV FLASK_APP=main/main.py
 ENV FLASK_ENV=development
+ENV NYTIMES_KEY="gJkqRRyjYRV0YDiUDAEXwsa0uZLL6YLh"
+ENV DB_PATH="/usr/src/app/./sqlfiles/practice-app.db"
+
 # tell the port number the container should expose
 EXPOSE 5000
 

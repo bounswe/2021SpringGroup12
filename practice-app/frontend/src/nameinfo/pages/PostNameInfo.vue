@@ -56,7 +56,7 @@ export default {
       this.success = false;
       this.message = "";
       this.fail = false;
-      const url = `http://127.0.0.1:5000/name_information`;
+      const url = `http://${process.env.VUE_APP_API_URL}/name_information`;
 	  
 	  
       if (!this.request.name || 

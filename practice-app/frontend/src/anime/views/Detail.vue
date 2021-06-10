@@ -41,7 +41,7 @@ export default {
       try {
         this.error = null;
         this.loading = true;
-        const url = `${process.env.VUE_APP_API_URL}/anime/${this.$route.params.id}`;
+        const url = `http://${process.env.VUE_APP_API_URL}/anime/${this.$route.params.id}`;
         const response = await axios.get(url);
         const anime = response.data;
         this.anime = {

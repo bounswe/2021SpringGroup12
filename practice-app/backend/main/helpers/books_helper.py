@@ -3,11 +3,12 @@ from flask import Response
 import requests
 import time
 from main.db.mapper import book_mapper
-
+import os
 # TODO change this variable in deployment phase!
 DB_PATH = "/home/veyis/Desktop/2021SpringGroup12-8e1c54b7896240a6d22027d0a291d6359b737675/practice-app/sqlfiles/practice-app.db"
 DB_PATH = "/usr/src/app/./sqlfiles/practice-app.db"
-
+DB_PATH = os.getenv("DB_PATH","/usr/src/app/./sqlfiles/practice-appj.db")
+NYTIMESKEY= os.getenv("NYTIMES_KEY")
 def validate_input(params):
     # if name parameter is not supplied, return 400
     if "name" not in params:
@@ -21,7 +22,7 @@ def call_nytimes(params):
     # now we are sure name parameter is supplied, request books of this author from NYTimes API.
     author_name = params.title().replace(" ", "+")
     r = requests.get(
-        f"https://api.nytimes.com/svc/books/v3/reviews.json?author={author_name}&api-key=gJkqRRyjYRV0YDiUDAEXwsa0uZLL6YLh")
+        f"https://api.nytimes.com/svc/books/v3/reviews.json?author={author_name}&api-key={NYTIMESKEY}")
     if r.status_code >= 500:
         # server is crashed, there is nothing I can do.
         return Response(f"Third party API is down.", status=r.status_code)
@@ -31,7 +32,7 @@ def call_nytimes(params):
         # wait 10 seconds and try again. If that fails again, return 429.
         time.sleep(10)
         r = requests.get(
-            f"https://api.nytimes.com/svc/books/v3/reviews.json?author={author_name}&api-key=gJkqRRyjYRV0YDiUDAEXwsa0uZLL6YLh")
+            f"https://api.nytimes.com/svc/books/v3/reviews.json?author={author_name}&api-key={NYTIMESKEY}")
         if r.status_code == 400:
             return Response(f"Author \"{author_name}\" could not found in database!", status=400)
         if r.status_code == 429:

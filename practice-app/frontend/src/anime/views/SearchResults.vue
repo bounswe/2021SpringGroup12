@@ -40,7 +40,7 @@ export default {
       try {
         this.error = null;
         this.loading = true;
-        const url = `${process.env.VUE_APP_API_URL}/anime/search?query=${this.$route.params.query}&limit=15`;
+        const url = `http://${process.env.VUE_APP_API_URL}/anime/search?query=${this.$route.params.query}&limit=15`;
         const response = await axios.get(url);
         const animes = response.data;
         this.animes = animes.map((anime) => ({
