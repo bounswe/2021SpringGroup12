@@ -1,13 +1,10 @@
-import sqlite3
+import sqlite3,os
 from sqlite3 import Cursor
 from typing import List
 
 from main.db.schemas import NameInfo
 
-
-DB_LOC = "C:/Users/fb_be/Documents/GitHub/2021SpringGroup12/practice-app/sqlfiles/practice-app.db"
-DB_PATH = "/home/veyis/Desktop/2021SpringGroup12-8e1c54b7896240a6d22027d0a291d6359b737675/practice-app/sqlfiles/practice-app.db"
-DB_PATH = "/usr/src/app/./sqlfiles/practice-app.db"
+DB_PATH = os.getenv("DB_PATH","/usr/src/app/./sqlfiles/practice-app.db")
 
 def insert_name_info(nameInfo: NameInfo):
     con = sqlite3.connect(DB_PATH)

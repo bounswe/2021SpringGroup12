@@ -4,11 +4,10 @@ import requests
 import time
 from main.db.mapper import book_mapper
 import os
-# TODO change this variable in deployment phase!
-DB_PATH = "/home/veyis/Desktop/2021SpringGroup12-8e1c54b7896240a6d22027d0a291d6359b737675/practice-app/sqlfiles/practice-app.db"
-DB_PATH = "/usr/src/app/./sqlfiles/practice-app.db"
-DB_PATH = os.getenv("DB_PATH","/usr/src/app/./sqlfiles/practice-appj.db")
+
+DB_PATH = os.getenv("DB_PATH","/usr/src/app/./sqlfiles/practice-app.db")
 NYTIMESKEY= os.getenv("NYTIMES_KEY")
+
 def validate_input(params):
     # if name parameter is not supplied, return 400
     if "name" not in params:
@@ -48,14 +47,14 @@ def add_book_from_user(book):
         cur = con.cursor()
         cur.execute(
             "INSERT INTO Books(book_title, book_author, url, publication_dt, summary, uuid, uri) VALUES (?,?,?,?,?,?,?)",
-            (book.book_title, book.book_author, book.url, book.publication_dt, book.summary, book.uuid, book.uri))
+            (book["book_title"], book["book_author"], book["url"], book["publication_dt"], book["summary"], book["uuid"], book["uri"]))
         # since isbn's can be a list. Insert those to a seperate table.
         if book.isbn13 != []:
             cur.execute("select * from Books")
             data = cur.execute("SELECT book_id FROM Books WHERE book_title = ? AND book_author = ?",
-                               (book.book_title, book.book_author))
+                               (book["book_title"], book["book_author"]))
             book_id = data.fetchone()[0]
-            for isbn in list(set(book.isbn13)):
+            for isbn in list(set(book["isbn13"])):
                 cur.execute(
                     "INSERT INTO BookISBNs(book_id, isbn) VALUES (?,?)", (book_id, isbn))
         con.commit()
@@ -65,7 +64,7 @@ def add_book_from_user(book):
 
 
 def add_books_from_nytimes(books):
-    con = sqlite3.connect(DB_PATH )
+    con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
     for book in books:
         try:

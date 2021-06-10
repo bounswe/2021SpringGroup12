@@ -11,10 +11,8 @@ from requests.api import request
 
 from db.schemas import Cocktail
 from db.mapper import cocktail_mapper
+DB_PATH = os.getenv("DB_PATH","/usr/src/app/./sqlfiles/practice-app.db")
 
-DB_PATH="/Users/batuhan_mac/Desktop/cmpe/Cmpe352/week9/cocktails/2021SpringGroup12/practice-app/sqlfiles/"
-DB_PATH = "/home/veyis/Desktop/2021SpringGroup12-8e1c54b7896240a6d22027d0a291d6359b737675/practice-app/sqlfiles/practice-app.db"
-DB_PATH = "/usr/src/app/./sqlfiles/practice-app.db"
 def validate_get_input(params):
     # necesssary info check
     if "cocktail_name" not in params or params== "":

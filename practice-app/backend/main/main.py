@@ -13,11 +13,9 @@ from main.helpers import issue_helper, books_helper, name_info_helper, anime_hel
 
 import random
 from flask_cors import CORS
-DB_PATH = "/home/veyis/Desktop/2021SpringGroup12-8e1c54b7896240a6d22027d0a291d6359b737675/practice-app/sqlfiles/practice-app.db"
-DB_PATH = "/usr/src/app/./sqlfiles/practice-app.db"
-## todo, delete j
-DB_PATH = os.getenv("DB_PATH","/usr/src/app/./sqlfiles/practice-appj.db")
-print(DB_PATH)
+NYTIMESKEY= os.getenv("NYTIMES_KEY")
+
+DB_PATH = os.getenv("DB_PATH","/usr/src/app/./sqlfiles/practice-app.db")
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
 
@@ -217,7 +215,7 @@ def get_movies():
     # now we are sure keyword parameter is supplied, request rewiew the moves with the keywords from NYTimes API.
     keyword = request.args.get("keyword").title().replace(" ", "+")
     r = requests.get(
-        "https://api.nytimes.com/svc/movies/v2/reviews/search.json?query={}&api-key=gJkqRRyjYRV0YDiUDAEXwsa0uZLL6YLh".format(keyword))
+        "https://api.nytimes.com/svc/movies/v2/reviews/search.json?query={}&api-key={}".format(keyword,NYTIMESKEY))
     r = r.json()
 
     # now we have the movies.

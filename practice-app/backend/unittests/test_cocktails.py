@@ -37,11 +37,11 @@ class TestCocktailsEndpoint(unittest.TestCase):
         self.assertEqual(response.status, '400 BAD REQUEST')
 
     def test_endpoint_get_wrong_2(self):
-        response = requests.get('http://127.0.0.1:5000/cocktails/get_cocktails/?cocktail_name=notacocktail')
+        response = self.app.get('/cocktails/get_cocktails/?cocktail_name=notacocktail')
         self.assertEqual(response.text, "Please provide an existing cocktail name!")
 
     def test_create_existing_cocktail_name(self):
-        response = requests.post('http://127.0.0.1:5000/cocktails/create_cocktail/', json={
+        response = self.app.post('/cocktails/create_cocktail/', json={
     "strDrink": "batuhancocktail",
     "strIngredient1": "gin",
     "strIngredient2": "tonic",

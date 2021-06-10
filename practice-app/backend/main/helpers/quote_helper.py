@@ -1,11 +1,9 @@
-import sqlite3
+import sqlite3,os
 from flask import Response
 import requests
 from main.db.mapper import quote_mapper
 
-DB_PATH = "C:\\Users\gokay\\Desktop\\TERM-6\\2021SpringGroup12\\practice-app\\sqlfiles"
-DB_PATH = "/home/veyis/Desktop/2021SpringGroup12-8e1c54b7896240a6d22027d0a291d6359b737675/practice-app/sqlfiles/practice-app.db"
-DB_PATH = "/usr/src/app/./sqlfiles/practice-app.db"
+DB_PATH = os.getenv("DB_PATH","/usr/src/app/./sqlfiles/practice-app.db")
 
 
 def get_genres():

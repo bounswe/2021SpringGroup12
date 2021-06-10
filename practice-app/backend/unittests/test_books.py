@@ -6,6 +6,7 @@ from main.db.mapper import book_mapper
 from main.helpers import books_helper
 import os
 from main import main
+DB_PATH = os.getenv("DB_PATH","/usr/src/app/./sqlfiles/practice-app.db")
 
 
 class TestBooksEndpoint(unittest.TestCase):
@@ -68,8 +69,8 @@ class TestBooksEndpoint(unittest.TestCase):
     def test_get_endpoint_correct_2(self):
         return_value = self.app.get(
             f'/books/?name={self.input_books_from_nytimes[0].get("book_author")}&max_results=1')
-        self.assertIn(return_value.status, ['200 OK', '429 Too Many Requests', '500 Internal Server Error',
-                                            '502 Bad Gateway', '503 Service Unavailable', '504 Gateway Timeout'])
+        self.assertIn(return_value.status, ['200 OK', '429 TOO MANY REQUESTS', '500 INTERNAL SERVER ERROR',
+                                            '502 BAD GATEWAY', '503 SERVICE UNAVAILABLE', '504 GATEWAY TIMEOUT'])
         if return_value.status == 200:
             self.assertEqual(return_value.json, {
                 "num_results": 1, "books": self.input_books_from_nytimes[:1]})
@@ -134,8 +135,7 @@ class TestBooksEndpoint(unittest.TestCase):
     def test_add_books_from_nytimes_correct_input(self):
         books_helper.add_books_from_nytimes(self.input_books_from_nytimes)
         # TODO change this in deployment phase
-        con = sqlite3.connect(
-            "/home/veyis/Desktop/a2021SpringGroup12/practice-app/sqlfiles/practice-app.db")
+        con = sqlite3.connect(DB_PATH)
         cur = con.cursor()
         cur.execute("SELECT * FROM Books WHERE book_author = 'Aldous Huxley'")
         books_from_db = cur.fetchall()
@@ -235,8 +235,7 @@ class TestBooksEndpoint(unittest.TestCase):
         book = book_mapper(self.input_book_from_user)
         books_helper.add_book_from_user(book)
         # TODO change this in deployment phase
-        con = sqlite3.connect(
-            "/home/veyis/Desktop/a2021SpringGroup12/practice-app/sqlfiles/practice-app.db")
+        con = sqlite3.connect(DB_PATH)
         cur = con.cursor()
         cur.execute("SELECT * FROM Books WHERE book_author = (?) AND book_title = (?)",
                     (self.input_book_from_user.get("book_author"), self.input_book_from_user.get("book_title")))

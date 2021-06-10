@@ -1,11 +1,9 @@
-import sqlite3
+import sqlite3,os
 from flask import Response
 from main.db.mapper import currency_rate_mapper
 
 # TODO change this variable in deployment phase!
-DB_PATH = "C:/Users/ihsan/PycharmProjects/2021SpringGroup12/practice-app/sqlfiles/practice-app.db"
-DB_PATH = "/home/veyis/Desktop/2021SpringGroup12-8e1c54b7896240a6d22027d0a291d6359b737675/practice-app/sqlfiles/practice-app.db"
-DB_PATH = "/usr/src/app/./sqlfiles/practice-app.db"
+DB_PATH = os.getenv("DB_PATH","/usr/src/app/./sqlfiles/practice-app.db")
 
 def validate_get_input(params):
     # necesssary info check

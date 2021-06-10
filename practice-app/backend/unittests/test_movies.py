@@ -149,7 +149,6 @@ class TestMoviesEndpoint(unittest.TestCase):
 
     def test_get_movies_wrong_1(self):
         return_value = self.app.get('/movies/')
-        print(return_value)
         self.assertEqual(return_value.status, '400 BAD REQUEST')
         self.assertEqual(return_value.data,
                          b'Please provide a keyword!')

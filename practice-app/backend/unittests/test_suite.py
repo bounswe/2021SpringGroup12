@@ -1,4 +1,4 @@
-from unittests import test_books
+from unittests import test_books, test_animes, test_cocktails, test_currency, test_movies, test_name_age, test_quote
 from unittests import helper_test
 import HtmlTestRunner  # Import the HTMLTestRunner Module
 import os
@@ -21,6 +21,12 @@ class HTML_TestRunner_TestSuite(unittest.TestCase):
         suite = unittest.TestSuite()
         # add two tests to the suite -- in principle they should be related, here they are demo
         suite.addTest(loader.loadTestsFromModule(test_books))
+        suite.addTest(loader.loadTestsFromModule(test_animes))
+        suite.addTest(loader.loadTestsFromModule(test_cocktails))
+        suite.addTest(loader.loadTestsFromModule(test_currency))
+        suite.addTest(loader.loadTestsFromModule(test_movies))
+        suite.addTest(loader.loadTestsFromModule(test_name_age))
+        suite.addTest(loader.loadTestsFromModule(test_quote))
 
         html_runner = HtmlTestRunner.HTMLTestRunner(
             combine_reports=True,
