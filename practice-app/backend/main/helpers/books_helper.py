@@ -70,11 +70,11 @@ def add_books_from_nytimes(books):
         try:
             cur.execute(
                 "INSERT INTO Books(book_title, book_author, url, publication_dt, summary, uuid, uri) VALUES (?,?,?,?,?,?,?)",
-                (book["book_title"], book["book_author"], book["url"], book["publication_dt"], book["summary"], book["uuid"], book["uri"]))
+                (book.book_title, book.book_author, book.url, book.publication_dt, book.summary, book.uuid, book.uri))
             cur.execute("SELECT book_id FROM Books WHERE book_title = ? AND book_author = ?",
-                        (book["book_title"], book["book_author"]))
+                        (book.book_title, book.book_author))
             book_id = cur.fetchone()[0]
-            for isbn in book["isbn13"]:
+            for isbn in book.isbn13:
                 cur.execute(
                     "INSERT INTO BookISBNs(book_id, isbn) VALUES (?,?)", (book_id, isbn))
         except Exception as err:
