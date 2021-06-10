@@ -5,8 +5,6 @@ from typing import List
 from main.db.schemas import Issue
 DB_PATH = os.getenv("DB_PATH","/usr/src/app/./sqlfiles/practice-app.db")
 
-ALL_ISSUES = {}
-
 
 def make_issue(git_issue):
     try:
