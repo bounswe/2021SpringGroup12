@@ -37,6 +37,7 @@ def call_nytimes(params):
         if r.status_code == 429:
             return Response(f"You have sent too many request recently, please wait!", status=429)
     r = r.json()
+    print(r)
     return r["results"]
 
 

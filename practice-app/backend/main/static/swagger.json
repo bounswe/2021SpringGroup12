@@ -1,0 +1,170 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "description": "URI of our deployed application.",
+        "version": "v.0.1",
+        "title": "Group 12 practice-app documentation"
+    },
+    "tags": [
+        {
+            "name": "Book request",
+            "description": "API for getting book reviews of an author."
+        }
+    ],
+    "paths": {
+        "/books/": {
+            "get": {
+                "tags": [
+                    " Book request"
+                ],
+                "summary": "Returns bookrequests",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "required": true,
+                        "name": "name",
+                        "type": "string",
+                        "description": "Name of the author."
+                    },
+                    {
+                        "in": "query",
+                        "required":false,
+                        "name": "max_results",
+                        "type": "integer",
+                        "description": "Number of results you want to get."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string",
+                            "format": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "429": {
+                        "description": "Too many requests."
+                    },
+                    "5xx": {
+                        "description": "NYTimes is down."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    " Book request"
+                ],
+                "summary": "Create a new book review in the system.",
+                "requestBody": {
+                    "description": "Book Request Post Object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/book"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string",
+                            "format": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "string",
+                            "format": "string"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "type": "string",
+                            "format": "string"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict! Check request body.",
+                        "schema": {
+                            "type": "string",
+                            "format": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "book": {
+                "type": "object",
+                "properties": {
+                    "book_title": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "book_author": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "url": {
+                        "type": "string",
+                        "format": "url"
+                    },
+                    "publication_dt": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "summary": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "uuid": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "uri": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "isbn13": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "string"
+                        }
+                    }
+                }
+            },
+            "booksGetResponse": {
+                "type": "object",
+                "properties": {
+                    "books": {
+                        "type": "array",
+                        "description": "List of books returned.",
+                        "items": {
+                            "$ref": "#/components/schemas/book"
+                        }
+                    },
+                    "num_results": {
+                        "type": "integer",
+                        "format": "integer",
+                        "min": 0,
+                        "description": "The number of books returned."
+                    }
+                }
+            }
+        }
+    }
+}

@@ -6,11 +6,11 @@ from pydantic import ValidationError
 import sqlite3
 from main.db import schemas, mapper
 import requests
-from flask import Flask, jsonify, Response, request, make_response, abort
+from flask import Flask, jsonify, Response, request, make_response
 import sys, os
 sys.path.append(".")
 from main.helpers import issue_helper, books_helper, name_info_helper, anime_helper, currency_helper, quote_helper, cocktail_helper
-
+from flask_swagger_ui import get_swaggerui_blueprint
 import random
 from flask_cors import CORS
 NYTIMESKEY= os.getenv("NYTIMES_KEY")
@@ -26,11 +26,27 @@ to read body: request.get_json() or request.form
 to read query parameters:  request.args.get(<argname>) or request.args.to_dict() or request.query_string.decode("utf-8")
 """
 
+################################ SWAGGER ############################
 
-@app.route('/')
-def get_tasks():
-    # get all tasks
-    return "group12 practice-app"
+""" 
+@app.route('/static/<path:path>')
+def send_static(path):
+    return send_from_directory('static', path)
+ """
+SWAGGER_URL = '/api/docs'
+API_URL = '/static/swagger.json'
+swagger_ui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config = {
+        'app_name': 'CMPE 352 GROUP 12 PRACTICE-APP'
+    }
+)
+
+app.register_blueprint(swagger_ui_blueprint, url_prefix=SWAGGER_URL)
+#app.register_blueprint(app.get_blueprint())
+
+
 
 ################################ BOOKS ############################
 
@@ -457,6 +473,10 @@ def create_cocktail():
     
 
 ################################ GENERAL RESPONSES ############################
+@app.route('/')
+def get_tasks():
+    # get all tasks
+    return "group12 practice-app"
 
 @app.errorhandler(404)
 def not_found(error):
