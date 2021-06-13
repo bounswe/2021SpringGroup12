@@ -9,6 +9,10 @@
         {
             "name": "Book request",
             "description": "API for getting book reviews of an author."
+        },
+        {
+            "name": "Movie request",
+            "description": "API for getting movie reviews of an author."
         }
     ],
     "paths": {
@@ -103,7 +107,75 @@
                     }
                 }
             }
+        },
+        "/movies/": {
+            "get": {
+                "tags": [
+                    " Movie Review request"
+                ],
+                "summary": "Returns moviereviewrequests",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "required": true,
+                        "name": "keyword",
+                        "type": "string",
+                        "description": "Keyword for a movie Review"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string",
+                            "format": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "/movies_addReview/": {
+            "post": {
+                "tags": [
+                    " Movie Review request"
+                ],
+                "summary": "Create a new movie review in the system.",
+                "requestBody": {
+                    "description": "Movie Review Request Post Object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/movie"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string",
+                            "format": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "string",
+                            "format": "string"
+                        }
+                    }
+                }
+            }
         }
+        
     },
     "components": {
         "schemas": {
@@ -162,6 +234,51 @@
                         "format": "integer",
                         "min": 0,
                         "description": "The number of books returned."
+                    }
+                }
+            },
+            "movie": {
+                "type": "object",
+                "properties": {
+                    "display_title": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "mpaa_rating": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "link": {
+                        "type": "string",
+                        "format": "url"
+                    },
+                    "critics_pick": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "byline": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "headline": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "summary_short": {
+                        "type": "string",
+                        "format": "string"
+                    }
+                }
+            },
+            "MovieResponse": {
+                "type": "object",
+                "properties": {
+                    "movies": {
+                        "type": "array",
+                        "description": "List of movie reviews returned.",
+                        "items": {
+                            "$ref": "#/components/schemas/movie"
+                        }
                     }
                 }
             }
