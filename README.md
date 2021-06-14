@@ -14,3 +14,9 @@ This is the github repository that we use for CMPE352 as Group-12. You can see m
 * [Zahit Batuhan Tongarlak](https://github.com/bounswe/2021SpringGroup12/wiki/Batuhan-Tongarlak)
 ## Old Members
 * [Doğukan Türksoy](https://github.com/bounswe/2021SpringGroup12/wiki/Doğukan-Türksoy)</del>
+
+## Practice-app
+* Webpage: http://18.184.69.221/
+* APIs: http://18.184.69.221:5000/
+* URI: http://18.184.69.221:5000/api/docs
+
