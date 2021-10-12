@@ -12,6 +12,7 @@ This is the github repository that we use for CMPE352 as Group-12. You can see m
 * [Refika Kalyoncu](https://github.com/bounswe/2021SpringGroup12/wiki/Refika-Kalyoncu) (Communicator)
 * [Ömer Yılmaz](https://github.com/bounswe/2021SpringGroup12/wiki/%C3%96mer-Y%C4%B1lmaz)
 * [Zahit Batuhan Tongarlak](https://github.com/bounswe/2021SpringGroup12/wiki/Batuhan-Tongarlak)
+* [Ahmet Berat Can](https://github.com/bounswe/2021SpringGroup12/wiki/Ahmet-Berat-Can)
 ## Old Members
 * [Doğukan Türksoy](https://github.com/bounswe/2021SpringGroup12/wiki/Doğukan-Türksoy)</del>
 
