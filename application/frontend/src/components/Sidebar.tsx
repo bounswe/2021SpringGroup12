@@ -11,6 +11,7 @@ import {
   VideoCameraOutlined,
 } from '@ant-design/icons';
 import { Menu } from 'antd';
+import { Link } from 'react-router-dom';
 
 
 export interface ISidebarProps {
@@ -29,28 +30,28 @@ export default function Sidebar (props: ISidebarProps) {
         <div style={{width:'120px', height:'120px', backgroundColor:'aqua',textAlign:'center'}}> LOGO</div>
         <Menu theme="dark" mode="inline" defaultSelectedKeys={["4"]}>
           <Menu.Item key="1" icon={<UserOutlined />}>
-            nav 1
+          <Link to="/sampleURL">sampleURL 1</Link>
           </Menu.Item>
           <Menu.Item key="2" icon={<VideoCameraOutlined />}>
-            nav 2
+          <Link to="/sampleURL2">sampleURL 2</Link>
           </Menu.Item>
           <Menu.Item key="3" icon={<UploadOutlined />}>
-            nav 3
+          <Link to="/sampleURL3">sampleURL 3</Link>
           </Menu.Item>
           <Menu.Item key="4" icon={<BarChartOutlined />}>
-            nav 4
+          <Link to="/sampleURL4">sampleURL 4</Link>
           </Menu.Item>
           <Menu.Item key="5" icon={<CloudOutlined />}>
-            nav 5
+          <Link to="/sampleURL5">sampleURL 5</Link>
           </Menu.Item>
           <Menu.Item key="6" icon={<AppstoreOutlined />}>
-            nav 6
+          <Link to="/sampleURL6">sampleURL 6</Link>
           </Menu.Item>
           <Menu.Item key="7" icon={<TeamOutlined />}>
-            nav 7
+          <Link to="/sampleURL7">sampleURL 7</Link>
           </Menu.Item>
           <Menu.Item key="8" icon={<ShopOutlined />}>
-            nav 8
+          <Link to="/sampleURL8">sampleURL 8</Link>
           </Menu.Item>
         </Menu>
       </Sider>
