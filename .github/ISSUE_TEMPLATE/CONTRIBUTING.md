@@ -14,4 +14,10 @@ assignees: ''
 **Deadline**
 -
 
+**External links**
+- 
 
+
+*****TEMPLATE BEGINS*****
+
+***Do not forget to add related labels, assign related assignee and most importantly add external links of corresponding works done before closing an issue***
