@@ -8,7 +8,7 @@ export default function Register(props: IRegisterProps) {
   return (
     <div className="site-card-wrapper">
       <Row justify="center">
-        <Col lg={12} style={{minWidth:'%25'}}>
+        <Col lg={12}>
           <Card title="Register" bordered>
             <RegistrationForm />
           </Card>

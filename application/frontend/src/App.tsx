@@ -6,6 +6,8 @@ import { Menu } from "antd";
 import Sidebar from "./components/Sidebar";
 import { Link, Route, Router, Switch } from "react-router-dom";
 import history from "./helpers/history";
+import { Login } from "./pages/Login";
+import { ForgotPassword } from "./pages/ForgotPassword";
 
 function App() {
   return (
@@ -24,9 +26,19 @@ function App() {
               <Menu.Item key="3">
                 <Link to="/dashboard">Dashboard</Link>
               </Menu.Item>
+              <Menu.Item key="4">
+                <Link to="/login">Login</Link>
+              </Menu.Item>
             </Menu>
           </Header>
-          <Content style={{ margin: "24px 16px 0", overflow: "initial", minWidth:"300px"}}>
+          <Content
+            style={{
+              margin: "24px 16px 0",
+              overflow: "scroll",
+              height:"100vh",
+              minWidth: "400px"
+            }}
+          >
             <Switch>
               <Route exact path="/">
                 Home
@@ -35,9 +47,15 @@ function App() {
                 <Register />
               </Route>
               <Route path="/dashboard">Dashboard</Route>
+              <Route path="/login">
+                <Login/>
+              </Route>
+              <Route path="/forgotpassword">
+                <ForgotPassword/>
+              </Route>
             </Switch>
           </Content>
-          <Footer></Footer>
+          <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
         </Layout>
       </Router>
     </>
