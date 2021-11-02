@@ -21,10 +21,24 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'javax.validation:validation-api:2.0.1.Final'
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+	compileOnly 'org.projectlombok:lombok:1.18.22'
 	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
+
+	compileOnly 'org.mapstruct:mapstruct:1.4.2.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+
+	runtimeOnly 'org.postgresql:postgresql'
+
+	testImplementation 'org.junit.vintage:junit-vintage-engine:5.7.0'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.5'
+
+
 }
 
 test {
