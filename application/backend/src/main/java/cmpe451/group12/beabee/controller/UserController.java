@@ -5,6 +5,8 @@ import cmpe451.group12.beabee.dto.UserDTO;
 import cmpe451.group12.beabee.service.UserService;
 import cmpe451.group12.beabee.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,10 +22,6 @@ public class UserController {
     @GetMapping("/{username}")
     public UserDTO getUser(@PathVariable String username) {
         return userMapper.mapToDto(userService.getUserByUsername(username));
-    }
-    @PostMapping("/")
-    public MessageResponse addUser(@RequestBody UserDTO userDTO) {
-        return userService.addUser(userMapper.mapToEntity(userDTO));
     }
 
 }

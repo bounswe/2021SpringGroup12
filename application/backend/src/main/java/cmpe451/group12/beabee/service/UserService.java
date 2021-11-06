@@ -19,14 +19,5 @@ public class UserService {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    public MessageResponse addUser(Users user) {
-        try { // TODO: prevent adding an existing user
-            System.out.println(user.toString());
-            userRepository.save(user);
-        }catch (Exception e){
-            System.out.println(e);
-            return new MessageResponse("Couldn't add user!", MessageType.ERROR);
-        }
-        return new MessageResponse("User has been added successfully!", MessageType.SUCCESS);
-    }
+
 }
