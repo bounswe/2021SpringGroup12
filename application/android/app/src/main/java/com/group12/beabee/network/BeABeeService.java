@@ -1,5 +1,10 @@
 package com.group12.beabee.network;
 
+import android.app.Application;
+import android.content.res.Resources;
+
+import com.group12.beabee.BeABeeApplication;
+import com.group12.beabee.R;
 import com.group12.beabee.network.mocking.MockService;
 
 import java.io.IOException;
@@ -24,8 +29,8 @@ public class BeABeeService {
             serviceAPI = new MockService();
         } else {
             Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(Resources.getSystem().getString(R.string.base_url_dev))
-                    .baseUrl("https://api.agify.io/")
+                .baseUrl(BeABeeApplication.getAppContext().getString(R.string.base_url_dev))
+//                    .baseUrl("https://api.agify.io/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(okHttpClient())
                     .build();
