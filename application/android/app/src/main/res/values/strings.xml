@@ -1,3 +1,5 @@
 <resources>
+    <string name="base_url"></string>
+    <string name="base_url_dev"></string>
     <string name="app_name">BeaBee</string>
 </resources>
