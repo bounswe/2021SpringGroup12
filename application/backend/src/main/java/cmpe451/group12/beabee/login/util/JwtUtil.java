@@ -1,4 +1,4 @@
-package cmpe451.group12.beabee.util;
+package cmpe451.group12.beabee.login.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

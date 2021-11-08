@@ -1,7 +1,7 @@
-package cmpe451.group12.beabee.mapper;
+package cmpe451.group12.beabee.login.mapper;
 
-import cmpe451.group12.beabee.dto.UserDTO;
-import cmpe451.group12.beabee.model.Users;
+import cmpe451.group12.beabee.login.dto.UserDTO;
+import cmpe451.group12.beabee.login.model.Users;
 import org.mapstruct.Mapper;
 import java.util.List;
 
