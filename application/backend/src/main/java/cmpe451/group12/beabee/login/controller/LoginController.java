@@ -1,69 +1,30 @@
-package cmpe451.group12.beabee.controller;
+package cmpe451.group12.beabee.login.controller;
 
-import cmpe451.group12.beabee.common.dto.AuthenticationResponse;
+import cmpe451.group12.beabee.login.dto.AuthenticationResponse;
 import cmpe451.group12.beabee.common.dto.MessageResponse;
-import cmpe451.group12.beabee.common.enums.MessageType;
-import cmpe451.group12.beabee.config.security.MyUserDetailsService;
-import cmpe451.group12.beabee.mapper.UserMapper;
-import cmpe451.group12.beabee.model.Users;
-import cmpe451.group12.beabee.repository.UserRepository;
-import cmpe451.group12.beabee.util.JwtUtil;
+import cmpe451.group12.beabee.login.dto.UserDTO;
+import cmpe451.group12.beabee.login.service.LoginService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
-import java.util.Random;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @Validated
 @CrossOrigin
+@RequestMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 public class LoginController {
-    private final AuthenticationManager authenticationManager;
-    private final MyUserDetailsService myUserDetailsService;
-    private final JwtUtil jwtTokenUtil;
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
+    private final LoginService service;
 
     @PostMapping("/login")
-    public AuthenticationResponse createAuthenticationToken(@RequestBody Users user) throws Exception {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-        } catch (BadCredentialsException e) {
-            throw new Exception("Wrong username or password!", e);
-        }
-        final UserDetails userDetails = myUserDetailsService.loadUserByUsername(user.getUsername());
-        final String jwt = jwtTokenUtil.generateToken(userDetails);
-        return new AuthenticationResponse(userMapper.mapToDto(user),jwt,"Login successful!",MessageType.SUCCESS);
+    public AuthenticationResponse createAuthenticationToken(@RequestBody UserDTO user) throws Exception {
+        return service.createAuthenticationToken(user);
     }
 
 
     @PostMapping("/signup")
-    public MessageResponse signup(@RequestBody  Users user) {
-        try { // TODO: prevent adding an existing user
-            if(userRepository.findByUsername(user.getUsername()).isPresent()){
-                Random rand = new Random();
-                return new MessageResponse("Username is already in use. Try "+ user.getUsername()+"_"+ rand.nextInt(1000)+" instead?",MessageType.ERROR);
-            }
-            if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-                return new MessageResponse("Email address is already in use. You already have an account?", MessageType.INFO);
-            }
-            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-            userRepository.save(user);
-        }catch (Exception e){
-            System.out.println(e);
-            return new MessageResponse("Couldn't sign up user!", MessageType.ERROR);
-        }
-        return new MessageResponse("User has signed up successfully!", MessageType.SUCCESS);
+    public MessageResponse signup(@RequestBody UserDTO user) {
+        return service.signup(user);
     }
 }
