@@ -28,6 +28,8 @@ public class SignUpActivity extends AppCompatActivity {
     EditText etUsername;
     @BindView(R.id.et_password)
     EditText etPassword;
+    @BindView(R.id.et_password_repeat)
+    EditText etPasswordRepeat;
     @BindView(R.id.et_email)
     EditText etEmail;
 
@@ -43,10 +45,17 @@ public class SignUpActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_signup)
     public void OnClickSignUp(){
+        String password = etPassword.getText().toString();
+        String password2 = etPasswordRepeat.getText().toString();
+        if (!password2.equals(password)){
+            Toast.makeText(this, "Make sure your passwords match!!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         SignUpRequest signUpRequest = new SignUpRequest();
         signUpRequest.username = etUsername.getText().toString();
         signUpRequest.email = etEmail.getText().toString();
-        signUpRequest.password = etPassword.getText().toString();
+        signUpRequest.password = password;
 
         serviceAPI.signUpRequest(signUpRequest).enqueue(new Callback<SignUpResponse>() {
 
