@@ -13,7 +13,10 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: ./application/backend
+    
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout
@@ -38,10 +41,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: publish
-    defaults:
-      run:
-        working-directory: ./application/backend
-    
+
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
