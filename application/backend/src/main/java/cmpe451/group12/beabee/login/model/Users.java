@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 
 import java.util.Collection;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -18,8 +19,19 @@ public class Users implements UserDetails {
     private String username;
     @Column(name = "password")
     private String password;
+
     @Column(name = "email")
     private String email;
+    @Column(name = "name")
+    private String name;
+    @Column(name = "surname")
+    private String surname;
+
+
+    @Column(name = "password_reset_token")
+    private String password_reset_token;
+    @Column(name = "password_reset_token_expiration_date")
+    private Date password_reset_token_expiration_date;
 
     /*
     @ManyToMany(fetch = FetchType.EAGER)
@@ -28,7 +40,7 @@ public class Users implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "AUTHORITY_ID")
     )
     private Set<Authority> authorities;
-*/
+    */
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
