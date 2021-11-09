@@ -1,5 +1,11 @@
-import React from "react";
 import { Form, Input, Checkbox, Button } from "antd";
+import { registerRequest } from "../api/auth";
+
+export type IregisterForm = {
+  email: string;
+  password: string;
+  username: string;
+};
 
 const formItemLayout = {
   labelCol: {
@@ -35,8 +41,8 @@ const tailFormItemLayout = {
 const RegistrationForm = () => {
   const [form] = Form.useForm();
 
-  const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
+  const onFinish = (values: IregisterForm) => {
+    registerRequest(values)
   };
 
   return (

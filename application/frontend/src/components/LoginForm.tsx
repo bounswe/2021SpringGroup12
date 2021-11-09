@@ -1,9 +1,10 @@
 import { Form, Input, Button, Checkbox } from "antd";
 import { Link } from "react-router-dom";
+import { loginRequest } from "../api/auth";
 
 export const LoginForm = () => {
   const onFinish = (values: any) => {
-    console.log("Success:", values);
+    loginRequest(values)
   };
 
   const onFinishFailed = (errorInfo: any) => {
