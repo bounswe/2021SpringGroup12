@@ -1,6 +1,6 @@
-package cmpe451.group12.beabee.repository;
+package cmpe451.group12.beabee.login.repository;
 
-import cmpe451.group12.beabee.model.Users;
+import cmpe451.group12.beabee.login.model.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

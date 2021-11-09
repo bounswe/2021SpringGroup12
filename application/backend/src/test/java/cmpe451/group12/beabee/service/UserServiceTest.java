@@ -1,12 +1,8 @@
 package cmpe451.group12.beabee.service;
 
-import cmpe451.group12.beabee.common.dto.MessageResponse;
-import cmpe451.group12.beabee.common.enums.MessageType;
-import cmpe451.group12.beabee.dto.UserDTO;
-import cmpe451.group12.beabee.mapper.UserMapper;
-import cmpe451.group12.beabee.model.Users;
-import cmpe451.group12.beabee.repository.UserRepository;
-import org.junit.Assert;
+import cmpe451.group12.beabee.login.mapper.UserMapper;
+import cmpe451.group12.beabee.login.repository.UserRepository;
+import cmpe451.group12.beabee.login.service.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

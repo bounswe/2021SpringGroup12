@@ -1,11 +1,8 @@
 package cmpe451.group12.beabee.config.security;
 
-import cmpe451.group12.beabee.model.Users;
-import cmpe451.group12.beabee.repository.UserRepository;
-import lombok.NoArgsConstructor;
+import cmpe451.group12.beabee.login.model.Users;
+import cmpe451.group12.beabee.login.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

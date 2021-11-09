@@ -1,7 +1,7 @@
-package cmpe451.group12.beabee.common.dto;
+package cmpe451.group12.beabee.login.dto;
 
 import cmpe451.group12.beabee.common.enums.MessageType;
-import cmpe451.group12.beabee.dto.UserDTO;
+import cmpe451.group12.beabee.login.dto.UserDTO;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
