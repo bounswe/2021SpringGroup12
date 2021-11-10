@@ -1,8 +1,8 @@
 package cmpe451.group12.beabee.login.controller;
 
-import cmpe451.group12.beabee.login.dto.UserDTO;
-import cmpe451.group12.beabee.login.mapper.UserMapper;
-import cmpe451.group12.beabee.login.service.UserService;
+import cmpe451.group12.beabee.common.dto.MessageResponse;
+import cmpe451.group12.beabee.login.dto.UserCredentialsDTO;
+import cmpe451.group12.beabee.login.service.UserCredentialsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -26,12 +26,12 @@ public class UserCredentialsController {
 
     @GetMapping("/forgot/{email_or_username}")
     public MessageResponse forgotPassword(@PathVariable String email_or_username) throws MessagingException {
-        return userService.sendResetPasswordMail(email_or_username);
+        return userCredentialsService.sendResetPasswordMail(email_or_username);
     }
 
     @PostMapping("/reset/{token}")
-    public MessageResponse ResetPassword(@RequestBody UserDTO user, @PathVariable String token) {
-        return userService.resetPassword(user,token);
+    public MessageResponse ResetPassword(@RequestBody UserCredentialsDTO user, @PathVariable String token) {
+        return userCredentialsService.resetPassword(user,token);
     }
 
 

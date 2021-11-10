@@ -6,8 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Set;
 
 @Data
@@ -20,6 +22,10 @@ public class Goal extends AllGoal{
     @Column(name = "ID")
     private Long id;
 
+    // TODO: not working
+    @CreatedDate
+    @Column(name = "createdAt")
+    private Date createdAt;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)

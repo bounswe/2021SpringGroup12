@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 public class UserCredentialsDTO {
 
-    private Long id;
+    private Long user_id;
 
     @NotBlank(message = "Username cannot be blank!")
     private String username;

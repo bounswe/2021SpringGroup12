@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -26,6 +27,18 @@ public class Users{
     private String username;
     @Column(name = "password")
     private String password;
+
+
+    @Column(name = "name")
+    private String name;
+    @Column(name = "surname")
+    private String surname;
+
+
+    @Column(name = "password_reset_token")
+    private String password_reset_token;
+    @Column(name = "password_reset_token_expiration_date")
+    private Date password_reset_token_expiration_date;
 
     @JsonIgnoreProperties({"creator"})
     @OneToMany(mappedBy = "creator")

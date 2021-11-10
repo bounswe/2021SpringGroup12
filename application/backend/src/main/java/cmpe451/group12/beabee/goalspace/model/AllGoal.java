@@ -32,9 +32,7 @@ public abstract class AllGoal  {
     @Column(name = "description")
     private String description;
 
-    @CreatedDate
-    @Column(name = "createdAt")
-    private Date createdAt;
+
     @Column(name = "deadline")
     private Date deadline;
     //@Column(name = "tags")
