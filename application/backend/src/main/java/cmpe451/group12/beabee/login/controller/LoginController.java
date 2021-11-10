@@ -2,7 +2,7 @@ package cmpe451.group12.beabee.login.controller;
 
 import cmpe451.group12.beabee.login.dto.AuthenticationResponse;
 import cmpe451.group12.beabee.common.dto.MessageResponse;
-import cmpe451.group12.beabee.login.dto.UserDTO;
+import cmpe451.group12.beabee.login.dto.UserCredentialsDTO;
 import cmpe451.group12.beabee.login.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -18,13 +18,13 @@ public class LoginController {
     private final LoginService service;
 
     @PostMapping("/login")
-    public AuthenticationResponse createAuthenticationToken(@RequestBody UserDTO user) throws Exception {
-        return service.createAuthenticationToken(user);
+    public AuthenticationResponse createAuthenticationToken(@RequestBody UserCredentialsDTO userCredentialsDTO) throws Exception {
+        return service.login(userCredentialsDTO);
     }
 
 
     @PostMapping("/signup")
-    public MessageResponse signup(@RequestBody UserDTO user) {
-        return service.signup(user);
+    public MessageResponse signup(@RequestBody UserCredentialsDTO userCredentialsDTO) {
+        return service.signup(userCredentialsDTO);
     }
 }

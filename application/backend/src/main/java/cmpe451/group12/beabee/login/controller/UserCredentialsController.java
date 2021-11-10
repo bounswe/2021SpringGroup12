@@ -1,8 +1,7 @@
 package cmpe451.group12.beabee.login.controller;
 
-import cmpe451.group12.beabee.login.dto.UserDTO;
-import cmpe451.group12.beabee.login.mapper.UserMapper;
-import cmpe451.group12.beabee.login.service.UserService;
+import cmpe451.group12.beabee.login.dto.UserCredentialsDTO;
+import cmpe451.group12.beabee.login.service.UserCredentialsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -13,12 +12,13 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Validated
 @RequestMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-public class UserController {
-    private final UserService userService;
+public class UserCredentialsController {
+
+    private final UserCredentialsService userCredentialsService;
 
     @GetMapping("/{username}")
-    public UserDTO getUser(@PathVariable String username) {
-        return userService.getUserByUsername(username);
+    public UserCredentialsDTO getUser(@PathVariable String username) {
+        return userCredentialsService.getUserByUsername(username);
     }
 
 }
