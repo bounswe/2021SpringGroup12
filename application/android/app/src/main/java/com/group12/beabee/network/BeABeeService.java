@@ -1,11 +1,10 @@
 package com.group12.beabee.network;
 
-import android.app.Application;
-import android.content.res.Resources;
+import android.content.Intent;
 
 import com.group12.beabee.BeABeeApplication;
-import com.group12.beabee.R;
 import com.group12.beabee.network.mocking.MockService;
+import com.group12.beabee.views.LoginActivity;
 
 import java.io.IOException;
 import java.net.CookieManager;
@@ -14,6 +13,7 @@ import java.net.CookiePolicy;
 import okhttp3.Interceptor;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -22,6 +22,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class BeABeeService {
 
     public static ServiceAPI serviceAPI;
+    public final static String BASE_URL = "http://192.168.1.0/";
+    public final static String BASE_URL_DEV = "http://192.168.1.0/";
     private final static boolean isMock = true;
 
     public static void InitNetworking() {
@@ -29,8 +31,8 @@ public class BeABeeService {
             serviceAPI = new MockService();
         } else {
             Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BeABeeApplication.getAppContext().getString(R.string.base_url_dev))
-//                    .baseUrl("https://api.agify.io/")
+                .baseUrl(BASE_URL_DEV)
+//                    .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(okHttpClient())
                     .build();
@@ -65,6 +67,45 @@ public class BeABeeService {
 
         return builder.build();
 
+    }
+
+    public class HeaderInterceptor implements Interceptor {
+
+        @Override
+        public Response intercept(Interceptor.Chain chain) throws IOException {
+            Request request = chain.request();
+
+            request = request.newBuilder()
+                    .addHeader("Authorization", "Bearer " + BeABeeApplication.AuthToken)
+                    .build();
+
+
+            Response response = chain.proceed(request);
+            return response;
+        }
+    }
+
+    public class AuthErrorInterceptor implements Interceptor {
+
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request request = chain.request();
+            okhttp3.Response response = chain.proceed(request);
+
+            if (response.code() == 401) {
+                BeABeeApplication.AuthToken = null;
+                Intent intent = new Intent(BeABeeApplication.getAppContext(), LoginActivity.class);
+                intent.putExtra("Error", "403");
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                BeABeeApplication.getAppContext().startActivity(intent);
+
+                return response;
+            } else if (response.code() == 403) {
+
+            }
+
+            return response;
+        }
     }
 
 
