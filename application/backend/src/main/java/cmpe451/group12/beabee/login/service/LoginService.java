@@ -1,13 +1,12 @@
 package cmpe451.group12.beabee.login.service;
 
-import cmpe451.group12.beabee.common.repository.UserRepository;
-import cmpe451.group12.beabee.common.model.Users;
 import cmpe451.group12.beabee.login.dto.AuthenticationResponse;
 import cmpe451.group12.beabee.common.dto.MessageResponse;
 import cmpe451.group12.beabee.common.enums.MessageType;
 import cmpe451.group12.beabee.config.security.MyUserDetailsService;
-import cmpe451.group12.beabee.login.dto.UserCredentialsDTO;
-import cmpe451.group12.beabee.login.mapper.UserCredentialsMapper;
+import cmpe451.group12.beabee.login.dto.UserDTO;
+import cmpe451.group12.beabee.login.mapper.UserMapper;
+import cmpe451.group12.beabee.login.repository.UserRepository;
 import cmpe451.group12.beabee.login.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,11 +30,16 @@ public class LoginService
 
     public AuthenticationResponse login(UserCredentialsDTO userCredentialsDTO) throws Exception
     {
+        Users user = userMapper.mapToEntity(userDTO);
+        if (user.getUsername().equals("")){
+            user = userRepository.findByEmail(userDTO.getEmail()).get();
+        }
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(userCredentialsDTO.getUsername(), userCredentialsDTO.getPassword()));
         } catch (BadCredentialsException e) {
-            throw new Exception("Wrong username or password!", e);
+            return new AuthenticationResponse(userDTO,"","Wrong username or password!",MessageType.ERROR);
+            //throw new Exception("Wrong username or password!", e);
         }
         userCredentialsDTO.setId(userRepository.findByUsername(userCredentialsDTO.getUsername()).get().getUser_id());
         userCredentialsDTO.setPassword("***");
