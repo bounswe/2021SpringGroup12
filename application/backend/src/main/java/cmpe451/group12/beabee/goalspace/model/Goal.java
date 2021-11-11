@@ -18,7 +18,7 @@ import java.util.Set;
 public class Goal extends AllGoal{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idgen")
     @Column(name = "ID")
     private Long id;
 

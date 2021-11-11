@@ -31,7 +31,7 @@ public class GoalService {
     }
 
     public List<GoalDTO> getGoalsOfAUser(Long user_id) {
-        return goalMapper.mapToDto(goalRepository.findAllByCreatorId(user_id));
+        return goalMapper.mapToDto(goalRepository.findAllByUserId(user_id));
     }
 
     public MessageResponse updateAGoal(GoalDTO goalDTO){
@@ -57,39 +57,35 @@ public class GoalService {
         return new MessageResponse("Goal updated!", MessageType.SUCCESS);
     }
 
-/*    public MessageResponse createEntity(Long id, Long goal_id, EntityDTO entityDto) {
-        Users user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        Goal goal = goalRepository.findById(goal_id).orElseThrow(EntityNotFoundException::new);
-        Set<Entity> goal_entities = goal.getEntities();
-        goal_entities.add(entityMapper.mapToEntity(entityDto));
-        goal.setEntities(goal_entities);
-        return new MessageResponse("entity added", MessageType.SUCCESS);
-    }
- */
-/*
-    public List<Entiti> getEntities(Long id){
-        return userRepository.findById(id).orElseThrow(EntityNotFoundException::new).getEntities().stream().map(x -> entityMapper.mapToDto(x)).collect(Collectors.toList());
-    }
-*/
+
 
     public MessageResponse createAGoal(Long user_id, GoalDTO goalDto) {
         Optional<Users> user = userRepository.findById(user_id);
         if (user.isEmpty()){
             return new MessageResponse("User does not exists!", MessageType.ERROR);
         }
-        Set<Goal> user_goals = user.get().getGoals();
-
-
-
+        //Set<Goal> user_goals = user.get().getGoals();
         Goal new_goal = goalMapper.mapToEntity(goalDto);
-        // TODO: set null fields
         new_goal.setIsDone(Boolean.FALSE);
-        user_goals.add(new_goal);
-        user.get().setGoals(user_goals);
+        //user_goals.add(new_goal);
+        //user.get().setGoals(user_goals);
         new_goal.setCreator(user.get());
         goalRepository.save(new_goal);
-        userRepository.save(user.get());
+        //userRepository.save(user.get());
         return new MessageResponse("Goal added successfully.", MessageType.SUCCESS);
     }
 
+    /**
+     * When a goal is deleted all of its entities are also deleted.
+     * @param goal_id
+     * @return
+     */
+    public MessageResponse deleteGoal(Long goal_id) {
+        Optional<Goal> goal_from_db_opt = goalRepository.findById(goal_id);
+        if (goal_from_db_opt.isEmpty()){
+            return new MessageResponse("Goal does not exists!", MessageType.ERROR);
+        }
+        goalRepository.delete(goal_from_db_opt.get());
+        return new MessageResponse("Goal deleted.", MessageType.SUCCESS);
+    }
 }

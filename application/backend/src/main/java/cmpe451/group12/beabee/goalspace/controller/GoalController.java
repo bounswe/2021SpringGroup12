@@ -41,6 +41,12 @@ public class GoalController {
     public MessageResponse createAGoal(@RequestBody GoalDTO goalDTO, @PathVariable Long user_id){
         return goalService.createAGoal(user_id,goalDTO);
     }
+
+    @DeleteMapping("/{goal_id}")
+    public MessageResponse deleteGoal(@PathVariable Long goal_id){
+        return goalService.deleteGoal(goal_id);
+    }
+
 }
 
 
