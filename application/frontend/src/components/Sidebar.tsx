@@ -27,7 +27,7 @@ export default function Sidebar (props: ISidebarProps) {
           left: 0,
         }}
       >
-        <div style={{width:'120px', height:'120px', backgroundColor:'aqua',textAlign:'center'}}> LOGO</div>
+        <div style={{width:'120px', height:'120px', backgroundColor:'#FFC839',textAlign:'center'}}> LOGO</div>
         <Menu theme="dark" mode="inline" defaultSelectedKeys={["4"]}>
           <Menu.Item key="1" icon={<UserOutlined />}>
           <Link to="/sampleURL">sampleURL 1</Link>
