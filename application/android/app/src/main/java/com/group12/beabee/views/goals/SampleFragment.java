@@ -1,0 +1,17 @@
+package com.group12.beabee.views.goals;
+
+import com.group12.beabee.R;
+import com.group12.beabee.views.BaseInnerFragment;
+import com.group12.beabee.views.MainPage.PageMode;
+
+public class SampleFragment extends BaseInnerFragment {
+    @Override
+    protected PageMode GetPageMode() {
+        return PageMode.OnlyBack;
+    }
+
+    @Override
+    protected int GetLayoutId() {
+        return R.layout.fragment_sample;
+    }
+}
