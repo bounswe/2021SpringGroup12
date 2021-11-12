@@ -22,8 +22,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class BeABeeService {
 
     public static ServiceAPI serviceAPI;
-    public final static String BASE_URL = "http://192.168.1.0/";
-    public final static String BASE_URL_DEV = "http://192.168.1.0/";
+    public final static String BASE_URL = "http://18.117.95.170:8085/";
+    public final static String BASE_URL_DEV = "http://18.117.95.170:8085/";
     private final static boolean isMock = true;
 
     public static void InitNetworking() {
@@ -50,6 +50,8 @@ public class BeABeeService {
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
+        builder.addInterceptor(new HeaderInterceptor());
+        builder.addInterceptor(new AuthErrorInterceptor());
         builder.addInterceptor(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
@@ -69,7 +71,7 @@ public class BeABeeService {
 
     }
 
-    public class HeaderInterceptor implements Interceptor {
+    public static class HeaderInterceptor implements Interceptor {
 
         @Override
         public Response intercept(Interceptor.Chain chain) throws IOException {
@@ -85,7 +87,7 @@ public class BeABeeService {
         }
     }
 
-    public class AuthErrorInterceptor implements Interceptor {
+    public static class AuthErrorInterceptor implements Interceptor {
 
         @Override
         public Response intercept(Chain chain) throws IOException {
