@@ -16,7 +16,7 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Task title"
+            android:text="Routine title"
             android:textSize="30sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -67,6 +67,26 @@
 
 
         <TextView
+            android:id="@+id/tv_periodTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Period: "
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_dateSelected" />
+
+
+        <TextView
+            android:id="@+id/tv_periodSelected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Weekly "
+            android:textSize="20sp"
+            app:layout_constraintStart_toEndOf="@+id/tv_periodTitle"
+            app:layout_constraintTop_toBottomOf="@+id/tv_dateSelected" />
+
+
+        <TextView
             android:id="@+id/tv_statusTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -74,7 +94,7 @@
             android:text="Current status"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_dateSelected"/>
+            app:layout_constraintTop_toBottomOf="@+id/tv_periodSelected"/>
 
         <CheckBox
             android:id="@+id/cb_isDone"
@@ -82,7 +102,7 @@
             android:layout_height="wrap_content"
             android:onClick="onCheckboxClicked"
             app:layout_constraintStart_toEndOf="@+id/tv_statusTitle"
-            app:layout_constraintTop_toBottomOf="@+id/tv_dateSelected" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_periodSelected" />
 
 
         <TextView
@@ -199,7 +219,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_reflections"/>
 
-            <View
+        <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#777777"

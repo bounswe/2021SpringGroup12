@@ -12,11 +12,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tv_title"
+        <EditText
+            android:id="@+id/et_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Task title"
+            android:hint="Reflection title"
             android:textSize="30sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -30,40 +30,17 @@
             android:text="Description:"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+            app:layout_constraintTop_toBottomOf="@+id/et_title" />
 
 
-        <TextView
-            android:id="@+id/tv_description"
+        <EditText
+            android:id="@+id/et_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Here is some description"
+            android:hint="Here is some description"
             android:textSize="20sp"
             app:layout_constraintStart_toEndOf="@+id/tv_descriptionTitle"
-            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
-
-
-        <TextView
-            android:id="@+id/tv_dateTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Deadline: "
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_description" />
-
-
-        <TextView
-            android:id="@+id/tv_dateSelected"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="12.12.2021"
-            android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@+id/tv_dateTitle"
-            app:layout_constraintTop_toBottomOf="@+id/tv_description" />
+            app:layout_constraintTop_toBottomOf="@+id/et_title" />
 
 
         <TextView
@@ -74,7 +51,7 @@
             android:text="Current status"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_dateSelected"/>
+            app:layout_constraintTop_toBottomOf="@+id/et_description" />
 
         <CheckBox
             android:id="@+id/cb_isDone"
@@ -82,7 +59,7 @@
             android:layout_height="wrap_content"
             android:onClick="onCheckboxClicked"
             app:layout_constraintStart_toEndOf="@+id/tv_statusTitle"
-            app:layout_constraintTop_toBottomOf="@+id/tv_dateSelected" />
+            app:layout_constraintTop_toBottomOf="@+id/et_description" />
 
 
         <TextView
@@ -199,7 +176,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_reflections"/>
 
-            <View
+        <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#777777"
