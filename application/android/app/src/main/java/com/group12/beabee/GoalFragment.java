@@ -1,22 +1,21 @@
 package com.group12.beabee;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link TaskFragment#newInstance} factory method to
+ * Use the {@link GoalFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TaskFragment extends Fragment {
+public class GoalFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -28,7 +27,7 @@ public class TaskFragment extends Fragment {
     private String mParam2;
     RecyclerView rvTask;
 
-    public TaskFragment() {
+    public GoalFragment() {
         // Required empty public constructor
     }
 
@@ -41,8 +40,8 @@ public class TaskFragment extends Fragment {
      * @return A new instance of fragment Task.
      */
     // TODO: Rename and change types and number of parameters
-    public static TaskFragment newInstance(String param1, String param2) {
-        TaskFragment fragment = new TaskFragment();
+    public static GoalFragment newInstance(String param1, String param2) {
+        GoalFragment fragment = new GoalFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -65,7 +64,7 @@ public class TaskFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_task, container, false);
+        return inflater.inflate(R.layout.fragment_goal, container, false);
     }
 
     @Override
@@ -75,6 +74,6 @@ public class TaskFragment extends Fragment {
         rvTask.setAdapter(new RoutineCardViewAdapter());
         rvTask.setAdapter(new QuestionCardViewAdapter());
         rvTask.setAdapter(new ReflectionCardViewAdapter());
-        //rvTask.setAdapter(new SubGoalCardViewAdapter());
+        rvTask.setAdapter(new SubGoalCardViewAdapter());
     }
 }
