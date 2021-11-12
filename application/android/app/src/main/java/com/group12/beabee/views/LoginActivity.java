@@ -53,7 +53,11 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                Toast.makeText(LoginActivity.this, response.body().message, Toast.LENGTH_LONG).show();
+                if (response.isSuccessful()){
+                    //login to the main page
+                }else{
+                    Toast.makeText(LoginActivity.this, "Something is wrong please try again later!", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override

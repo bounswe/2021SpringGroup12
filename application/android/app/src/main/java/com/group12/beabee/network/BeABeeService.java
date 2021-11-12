@@ -24,14 +24,14 @@ public class BeABeeService {
     public static ServiceAPI serviceAPI;
     public final static String BASE_URL = "http://18.117.95.170:8085/";
     public final static String BASE_URL_DEV = "http://18.117.95.170:8085/";
-    private final static boolean isMock = true;
+    private final static boolean isMock = false;
 
     public static void InitNetworking() {
         if (isMock) {
             serviceAPI = new MockService();
         } else {
             Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL_DEV)
+                    .baseUrl(BASE_URL_DEV)
 //                    .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(okHttpClient())
@@ -77,10 +77,10 @@ public class BeABeeService {
         public Response intercept(Interceptor.Chain chain) throws IOException {
             Request request = chain.request();
 
-            request = request.newBuilder()
-                    .addHeader("Authorization", "Bearer " + BeABeeApplication.AuthToken)
-                    .build();
-
+            if (BeABeeApplication.AuthToken != null)
+                request = request.newBuilder()
+                        .addHeader("Authorization", "Bearer " + BeABeeApplication.AuthToken)
+                        .build();
 
             Response response = chain.proceed(request);
             return response;
