@@ -8,6 +8,7 @@ import { Link, Route, Router, Switch } from "react-router-dom";
 import history from "./helpers/history";
 import { Login } from "./pages/Login";
 import { ForgotPassword } from "./pages/ForgotPassword";
+import { ViewEntity } from "./pages/ViewEntity";
 
 function App() {
   return (
@@ -52,6 +53,9 @@ function App() {
               </Route>
               <Route path="/forgotpassword">
                 <ForgotPassword/>
+              </Route>
+              <Route path="/viewentity">
+                <ViewEntity/>
               </Route>
             </Switch>
           </Content>
