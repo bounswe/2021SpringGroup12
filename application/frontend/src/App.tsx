@@ -8,8 +8,13 @@ import { Link, Route, Router, Switch } from "react-router-dom";
 import history from "./helpers/history";
 import { Login } from "./pages/Login";
 import { ForgotPassword } from "./pages/ForgotPassword";
+import {GoalsPage} from "./pages/GoalsPage";
+import {AddGoal} from "./pages/AddGoal";
+import {GoalPage} from "./pages/GoalPage";
 
 function App() {
+  // @ts-ignore
+  // @ts-ignore
   return (
     <>
       <Router history={history}>
@@ -28,6 +33,9 @@ function App() {
               </Menu.Item>
               <Menu.Item key="4">
                 <Link to="/login">Login</Link>
+              </Menu.Item>
+              <Menu.Item key="5">
+                <Link to="/goals">GoalsPage</Link>
               </Menu.Item>
             </Menu>
           </Header>
@@ -53,6 +61,13 @@ function App() {
               <Route path="/forgotpassword">
                 <ForgotPassword/>
               </Route>
+              <Route path="/goals">
+                <GoalsPage/>
+              </Route>
+              <Route path="/addGoal">
+                <AddGoal/>
+              </Route>
+              <Route path="/goal/:goal_name" children={<GoalPage />} />
             </Switch>
           </Content>
           <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
