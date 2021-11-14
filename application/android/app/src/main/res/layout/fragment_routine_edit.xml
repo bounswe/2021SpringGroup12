@@ -10,13 +10,13 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <EditText
             android:id="@+id/et_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Task title"
+            android:hint="Routine title"
             android:textSize="30sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -37,7 +37,6 @@
             android:id="@+id/et_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:hint="Give a short description"
             android:textSize="20sp"
             app:layout_constraintStart_toEndOf="@+id/tv_descriptionTitle"
@@ -69,6 +68,29 @@
 
 
         <TextView
+            android:id="@+id/tv_periodTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Period: "
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_pickDate" />
+
+
+        <Button
+            android:id="@+id/btn_pickPeriod"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:text="Select Period"
+            android:textColor="@android:color/white"
+            app:layout_constraintStart_toEndOf="@+id/tv_periodTitle"
+            app:layout_constraintTop_toBottomOf="@+id/btn_pickDate" />
+
+
+        <TextView
             android:id="@+id/tv_statusTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -76,7 +98,7 @@
             android:text="Current status"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_dateTitle"/>
+            app:layout_constraintTop_toBottomOf="@+id/btn_pickPeriod"/>
 
         <CheckBox
             android:id="@+id/cb_isDone"
@@ -84,7 +106,7 @@
             android:layout_height="wrap_content"
             android:onClick="onCheckboxClicked"
             app:layout_constraintStart_toEndOf="@+id/tv_statusTitle"
-            app:layout_constraintTop_toBottomOf="@+id/tv_dateTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_pickPeriod" />
 
 
 
