@@ -8,8 +8,29 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.group12.beabee.models.RoutineShort;
+
+import com.group12.beabee.views.entities.IOnRoutineClickedListener;
+
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class RoutineCardViewAdapter extends RecyclerView.Adapter<RoutineCardViewAdapter.ViewHolder> {
 
+
+    private List<RoutineShort> routineShortList;
+    private IOnRoutineClickedListener onItemClickedListener;
+
+    public void setData(List<RoutineShort> routineShorts){
+        routineShortList = routineShorts;
+        notifyDataSetChanged();
+    }
+
+    public void setItemClickListener(IOnRoutineClickedListener listener){
+        onItemClickedListener = listener;
+    }
 
     @NonNull
     @Override
@@ -20,27 +41,36 @@ public class RoutineCardViewAdapter extends RecyclerView.Adapter<RoutineCardView
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
+        holder.BindData(routineShortList.get(position));
     }
 
     @Override
     public int getItemCount() {
 
-        return 10;
+        return routineShortList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        TextView title;
-        TextView description;
+        @BindView(R.id.tv_title)
+        TextView tvtitle;
+        @BindView(R.id.tv_description)
+        TextView tvdescription;
+        @BindView(R.id.item_parent)
+        View itemParent;
+
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.tv_title);
-            description = itemView.findViewById(R.id.tv_description);
-        }
-
-        public void OnDataBind(){
+            ButterKnife.bind(this, itemView);
 
         }
+
+        public void BindData(RoutineShort routineShort){
+            tvtitle.setText(routineShort.title);
+            tvdescription.setText(routineShort.description);
+            itemParent.setOnClickListener(v -> onItemClickedListener.OnRoutineClicked(routineShort.id));
+        }
+
     }
 }
