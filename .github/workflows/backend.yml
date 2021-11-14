@@ -29,6 +29,9 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
           cache: 'gradle'
+          
+      - name: Build jar
+        run: ./gradlew jar
       - name: Build image
         run: docker build . -t beabee/beabee_spring
       - name: Docker login
