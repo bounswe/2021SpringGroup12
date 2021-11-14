@@ -1,4 +1,4 @@
-package com.group12.beabee;
+package com.group12.beabee.views.entities;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +8,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.group12.beabee.R;
 import com.group12.beabee.models.ReflectionShort;
-import com.group12.beabee.views.entities.IOnReflectionClickedListener;
 
 import java.util.List;
 

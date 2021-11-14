@@ -1,4 +1,4 @@
-package com.group12.beabee;
+package com.group12.beabee.views.entities;
 
 import android.os.Bundle;
 
@@ -7,20 +7,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
+import com.group12.beabee.R;
 import com.group12.beabee.models.QuestionShort;
 import com.group12.beabee.models.ReflectionShort;
 import com.group12.beabee.models.RoutineShort;
 import com.group12.beabee.models.TaskShort;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainPage.PageMode;
-import com.group12.beabee.views.entities.IOnQuestionClickedListener;
-import com.group12.beabee.views.entities.IOnReflectionClickedListener;
-import com.group12.beabee.views.entities.IOnRoutineClickedListener;
-import com.group12.beabee.views.entities.IOnTaskClickedListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +24,11 @@ import butterknife.BindView;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link QuestionFragment#newInstance} factory method to
+ * Use the {@link ReflectionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class QuestionFragment extends BaseInnerFragment implements IOnTaskClickedListener,
+public class ReflectionFragment extends BaseInnerFragment implements IOnTaskClickedListener,
         IOnRoutineClickedListener, IOnQuestionClickedListener, IOnReflectionClickedListener {
-
 
     @BindView(R.id.rv_tasks)
     RecyclerView rvTasks;
@@ -45,7 +39,7 @@ public class QuestionFragment extends BaseInnerFragment implements IOnTaskClicke
     @BindView(R.id.rv_reflections)
     RecyclerView rvReflections;
 
-    public QuestionFragment() {
+    public ReflectionFragment() {
         // Required empty public constructor
     }
 
@@ -53,11 +47,11 @@ public class QuestionFragment extends BaseInnerFragment implements IOnTaskClicke
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment Question.
+     * @return A new instance of fragment Reflection.
      */
     // TODO: Rename and change types and number of parameters
-    public static QuestionFragment newInstance() {
-        QuestionFragment fragment = new QuestionFragment();
+    public static ReflectionFragment newInstance() {
+        ReflectionFragment fragment = new ReflectionFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -169,7 +163,6 @@ public class QuestionFragment extends BaseInnerFragment implements IOnTaskClicke
 
     @Override
     protected int GetLayoutId() {
-        return R.layout.fragment_question;
+        return R.layout.fragment_reflection;
     }
-
 }

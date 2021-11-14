@@ -1,25 +1,23 @@
-package com.group12.beabee;
+package com.group12.beabee.views.entities;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
+import com.group12.beabee.R;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainPage.PageMode;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link QuestionFragmentEdit#newInstance} factory method to
+ * Use the {@link TaskFragmentEdit#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class QuestionFragmentEdit extends BaseInnerFragment {
+public class TaskFragmentEdit extends BaseInnerFragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -31,7 +29,7 @@ public class QuestionFragmentEdit extends BaseInnerFragment {
     private String mParam2;
 
 
-    public QuestionFragmentEdit() {
+    public TaskFragmentEdit() {
         // Required empty public constructor
     }
 
@@ -39,11 +37,13 @@ public class QuestionFragmentEdit extends BaseInnerFragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment QuestionEdit.
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment TaskEdit.
      */
     // TODO: Rename and change types and number of parameters
-    public static QuestionFragmentEdit newInstance() {
-        QuestionFragmentEdit fragment = new QuestionFragmentEdit();
+    public static TaskFragmentEdit newInstance() {
+        TaskFragmentEdit fragment = new TaskFragmentEdit();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -64,6 +64,6 @@ public class QuestionFragmentEdit extends BaseInnerFragment {
 
     @Override
     protected int GetLayoutId() {
-        return R.layout.fragment_question_edit;
+        return R.layout.fragment_task_edit;
     }
 }
