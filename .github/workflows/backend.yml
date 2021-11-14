@@ -30,7 +30,7 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
       - name: Build image
-        run: ./docker build . -t beabee/beabee_spring
+        run: docker build . -t beabee/beabee_spring
       - name: Docker login
         uses: docker/login-action@v1.10.0
         with:
