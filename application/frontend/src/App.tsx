@@ -11,8 +11,14 @@ import { ForgotPassword } from "./pages/ForgotPassword";
 import {GoalsPage} from "./pages/GoalsPage";
 import {AddGoal} from "./pages/AddGoal";
 import {GoalPage} from "./pages/GoalPage";
+import axios from "axios";
+import {EditGoal} from "./pages/EditGoal";
 
 function App() {
+  axios.defaults.baseURL = "http://localhost:8085"
+  localStorage.setItem("user_id", "1")
+  localStorage.setItem("jwt", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsaXRpdHl1bSIsImV4cCI6MTYzNzMyNzc4MCwiaWF0IjoxNjM2ODk1NzgwfQ.IavSQyuERhiM58XmMt6udqh7vZISi7B6Bx1PY3zROLA")
+
   // @ts-ignore
   // @ts-ignore
   return (
@@ -67,7 +73,8 @@ function App() {
               <Route path="/addGoal">
                 <AddGoal/>
               </Route>
-              <Route path="/goal/:goal_name" children={<GoalPage />} />
+              <Route path="/goal/:goal_id" children={<GoalPage />} />
+              <Route path="/editGoal/:goal_id" children={<EditGoal />} />
             </Switch>
           </Content>
           <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>

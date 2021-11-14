@@ -1,41 +1,49 @@
-import {Button, Space, Table} from 'antd';
+import {Button, Space, Table, Tag} from 'antd';
 import * as React from "react";
 import { Link } from 'react-router-dom';
+import axios from "axios";
 export class GoalsPage extends React.Component {
     state = {
         isLoaded: false,
         goals: [],
-        deletedCount: 0
     };
+    user_id = localStorage.getItem("user_id")
+    jwt = localStorage.getItem("jwt")
 
-    deleteGoal = (record: { name: any; }) => {
-        console.log('Received values of delete: ', record);
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Accept': 'application/json',
-                'Content-Type': 'application/json' },
-            body: JSON.stringify({'name': record.name})
-        };
-        fetch('http://localhost:5002/delete_goal', requestOptions).then(() => {this.getGoals()})
-
+    deleteGoal = (goal: { key: any; }) => {
+        console.log('Received values of delete: ', goal);
+        axios.delete(`/goals/${goal.key}`,
+            {
+                headers: { Authorization: `Bearer ${this.jwt}`},
+                data: {}
+            }).then(() => this.getGoals())
     };
 
     getGoals() {
-        fetch('http://localhost:5002/goals')
+        console.log(axios.defaults.baseURL)
+        axios.get(`/goals/of_user/${this.user_id}`,
+            {
+                headers: { Authorization: `Bearer ${this.jwt}`},
+                data: {}
+
+            })
             .then(response => {
                 // check for error response
-                if (response.ok) {
-                    return response.json()
+                if (response.status === 200) {
+                    return response.data
                 }
                 throw response
             })
             .then(data => {
                 let tmp = []
-                for (let i = 0; i < data['data'].length; i++) {
+                for (let i = 0; i < data.length; i++) {
                     tmp.push({
-                        key: i.toString(),
-                        name: data['data'][i]['name'],
-                        description: data['data'][i]['description']
+                        key: data[i]['id'],
+                        title: data[i]['title'],
+                        description: data[i]['description'],
+                        goalType: data[i]['goalType'],
+                        isDone: data[i]['isDone'],
+                        deadline: data[i]['deadline']
                     })
                 }
                 this.setState({
@@ -56,10 +64,12 @@ export class GoalsPage extends React.Component {
 
     columns = [
         {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-            render: (text: any) => <Link to={"/goal/" + text}> {text} </Link>
+            title: 'Title',
+            dataIndex: 'title',
+            key: 'title',
+            render: (text: any,
+                     goal: { key: string | number | boolean | {} | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactNodeArray | React.ReactPortal | null | undefined; }) =>
+                <Link to={"/goal/" + goal.key}> {text} </Link>
             ,
         },
         {
@@ -68,15 +78,51 @@ export class GoalsPage extends React.Component {
             key: 'description',
         },
         {
+            title: 'Goal Type',
+            dataIndex: 'goalType',
+            key: 'goalType',
+        },
+        {
+            title: 'Deadline',
+            dataIndex: 'deadline',
+            key: 'deadline',
+        },
+        {
+            title: 'Is Done',
+            dataIndex: 'isDone',
+            key: 'isDone',
+            render: (isDone: boolean) => {
+                let color = 'red';
+                let text = 'NOT DONE'
+                if (isDone) {
+                    color = 'green';
+                    text = 'DONE'
+                }
+                return (
+                    <Tag color={color}>
+                        {text}
+                    </Tag>
+                );
+            }
+        },
+        {
             title: 'Action',
             key: 'action',
             render: (text: any,
-                     record: { name: string | number | boolean | {} | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactNodeArray | React.ReactPortal | null | undefined; }) =>
-                (<Space size="middle">
-                        <Button type="primary" onClick={() => this.deleteGoal(record)}>
-                            Delete
-                        </Button>
-                    </Space>
+                     goal: { key: string | number | boolean | {} | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactNodeArray | React.ReactPortal | null | undefined; }) =>
+                (   <div>
+                        <Space size="middle">
+                            <Button type="primary" onClick={() => this.deleteGoal(goal)}>
+                                Delete
+                            </Button>
+                        </Space>
+                        <Link to={"/editGoal/" + goal.key}>
+                            <button type="button">
+                                Edit
+                            </button>
+                        </Link>
+                    </div>
+
                 ),
         },
     ];
@@ -94,7 +140,7 @@ export class GoalsPage extends React.Component {
 
         return (
             <div>
-                <Table columns={this.columns} dataSource={[...goals]} />
+                <Table columns={this.columns} dataSource={goals} />
                 <Link to="/addGoal">
                     <button type="button">
                         Add Goal
