@@ -21,12 +21,40 @@ public class EntitiController {
 
     private final EntitiService entitiService;
 
-    @GetMapping("/{goal_id}")
+
+    /****************************** GET ALL ENTITIES ********************************/
+
+    @GetMapping("/goal/{goal_id}")
     public List<EntitiDTO> getEntitiesOfAGoal(@PathVariable Long goal_id) {
         return entitiService.getEntitiesOfAGoal(goal_id);
     }
+    @GetMapping("/user/{user_id}")
+    public List<EntitiDTO> getEntitiesOfAUser(@PathVariable Long user_id) {
+        return entitiService.getEntitiesOfAUser(user_id);
+    }
 
+    @GetMapping("/user/subgoal/{user_id}")
+    public List<SubgoalDTO> getSubgoalsOfAUser(@PathVariable Long user_id) {
+        return entitiService.getSubgoalsOfAUser(user_id);
+    }
+    @GetMapping("/user/question/{user_id}")
+    public List<QuestionDTO> getQuestionsOfAUser(@PathVariable Long user_id) {
+        return entitiService.getQuestionsOfAUser(user_id);
+    }
+    @GetMapping("/user/reflection/{user_id}")
+    public List<ReflectionDTO> getReflectionsOfAUser(@PathVariable Long user_id) {
+        return entitiService.getReflectionsOfAUser(user_id);
+    }
+    @GetMapping("/user/routine/{user_id}")
+    public List<RoutineDTO> getRoutinesOfAUser(@PathVariable Long user_id) {
+        return entitiService.getRoutinesOfAUser(user_id);
+    }
+    @GetMapping("/user/task/{user_id}")
+    public List<TaskDTO> getTasksOfAUser(@PathVariable Long user_id) {
+        return entitiService.getTasksOfAUser(user_id);
+    }
     /****************************** LINKING ENTITIES ********************************/
+
     @PostMapping("/{id}/link/{child_id}")
     public MessageResponse linkEntities(@PathVariable Long id, @PathVariable Long child_id){
         return entitiService.linkEntities(id,child_id);
