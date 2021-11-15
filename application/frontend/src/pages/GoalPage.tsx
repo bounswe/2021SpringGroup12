@@ -5,7 +5,7 @@ import axios from "axios";
 import {Link} from "react-router-dom";
 import {Button, Space, Table, Tag} from "antd";
 
-const jwt = localStorage.getItem("jwt")
+const token = localStorage.getItem("token");
 
 export function GoalPage() {
     const [goal, setGoal] = useState({
@@ -21,7 +21,7 @@ export function GoalPage() {
         console.log('Received values of delete: ', goal);
         axios.delete(`/entities/${goal.entityType.toLowerCase()}/${goal.key}`,
             {
-                headers: { Authorization: `Bearer ${jwt}`},
+                headers: { Authorization: `Bearer ${token}`},
                 data: {}
             }).then(() => getEntities())
     };
@@ -105,7 +105,7 @@ export function GoalPage() {
         console.log(axios.defaults.baseURL)
         axios.get(`/entities/${goal_id}`,
             {
-                headers: { Authorization: `Bearer ${jwt}`},
+                headers: { Authorization: `Bearer ${token}`},
                 data: {}
             })
             .then(response => {
@@ -122,7 +122,7 @@ export function GoalPage() {
                         key: data[i]['id'],
                         title: data[i]['title'],
                         description: data[i]['description'],
-                        entityType: data[i]['entityType'],
+                        entityType: data[i]['entitiType'],
                         isDone: data[i]['isDone'],
                         period: data[i]['period'],
                         rating: data[i]['rating'],
@@ -142,7 +142,7 @@ export function GoalPage() {
     useEffect(() => {
         axios.get(`/goals/${goal_id}`,
             {
-                headers: { Authorization: `Bearer ${jwt}`},
+                headers: { Authorization: `Bearer ${token}`},
                 data: {}
             })
             .then(response => {

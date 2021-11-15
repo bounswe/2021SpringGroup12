@@ -7,13 +7,13 @@ import axios from "axios";
 export class AddGoal extends React.Component {
     state = { isAdded: false};
     user_id = localStorage.getItem("user_id")
-    jwt = localStorage.getItem("jwt")
+    token = localStorage.getItem("token");
 
     onFinish = (values: any) => {
         console.log('Received values of form: ', values);
         values['goalType'] = 'GOAL'
         axios.post(`/goals/${this.user_id}`, values, {
-            headers: { Authorization: `Bearer ${this.jwt}`},
+            headers: { Authorization: `Bearer ${this.token}`},
         }).then(() => this.setState({ isAdded: true }))
     };
     render() {

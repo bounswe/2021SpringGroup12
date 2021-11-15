@@ -72,7 +72,7 @@ export default class App extends React.Component<IAppProps, IAppState> {
             <Home user={this.state.username} />
           </Route>
           <Route path="/goals">
-            <GoalsPage/>
+            <GoalsPage />
           </Route>
           <Route path="/addGoal">
             <AddGoal/>

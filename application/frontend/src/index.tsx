@@ -5,7 +5,8 @@ import App from "./App";
 import axios from "axios";
 import { BrowserRouter } from "react-router-dom";
 
-axios.defaults.baseURL = "http://18.117.95.170:8085/";
+axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
+console.log(axios.defaults.baseURL)
 
 ReactDOM.render(
   <React.StrictMode>
