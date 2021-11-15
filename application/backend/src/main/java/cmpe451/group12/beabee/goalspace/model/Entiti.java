@@ -53,7 +53,7 @@ public abstract class Entiti {
      */
 
     @JsonIgnoreProperties({"id"})
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "Sublinks")
     @Column(name = "sublink_id")
     private Set<Entiti> sublinks;

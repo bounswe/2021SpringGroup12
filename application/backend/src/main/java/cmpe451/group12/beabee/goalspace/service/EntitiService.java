@@ -2,6 +2,7 @@ package cmpe451.group12.beabee.goalspace.service;
 
 import cmpe451.group12.beabee.common.dto.MessageResponse;
 import cmpe451.group12.beabee.common.enums.MessageType;
+import cmpe451.group12.beabee.common.repository.UserRepository;
 import cmpe451.group12.beabee.goalspace.Repository.*;
 import cmpe451.group12.beabee.goalspace.dto.*;
 import cmpe451.group12.beabee.goalspace.enums.EntitiType;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public class EntitiService {
 
     private final GoalRepository goalRepository;
+    private final UserRepository userRepository;
 
     private final EntitiMapper entitiMapper;
     private final EntitiRepository entitiRepository;
@@ -37,6 +39,8 @@ public class EntitiService {
     private final QuestionMapper questionMapper;
 
 
+    /****************************** GET ALL ENTITIES ********************************/
+
     public List<EntitiDTO> getEntitiesOfAGoal(Long goal_id) {
         if (!goalRepository.existsById(goal_id)) {
             return new ArrayList<>();
@@ -50,6 +54,87 @@ public class EntitiService {
         entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Reflection")).map(x -> entitiMapper.mapToDto((Reflection) x)).collect(Collectors.toList()));
         entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Subgoal")).map(x -> entitiMapper.mapToDto((Subgoal) x)).collect(Collectors.toList()));
         return entity_dtos;
+    }
+
+    public List<EntitiDTO> getEntitiesOfAUser(Long user_id) {
+        if (!userRepository.existsById(user_id)) {
+            return new ArrayList<>();
+        }
+        List<Goal> goals = goalRepository.findAllByUserId(user_id);
+        List<Entiti> entities = new ArrayList<>();
+        for (Goal g : goals) {
+            entities.addAll(entitiRepository.findAllByMainGoal(goalRepository.getById(g.getId())));
+        }
+
+        List<EntitiDTO> entity_dtos = new ArrayList<>();
+        entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Question")).map(x -> entitiMapper.mapToDto((Question) x)).collect(Collectors.toList()));
+        entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Task")).map(x -> entitiMapper.mapToDto((Task) x)).collect(Collectors.toList()));
+        entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Routine")).map(x -> entitiMapper.mapToDto((Routine) x)).collect(Collectors.toList()));
+        entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Reflection")).map(x -> entitiMapper.mapToDto((Reflection) x)).collect(Collectors.toList()));
+        entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Subgoal")).map(x -> entitiMapper.mapToDto((Subgoal) x)).collect(Collectors.toList()));
+        return entity_dtos;
+    }
+
+    public List<SubgoalDTO> getSubgoalsOfAUser(Long user_id) {
+        if (!userRepository.existsById(user_id)) {
+            return new ArrayList<>();
+        }
+        List<Goal> goals = goalRepository.findAllByUserId(user_id);
+        List<Subgoal> entities = new ArrayList<>();
+        for (Goal g : goals) {
+            entities.addAll(subgoalRepository.findByGoalId(g.getId()));
+        }
+        return entities.stream().map(x -> subgoalMapper.mapToDto(x)).collect(Collectors.toList());
+    }
+
+
+    public List<QuestionDTO> getQuestionsOfAUser(Long user_id) {
+        if (!userRepository.existsById(user_id)) {
+            return new ArrayList<>();
+        }
+        List<Goal> goals = goalRepository.findAllByUserId(user_id);
+        List<Question> entities = new ArrayList<>();
+        for (Goal g : goals) {
+            entities.addAll(questionRepository.findByGoalId(g.getId()));
+        }
+        return entities.stream().map(x -> questionMapper.mapToDto(x)).collect(Collectors.toList());
+    }
+
+    public List<ReflectionDTO> getReflectionsOfAUser(Long user_id) {
+        if (!userRepository.existsById(user_id)) {
+            return new ArrayList<>();
+        }
+        List<Goal> goals = goalRepository.findAllByUserId(user_id);
+        List<Reflection> entities = new ArrayList<>();
+        for (Goal g : goals) {
+            entities.addAll(reflectionRepository.findByGoalId(g.getId()));
+        }
+        return entities.stream().map(x -> reflectionMapper.mapToDto(x)).collect(Collectors.toList());
+    }
+
+    public List<RoutineDTO> getRoutinesOfAUser(Long user_id) {
+        if (!userRepository.existsById(user_id)) {
+            return new ArrayList<>();
+        }
+        List<Goal> goals = goalRepository.findAllByUserId(user_id);
+        List<Routine> entities = new ArrayList<>();
+        for (Goal g : goals) {
+            entities.addAll(routineRepository.findByGoalId(g.getId()));
+        }
+        return entities.stream().map(x -> routineMapper.mapToDto(x)).collect(Collectors.toList());
+    }
+
+
+    public List<TaskDTO> getTasksOfAUser(Long user_id) {
+        if (!userRepository.existsById(user_id)) {
+            return new ArrayList<>();
+        }
+        List<Goal> goals = goalRepository.findAllByUserId(user_id);
+        List<Task> entities = new ArrayList<>();
+        for (Goal g : goals) {
+            entities.addAll(taskRepository.findByGoalId(g.getId()));
+        }
+        return entities.stream().map(x -> taskMapper.mapToDto(x)).collect(Collectors.toList());
     }
 
     /****************************** LINKING ENTITIES ********************************/
@@ -72,6 +157,9 @@ public class EntitiService {
             return new ArrayList<>();
         }
         List<Entiti> entities = entitiRepository.findById(entity_id).get().getSublinks().stream().collect(Collectors.toList());
+        for (int i = 0; i < entities.size(); i++) {
+            System.out.println(entities.get(i));
+        }
         List<EntitiDTO> entity_dtos = new ArrayList<>();
         entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Question")).map(x -> entitiMapper.mapToDto((Question) x)).collect(Collectors.toList()));
         entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Task")).map(x -> entitiMapper.mapToDto((Task) x)).collect(Collectors.toList()));
@@ -87,15 +175,15 @@ public class EntitiService {
         if (entity.isEmpty() || child_entity.isEmpty()) {
             return new MessageResponse("One of the entities does not exists!", MessageType.ERROR);
         }
-            Set<Entiti> sublinks = entity.get().getSublinks();
-            if (sublinks.contains(child_entity.get())){
-                sublinks.remove(child_entity.get());
-                entity.get().setSublinks(sublinks);
-                entitiRepository.save(entity.get());
-                return new MessageResponse("Link deleted.", MessageType.SUCCESS);
-            }else{
-                return new MessageResponse("There were no link at all!", MessageType.ERROR);
-            }
+        Set<Entiti> sublinks = entity.get().getSublinks();
+        if (sublinks.contains(child_entity.get())) {
+            sublinks.remove(child_entity.get());
+            entity.get().setSublinks(sublinks);
+            entitiRepository.save(entity.get());
+            return new MessageResponse("Link deleted.", MessageType.SUCCESS);
+        } else {
+            return new MessageResponse("There were no link at all!", MessageType.ERROR);
+        }
     }
 
     /****************************** POSTS ********************************/
@@ -163,22 +251,22 @@ public class EntitiService {
     /****************************** GETS ********************************/
     public EntitiDTO getEntiti(Long id) {
         Optional<Entiti> entiti_opt = entitiRepository.findById(id);
-        if (entiti_opt.isEmpty()){
+        if (entiti_opt.isEmpty()) {
             return new EntitiDTO();
         }
-        if (entiti_opt.get().getEntitiType().equals(EntitiType.ROUTINE)){
+        if (entiti_opt.get().getEntitiType().equals(EntitiType.ROUTINE)) {
             return entitiMapper.mapToDto((Routine) entiti_opt.get());
         }
-        if (entiti_opt.get().getEntitiType().equals(EntitiType.TASK)){
+        if (entiti_opt.get().getEntitiType().equals(EntitiType.TASK)) {
             return entitiMapper.mapToDto((Task) entiti_opt.get());
         }
-        if (entiti_opt.get().getEntitiType().equals(EntitiType.QUESTION)){
+        if (entiti_opt.get().getEntitiType().equals(EntitiType.QUESTION)) {
             return entitiMapper.mapToDto((Question) entiti_opt.get());
         }
-        if (entiti_opt.get().getEntitiType().equals(EntitiType.REFLECTION)){
+        if (entiti_opt.get().getEntitiType().equals(EntitiType.REFLECTION)) {
             return entitiMapper.mapToDto((Reflection) entiti_opt.get());
         }
-        if (entiti_opt.get().getEntitiType().equals(EntitiType.SUBGOAL)){
+        if (entiti_opt.get().getEntitiType().equals(EntitiType.SUBGOAL)) {
             return entitiMapper.mapToDto((Subgoal) entiti_opt.get());
         }
         return new EntitiDTO();// it wont reach here anyways
@@ -307,7 +395,6 @@ public class EntitiService {
         }
         return new MessageResponse("Couldn't update question!", MessageType.ERROR);
     }
-
 
 
 }
