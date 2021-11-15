@@ -103,7 +103,7 @@ export function GoalPage() {
 
     const getEntities = () => {
         console.log(axios.defaults.baseURL)
-        axios.get(`/entities/${goal_id}`,
+        axios.get(`/entities/goal/${goal_id}`,
             {
                 headers: { Authorization: `Bearer ${token}`},
                 data: {}
