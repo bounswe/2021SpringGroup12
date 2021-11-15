@@ -28,6 +28,9 @@ export default class NavBar extends React.Component<
             <Menu.Item key="1">
               <Link to="/">Home</Link>
             </Menu.Item>
+            <Menu.Item key="2">
+              <Link to="/goals">Goals</Link>
+            </Menu.Item>
             <Menu.Item key="4">
               <SignOutButton />
             </Menu.Item>

@@ -7,6 +7,10 @@ import { Login } from "./pages/Login";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import Home from "./pages/Home";
 import NavBar from "./components/NavBar";
+import {GoalsPage} from "./pages/GoalsPage";
+import {AddGoal} from "./pages/AddGoal";
+import {GoalPage} from "./pages/GoalPage";
+import {EditGoal} from "./pages/EditGoal";
 
 export interface IAppProps {}
 
@@ -67,6 +71,14 @@ export default class App extends React.Component<IAppProps, IAppState> {
           <Route exact path="/">
             <Home user={this.state.username} />
           </Route>
+          <Route path="/goals">
+            <GoalsPage />
+          </Route>
+          <Route path="/addGoal">
+            <AddGoal/>
+          </Route>
+          <Route path="/goal/:goal_id" children={<GoalPage />} />
+          <Route path="/editGoal/:goal_id" children={<EditGoal />} />
         </Switch>
       </Router>
     );
