@@ -13,11 +13,16 @@ import {AddGoal} from "./pages/AddGoal";
 import {GoalPage} from "./pages/GoalPage";
 import axios from "axios";
 import {EditGoal} from "./pages/EditGoal";
+import {EntityPage} from "./pages/EntityPage";
+import {AddEntity} from "./pages/AddEntity";
+import {EditEntity} from "./pages/EditEntity"
+import {LinkEntity} from "./pages/LinkEntity"
+
 
 function App() {
   axios.defaults.baseURL = "http://localhost:8085"
   localStorage.setItem("user_id", "1")
-  localStorage.setItem("jwt", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsaXRpdHl1bSIsImV4cCI6MTYzNzMyNzc4MCwiaWF0IjoxNjM2ODk1NzgwfQ.IavSQyuERhiM58XmMt6udqh7vZISi7B6Bx1PY3zROLA")
+  localStorage.setItem("jwt", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsaXRpdHl1bSIsImV4cCI6MTYzNzQwNjg5OCwiaWF0IjoxNjM2OTc0ODk4fQ.DwsZ85InAJlv_ojQ9IQcnabN_iB_QhAh-fAwBzjNGvQ")
 
   // @ts-ignore
   // @ts-ignore
@@ -75,6 +80,10 @@ function App() {
               </Route>
               <Route path="/goal/:goal_id" children={<GoalPage />} />
               <Route path="/editGoal/:goal_id" children={<EditGoal />} />
+              <Route path="/entity/:entity_id" children={<EntityPage />} />
+              <Route path="/addEntity/:goal_id" children={<AddEntity /> } />
+              <Route path="/editEntity/:entity_id" children={<EditEntity /> } />
+              <Route path="/linkEntityfrom/:entity_id" children={<LinkEntity /> } />
             </Switch>
           </Content>
           <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
