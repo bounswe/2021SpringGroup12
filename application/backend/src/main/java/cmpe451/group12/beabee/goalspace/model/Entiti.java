@@ -26,7 +26,7 @@ public abstract class Entiti {
 
     @JsonIgnoreProperties({"entities"})
 //    @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "goal_id")
     private Goal mainGoal;
 

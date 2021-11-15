@@ -300,53 +300,74 @@ public class EntitiService {
     /****************************** DELETES ********************************/
 
     public MessageResponse deleteReflection(Long id) {
-        try {
-            reflectionRepository.deleteById(id);
-            return new MessageResponse("Reflection deleted!", MessageType.SUCCESS);
-        } catch (Exception e) {
-            System.out.println(e);
+        Optional<Reflection>  reflection_opt = reflectionRepository.findById(id);
+        if (reflection_opt.isEmpty()) {
             return new MessageResponse("Reflection not found!", MessageType.ERROR);
         }
+        Goal main_goal = reflection_opt.get().getMainGoal();
+        Set<Entiti> entities = main_goal.getEntities();
+        entities.remove(reflection_opt.get());
+        main_goal.setEntities(entities);
+        goalRepository.save(main_goal);
+        reflectionRepository.deleteById(id);
+        return new MessageResponse("Reflection deleted!", MessageType.SUCCESS);
     }
 
     public MessageResponse deleteQuestion(Long id) {
-        try {
-            questionRepository.deleteById(id);
-            return new MessageResponse("Question deleted!", MessageType.SUCCESS);
-        } catch (Exception e) {
-            System.out.println(e);
+        Optional<Question>  question_opt = questionRepository.findById(id);
+        if (question_opt.isEmpty()) {
             return new MessageResponse("Question not found!", MessageType.ERROR);
         }
+        Goal main_goal = question_opt.get().getMainGoal();
+        Set<Entiti> entities = main_goal.getEntities();
+        entities.remove(question_opt.get());
+        main_goal.setEntities(entities);
+        goalRepository.save(main_goal);
+        questionRepository.deleteById(id);
+        return new MessageResponse("Question deleted!", MessageType.SUCCESS);
     }
 
     public MessageResponse deleteSubgoal(Long id) {
-        try {
-            subgoalRepository.deleteById(id);
-            return new MessageResponse("Subgoal deleted!", MessageType.SUCCESS);
-        } catch (Exception e) {
-            System.out.println(e);
+        Optional<Subgoal> subgoal_opt = subgoalRepository.findById(id);
+        if (subgoal_opt.isEmpty()) {
             return new MessageResponse("Subgoal not found!", MessageType.ERROR);
         }
-    }
+        Goal main_goal = subgoal_opt.get().getMainGoal();
+        Set<Entiti> entities = main_goal.getEntities();
+        entities.remove(subgoal_opt.get());
+        main_goal.setEntities(entities);
+        goalRepository.save(main_goal);
+        subgoalRepository.deleteById(id);
+        return new MessageResponse("Subgoal deleted!", MessageType.SUCCESS);
+
+}
 
     public MessageResponse deleteTask(Long id) {
-        try {
-            taskRepository.deleteById(id);
-            return new MessageResponse("Task deleted!", MessageType.SUCCESS);
-        } catch (Exception e) {
-            System.out.println(e);
+        Optional<Task>  task_opt = taskRepository.findById(id);
+        if (task_opt.isEmpty()) {
             return new MessageResponse("Task not found!", MessageType.ERROR);
         }
+        Goal main_goal = task_opt.get().getMainGoal();
+        Set<Entiti> entities = main_goal.getEntities();
+        entities.remove(task_opt.get());
+        main_goal.setEntities(entities);
+        goalRepository.save(main_goal);
+        taskRepository.deleteById(id);
+        return new MessageResponse("Task deleted!", MessageType.SUCCESS);
     }
 
     public MessageResponse deleteRoutine(Long id) {
-        try {
-            routineRepository.deleteById(id);
-            return new MessageResponse("Routine deleted!", MessageType.SUCCESS);
-        } catch (Exception e) {
-            System.out.println(e);
+        Optional<Routine>  routine_opt = routineRepository.findById(id);
+        if (routine_opt.isEmpty()) {
             return new MessageResponse("Routine not found!", MessageType.ERROR);
         }
+        Goal main_goal = routine_opt.get().getMainGoal();
+        Set<Entiti> entities = main_goal.getEntities();
+        entities.remove(routine_opt.get());
+        main_goal.setEntities(entities);
+        goalRepository.save(main_goal);
+        routineRepository.deleteById(id);
+        return new MessageResponse("Routine deleted!", MessageType.SUCCESS);
     }
 
     /****************************** PUTS ********************************/
