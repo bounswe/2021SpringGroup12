@@ -1,11 +1,14 @@
 package cmpe451.group12.beabee.login.service;
 
+
 import cmpe451.group12.beabee.common.dto.MessageResponse;
 import cmpe451.group12.beabee.common.enums.MessageType;
-import cmpe451.group12.beabee.login.dto.UserDTO;
-import cmpe451.group12.beabee.login.mapper.UserMapper;
-import cmpe451.group12.beabee.login.model.Users;
-import cmpe451.group12.beabee.login.repository.UserRepository;
+import cmpe451.group12.beabee.common.mapper.UserMapper;
+import cmpe451.group12.beabee.common.model.Users;
+import cmpe451.group12.beabee.common.repository.UserRepository;
+import cmpe451.group12.beabee.goalspace.dto.UserDTO;
+import cmpe451.group12.beabee.login.dto.UserCredentialsDTO;
+import cmpe451.group12.beabee.login.mapper.UserCredentialsMapper;
 import cmpe451.group12.beabee.login.util.EmailSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,14 +23,21 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
+public class UserCredentialsService {
+
+    private  final UserRepository userRepository;
+    private  final  UserCredentialsMapper userCredentialsMapper;
     private final EmailSender emailSender;
 
-    public UserDTO getUserByUsername(String username) {
-        return userMapper.mapToDto(userRepository.findByUsername(username)
-                .orElseThrow(EntityNotFoundException::new));
+
+    public UserCredentialsDTO getUserByUsername(String username) {
+        Optional<Users> user = userRepository.findByUsername(username);
+
+       if(user.isPresent()){
+           user.get().setPassword("***");
+           return userCredentialsMapper.mapToDto(user.get());
+       }
+        return new UserCredentialsDTO();
     }
 
     public MessageResponse sendResetPasswordMail(String email_or_username) throws MessagingException {
@@ -52,7 +62,7 @@ public class UserService {
         }
     }
 
-    public MessageResponse resetPassword(UserDTO userDTO, String resetToken) {
+    public MessageResponse resetPassword(UserCredentialsDTO userDTO, String resetToken) {
         Optional<Users> user = userRepository.findByUsername(userDTO.getUsername());
         if (user.isPresent()) {
             Date now = new Date(System.currentTimeMillis());
@@ -86,5 +96,6 @@ public class UserService {
         }
         return new MessageResponse("Couldn't find user in the system. Do you want to signup?", MessageType.ERROR);
     }
+
 
 }

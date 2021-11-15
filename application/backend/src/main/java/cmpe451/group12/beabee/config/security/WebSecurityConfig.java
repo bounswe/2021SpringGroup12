@@ -33,13 +33,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  implements 
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+       // TODO: change this before final deployment
+
         http.cors().and()
                 .csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/**").permitAll() // TODO delete later
                 .antMatchers(HttpMethod.POST,"/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/signup").permitAll()
                 .antMatchers(HttpMethod.GET, "/users/forgot/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/users/reset/**").permitAll()
+                .antMatchers("/goals/**").permitAll() // TODO delete later
                 .antMatchers("/v2/api-docs").permitAll()
                 .antMatchers("/configuration/ui").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()
@@ -51,6 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  implements 
                 .anyRequest().authenticated()
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
 
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }

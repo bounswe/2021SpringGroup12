@@ -1,8 +1,6 @@
 package cmpe451.group12.beabee.service;
 
-import cmpe451.group12.beabee.login.mapper.UserMapper;
-import cmpe451.group12.beabee.login.repository.UserRepository;
-import cmpe451.group12.beabee.login.service.UserService;
+import cmpe451.group12.beabee.login.mapper.UserCredentialsMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,16 +11,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+public class UserCredentialsServiceTest {
+
 
     @Mock
-    private UserRepository userRepository;
-    @Autowired
-    @InjectMocks
-    private UserService userService;
-
-    @Mock
-    private UserMapper userMapper;
+    private UserCredentialsMapper userCredentialsMapper;
 
     @BeforeEach
     public void setUp() {
