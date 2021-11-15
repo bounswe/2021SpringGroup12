@@ -5,10 +5,12 @@ import cmpe451.group12.beabee.goalspace.enums.EntitiType;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
 @Setter
+
 public class EntitiDTO {
 
     private Long id;
@@ -21,5 +23,5 @@ public class EntitiDTO {
     private Date deadline;
     private Double rating;
     private Long period;
-
+    private LocalDateTime created;
 }
