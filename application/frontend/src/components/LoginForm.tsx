@@ -1,14 +1,34 @@
-import { Form, Input, Button, Checkbox } from "antd";
-import { Link } from "react-router-dom";
-import { loginRequest } from "../api/auth";
+import { Form, Input, Button } from "antd";
+import axios from "axios";
+import { Link, useHistory } from "react-router-dom";
 
 export const LoginForm = () => {
+  const history = useHistory();
+
   const onFinish = (values: any) => {
-    loginRequest(values)
+    axios
+      .post("/login", {
+        email: values.email,
+        password: values.password,
+        username: values.username,
+      })
+      .then((res) => {
+        if(res && res.status === 200){
+        localStorage.setItem("token", res.data.jwt);
+        localStorage.setItem("username", res.data.userDTO.username);
+        console.log('here')
+        history.push("/");
+        window.location.reload();
+        }
+      })
+      .catch((error) => {
+        window.alert(`Login failed with error Try Again ! \n ${error}`)
+
+      });
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+    window.alert("Login Failed");
   };
 
   return (
@@ -28,6 +48,22 @@ export const LoginForm = () => {
       >
         <Input />
       </Form.Item>
+      <Form.Item
+        name="email"
+        label="E-mail"
+        rules={[
+          {
+            type: "email",
+            message: "The input is not valid E-mail!",
+          },
+          {
+            required: true,
+            message: "Please input your E-mail!",
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
 
       <Form.Item
         label="Password"
@@ -36,21 +72,28 @@ export const LoginForm = () => {
       >
         <Input.Password />
       </Form.Item>
-
       <Form.Item
         name="remember"
         valuePropName="checked"
         wrapperCol={{ offset: 8, span: 16 }}
       >
-        <Checkbox>Remember me</Checkbox>
         <Link style={{ float: "right" }} to="/forgotpassword">
           Forgot Password
         </Link>
       </Form.Item>
-
-      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+      <Form.Item name="submit" wrapperCol={{ offset: 8, span: 16 }}>
         <Button type="primary" htmlType="submit">
-          Submit
+          Login
+        </Button>
+      </Form.Item>
+      <Form.Item name="link" wrapperCol={{ offset: 8, span: 16 }}>
+        <Button type="link" href="/register">
+          Have no account? Register
+        </Button>
+      </Form.Item>
+      <Form.Item name="link" wrapperCol={{ offset: 8, span: 16 }}>
+        <Button type="link" href="/forgotpassword">
+          Forgot password ?
         </Button>
       </Form.Item>
     </Form>

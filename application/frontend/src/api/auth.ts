@@ -1,32 +1,35 @@
 import axios from "axios";
 import { IregisterForm } from "../components/RegistrationForm";
 
-export const registerRequest = (values:IregisterForm) => {
+// TODO use this api calls later
+export const registerRequest = (values: IregisterForm) => {
   axios
-    .post("/registerURL", {
+    .post("/signup", {
       email: values.email,
       password: values.password,
       username: values.username,
     })
-    .then(function (response) {
-      console.log(response);
+    .then((res) => {
+      console.log(res);
     })
-    .catch(function (error) {
-      console.log(error);
+    .catch((err) => {
+      console.log(err);
     });
 };
 
-export const loginRequest = (values:IregisterForm) => {
+export const loginRequest = (values: IregisterForm): any => {
   axios
-    .post("/loginURL", {
+    .post("/login", {
       email: values.email,
       password: values.password,
       username: values.username,
     })
-    .then(function (response) {
-      console.log(response);
+    .then((res) => {
+      console.log(res.data);
+      return res;
     })
-    .catch(function (error) {
+    .catch((error) => {
       console.log(error);
+      return error;
     });
 };
