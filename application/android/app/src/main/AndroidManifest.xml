@@ -16,7 +16,7 @@
         android:theme="@style/Theme.BeaBee">
 
         <activity
-            android:name=".views.MainPage.MainActivity"
+            android:name=".views.MainStructure.MainActivity"
             android:exported="false" />
 
         <activity

@@ -2,7 +2,7 @@ package com.group12.beabee.views.goals;
 
 import com.group12.beabee.R;
 import com.group12.beabee.views.BaseInnerFragment;
-import com.group12.beabee.views.MainPage.PageMode;
+import com.group12.beabee.views.MainStructure.PageMode;
 
 public class SampleFragment extends BaseInnerFragment {
     @Override

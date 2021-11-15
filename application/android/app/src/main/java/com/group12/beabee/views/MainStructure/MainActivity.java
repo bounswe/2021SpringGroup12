@@ -1,4 +1,4 @@
-package com.group12.beabee.views.MainPage;
+package com.group12.beabee.views.MainStructure;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,21 +9,15 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.group12.beabee.R;
-import com.group12.beabee.models.requests.SignUpRequest;
-import com.group12.beabee.models.responses.SignUpResponse;
 import com.group12.beabee.network.BeABeeService;
 import com.group12.beabee.network.ServiceAPI;
 import com.group12.beabee.views.goals.HomeFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 

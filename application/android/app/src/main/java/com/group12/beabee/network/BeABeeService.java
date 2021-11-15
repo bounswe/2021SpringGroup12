@@ -96,6 +96,7 @@ public class BeABeeService {
 
             if (response.code() == 401) {
                 BeABeeApplication.AuthToken = null;
+                BeABeeApplication.userId = -1;
                 Intent intent = new Intent(BeABeeApplication.getAppContext(), LoginActivity.class);
                 intent.putExtra("Error", "403");
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

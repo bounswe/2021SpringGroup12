@@ -9,14 +9,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.group12.beabee.views.MainPage.BaseContainerFragment;
-import com.group12.beabee.views.MainPage.PageMode;
+import com.group12.beabee.network.BeABeeService;
+import com.group12.beabee.network.ServiceAPI;
+import com.group12.beabee.views.MainStructure.BaseContainerFragment;
+import com.group12.beabee.views.MainStructure.PageMode;
 
 import butterknife.ButterKnife;
 
 public abstract class BaseInnerFragment extends Fragment {
 
     private BaseContainerFragment parentFragment;
+    protected ServiceAPI service;
 
     @Nullable
     @Override
@@ -29,6 +32,7 @@ public abstract class BaseInnerFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        service = BeABeeService.serviceAPI;
         parentFragment = ((BaseContainerFragment) getParentFragment());
         parentFragment.SetMode(GetPageMode());
     }

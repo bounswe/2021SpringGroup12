@@ -1,4 +1,4 @@
-package com.group12.beabee.views.MainPage;
+package com.group12.beabee.views.MainStructure;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

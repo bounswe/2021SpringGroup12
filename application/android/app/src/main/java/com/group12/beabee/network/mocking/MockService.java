@@ -1,11 +1,16 @@
 package com.group12.beabee.network.mocking;
 
+import com.group12.beabee.models.Goal;
 import com.group12.beabee.models.requests.LoginRequest;
 import com.group12.beabee.models.requests.SignUpRequest;
+import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.LoginResponse;
 import com.group12.beabee.models.responses.SignUpResponse;
 import com.group12.beabee.models.responses.UserDTO;
 import com.group12.beabee.network.ServiceAPI;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,4 +49,41 @@ public class MockService implements ServiceAPI {
         };
     }
 
+    @Override
+    public Call<List<Goal>> getGoalsOfUser(int userId) {
+        List<Goal> tempList = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            Goal temp = new Goal();
+            temp.id = i;
+            temp.title = "title"+i;
+            temp.description = "description"+i;
+            temp.goalType = "GOAL";
+            temp.createdAt = "2021-11-15T18:01:25.047Z";
+            temp.deadLine = "2021-11-15T18:01:25.047Z";
+            tempList.add(temp);
+        }
+        return new MockCall<List<Goal>>() {
+            @Override
+            public void enqueue(Callback<List<Goal>> callback) {
+                callback.onResponse(this, Response.success(tempList));
+            }
+        };
+    }
+
+    @Override
+    public Call<BasicResponse> createGoalsOfUser(int userId, Goal goal) {
+        return returnBasicResponse();
+    }
+
+    private Call<BasicResponse> returnBasicResponse(){
+        return new MockCall<BasicResponse>() {
+            @Override
+            public void enqueue(Callback<BasicResponse> callback) {
+                BasicResponse temp = new BasicResponse();
+                temp.message = "Succesful";
+                temp.messageType = "SUCCESS";
+                callback.onResponse(this, Response.success(temp));
+            }
+        };
+    }
 }

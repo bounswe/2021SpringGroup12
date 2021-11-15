@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.group12.beabee.R;
-import com.group12.beabee.models.GoalShort;
+import com.group12.beabee.models.Goal;
 
 import java.util.List;
 
@@ -18,10 +18,10 @@ import butterknife.ButterKnife;
 
 public class GoalsAdapter extends RecyclerView.Adapter<GoalsAdapter.ViewHolder> {
 
-    private List<GoalShort> goalShortList;
+    private List<Goal> goalShortList;
     private IOnGoalClickedListener onItemClickedListener;
 
-    public void setData(List<GoalShort> goalShorts){
+    public void setData(List<Goal> goalShorts){
         goalShortList = goalShorts;
         notifyDataSetChanged();
     }
@@ -44,7 +44,7 @@ public class GoalsAdapter extends RecyclerView.Adapter<GoalsAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return goalShortList.size();
+        return goalShortList!=null ? goalShortList.size():0;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -62,7 +62,7 @@ public class GoalsAdapter extends RecyclerView.Adapter<GoalsAdapter.ViewHolder> 
             ButterKnife.bind(this, itemView);
         }
 
-        public void BindData(GoalShort goalShort) {
+        public void BindData(Goal goalShort) {
             tvTitle.setText(goalShort.title);
             tvDescription.setText(goalShort.description);
             itemParent.setOnClickListener(v -> onItemClickedListener.OnGoalClicked(goalShort.id));

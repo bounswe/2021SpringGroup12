@@ -10,6 +10,7 @@ public class BeABeeApplication extends Application {
     private static Context context;
 
     public static String AuthToken;
+    public static int userId;
 
     public static Context getAppContext() {
         return context;
