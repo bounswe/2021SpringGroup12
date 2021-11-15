@@ -161,6 +161,28 @@ public class EntitiService {
     }
 
     /****************************** GETS ********************************/
+    public EntitiDTO getEntiti(Long id) {
+        Optional<Entiti> entiti_opt = entitiRepository.findById(id);
+        if (entiti_opt.isEmpty()){
+            return new EntitiDTO();
+        }
+        if (entiti_opt.get().getEntitiType().equals(EntitiType.ROUTINE)){
+            return entitiMapper.mapToDto((Routine) entiti_opt.get());
+        }
+        if (entiti_opt.get().getEntitiType().equals(EntitiType.TASK)){
+            return entitiMapper.mapToDto((Task) entiti_opt.get());
+        }
+        if (entiti_opt.get().getEntitiType().equals(EntitiType.QUESTION)){
+            return entitiMapper.mapToDto((Question) entiti_opt.get());
+        }
+        if (entiti_opt.get().getEntitiType().equals(EntitiType.REFLECTION)){
+            return entitiMapper.mapToDto((Reflection) entiti_opt.get());
+        }
+        if (entiti_opt.get().getEntitiType().equals(EntitiType.SUBGOAL)){
+            return entitiMapper.mapToDto((Subgoal) entiti_opt.get());
+        }
+        return new EntitiDTO();// it wont reach here anyways
+    }
 
     public SubgoalDTO getSubgoal(Long id) {
         Optional<Subgoal> subgoal_opt = subgoalRepository.findById(id);
@@ -285,6 +307,7 @@ public class EntitiService {
         }
         return new MessageResponse("Couldn't update question!", MessageType.ERROR);
     }
+
 
 
 }
