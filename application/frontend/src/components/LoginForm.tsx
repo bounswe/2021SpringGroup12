@@ -8,22 +8,19 @@ export const LoginForm = () => {
   const onFinish = (values: any) => {
     axios
       .post("/login", {
-        email: values.email,
         password: values.password,
         username: values.username,
       })
       .then((res) => {
-        if(res && res.status === 200){
-        localStorage.setItem("token", res.data.jwt);
-        localStorage.setItem("username", res.data.userDTO.username);
-        console.log('here')
-        history.push("/");
-        window.location.reload();
+        if (res && res.status === 200) {
+          localStorage.setItem("token", res.data.jwt);
+          localStorage.setItem("username", res.data.userDTO.username);
+          history.push("/");
+          window.location.reload();
         }
       })
       .catch((error) => {
-        window.alert(`Login failed with error Try Again ! \n ${error}`)
-
+        window.alert(`Login failed with error Try Again ! \n ${error}`);
       });
   };
 
@@ -48,23 +45,6 @@ export const LoginForm = () => {
       >
         <Input />
       </Form.Item>
-      <Form.Item
-        name="email"
-        label="E-mail"
-        rules={[
-          {
-            type: "email",
-            message: "The input is not valid E-mail!",
-          },
-          {
-            required: true,
-            message: "Please input your E-mail!",
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-
       <Form.Item
         label="Password"
         name="password"
