@@ -8,13 +8,13 @@ export class GoalsPage extends React.Component {
         goals: [],
     };
     user_id = localStorage.getItem("user_id")
-    jwt = localStorage.getItem("jwt")
+    token = localStorage.getItem("token");
 
     deleteGoal = (goal: { key: any; }) => {
         console.log('Received values of delete: ', goal);
         axios.delete(`/goals/${goal.key}`,
             {
-                headers: { Authorization: `Bearer ${this.jwt}`},
+                headers: { Authorization: `Bearer ${this.token}`},
                 data: {}
             }).then(() => this.getGoals())
     };
@@ -23,7 +23,7 @@ export class GoalsPage extends React.Component {
         console.log(axios.defaults.baseURL)
         axios.get(`/goals/of_user/${this.user_id}`,
             {
-                headers: { Authorization: `Bearer ${this.jwt}`},
+                headers: { Authorization: `Bearer ${this.token}`},
                 data: {}
 
             })

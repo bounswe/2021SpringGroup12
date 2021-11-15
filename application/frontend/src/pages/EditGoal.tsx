@@ -5,14 +5,14 @@ import axios from "axios";
 import {GoalForm} from "../components/GoalForm";
 import {Link} from "react-router-dom";
 
-const jwt = localStorage.getItem("jwt")
+const token = localStorage.getItem("token");
 
 export function EditGoal() {
     const onFinish = (values: any) => {
         console.log('Received values of form: ', values);
         values['id'] = goal_id
-        axios.post(`/goals/`, values, {
-            headers: { Authorization: `Bearer ${jwt}`},
+        axios.put(`/goals/`, values, {
+            headers: { Authorization: `Bearer ${token}`},
         })
             .then(() => setAdded(true))
 
@@ -28,7 +28,7 @@ export function EditGoal() {
     useEffect(() => {
         axios.get(`/goals/${goal_id}`,
             {
-                headers: { Authorization: `Bearer ${jwt}`},
+                headers: { Authorization: `Bearer ${token}`},
                 data: {}
             })
             .then(response => {
