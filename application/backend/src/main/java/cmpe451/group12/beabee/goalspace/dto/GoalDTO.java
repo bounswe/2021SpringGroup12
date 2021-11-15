@@ -5,6 +5,7 @@ import cmpe451.group12.beabee.goalspace.model.Entiti;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 import java.util.Set;
 
@@ -16,10 +17,12 @@ public class GoalDTO {
 
     private GoalType goalType;
 
+    @NotBlank
     private String title;
 
     private Boolean isDone;
 
+    @NotBlank
     private String description;
 
     private Date deadline;

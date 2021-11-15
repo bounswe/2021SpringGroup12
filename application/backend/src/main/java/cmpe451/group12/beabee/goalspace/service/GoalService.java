@@ -12,12 +12,8 @@ import cmpe451.group12.beabee.goalspace.model.Goal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -57,21 +53,15 @@ public class GoalService {
         return new MessageResponse("Goal updated!", MessageType.SUCCESS);
     }
 
-
-
     public MessageResponse createAGoal(Long user_id, GoalDTO goalDto) {
         Optional<Users> user = userRepository.findById(user_id);
         if (user.isEmpty()){
             return new MessageResponse("User does not exists!", MessageType.ERROR);
         }
-        //Set<Goal> user_goals = user.get().getGoals();
         Goal new_goal = goalMapper.mapToEntity(goalDto);
         new_goal.setIsDone(Boolean.FALSE);
-        //user_goals.add(new_goal);
-        //user.get().setGoals(user_goals);
         new_goal.setCreator(user.get());
         goalRepository.save(new_goal);
-        //userRepository.save(user.get());
         return new MessageResponse("Goal added successfully.", MessageType.SUCCESS);
     }
 
