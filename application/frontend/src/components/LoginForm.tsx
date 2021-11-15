@@ -15,6 +15,7 @@ export const LoginForm = () => {
         if (res && res.status === 200) {
           localStorage.setItem("token", res.data.jwt);
           localStorage.setItem("username", res.data.userDTO.username);
+          localStorage.setItem("user_id", res.data.user_id);
           history.push("/");
           window.location.reload();
         }

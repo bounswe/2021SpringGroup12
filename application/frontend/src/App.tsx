@@ -11,20 +11,20 @@ import NavBar from "./components/NavBar";
 export interface IAppProps {}
 
 export interface IAppState {
-  user: string;
+  username: string;
 }
 export default class App extends React.Component<IAppProps, IAppState> {
   constructor(props: IAppProps) {
     super(props);
 
     this.state = {
-      user: "",
+      username: "",
     };
   }
   componentDidMount() {
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
-    
+    const user_id = localStorage.getItem("user_id");
     // TODO add jwt authorization
 
     // const config = {
@@ -43,14 +43,14 @@ export default class App extends React.Component<IAppProps, IAppState> {
     //   .catch((err) => console.log(err));
     if (token && username) {
       this.setState({
-        user: username,
+        username: username,
       });
     }
   }
   render() {
     return (
       <Router history={history}>
-        <NavBar user={this.state.user}></NavBar>
+        <NavBar user={this.state.username}></NavBar>
         <Switch>
           <Route exact path="/dashboard">
             Dashboard
@@ -65,7 +65,7 @@ export default class App extends React.Component<IAppProps, IAppState> {
             <ForgotPassword />
           </Route>
           <Route exact path="/">
-            <Home user={this.state.user} />
+            <Home user={this.state.username} />
           </Route>
         </Switch>
       </Router>
