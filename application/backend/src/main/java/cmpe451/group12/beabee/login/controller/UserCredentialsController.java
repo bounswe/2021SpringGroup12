@@ -14,7 +14,8 @@ import javax.mail.MessagingException;
 @RestController
 @RequiredArgsConstructor
 @Validated
-@RequestMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//@RequestMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/users")
 public class UserCredentialsController {
 
     private final UserCredentialsService userCredentialsService;

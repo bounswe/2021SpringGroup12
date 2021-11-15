@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -32,6 +33,9 @@ public abstract class AllGoal  {
     @Column(name = "description")
     private String description;
 
+    @CreatedDate
+    @Column(name = "createdAt",updatable = false)
+    private Date createdAt;
 
     @Column(name = "deadline")
     private Date deadline;

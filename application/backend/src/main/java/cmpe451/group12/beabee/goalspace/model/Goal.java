@@ -22,10 +22,12 @@ public class Goal extends AllGoal{
     @Column(name = "ID")
     private Long id;
 
+    /*
     // TODO: not working
     @CreatedDate
     @Column(name = "createdAt")
     private Date createdAt;
+    */
 
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
