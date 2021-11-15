@@ -29,5 +29,5 @@ public interface ServiceAPI {
     Call<List<Goal>> getGoalsOfUser(@Path("user_id") int userId);
 
     @POST("/goals/{user_id}")
-    Call<BasicResponse> createGoalsOfUser(@Path("user_id") int userId, @Body Goal userDTO);
+    Call<BasicResponse> createGoalOfUser(@Path("user_id") int userId, @Body Goal userDTO);
 }

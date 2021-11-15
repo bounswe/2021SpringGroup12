@@ -11,6 +11,7 @@ import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.Goal;
+import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
 
@@ -46,7 +47,17 @@ public class HomeFragment extends BaseInnerFragment implements IOnGoalClickedLis
                 temp.goalType = "GOAL";
                 temp.createdAt = "2021-11-15T18:01:25.047Z";
                 temp.deadLine = "2021-11-15T18:01:25.047Z";
-                service.createGoalsOfUser(BeABeeApplication.userId, temp);
+                service.createGoalOfUser(BeABeeApplication.userId, temp).enqueue(new Callback<BasicResponse>() {
+                    @Override
+                    public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                        Utils.ShowErrorToast(getContext(), response.message());
+                    }
+
+                    @Override
+                    public void onFailure(Call<BasicResponse> call, Throwable t) {
+                        Utils.ShowErrorToast(getContext(), "Something went wrong!");
+                    }
+                });
                 OpenNewFragment(new SampleFragment());
             }
         });
@@ -58,7 +69,7 @@ public class HomeFragment extends BaseInnerFragment implements IOnGoalClickedLis
         service.getGoalsOfUser(BeABeeApplication.userId).enqueue(new Callback<List<Goal>>() {
             @Override
             public void onResponse(Call<List<Goal>> call, Response<List<Goal>> response) {
-                if (response.isSuccessful() && response.body()!=null){
+                if (response.isSuccessful() && response.body() != null){
                     OnGoalsReceived(response.body());
                 }else{
                     Utils.ShowErrorToast(getContext(), "Something went wrong!");

@@ -71,7 +71,7 @@ public class MockService implements ServiceAPI {
     }
 
     @Override
-    public Call<BasicResponse> createGoalsOfUser(int userId, Goal goal) {
+    public Call<BasicResponse> createGoalOfUser(int userId, Goal goal) {
         return returnBasicResponse();
     }
 

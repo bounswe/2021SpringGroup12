@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                if (response.isSuccessful() && response.body() != null){
+                if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")){
                     BeABeeApplication.AuthToken = response.body().jwt;
                     BeABeeApplication.userId = response.body().userDTO.userId;
                     //login to the main page
