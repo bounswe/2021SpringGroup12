@@ -1,5 +1,12 @@
-import React from "react";
-import { Form, Input, Checkbox, Button } from "antd";
+import { Form, Input, Button } from "antd";
+import axios from "axios";
+import { useHistory } from "react-router";
+
+export type IregisterForm = {
+  email: string;
+  password: string;
+  username: string;
+};
 
 const formItemLayout = {
   labelCol: {
@@ -34,9 +41,27 @@ const tailFormItemLayout = {
 
 const RegistrationForm = () => {
   const [form] = Form.useForm();
+  const history = useHistory();
 
-  const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
+  const onFinish = (values: IregisterForm) => {
+    axios
+      .post("/signup", {
+        email: values.email,
+        password: values.password,
+        username: values.username,
+      })
+      .then((res) => {
+        if (res.data.messageType === "SUCCESS") {
+          window.alert(res.data.message);
+          history.push("/login");
+          window.location.reload();
+        }else{
+          window.alert(res.data.message);
+        }
+      })
+      .catch((err) => {
+        window.alert(`Registration failed with error Try Again ! \n${err}`)
+      });
   };
 
   return (
@@ -122,26 +147,14 @@ const RegistrationForm = () => {
         <Input.Password />
       </Form.Item>
 
-      <Form.Item
-        name="agreement"
-        valuePropName="checked"
-        rules={[
-          {
-            validator: (_, value) =>
-              value
-                ? Promise.resolve()
-                : Promise.reject(new Error("Should accept agreement")),
-          },
-        ]}
-        {...tailFormItemLayout}
-      >
-        <Checkbox>
-          I have read the <a href="">agreement</a>
-        </Checkbox>
-      </Form.Item>
       <Form.Item {...tailFormItemLayout}>
         <Button type="primary" htmlType="submit">
           Register
+        </Button>
+      </Form.Item>
+      <Form.Item {...tailFormItemLayout}>
+        <Button type="link" href="/login">
+          Already have an account ?
         </Button>
       </Form.Item>
     </Form>
