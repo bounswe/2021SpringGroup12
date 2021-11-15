@@ -14,7 +14,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.group12.beabee.R;
 import com.group12.beabee.network.BeABeeService;
 import com.group12.beabee.network.ServiceAPI;
+import com.group12.beabee.views.goals.GoalFragment;
 import com.group12.beabee.views.goals.HomeFragment;
+import com.group12.beabee.views.goals.subGoalFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,10 +61,10 @@ public class MainActivity extends AppCompatActivity {
                     baseContainerFragment = new BaseContainerFragment(new HomeFragment());
                     break;
                 case 1:
-                    baseContainerFragment = new BaseContainerFragment(new HomeFragment());
+                    baseContainerFragment = new BaseContainerFragment(new GoalFragment());
                     break;
                 case 2:
-                    baseContainerFragment = new BaseContainerFragment(new HomeFragment());
+                    baseContainerFragment = new BaseContainerFragment(new subGoalFragment());
                     break;
                 case 3:
                     baseContainerFragment = new BaseContainerFragment(new HomeFragment());
