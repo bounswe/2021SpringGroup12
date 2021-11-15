@@ -68,6 +68,12 @@ public class EntitiController {
     }
 
     /****************************** GETS ********************************/
+    @GetMapping("/entiti/{id}")
+    public EntitiDTO getEntiti(@PathVariable Long id) {
+        return entitiService.getEntiti(id);
+    }
+
+
     @GetMapping("/subgoal/{id}")
     public SubgoalDTO getSubgoal(@PathVariable Long id) {
         return entitiService.getSubgoal(id);
