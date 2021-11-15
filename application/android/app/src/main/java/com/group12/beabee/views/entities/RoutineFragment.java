@@ -15,7 +15,7 @@ import com.group12.beabee.models.ReflectionShort;
 import com.group12.beabee.models.RoutineShort;
 import com.group12.beabee.models.TaskShort;
 import com.group12.beabee.views.BaseInnerFragment;
-import com.group12.beabee.views.MainPage.PageMode;
+import com.group12.beabee.views.MainStructure.PageMode;
 
 import java.util.ArrayList;
 import java.util.List;

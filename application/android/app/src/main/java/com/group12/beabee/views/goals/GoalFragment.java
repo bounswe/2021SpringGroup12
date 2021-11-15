@@ -27,7 +27,7 @@ import com.group12.beabee.views.entities.RoutineCardViewAdapter;
 import com.group12.beabee.views.entities.TagCardViewAdapter;
 import com.group12.beabee.views.entities.TaskCardViewAdapter;
 import com.group12.beabee.views.BaseInnerFragment;
-import com.group12.beabee.views.MainPage.PageMode;
+import com.group12.beabee.views.MainStructure.PageMode;
 
 import java.util.ArrayList;
 import java.util.List;

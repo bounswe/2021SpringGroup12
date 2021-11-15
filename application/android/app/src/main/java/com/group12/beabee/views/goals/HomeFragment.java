@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.Goal;
+import com.group12.beabee.models.GoalShort;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
@@ -40,7 +40,7 @@ public class HomeFragment extends BaseInnerFragment implements IOnGoalClickedLis
         noGoalView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Goal temp = new Goal();
+                GoalShort temp = new GoalShort();
                 temp.id = 1;
                 temp.title = "title"+1;
                 temp.description = "description"+1;
@@ -66,9 +66,9 @@ public class HomeFragment extends BaseInnerFragment implements IOnGoalClickedLis
     @Override
     public void onResume() {
         super.onResume();
-        service.getGoalsOfUser(BeABeeApplication.userId).enqueue(new Callback<List<Goal>>() {
+        service.getGoalsOfUser(BeABeeApplication.userId).enqueue(new Callback<List<GoalShort>>() {
             @Override
-            public void onResponse(Call<List<Goal>> call, Response<List<Goal>> response) {
+            public void onResponse(Call<List<GoalShort>> call, Response<List<GoalShort>> response) {
                 if (response.isSuccessful() && response.body() != null){
                     OnGoalsReceived(response.body());
                 }else{
@@ -77,13 +77,13 @@ public class HomeFragment extends BaseInnerFragment implements IOnGoalClickedLis
             }
 
             @Override
-            public void onFailure(Call<List<Goal>> call, Throwable t) {
+            public void onFailure(Call<List<GoalShort>> call, Throwable t) {
                 Utils.ShowErrorToast(getContext(),"Something went wrong!");
             }
         });
     }
 
-    private void OnGoalsReceived(List<Goal> goals){
+    private void OnGoalsReceived(List<GoalShort> goals){
         if (goals==null || goals.size()==0)
         {
             rvGoals.setVisibility(View.GONE);

@@ -1,6 +1,6 @@
 package com.group12.beabee.network.mocking;
 
-import com.group12.beabee.models.Goal;
+import com.group12.beabee.models.GoalShort;
 import com.group12.beabee.models.requests.LoginRequest;
 import com.group12.beabee.models.requests.SignUpRequest;
 import com.group12.beabee.models.responses.BasicResponse;
@@ -50,10 +50,10 @@ public class MockService implements ServiceAPI {
     }
 
     @Override
-    public Call<List<Goal>> getGoalsOfUser(int userId) {
-        List<Goal> tempList = new ArrayList<>();
+    public Call<List<GoalShort>> getGoalsOfUser(int userId) {
+        List<GoalShort> tempList = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            Goal temp = new Goal();
+            GoalShort temp = new GoalShort();
             temp.id = i;
             temp.title = "title"+i;
             temp.description = "description"+i;
@@ -62,16 +62,16 @@ public class MockService implements ServiceAPI {
             temp.deadLine = "2021-11-15T18:01:25.047Z";
             tempList.add(temp);
         }
-        return new MockCall<List<Goal>>() {
+        return new MockCall<List<GoalShort>>() {
             @Override
-            public void enqueue(Callback<List<Goal>> callback) {
+            public void enqueue(Callback<List<GoalShort>> callback) {
                 callback.onResponse(this, Response.success(tempList));
             }
         };
     }
 
     @Override
-    public Call<BasicResponse> createGoalOfUser(int userId, Goal goal) {
+    public Call<BasicResponse> createGoalOfUser(int userId, GoalShort goal) {
         return returnBasicResponse();
     }
 

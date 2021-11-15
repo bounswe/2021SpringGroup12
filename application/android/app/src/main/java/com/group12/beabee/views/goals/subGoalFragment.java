@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.group12.beabee.R;
 import com.group12.beabee.views.BaseInnerFragment;
-import com.group12.beabee.views.MainPage.PageMode;
+import com.group12.beabee.views.MainStructure.PageMode;
 import com.group12.beabee.views.entities.IOnQuestionClickedListener;
 import com.group12.beabee.views.entities.IOnReflectionClickedListener;
 import com.group12.beabee.views.entities.IOnRoutineClickedListener;

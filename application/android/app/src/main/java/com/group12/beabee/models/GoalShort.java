@@ -1,6 +1,6 @@
 package com.group12.beabee.models;
 
-public class Goal {
+public class GoalShort {
     public int id;
     public String title;
     public String description;
