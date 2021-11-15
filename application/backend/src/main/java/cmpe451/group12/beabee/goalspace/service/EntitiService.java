@@ -2,19 +2,14 @@ package cmpe451.group12.beabee.goalspace.service;
 
 import cmpe451.group12.beabee.common.dto.MessageResponse;
 import cmpe451.group12.beabee.common.enums.MessageType;
-import cmpe451.group12.beabee.common.model.Users;
-import cmpe451.group12.beabee.common.repository.UserRepository;
 import cmpe451.group12.beabee.goalspace.Repository.*;
 import cmpe451.group12.beabee.goalspace.dto.*;
-import cmpe451.group12.beabee.goalspace.enums.EntityType;
+import cmpe451.group12.beabee.goalspace.enums.EntitiType;
 import cmpe451.group12.beabee.goalspace.mapper.*;
 import cmpe451.group12.beabee.goalspace.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class EntityService {
+public class EntitiService {
 
     private final GoalRepository goalRepository;
 
@@ -112,7 +107,7 @@ public class EntityService {
         }
         Subgoal new_subgoal = subgoalMapper.mapToEntity(subgoalDTO);
         new_subgoal.setMainGoal(goal_opt.get());
-        new_subgoal.setEntityType(EntityType.SUBGOAL);
+        new_subgoal.setEntitiType(EntitiType.SUBGOAL);
         subgoalRepository.save(new_subgoal);
         return new MessageResponse("Subgoal added.", MessageType.SUCCESS);
     }
@@ -124,7 +119,7 @@ public class EntityService {
         }
         Task new_task = taskMapper.mapToEntity(taskDTO);
         new_task.setMainGoal(goal_opt.get());
-        new_task.setEntityType(EntityType.TASK);
+        new_task.setEntitiType(EntitiType.TASK);
         taskRepository.save(new_task);
         return new MessageResponse("Task added.", MessageType.SUCCESS);
     }
@@ -136,7 +131,7 @@ public class EntityService {
         }
         Reflection new_reflection = reflectionMapper.mapToEntity(reflectionDTO);
         new_reflection.setMainGoal(goal_opt.get());
-        new_reflection.setEntityType(EntityType.REFLECTION);
+        new_reflection.setEntitiType(EntitiType.REFLECTION);
         reflectionRepository.save(new_reflection);
         return new MessageResponse("Reflection added.", MessageType.SUCCESS);
     }
@@ -148,7 +143,7 @@ public class EntityService {
         }
         Question new_question = questionMapper.mapToEntity(questionDTO);
         new_question.setMainGoal(goal_opt.get());
-        new_question.setEntityType(EntityType.QUESTION);
+        new_question.setEntitiType(EntitiType.QUESTION);
         questionRepository.save(new_question);
         return new MessageResponse("Question added.", MessageType.SUCCESS);
     }
@@ -160,7 +155,7 @@ public class EntityService {
         }
         Routine new_routine = routineMapper.mapToEntity(routineDTO);
         new_routine.setMainGoal(goal_opt.get());
-        new_routine.setEntityType(EntityType.ROUTINE);
+        new_routine.setEntitiType(EntitiType.ROUTINE);
         routineRepository.save(new_routine);
         return new MessageResponse("Routine added.", MessageType.SUCCESS);
     }

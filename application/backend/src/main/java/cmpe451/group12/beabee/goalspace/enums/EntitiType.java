@@ -1,6 +1,6 @@
 package cmpe451.group12.beabee.goalspace.enums;
 
-public enum EntityType {
+public enum EntitiType {
     SUBGOAL,//0
     TASK,//1
     ROUTINE,//2

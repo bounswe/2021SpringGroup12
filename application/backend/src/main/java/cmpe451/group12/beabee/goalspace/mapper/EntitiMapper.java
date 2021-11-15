@@ -3,9 +3,7 @@ package cmpe451.group12.beabee.goalspace.mapper;
 
 
 import cmpe451.group12.beabee.goalspace.dto.EntitiDTO;
-import cmpe451.group12.beabee.goalspace.dto.GoalDTO;
 import cmpe451.group12.beabee.goalspace.model.*;
-import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -23,7 +21,7 @@ public class EntitiMapper {
             return null;
         } else {
             EntitiDTO entityDTO = new EntitiDTO();
-            entityDTO.setEntityType(subgoal.getEntityType());
+            entityDTO.setEntitiType(subgoal.getEntitiType());
             entityDTO.setId(subgoal.getId());
             entityDTO.setTitle(subgoal.getTitle());
             entityDTO.setIsDone(subgoal.getIsDone());
@@ -40,7 +38,7 @@ public class EntitiMapper {
             return null;
         } else {
             EntitiDTO entityDTO = new EntitiDTO();
-            entityDTO.setEntityType(reflection.getEntityType());
+            entityDTO.setEntitiType(reflection.getEntitiType());
             entityDTO.setId(reflection.getId());
             entityDTO.setTitle(reflection.getTitle());
             entityDTO.setIsDone(reflection.getIsDone());
@@ -55,7 +53,7 @@ public class EntitiMapper {
         } else {
             EntitiDTO entityDTO = new EntitiDTO();
             entityDTO.setId(question.getId());
-            entityDTO.setEntityType(question.getEntityType());
+            entityDTO.setEntitiType(question.getEntitiType());
 
             entityDTO.setTitle(question.getTitle());
             entityDTO.setIsDone(question.getIsDone());
@@ -70,7 +68,7 @@ public class EntitiMapper {
         } else {
             EntitiDTO entityDTO = new EntitiDTO();
             entityDTO.setId(task.getId());
-            entityDTO.setEntityType(task.getEntityType());
+            entityDTO.setEntitiType(task.getEntitiType());
 
             entityDTO.setTitle(task.getTitle());
             entityDTO.setIsDone(task.getIsDone());
@@ -88,7 +86,7 @@ public class EntitiMapper {
         } else {
             EntitiDTO entityDTO = new EntitiDTO();
             entityDTO.setId(routine.getId());
-            entityDTO.setEntityType(routine.getEntityType());
+            entityDTO.setEntitiType(routine.getEntitiType());
 
             entityDTO.setTitle(routine.getTitle());
             entityDTO.setIsDone(routine.getIsDone());

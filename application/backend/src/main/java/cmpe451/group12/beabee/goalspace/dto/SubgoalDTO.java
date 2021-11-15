@@ -1,7 +1,7 @@
 package cmpe451.group12.beabee.goalspace.dto;
 
 
-import cmpe451.group12.beabee.goalspace.enums.EntityType;
+import cmpe451.group12.beabee.goalspace.enums.EntitiType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +18,7 @@ public class SubgoalDTO {
     private Long mainGoal_id;
 
     //TODO, buna gerek var mı ya?
-    private EntityType entityType;
+    private EntitiType entitiType;
 
     private String title;
     private String description;

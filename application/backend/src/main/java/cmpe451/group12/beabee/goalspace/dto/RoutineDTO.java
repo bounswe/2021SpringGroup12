@@ -1,7 +1,7 @@
 package cmpe451.group12.beabee.goalspace.dto;
 
 
-import cmpe451.group12.beabee.goalspace.enums.EntityType;
+import cmpe451.group12.beabee.goalspace.enums.EntitiType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +15,7 @@ public class RoutineDTO {
 
     private Long mainGoal_id;
 
-    private EntityType entityType;
+    private EntitiType entitiType;
     private String title;
     private String description;
     private Date createdAt;

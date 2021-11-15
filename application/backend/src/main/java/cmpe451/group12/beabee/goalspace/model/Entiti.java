@@ -1,9 +1,7 @@
 package cmpe451.group12.beabee.goalspace.model;
 
-import cmpe451.group12.beabee.goalspace.enums.EntityType;
-import cmpe451.group12.beabee.goalspace.enums.GoalType;
+import cmpe451.group12.beabee.goalspace.enums.EntitiType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,7 +28,7 @@ public abstract class Entiti {
 
 
     @Column(name = "entityType")
-    private EntityType entityType;
+    private EntitiType entitiType;
     @Column(name = "title")
     private String title;
     @Column(name = "description")
