@@ -1,32 +1,13 @@
-import { Form, Input, Button } from "antd";
-import axios from "axios";
-import { Link, useHistory } from "react-router-dom";
+import { Form, Input, Button, Checkbox } from "antd";
+import { Link } from "react-router-dom";
 
 export const LoginForm = () => {
-  const history = useHistory();
-
   const onFinish = (values: any) => {
-    axios
-      .post("/login", {
-        password: values.password,
-        username: values.username,
-      })
-      .then((res) => {
-        if (res && res.status === 200) {
-          localStorage.setItem("token", res.data.jwt);
-          localStorage.setItem("username", res.data.userDTO.username);
-          localStorage.setItem("user_id", res.data.user_id);
-          history.push("/");
-          window.location.reload();
-        }
-      })
-      .catch((error) => {
-        window.alert(`Login failed with error Try Again ! \n ${error}`);
-      });
+    console.log("Success:", values);
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    window.alert("Login Failed");
+    console.log("Failed:", errorInfo);
   };
 
   return (
@@ -46,6 +27,7 @@ export const LoginForm = () => {
       >
         <Input />
       </Form.Item>
+
       <Form.Item
         label="Password"
         name="password"
@@ -53,28 +35,21 @@ export const LoginForm = () => {
       >
         <Input.Password />
       </Form.Item>
+
       <Form.Item
         name="remember"
         valuePropName="checked"
         wrapperCol={{ offset: 8, span: 16 }}
       >
+        <Checkbox>Remember me</Checkbox>
         <Link style={{ float: "right" }} to="/forgotpassword">
           Forgot Password
         </Link>
       </Form.Item>
-      <Form.Item name="submit" wrapperCol={{ offset: 8, span: 16 }}>
+
+      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button type="primary" htmlType="submit">
-          Login
-        </Button>
-      </Form.Item>
-      <Form.Item name="link" wrapperCol={{ offset: 8, span: 16 }}>
-        <Button type="link" href="/register">
-          Have no account? Register
-        </Button>
-      </Form.Item>
-      <Form.Item name="link" wrapperCol={{ offset: 8, span: 16 }}>
-        <Button type="link" href="/forgotpassword">
-          Forgot password ?
+          Submit
         </Button>
       </Form.Item>
     </Form>
