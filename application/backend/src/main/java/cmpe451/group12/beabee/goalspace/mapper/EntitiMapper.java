@@ -21,14 +21,16 @@ public class EntitiMapper {
             return null;
         } else {
             EntitiDTO entityDTO = new EntitiDTO();
-            entityDTO.setEntitiType(subgoal.getEntitiType());
             entityDTO.setId(subgoal.getId());
+            entityDTO.setEntitiType(subgoal.getEntitiType());
+
             entityDTO.setTitle(subgoal.getTitle());
             entityDTO.setIsDone(subgoal.getIsDone());
             entityDTO.setDescription(subgoal.getDescription());
             entityDTO.setDeadline(subgoal.getDeadline());
             entityDTO.setCreatedAt(subgoal.getCreatedAt());
             entityDTO.setRating(subgoal.getRating());
+            entityDTO.setMainGoal_id(subgoal.getMainGoal().getId());
             return entityDTO;
         }
     }
@@ -38,12 +40,14 @@ public class EntitiMapper {
             return null;
         } else {
             EntitiDTO entityDTO = new EntitiDTO();
-            entityDTO.setEntitiType(reflection.getEntitiType());
             entityDTO.setId(reflection.getId());
+            entityDTO.setEntitiType(reflection.getEntitiType());
+
             entityDTO.setTitle(reflection.getTitle());
             entityDTO.setIsDone(reflection.getIsDone());
             entityDTO.setDescription(reflection.getDescription());
             entityDTO.setCreatedAt(reflection.getCreatedAt());
+            entityDTO.setMainGoal_id(reflection.getMainGoal().getId());
             return entityDTO;
         }
     }
@@ -59,6 +63,7 @@ public class EntitiMapper {
             entityDTO.setIsDone(question.getIsDone());
             entityDTO.setDescription(question.getDescription());
             entityDTO.setCreatedAt(question.getCreatedAt());
+            entityDTO.setMainGoal_id(question.getMainGoal().getId());
             return entityDTO;
         }
     }
@@ -76,6 +81,7 @@ public class EntitiMapper {
             entityDTO.setDeadline(task.getDeadline());
             entityDTO.setCreatedAt(task.getCreatedAt());
             entityDTO.setRating(task.getRating());
+            entityDTO.setMainGoal_id(task.getMainGoal().getId());
             return entityDTO;
         }
     }
@@ -95,6 +101,7 @@ public class EntitiMapper {
             entityDTO.setCreatedAt(routine.getCreatedAt());
             entityDTO.setRating(routine.getRating());
             entityDTO.setPeriod(routine.getPeriod());
+            entityDTO.setMainGoal_id(routine.getMainGoal().getId());
             return entityDTO;
         }
     }
