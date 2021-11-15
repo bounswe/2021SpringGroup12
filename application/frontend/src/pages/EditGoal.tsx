@@ -11,7 +11,7 @@ export function EditGoal() {
     const onFinish = (values: any) => {
         console.log('Received values of form: ', values);
         values['id'] = goal_id
-        axios.post(`/goals/`, values, {
+        axios.put(`/goals/`, values, {
             headers: { Authorization: `Bearer ${jwt}`},
         })
             .then(() => setAdded(true))
