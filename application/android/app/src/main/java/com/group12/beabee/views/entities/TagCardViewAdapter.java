@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.group12.beabee.R;
+import com.group12.beabee.models.TagShort;
 import com.group12.beabee.models.TaskShort;
 
 import java.util.List;
@@ -16,45 +17,44 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TaskCardViewAdapter extends RecyclerView.Adapter<TaskCardViewAdapter.ViewHolder> {
+public class TagCardViewAdapter extends RecyclerView.Adapter<TagCardViewAdapter.ViewHolder> {
 
 
-    private List<TaskShort> taskShortList;
-    private IOnTaskClickedListener onItemClickedListener;
+    private List<TagShort> tagShortList;
+    private IOnTagClickedListener onItemClickedListener;
 
-    public void setData(List<TaskShort> taskShorts){
-        taskShortList = taskShorts;
+    public void setData(List<TagShort> tagShorts){
+        tagShortList = tagShorts;
         notifyDataSetChanged();
     }
 
-    public void setItemClickListener(IOnTaskClickedListener listener){
+    public void setItemClickListener(IOnTagClickedListener listener){
         onItemClickedListener = listener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_task_cardview, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tag_cardview, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.BindData(taskShortList.get(position));
+        holder.BindData(tagShortList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        if(tagShortList==null||tagShortList.size()==0) return 0;
+        else return tagShortList.size();
     }
-        // return taskShortList.size();
+
 
 
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_title)
         TextView tvtitle;
-        @BindView(R.id.tv_description)
-        TextView tvdescription;
         @BindView(R.id.item_parent)
         View itemParent;
 
@@ -66,10 +66,9 @@ public class TaskCardViewAdapter extends RecyclerView.Adapter<TaskCardViewAdapte
 
         }
 
-        public void BindData(TaskShort taskShort){
-            tvtitle.setText(taskShort.title);
-            tvdescription.setText(taskShort.description);
-            itemParent.setOnClickListener(v -> onItemClickedListener.OnTaskClicked(taskShort.id));
+        public void BindData(TagShort tagShort){
+            tvtitle.setText(tagShort.title);
+            itemParent.setOnClickListener(v -> onItemClickedListener.OnTagClicked(tagShort.id));
         }
 
     }

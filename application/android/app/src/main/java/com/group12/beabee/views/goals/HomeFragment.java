@@ -53,12 +53,12 @@ public class HomeFragment extends BaseInnerFragment implements IOnGoalClickedLis
 
     private List<GoalShort> GetGoals(){
         List<GoalShort> tempList = new ArrayList<>();
-//        for (int i = 0; i < 10; i++) {
-//            GoalShort temp = new GoalShort();
-//            temp.title = "title"+i;
-//            temp.description = ""+i+i+i;
-//            tempList.add(temp);
-//        }
+        for (int i = 0; i < 10; i++) {
+            GoalShort temp = new GoalShort();
+           temp.title = "title"+i;
+           temp.description = ""+i+i+i;
+           tempList.add(temp);
+        }
         return tempList;
     }
 

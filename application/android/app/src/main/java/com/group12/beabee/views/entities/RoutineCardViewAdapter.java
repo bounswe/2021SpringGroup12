@@ -46,7 +46,8 @@ public class RoutineCardViewAdapter extends RecyclerView.Adapter<RoutineCardView
     @Override
     public int getItemCount() {
 
-        return routineShortList.size();
+        return 0;
+        //return routineShortList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

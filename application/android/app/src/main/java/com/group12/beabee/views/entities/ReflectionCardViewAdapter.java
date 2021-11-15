@@ -45,8 +45,9 @@ public class ReflectionCardViewAdapter extends RecyclerView.Adapter<ReflectionCa
 
     @Override
     public int getItemCount() {
+        return 0;
 
-        return reflectionShortList.size();
+        //return reflectionShortList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

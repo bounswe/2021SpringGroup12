@@ -46,7 +46,7 @@ public class QuestionCardViewAdapter extends RecyclerView.Adapter<QuestionCardVi
     @Override
     public int getItemCount() {
 
-        return questionShortList.size();
+        return 0;//questionShortList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

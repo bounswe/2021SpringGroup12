@@ -1,4 +1,4 @@
-package com.group12.beabee;
+package com.group12.beabee.views.goals;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +8,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class SubGoalCardViewAdapter extends RecyclerView.Adapter<SubGoalCardViewAdapter.ViewHolder> {
+import com.group12.beabee.R;
+
+public class GoalCardViewAdapter extends RecyclerView.Adapter<GoalCardViewAdapter.ViewHolder> {
 
 
     @NonNull
