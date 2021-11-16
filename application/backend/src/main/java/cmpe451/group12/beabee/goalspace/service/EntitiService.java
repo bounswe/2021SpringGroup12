@@ -275,27 +275,52 @@ public class EntitiService {
 
     public SubgoalDTO getSubgoal(Long id) {
         Optional<Subgoal> subgoal_opt = subgoalRepository.findById(id);
-        return subgoal_opt.isEmpty() ? new SubgoalDTO() : subgoalMapper.mapToDto(subgoal_opt.get());
+        if (subgoal_opt.isEmpty()){
+            return new SubgoalDTO();
+        }
+        SubgoalDTO subgoalDTO = subgoalMapper.mapToDto(subgoal_opt.get());
+        subgoalDTO.setMainGoal_id(subgoal_opt.get().getMainGoal().getId());
+        return subgoalDTO;
     }
 
     public TaskDTO getTask(Long id) {
         Optional<Task> task_opt = taskRepository.findById(id);
-        return task_opt.isEmpty() ? new TaskDTO() : taskMapper.mapToDto(task_opt.get());
+        if (task_opt.isEmpty()){
+            return new TaskDTO();
+        }
+        TaskDTO taskDTO = taskMapper.mapToDto(task_opt.get());
+        taskDTO.setMainGoal_id(task_opt.get().getMainGoal().getId());
+        return taskDTO;
     }
 
     public RoutineDTO getRoutine(Long id) {
         Optional<Routine> routine_opt = routineRepository.findById(id);
-        return routine_opt.isEmpty() ? new RoutineDTO() : routineMapper.mapToDto(routine_opt.get());
+        if (routine_opt.isEmpty()){
+            return new RoutineDTO();
+        }
+        RoutineDTO routineDTO = routineMapper.mapToDto(routine_opt.get());
+        routineDTO.setMainGoal_id(routine_opt.get().getMainGoal().getId());
+        return routineDTO;
     }
 
     public ReflectionDTO getReflection(Long id) {
         Optional<Reflection> reflection_opt = reflectionRepository.findById(id);
-        return reflection_opt.isEmpty() ? new ReflectionDTO() : reflectionMapper.mapToDto(reflection_opt.get());
+        if (reflection_opt.isEmpty()){
+            return new ReflectionDTO();
+        }
+        ReflectionDTO reflectionDTO = reflectionMapper.mapToDto(reflection_opt.get());
+        reflectionDTO.setMainGoal_id(reflection_opt.get().getMainGoal().getId());
+        return reflectionDTO;
     }
 
     public QuestionDTO getQuestion(Long id) {
         Optional<Question> question_opt = questionRepository.findById(id);
-        return question_opt.isEmpty() ? new QuestionDTO() : questionMapper.mapToDto(question_opt.get());
+        if (question_opt.isEmpty()){
+            return new QuestionDTO();
+        }
+        QuestionDTO questionDTO = questionMapper.mapToDto(question_opt.get());
+        questionDTO.setMainGoal_id(question_opt.get().getMainGoal().getId());
+        return questionDTO;
     }
 
     /****************************** DELETES ********************************/
