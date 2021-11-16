@@ -15,6 +15,9 @@ import {EntityPage} from "./pages/EntityPage";
 import {AddEntity} from "./pages/AddEntity";
 import {EditEntity} from "./pages/EditEntity"
 import {LinkEntity} from "./pages/LinkEntity"
+import { Content } from "antd/lib/layout/layout";
+import {Layout} from "antd";
+import Sidebar from "./components/Sidebar";
 
 
 
@@ -59,39 +62,50 @@ export default class App extends React.Component<IAppProps, IAppState> {
   }
   render() {
     return (
-      <Router history={history}>
-
-        <NavBar user={this.state.username}></NavBar>
-        <Switch>
-          <Route exact path="/dashboard">
-            Dashboard
-          </Route>
-          <Route exact path="/register">
-            <Register />
-          </Route>
-          <Route exact path="/login">
-            <Login />
-          </Route>
-          <Route exact path="/forgotpassword">
-            <ForgotPassword />
-          </Route>
-          <Route exact path="/">
-            <Home user={this.state.username} />
-          </Route>
-          <Route path="/goals">
-            <GoalsPage />
-          </Route>
-          <Route path="/addGoal">
-            <AddGoal/>
-          </Route>
-          <Route path="/goal/:goal_id" children={<GoalPage />} />
-          <Route path="/editGoal/:goal_id" children={<EditGoal />} />
-          <Route path="/entity/:entity_id" children={<EntityPage />} />
-          <Route path="/addEntity/:goal_id" children={<AddEntity /> } />
-          <Route path="/editEntity/:entity_id" children={<EditEntity /> } />
-          <Route path="/linkEntityfrom/:entity_id" children={<LinkEntity /> } />
-        </Switch>
-      </Router>
+        <Router history={history}>
+          <Sidebar user={this.state.username} />
+          <Layout className="site-layout" style={{ marginLeft: 200 }}>
+            <NavBar user={this.state.username}></NavBar>
+            <Content
+                style={{
+                  margin: "24px 16px 0",
+                  overflow: "scroll",
+                  height: "100vh",
+                  minWidth: "400px",
+                }}
+            >
+              <Switch>
+                <Route exact path="/dashboard">
+                  Dashboard
+                </Route>
+                <Route exact path="/register">
+                  <Register />
+                </Route>
+                <Route exact path="/login">
+                  <Login />
+                </Route>
+                <Route exact path="/forgotpassword">
+                  <ForgotPassword />
+                </Route>
+                <Route exact path="/">
+                  <Home user={this.state.username} />
+                </Route>
+                <Route path="/goals">
+                  <GoalsPage />
+                </Route>
+                <Route path="/addGoal">
+                  <AddGoal />
+                </Route>
+                <Route path="/goal/:goal_id" children={<GoalPage />} />
+                <Route path="/editGoal/:goal_id" children={<EditGoal />} />
+                <Route path="/entity/:entity_id" children={<EntityPage />} />
+                <Route path="/addEntity/:goal_id" children={<AddEntity /> } />
+                <Route path="/editEntity/:entity_id" children={<EditEntity /> } />
+                <Route path="/linkEntityfrom/:entity_id" children={<LinkEntity /> } />
+              </Switch>
+            </Content>
+          </Layout>
+        </Router>
     );
   }
 }
