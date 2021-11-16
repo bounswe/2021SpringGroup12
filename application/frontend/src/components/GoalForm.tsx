@@ -26,12 +26,12 @@ export const GoalForm = (onFinish: ((values: any) => void) | undefined,
             >
                 <Input placeholder="Goal Description" defaultValue={description}/>
             </Form.Item>
-            <h2>Deadline</h2>
+            {/*<h2>Deadline</h2>
             <Form.Item
                 name="deadline"
             >
                 <Input placeholder="Goal Deadline" defaultValue={deadline}/>
-            </Form.Item>
+            </Form.Item>*/}
             <Form.Item>
                 <Button type="primary" htmlType="submit">
                     Submit
