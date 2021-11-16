@@ -6,7 +6,7 @@ import {Link} from "react-router-dom";
 import {Button, Space, Table, Tag} from "antd";
 import { EntityForm } from "../components/EntityForm";
 
-const jwt = localStorage.getItem("jwt")
+const token = localStorage.getItem("token")
 
 export function AddEntity() {
 
@@ -19,7 +19,7 @@ export function AddEntity() {
         values['mainGoal_id'] = goal_id
         console.log(values)
         axios.post(`/entities/${values['entityType'].toLowerCase()}`, values,  {
-            headers: { Authorization: `Bearer ${jwt}`},
+            headers: { Authorization: `Bearer ${token}`},
         }).then(() => setSubmitted(true))
     };
 
