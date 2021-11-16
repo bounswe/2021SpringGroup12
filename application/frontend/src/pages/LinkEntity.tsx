@@ -19,7 +19,7 @@ export function LinkEntity() {
         console.log('Received values of form: ', values);
         values['entity_id'] = entity_id
         axios.post(`/entities/${values['entityType'].toLowerCase()}`, values,  {
-            headers: { Authorization: `Bearer ${jwt}`},
+            headers: { Authorization: `Bearer ${token}`},
         }).then(() => setSubmitted(true))
     };
 
