@@ -2,6 +2,7 @@ package cmpe451.group12.beabee.goalspace.model;
 
 import cmpe451.group12.beabee.goalspace.enums.EntitiType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -17,6 +18,7 @@ import java.util.Set;
 @Setter
 @EntityListeners(AuditingEntityListener.class)
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@EqualsAndHashCode
 public abstract class Entiti {
 
     @Id
@@ -57,5 +59,29 @@ public abstract class Entiti {
     @JoinTable(name = "Sublinks")
     @Column(name = "sublink_id")
     private Set<Entiti> sublinks;
+
+    @Override
+    public boolean equals(Object obj)
+    {
+
+        // checking if both the object references are
+        // referring to the same object.
+        if(this == obj)
+            return true;
+
+        // it checks if the argument is of the
+        // type Geek by comparing the classes
+        // of the passed argument and this object.
+        // if(!(obj instanceof Geek)) return false; ---> avoid.
+        if(obj == null || obj.getClass()!= this.getClass())
+            return false;
+
+        // type casting of the argument.
+        Entiti geek = (Entiti) obj;
+
+        // comparing the state of argument with
+        // the state of 'this' Object.
+        return (geek.id == this.id);
+    }
 
 }

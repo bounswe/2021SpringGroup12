@@ -140,15 +140,16 @@ public class EntitiService {
     /****************************** LINKING ENTITIES ********************************/
 
     public MessageResponse linkEntities(Long id, Long child_id) {
-        Optional<Entiti> entity = entitiRepository.findById(id);
-        Optional<Entiti> child_entity = entitiRepository.findById(child_id);
-        if (entity.isEmpty() || child_entity.isEmpty()) {
+        Optional<Entiti> entity_opt = entitiRepository.findById(id);
+        Optional<Entiti> child_entity_opt = entitiRepository.findById(child_id);
+        if (entity_opt.isEmpty() || child_entity_opt.isEmpty()) {
             return new MessageResponse("One of the entities does not exists!", MessageType.ERROR);
         }
-        Set<Entiti> sublinks = entity.get().getSublinks();
-        sublinks.add(child_entity.get());
-        entity.get().setSublinks(sublinks);
-        entitiRepository.save(entity.get());
+        Entiti entity = entity_opt.get();
+        Set<Entiti> sublinks = entity.getSublinks();
+        sublinks.add(child_entity_opt.get());
+        entity.setSublinks(sublinks);
+        entitiRepository.save(entity);
         return new MessageResponse("Linking operation is successful.", MessageType.SUCCESS);
     }
 
