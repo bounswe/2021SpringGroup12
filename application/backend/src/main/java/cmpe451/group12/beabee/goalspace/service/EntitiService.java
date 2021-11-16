@@ -400,6 +400,8 @@ public class EntitiService {
     public MessageResponse updateSubgoal(SubgoalDTO subgoal_dto) {
         if (subgoalRepository.existsById(subgoal_dto.getId())) {
             Subgoal subgoal = subgoalMapper.mapToEntity(subgoal_dto);
+            Goal goal = goalRepository.getById(subgoal_dto.getMainGoal_id());
+            subgoal.setMainGoal(goal);
             subgoalRepository.save(subgoal);
             return new MessageResponse("Updated subgoal", MessageType.SUCCESS);
         }
@@ -410,6 +412,8 @@ public class EntitiService {
     public MessageResponse updateTask(TaskDTO task_dto) {
         if (taskRepository.existsById(task_dto.getId())) {
             Task task = taskMapper.mapToEntity(task_dto);
+            Goal goal = goalRepository.getById(task_dto.getMainGoal_id());
+            task.setMainGoal(goal);
             taskRepository.save(task);
             return new MessageResponse("Updated task", MessageType.SUCCESS);
         }
@@ -419,6 +423,8 @@ public class EntitiService {
     public MessageResponse updateRoutine(RoutineDTO routine_dto) {
         if (routineRepository.existsById(routine_dto.getId())) {
             Routine routine = routineMapper.mapToEntity(routine_dto);
+            Goal goal = goalRepository.getById(routine_dto.getMainGoal_id());
+            routine.setMainGoal(goal);
             routineRepository.save(routine);
             return new MessageResponse("Updated routine", MessageType.SUCCESS);
         }
@@ -428,6 +434,8 @@ public class EntitiService {
     public MessageResponse updateReflection(ReflectionDTO reflection_dto) {
         if (reflectionRepository.existsById(reflection_dto.getId())) {
             Reflection reflection = reflectionMapper.mapToEntity(reflection_dto);
+            Goal goal = goalRepository.getById(reflection_dto.getMainGoal_id());
+            reflection.setMainGoal(goal);
             reflectionRepository.save(reflection);
             return new MessageResponse("Updated reflection", MessageType.SUCCESS);
         }
@@ -437,6 +445,8 @@ public class EntitiService {
     public MessageResponse updateQuestion(QuestionDTO question_dto) {
         if (questionRepository.existsById(question_dto.getId())) {
             Question question = questionMapper.mapToEntity(question_dto);
+            Goal goal = goalRepository.getById(question_dto.getMainGoal_id());
+            question.setMainGoal(goal);
             questionRepository.save(question);
             return new MessageResponse("Updated question", MessageType.SUCCESS);
         }
