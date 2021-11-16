@@ -5,7 +5,7 @@ import axios from "axios";
 import {EntityForm} from "../components/EntityForm";
 import {Link} from "react-router-dom";
 
-const jwt = localStorage.getItem("jwt")
+const token = localStorage.getItem("token")
 
 
 
@@ -15,9 +15,9 @@ export function EditEntity() {
 
     const onFinish = (values: any) => {
         console.log('Received values of form: ', values);
-        axios.get(`/entities/${values['entityType'].toLowerCase()}/${entity_id}`,
+        axios.get(`/entities/entiti/${entity_id}`,
         {
-            headers: { Authorization: `Bearer ${jwt}`},
+            headers: { Authorization: `Bearer ${token}`},
             data: {}
         })
         .then(response => {
@@ -32,7 +32,7 @@ export function EditEntity() {
             entity['description']=values['description']
             console.log(entity)
             axios.put(`/entities/${entity['entitiType'].toLowerCase()}/${entity_id}`, entity, {
-                headers: { Authorization: `Bearer ${jwt}`},
+                headers: { Authorization: `Bearer ${token}`},
             })
                 .then(() => setAdded(true)) 
         })
@@ -50,7 +50,7 @@ export function EditEntity() {
     useEffect(() => {
         axios.get(`/goals/${entity_id}`,
             {
-                headers: { Authorization: `Bearer ${jwt}`},
+                headers: { Authorization: `Bearer ${token}`},
                 data: {}
             })
             .then(response => {
@@ -61,7 +61,7 @@ export function EditEntity() {
                 throw response
             })
             .then(entity => {
-                setForm(EntityForm(onFinish, entity))
+                setForm(EntityForm(onFinish, entity, true))
                 setLoaded(true)
                 console.log('Burada!')
             })

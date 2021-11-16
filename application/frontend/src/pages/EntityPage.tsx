@@ -5,7 +5,7 @@ import axios from "axios";
 import {Link} from "react-router-dom";
 import {Button, Space, Table, Tag} from "antd";
 
-const jwt = localStorage.getItem("jwt")
+const token = localStorage.getItem("token")
 
 export function EntityPage() {
     const [entity, setEntity] = useState({
@@ -92,7 +92,7 @@ export function EntityPage() {
         console.log('Received values of delete: ', entity);
         axios.delete(`/entities/${entity_id}/delete_link/${entity.key}`,
             {
-                headers: { Authorization: `Bearer ${jwt}`},
+                headers: { Authorization: `Bearer ${token}`},
                 data: {}
             }).then(() => getEntities())
     };
@@ -102,7 +102,7 @@ export function EntityPage() {
         console.log(axios.defaults.baseURL)
         axios.get(`/entities/${entity_id}/sublinks`,
             {
-                headers: { Authorization: `Bearer ${jwt}`},
+                headers: { Authorization: `Bearer ${token}`},
                 data: {}
             })
             .then(response => {
@@ -137,9 +137,9 @@ export function EntityPage() {
     }
 
     useEffect(() => {
-        axios.get(`/entities/${entity_id}`,  // we need goal id from params
+        axios.get(`/entities/entiti/${entity_id}`,  // we need goal id from params
             {
-                headers: { Authorization: `Bearer ${jwt}`},
+                headers: { Authorization: `Bearer ${token}`},
                 data: {}
             })
             .then(response => {

@@ -2,8 +2,9 @@ import { Form, Input, Button, Select } from "antd";
 import * as React from "react";
 import { useParams } from "react-router";
 
-export const EntityForm = (onFinish: ((values: any) => void) | undefined,
-                         defaultValues = {title: "", description: "", deadline: ""}) => {
+export const EntityForm = (onFinish: ((values: any) => void) | undefined,  
+                         defaultValues = {title: "", description: "", deadline: ""}, isEdit = false
+                        ) => {
     const title = defaultValues['title']
     const description = defaultValues['description']
     const deadline = defaultValues['deadline']
@@ -35,6 +36,8 @@ export const EntityForm = (onFinish: ((values: any) => void) | undefined,
             >
                 <Input placeholder="Entity Description" defaultValue={description}/>
             </Form.Item>
+            {!isEdit && 
+            (<div>
             <h2>Entity Type</h2>
             <Form.Item name="entityType">
                 <Select defaultValue="subgoal" style={{ width: 120 }} onChange={handleChange}>
@@ -45,6 +48,9 @@ export const EntityForm = (onFinish: ((values: any) => void) | undefined,
                 <Option value="task">Task</Option>
                  </Select> 
             </Form.Item>
+            </div>)
+            }
+
             <Form.Item>
                 <Button type="primary" htmlType="submit">
                     Submit
