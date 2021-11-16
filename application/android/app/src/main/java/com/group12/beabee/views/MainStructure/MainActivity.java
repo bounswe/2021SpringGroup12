@@ -16,7 +16,7 @@ import com.group12.beabee.network.BeABeeService;
 import com.group12.beabee.network.ServiceAPI;
 import com.group12.beabee.views.goals.GoalFragment;
 import com.group12.beabee.views.goals.HomeFragment;
-import com.group12.beabee.views.goals.subGoalFragment;
+import com.group12.beabee.views.goals.SubgoalFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,10 +61,10 @@ public class MainActivity extends AppCompatActivity {
                     baseContainerFragment = new BaseContainerFragment(new HomeFragment());
                     break;
                 case 1:
-                    baseContainerFragment = new BaseContainerFragment(new GoalFragment());
+                    baseContainerFragment = new BaseContainerFragment(new HomeFragment());
                     break;
                 case 2:
-                    baseContainerFragment = new BaseContainerFragment(new subGoalFragment());
+                    baseContainerFragment = new BaseContainerFragment(new HomeFragment());
                     break;
                 case 3:
                     baseContainerFragment = new BaseContainerFragment(new HomeFragment());

@@ -32,6 +32,8 @@ public class BaseContainerFragment extends Fragment {
     ImageButton btnEdit;
     @BindView(R.id.btn_approve)
     ImageButton btnApprove;
+    @BindView(R.id.btn_add)
+    ImageButton btnAdd;
 
     private FragmentManager fragmentManager;
     private BaseInnerFragment initialFragment;
@@ -70,6 +72,10 @@ public class BaseContainerFragment extends Fragment {
         btnEdit.setOnClickListener(listener);
     }
 
+    public void SetAddBtnListener(View.OnClickListener listener) {
+        btnAdd.setOnClickListener(listener);
+    }
+
     public void AddNewFragment(BaseInnerFragment fragment) {
         fragmentManager = getChildFragmentManager();
         fragmentManager.beginTransaction()
@@ -97,6 +103,12 @@ public class BaseContainerFragment extends Fragment {
             case NoTopBar:
                 ModeNoTopBar();
                 break;
+            case List:
+                ModeList();
+                break;
+            case ListWithBack:
+                ModeListWithBack();
+                break;
         }
     }
 
@@ -106,6 +118,7 @@ public class BaseContainerFragment extends Fragment {
         btnCancel.setVisibility(View.VISIBLE);
         btnApprove.setVisibility(View.VISIBLE);
         btnEdit.setVisibility(View.GONE);
+        btnAdd.setVisibility(View.GONE);
     }
 
     private void ModeEditable() {
@@ -114,6 +127,7 @@ public class BaseContainerFragment extends Fragment {
         btnCancel.setVisibility(View.GONE);
         btnApprove.setVisibility(View.GONE);
         btnEdit.setVisibility(View.VISIBLE);
+        btnAdd.setVisibility(View.GONE);
     }
 
     private void ModeOnlyBack() {
@@ -122,9 +136,29 @@ public class BaseContainerFragment extends Fragment {
         btnCancel.setVisibility(View.GONE);
         btnApprove.setVisibility(View.GONE);
         btnEdit.setVisibility(View.GONE);
+        btnAdd.setVisibility(View.GONE);
+    }
+
+    private void ModeList() {
+        topbar.setVisibility(View.VISIBLE);
+        btnBack.setVisibility(View.GONE);
+        btnCancel.setVisibility(View.GONE);
+        btnApprove.setVisibility(View.GONE);
+        btnEdit.setVisibility(View.GONE);
+        btnAdd.setVisibility(View.VISIBLE);
+    }
+
+    private void ModeListWithBack() {
+        topbar.setVisibility(View.VISIBLE);
+        btnBack.setVisibility(View.VISIBLE);
+        btnCancel.setVisibility(View.GONE);
+        btnApprove.setVisibility(View.GONE);
+        btnEdit.setVisibility(View.GONE);
+        btnAdd.setVisibility(View.VISIBLE);
     }
 
     private void ModeNoTopBar() {
         topbar.setVisibility(View.GONE);
     }
+
 }

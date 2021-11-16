@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.group12.beabee.R;
 import com.group12.beabee.models.TaskShort;
+import com.group12.beabee.models.responses.Entity;
 
 import java.util.List;
 
@@ -19,10 +20,10 @@ import butterknife.ButterKnife;
 public class TaskCardViewAdapter extends RecyclerView.Adapter<TaskCardViewAdapter.ViewHolder> {
 
 
-    private List<TaskShort> taskShortList;
+    private List<Entity> taskShortList;
     private IOnTaskClickedListener onItemClickedListener;
 
-    public void setData(List<TaskShort> taskShorts){
+    public void setData(List<Entity> taskShorts){
         taskShortList = taskShorts;
         notifyDataSetChanged();
     }
@@ -45,9 +46,8 @@ public class TaskCardViewAdapter extends RecyclerView.Adapter<TaskCardViewAdapte
 
     @Override
     public int getItemCount() {
-        return 0;
+        return taskShortList!=null ? taskShortList.size():0;
     }
-        // return taskShortList.size();
 
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -66,7 +66,7 @@ public class TaskCardViewAdapter extends RecyclerView.Adapter<TaskCardViewAdapte
 
         }
 
-        public void BindData(TaskShort taskShort){
+        public void BindData(Entity taskShort){
             tvtitle.setText(taskShort.title);
             tvdescription.setText(taskShort.description);
             itemParent.setOnClickListener(v -> onItemClickedListener.OnTaskClicked(taskShort.id));

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.group12.beabee.R;
 import com.group12.beabee.models.RoutineShort;
+import com.group12.beabee.models.responses.Entity;
 
 import java.util.List;
 
@@ -19,10 +20,10 @@ import butterknife.ButterKnife;
 public class RoutineCardViewAdapter extends RecyclerView.Adapter<RoutineCardViewAdapter.ViewHolder> {
 
 
-    private List<RoutineShort> routineShortList;
+    private List<Entity> routineShortList;
     private IOnRoutineClickedListener onItemClickedListener;
 
-    public void setData(List<RoutineShort> routineShorts){
+    public void setData(List<Entity> routineShorts){
         routineShortList = routineShorts;
         notifyDataSetChanged();
     }
@@ -45,9 +46,7 @@ public class RoutineCardViewAdapter extends RecyclerView.Adapter<RoutineCardView
 
     @Override
     public int getItemCount() {
-
-        return 0;
-        //return routineShortList.size();
+        return routineShortList!=null ? routineShortList.size():0;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -66,7 +65,7 @@ public class RoutineCardViewAdapter extends RecyclerView.Adapter<RoutineCardView
 
         }
 
-        public void BindData(RoutineShort routineShort){
+        public void BindData(Entity routineShort){
             tvtitle.setText(routineShort.title);
             tvdescription.setText(routineShort.description);
             itemParent.setOnClickListener(v -> onItemClickedListener.OnRoutineClicked(routineShort.id));

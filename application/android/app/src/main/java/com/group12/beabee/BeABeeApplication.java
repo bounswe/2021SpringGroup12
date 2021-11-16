@@ -11,6 +11,7 @@ public class BeABeeApplication extends Application {
 
     public static String AuthToken;
     public static int userId;
+    public static int currentMainGoal;
 
     public static Context getAppContext() {
         return context;
@@ -20,6 +21,8 @@ public class BeABeeApplication extends Application {
     public void onCreate() {
         super.onCreate();
         BeABeeApplication.context = getApplicationContext();
+        BeABeeApplication.userId = 0;
+        AuthToken = null;
         BeABeeService.InitNetworking();
     }
 }

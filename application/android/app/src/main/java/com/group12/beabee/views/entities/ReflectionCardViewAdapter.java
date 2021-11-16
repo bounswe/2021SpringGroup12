@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.group12.beabee.R;
 import com.group12.beabee.models.ReflectionShort;
+import com.group12.beabee.models.responses.Entity;
 
 import java.util.List;
 
@@ -19,10 +20,10 @@ import butterknife.ButterKnife;
 public class ReflectionCardViewAdapter extends RecyclerView.Adapter<ReflectionCardViewAdapter.ViewHolder> {
 
 
-    private List<ReflectionShort> reflectionShortList;
+    private List<Entity> reflectionShortList;
     private IOnReflectionClickedListener onItemClickedListener;
 
-    public void setData(List<ReflectionShort> reflectionShorts){
+    public void setData(List<Entity> reflectionShorts){
         reflectionShortList = reflectionShorts;
         notifyDataSetChanged();
     }
@@ -45,9 +46,7 @@ public class ReflectionCardViewAdapter extends RecyclerView.Adapter<ReflectionCa
 
     @Override
     public int getItemCount() {
-        return 0;
-
-        //return reflectionShortList.size();
+        return reflectionShortList!=null ? reflectionShortList.size():0;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -66,7 +65,7 @@ public class ReflectionCardViewAdapter extends RecyclerView.Adapter<ReflectionCa
 
         }
 
-        public void BindData(ReflectionShort reflectionShort){
+        public void BindData(Entity reflectionShort){
             tvtitle.setText(reflectionShort.title);
             tvdescription.setText(reflectionShort.description);
             itemParent.setOnClickListener(v -> onItemClickedListener.OnReflectionClicked(reflectionShort.id));

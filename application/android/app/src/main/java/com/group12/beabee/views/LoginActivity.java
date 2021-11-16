@@ -57,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
                     BeABeeApplication.userId = response.body().userDTO.userId;
                     //login to the main page
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }else{
                     Toast.makeText(LoginActivity.this, "Something is wrong please try again later!", Toast.LENGTH_SHORT).show();

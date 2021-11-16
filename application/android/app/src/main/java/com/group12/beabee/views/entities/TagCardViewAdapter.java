@@ -46,8 +46,7 @@ public class TagCardViewAdapter extends RecyclerView.Adapter<TagCardViewAdapter.
 
     @Override
     public int getItemCount() {
-        if(tagShortList==null||tagShortList.size()==0) return 0;
-        else return tagShortList.size();
+        return tagShortList!=null ? tagShortList.size():0;
     }
 
 

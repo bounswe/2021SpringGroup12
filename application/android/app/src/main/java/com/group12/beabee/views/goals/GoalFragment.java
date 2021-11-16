@@ -1,64 +1,35 @@
 package com.group12.beabee.views.goals;
 
 import android.os.Bundle;
-import android.view.View;
+import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.group12.beabee.models.GoalShort;
-import com.group12.beabee.models.QuestionShort;
-import com.group12.beabee.models.ReflectionShort;
-import com.group12.beabee.models.RoutineShort;
-import com.group12.beabee.models.SubgoalShort;
-import com.group12.beabee.models.TagShort;
-import com.group12.beabee.models.TaskShort;
-import com.group12.beabee.views.entities.IOnQuestionClickedListener;
-import com.group12.beabee.views.entities.IOnReflectionClickedListener;
-import com.group12.beabee.views.entities.IOnRoutineClickedListener;
-import com.group12.beabee.views.entities.IOnTagClickedListener;
-import com.group12.beabee.views.entities.IOnTaskClickedListener;
-import com.group12.beabee.views.entities.QuestionCardViewAdapter;
+import com.group12.beabee.Utils;
+import com.group12.beabee.models.GoalDTO;
+import com.group12.beabee.models.responses.Entity;
+import com.group12.beabee.views.MainStructure.BaseEntityListBottomFragment;
 import com.group12.beabee.R;
-import com.group12.beabee.views.entities.ReflectionCardViewAdapter;
-import com.group12.beabee.views.entities.RoutineCardViewAdapter;
-import com.group12.beabee.views.entities.TagCardViewAdapter;
-import com.group12.beabee.views.entities.TaskCardViewAdapter;
-import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link GoalFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GoalFragment extends BaseInnerFragment implements IOnTaskClickedListener,
-        IOnRoutineClickedListener, IOnQuestionClickedListener, IOnReflectionClickedListener,IOnSubgoalClickedListener, IOnTagClickedListener {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
-    // TODO: Rename and change types of parameters
-    @BindView(R.id.rv_subgoals)
-    RecyclerView rvSubgoal;
-    @BindView(R.id.rv_tasks)
-    RecyclerView rvTask;
-    @BindView(R.id.rv_questions)
-    RecyclerView rvQuestion;
-    @BindView(R.id.rv_reflections)
-    RecyclerView rvReflection;
-    @BindView(R.id.rv_routines)
-    RecyclerView rvRoutine;
-    @BindView(R.id.rv_tags)
-    RecyclerView rvTag;
-
+public class GoalFragment extends BaseEntityListBottomFragment {
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
+    @BindView(R.id.tv_description)
+    TextView tvDescription;
+    private GoalDTO goalDTO;
 
 
     public GoalFragment() {
@@ -72,12 +43,17 @@ public class GoalFragment extends BaseInnerFragment implements IOnTaskClickedLis
      * @return A new instance of fragment Task.
      */
     // TODO: Rename and change types and number of parameters
-    public static GoalFragment newInstance() {
+    public static GoalFragment newInstance(int id) {
         GoalFragment fragment = new GoalFragment();
         Bundle args = new Bundle();
+        args.putInt("id", id);
         fragment.setArguments(args);
         return fragment;
+    }
 
+    @Override
+    protected void OnEditClicked() {
+        OpenNewFragment(GoalEditFragment.newInstance(goalDTO));
     }
 
     @Override
@@ -90,103 +66,49 @@ public class GoalFragment extends BaseInnerFragment implements IOnTaskClickedLis
         return R.layout.fragment_goal;
     }
 
-
-
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onResume() {
+        super.onResume();
+        service.getGoalDetail(id).enqueue(new Callback<GoalDTO>() {
+            @Override
+            public void onResponse(Call<GoalDTO> call, Response<GoalDTO> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    OnGoalDTOReceived(response.body());
+                } else {
+                    Utils.ShowErrorToast(getActivity(), "Something went wrong!");
+                    GoBack();
+                }
+            }
 
-        TaskCardViewAdapter tasksAdapter = new TaskCardViewAdapter();
-        RoutineCardViewAdapter routinesAdapter = new RoutineCardViewAdapter();
-        QuestionCardViewAdapter questionsAdapter = new QuestionCardViewAdapter();
-        ReflectionCardViewAdapter reflectionAdapter= new ReflectionCardViewAdapter();
-        TagCardViewAdapter tagAdapter=new TagCardViewAdapter();
-        SubgoalCardViewAdapter subgoalAdapter=new SubgoalCardViewAdapter();
+            @Override
+            public void onFailure(Call<GoalDTO> call, Throwable t) {
+                Utils.ShowErrorToast(getActivity(), "Something went wrong!");
+                GoBack();
+            }
+        });
 
-        rvTask.setAdapter(tasksAdapter);
-        rvRoutine.setAdapter(routinesAdapter);
-        rvQuestion.setAdapter(questionsAdapter);
-        rvReflection.setAdapter(reflectionAdapter);
-        rvTag.setAdapter(tagAdapter);
-        rvSubgoal.setAdapter(subgoalAdapter);
+        service.getSublinksForGoal(id).enqueue(new Callback<List<Entity>>() {
+            @Override
+            public void onResponse(Call<List<Entity>> call, Response<List<Entity>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    OnEntitiesReceived(response.body());
+                } else {
+                    Utils.ShowErrorToast(getContext(), "Something went wrong!");
+                    GoBack();
+                }
+            }
 
-        tasksAdapter.setItemClickListener(this);
-        routinesAdapter.setItemClickListener(this);
-        questionsAdapter.setItemClickListener(this);
-        reflectionAdapter.setItemClickListener(this);
-        tagAdapter.setItemClickListener(this);
-        subgoalAdapter.setItemClickListener(this);
-
-        //try with mock data
-        List<TaskShort> taskShorts = GetTasks();
-        List<RoutineShort> routineShorts = GetRoutines();
-        List<QuestionShort> questionShorts = GetQuestions();
-        List<TagShort> tagShorts = GetTags();
-        List<ReflectionShort> reflectionShorts = GetReflections();
-        List<SubgoalShort> subgoalShorts = GetSubgoals();
-
-        tasksAdapter.setData(taskShorts);
-        routinesAdapter.setData(routineShorts);
-        questionsAdapter.setData(questionShorts);
-        reflectionAdapter.setData(reflectionShorts);
-        subgoalAdapter.setData(subgoalShorts);
-        tagAdapter.setData(tagShorts);
-
-    }
-    private List<TaskShort> GetTasks(){
-        return new ArrayList<>();
-    }
-    private List<TagShort> GetTags(){
-        return new ArrayList<>();
-    }
-    private List<ReflectionShort> GetReflections(){
-        return new ArrayList<>();
-    }
-    private List<SubgoalShort> GetSubgoals(){
-        return new ArrayList<>();
-    }
-    private List<RoutineShort> GetRoutines(){return new ArrayList<>(); }
-    private List<QuestionShort> GetQuestions(){
-        return new ArrayList<>();
-    }
-    private List<GoalShort> GetGoals(){
-        List<GoalShort> tempList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            GoalShort temp = new GoalShort();
-            temp.title = "title"+i;
-            temp.description = ""+i+i+i;
-            tempList.add(temp);
-        }
-        return tempList;
+            @Override
+            public void onFailure(Call<List<Entity>> call, Throwable t) {
+                Utils.ShowErrorToast(getContext(), "Something went wrong!");
+                GoBack();
+            }
+        });
     }
 
-    @Override
-    public void OnQuestionClicked(String id) {
-
-    }
-
-    @Override
-    public void OnReflectionClicked(String id) {
-
-    }
-
-    @Override
-    public void OnRoutineClicked(String id) {
-
-    }
-
-    @Override
-    public void OnTaskClicked(String id) {
-
-    }
-
-    @Override
-    public void OnSubgoalClicked(String id) {
-
-    }
-
-    @Override
-    public void OnTagClicked(String id) {
-
+    private void OnGoalDTOReceived(GoalDTO data) {
+        goalDTO = data;
+        tvTitle.setText(data.title);
+        tvDescription.setText(data.description);
     }
 }
