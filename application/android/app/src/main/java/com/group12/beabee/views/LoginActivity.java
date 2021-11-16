@@ -5,17 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.models.requests.LoginRequest;
-import com.group12.beabee.models.requests.SignUpRequest;
 import com.group12.beabee.models.responses.LoginResponse;
-import com.group12.beabee.models.responses.SignUpResponse;
 import com.group12.beabee.network.BeABeeService;
 import com.group12.beabee.network.ServiceAPI;
-import com.group12.beabee.views.MainPage.MainActivity;
+import com.group12.beabee.views.MainStructure.MainActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,9 +52,12 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")){
+                    BeABeeApplication.AuthToken = response.body().jwt;
+                    BeABeeApplication.userId = response.body().userDTO.userId;
                     //login to the main page
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }else{
                     Toast.makeText(LoginActivity.this, "Something is wrong please try again later!", Toast.LENGTH_SHORT).show();
