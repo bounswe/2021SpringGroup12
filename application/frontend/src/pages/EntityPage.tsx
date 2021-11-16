@@ -5,26 +5,17 @@ import axios from "axios";
 import {Link} from "react-router-dom";
 import {Button, Space, Table, Tag} from "antd";
 
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("token")
 
-export function GoalPage() {
-    const [goal, setGoal] = useState({
+export function EntityPage() {
+    const [entity, setEntity] = useState({
         title: "Loading",
         description: "Loading"
     })
     const [entities, setEntities] = useState([])
     const [isLoaded, setLoaded] = useState(false)
     // @ts-ignore
-    const {goal_id} = useParams();
-
-    const deleteEntity = (goal: { key: any, entityType: string}) => {
-        console.log('Received values of delete: ', goal);
-        axios.delete(`/entities/${goal.entityType.toLowerCase()}/${goal.key}`,
-            {
-                headers: { Authorization: `Bearer ${token}`},
-                data: {}
-            }).then(() => getEntities())
-    };
+    const {entity_id} = useParams();
 
     const columns = [
         {
@@ -79,6 +70,7 @@ export function GoalPage() {
                 );
             }
         },
+
         {
             title: 'Action',
             key: 'action',
@@ -86,24 +78,29 @@ export function GoalPage() {
                      entity: { key: number, entityType: string}) =>
                 (   <div>
                         <Space size="middle">
-                            <Button type="primary" onClick={() => deleteEntity(entity)}>
-                                Delete
+                            <Button type="primary" onClick={() => deleteLink(entity)}>
+                                Delete Link
                             </Button>
                         </Space>
-                        <Link to={"/editEntity/" + entity.key}>
-                            <button type="button">
-                                Edit
-                            </button>
-                        </Link>
                     </div>
 
                 ),
         },
     ];
 
+    const deleteLink = (entity: { key: any}) => {
+        console.log('Received values of delete: ', entity);
+        axios.delete(`/entities/${entity_id}/delete_link/${entity.key}`,
+            {
+                headers: { Authorization: `Bearer ${token}`},
+                data: {}
+            }).then(() => getEntities())
+    };
+
+
     const getEntities = () => {
         console.log(axios.defaults.baseURL)
-        axios.get(`/entities/goal/${goal_id}`,
+        axios.get(`/entities/${entity_id}/sublinks`,
             {
                 headers: { Authorization: `Bearer ${token}`},
                 data: {}
@@ -140,7 +137,7 @@ export function GoalPage() {
     }
 
     useEffect(() => {
-        axios.get(`/goals/${goal_id}`,
+        axios.get(`/entities/entiti/${entity_id}`,  // we need goal id from params
             {
                 headers: { Authorization: `Bearer ${token}`},
                 data: {}
@@ -152,8 +149,8 @@ export function GoalPage() {
                 }
                 throw response
             })
-            .then(goal => {
-                setGoal(goal)
+            .then(entity => {
+                setEntity(entity)
                 getEntities()
                 console.log('Burada!')
 
@@ -168,12 +165,13 @@ export function GoalPage() {
     }
     return (
         <div>
-            <h2>Name: {goal['title']}</h2>
-            <h2>Description: {goal['description']}</h2>
+            <h2>Name: {entity['title']}</h2>
+            <h2>Description: {entity['description']}</h2>
+            <h2>Linked Entities</h2>
             <Table columns={columns} dataSource={entities} />
-            <Link to={"/addEntity/" + goal_id}>
+            <Link to={"/linkEntityfrom/" + entity_id}>
                 <button type="button">
-                    Add Entity
+                    Link Entity
                 </button>
             </Link>
         </div>)

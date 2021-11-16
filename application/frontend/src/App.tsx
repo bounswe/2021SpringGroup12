@@ -11,6 +11,12 @@ import {GoalsPage} from "./pages/GoalsPage";
 import {AddGoal} from "./pages/AddGoal";
 import {GoalPage} from "./pages/GoalPage";
 import {EditGoal} from "./pages/EditGoal";
+import {EntityPage} from "./pages/EntityPage";
+import {AddEntity} from "./pages/AddEntity";
+import {EditEntity} from "./pages/EditEntity"
+import {LinkEntity} from "./pages/LinkEntity"
+
+
 
 export interface IAppProps {}
 
@@ -54,6 +60,7 @@ export default class App extends React.Component<IAppProps, IAppState> {
   render() {
     return (
       <Router history={history}>
+
         <NavBar user={this.state.username}></NavBar>
         <Switch>
           <Route exact path="/dashboard">
@@ -79,6 +86,10 @@ export default class App extends React.Component<IAppProps, IAppState> {
           </Route>
           <Route path="/goal/:goal_id" children={<GoalPage />} />
           <Route path="/editGoal/:goal_id" children={<EditGoal />} />
+          <Route path="/entity/:entity_id" children={<EntityPage />} />
+          <Route path="/addEntity/:goal_id" children={<AddEntity /> } />
+          <Route path="/editEntity/:entity_id" children={<EditEntity /> } />
+          <Route path="/linkEntityfrom/:entity_id" children={<LinkEntity /> } />
         </Switch>
       </Router>
     );
