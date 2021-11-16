@@ -6,7 +6,7 @@ import {Link} from "react-router-dom";
 import {Button, Space, Table, Tag} from "antd";
 import { LinkEntityForm } from "../components/LinkEntityForm";
 
-const jwt = localStorage.getItem("jwt")
+const token = localStorage.getItem("token")
 
 export function LinkEntity() {
 
