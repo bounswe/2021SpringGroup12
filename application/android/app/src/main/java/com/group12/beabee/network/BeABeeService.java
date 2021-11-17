@@ -23,7 +23,7 @@ public class BeABeeService {
 
     public static ServiceAPI serviceAPI;
     public final static String BASE_URL = "http://18.117.95.170:8085/";
-    public final static String BASE_URL_DEV = "http://18.117.95.170:8085/";
+    public final static String BASE_URL_DEV = "http://3.144.201.198:8085/";
     private final static boolean isMock = false;
 
     public static void InitNetworking() {
