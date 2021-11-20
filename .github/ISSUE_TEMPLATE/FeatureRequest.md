@@ -7,17 +7,17 @@ assignees: ''
 
 ---
 
-**Describe the problem which caused your suggestion/solution**
--
+**Description**
+- Describe the problem which caused your suggestion/solution
 
-**Describe the suggestion/solution**
--
+**Suggestion/Solution**
+- Describe the suggestion/solution
 
-**Describe alternatives you've considered**
-- 
+**Alternatives**
+- Any Alternative solution or suggestions
 
 **Any relevant links**
-- 
+- Relevant and helpful links
 
 **Additional context**
--
+- Additional helpful links and materials
