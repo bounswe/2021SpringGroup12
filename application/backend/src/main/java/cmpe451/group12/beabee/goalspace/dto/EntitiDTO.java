@@ -23,6 +23,5 @@ public class EntitiDTO {
     private Date deadline;
     private Double rating;
     private Long period;
-    private LocalDateTime created;
 
 }
