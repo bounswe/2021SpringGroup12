@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -25,4 +26,7 @@ public class SubgoalGetDTO {
     private Boolean isDone;
     private Date deadline;
     private Double rating;
+
+    private Set<SubgoalDTOShort> childSubgoals;
+
 }

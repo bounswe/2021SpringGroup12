@@ -57,18 +57,20 @@ public class SubgoalController {
         return subgoalService.getSubgoalsOfAUser(user_id);
     }
     */
+    /*
     @ApiOperation(value = "Get All Subgoals Of a Goal")
     @GetMapping("/of_goal/{goal_id}")
     public List<SubgoalDTOShort> getSubgoalsOfAGoal(@PathVariable @ApiParam(value = "Id of the goal.", example = "5") Long goal_id) {
         return subgoalService.getSubgoalsOfAGoal(goal_id);
     }
-
+    */
+    /*
     @ApiOperation(value = "Get All Subgoals Of a Subgoal")
     @GetMapping("/of_subgoal/{subgoal_id}")
     public List<SubgoalDTOShort> getSubgoalsOfASubgoal(@PathVariable @ApiParam(value = "Id of the subgoal.", example = "5") Long subgoal_id) {
         return subgoalService.getSubgoalsOfASubgoal(subgoal_id);
     }
-
+    */
     @ApiOperation(value = "Update a subgoal.")
     @PutMapping("")
     public MessageResponse updateSubgoal(@RequestBody @ApiParam(

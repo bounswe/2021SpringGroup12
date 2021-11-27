@@ -4,6 +4,7 @@ import cmpe451.group12.beabee.goalspace.enums.GoalType;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,5 +25,7 @@ public class GoalGetDTO {
     private Date deadline;
 
     private Date createdAt;
+
+    private Set<SubgoalDTOShort> subgoals;
 
 }

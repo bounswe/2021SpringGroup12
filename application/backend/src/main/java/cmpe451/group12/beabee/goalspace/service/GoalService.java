@@ -11,10 +11,7 @@ import cmpe451.group12.beabee.goalspace.dto.goals.GoalGetDTO;
 import cmpe451.group12.beabee.goalspace.dto.goals.GoalPostDTO;
 import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalPostDTO;
 import cmpe451.group12.beabee.goalspace.enums.GoalType;
-import cmpe451.group12.beabee.goalspace.mapper.goals.GoalGetMapper;
-import cmpe451.group12.beabee.goalspace.mapper.goals.GoalPostMapper;
-import cmpe451.group12.beabee.goalspace.mapper.goals.GoalShortMapper;
-import cmpe451.group12.beabee.goalspace.mapper.goals.SubgoalPostMapper;
+import cmpe451.group12.beabee.goalspace.mapper.goals.*;
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +31,7 @@ public class GoalService {
     private final SubgoalRepository subgoalRepository;
     private final GoalPostMapper goalPostMapper;
     private final SubgoalPostMapper subgoalPostMapper;
+    private final SubgoalShortMapper subgoalShortMapper;
     private final GoalGetMapper goalGetMapper;
     private final GoalShortMapper goalShortMapper;
     private final UserRepository userRepository;
@@ -44,6 +42,7 @@ public class GoalService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Goal not found!");
         GoalGetDTO goalGetDTO = goalGetMapper.mapToDto(goal_from_db_opt.get());
         goalGetDTO.setUser_id(goal_from_db_opt.get().getCreator().getUser_id());
+        goalGetDTO.setSubgoals(subgoalShortMapper.mapToDto(goal_from_db_opt.get().getSubgoals().stream().collect(Collectors.toList())).stream().collect(Collectors.toSet()));
         return  goalGetDTO;
     }
 

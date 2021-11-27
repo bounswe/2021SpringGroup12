@@ -68,6 +68,7 @@ public class SubgoalService {
         if (subgoal_opt.get().getMainGoal() != null) {
             subgoalGetDTO.setMain_goal_id(subgoal_opt.get().getMainGoal().getId());
         }
+        subgoalGetDTO.setChildSubgoals(subgoalShortMapper.mapToDto(subgoal_opt.get().getChild_subgoals().stream().collect(Collectors.toList())).stream().collect(Collectors.toSet()));
         return subgoalGetDTO;
     }
 
