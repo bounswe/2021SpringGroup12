@@ -1,6 +1,6 @@
 package cmpe451.group12.beabee.common.model;
 
-import cmpe451.group12.beabee.goalspace.model.Goal;
+import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;

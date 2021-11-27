@@ -1,23 +1,15 @@
 package cmpe451.group12.beabee.common.service;
 
 
-import cmpe451.group12.beabee.common.dto.MessageResponse;
-import cmpe451.group12.beabee.common.enums.MessageType;
 import cmpe451.group12.beabee.common.repository.UserRepository;
 import cmpe451.group12.beabee.goalspace.Repository.GoalRepository;
-import cmpe451.group12.beabee.goalspace.dto.GoalDTO;
-import cmpe451.group12.beabee.goalspace.dto.UserDTO;
-import cmpe451.group12.beabee.goalspace.mapper.GoalMapper;
+import cmpe451.group12.beabee.common.dto.UserGetDTO;
+import cmpe451.group12.beabee.goalspace.mapper.goals.GoalPostMapper;
 import cmpe451.group12.beabee.common.mapper.UserMapper;
-import cmpe451.group12.beabee.goalspace.model.Entiti;
-import cmpe451.group12.beabee.goalspace.model.Goal;
-import cmpe451.group12.beabee.common.model.Users;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -25,9 +17,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final GoalRepository goalRepository;
     private final UserMapper userMapper;
-    private final GoalMapper goalMapper;
+    private final GoalPostMapper goalPostMapper;
 
-    public UserDTO getUserById(Long id) {
+    public UserGetDTO getUserById(Long id) {
         return userMapper.mapToDto(userRepository.findById(id).orElseThrow(EntityNotFoundException::new));
     }
     /*

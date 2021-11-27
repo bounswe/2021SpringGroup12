@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class AuthenticationResponse {
 
-    public final UserCredentialsDTO userCredentialsDTO;
+    public final UserCredentialsGetDTO userCredentialsGetDTO;
     public final String jwt;
     public final String message;
     public final MessageType messageType;

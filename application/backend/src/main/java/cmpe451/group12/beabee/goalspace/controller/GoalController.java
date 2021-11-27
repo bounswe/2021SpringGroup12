@@ -2,17 +2,13 @@ package cmpe451.group12.beabee.goalspace.controller;
 
 
 import cmpe451.group12.beabee.common.dto.MessageResponse;
-import cmpe451.group12.beabee.common.enums.MessageType;
-import cmpe451.group12.beabee.goalspace.dto.GoalDTO;
-import cmpe451.group12.beabee.goalspace.model.Goal;
+import cmpe451.group12.beabee.goalspace.dto.goals.*;
 import cmpe451.group12.beabee.goalspace.service.GoalService;
-import cmpe451.group12.beabee.login.dto.UserCredentialsDTO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Example;
 import io.swagger.annotations.ExampleProperty;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,19 +19,20 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 //@RequestMapping(value = "/goals", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-@RequestMapping(value = "/goals")
+@RequestMapping(value = "/v2/goals")
 public class GoalController {
     private final GoalService goalService;
 
+    /************************************** GOALS*******/
     @ApiOperation(value = "Get a Goal")
     @GetMapping("/{goal_id}")
-    public GoalDTO getGoal(@PathVariable  @ApiParam(value = "Id of the goal.",example = "5") Long goal_id) {
+    public GoalGetDTO getGoal(@PathVariable  @ApiParam(value = "Id of the goal.",example = "5") Long goal_id) {
         return goalService.getAGoal(goal_id);
     }
 
     @ApiOperation(value = "Get all goals of a user.")
     @GetMapping("/of_user/{user_id}")
-    public List<GoalDTO> getGoalsOfAUser(@PathVariable @ApiParam(value = "Id of the user.",example = "5")Long user_id) {
+    public List<GoalDTOShort> getGoalsOfAUser(@PathVariable @ApiParam(value = "Id of the user.",example = "5")Long user_id) {
         return goalService.getGoalsOfAUser(user_id);
     }
 
@@ -55,8 +52,8 @@ public class GoalController {
                             "  \"title*\": \"string\"\n" +
                             "}"
             )
-            ) )GoalDTO goalDTO){
-        return goalService.updateAGoal(goalDTO);
+            ) ) GoalGetDTO goalGetDTO){
+        return goalService.updateAGoal(goalGetDTO);
     }
 
     @ApiOperation(value = "Create a goal.")
@@ -66,17 +63,13 @@ public class GoalController {
             examples = @Example(value =
             @ExampleProperty(
                     value = "{\n" +
-                            "  \"createdAt*\": \"2021-11-20T10:01:10.538Z\",\n" +
                             "  \"deadline*\": \"2021-11-20T10:01:10.538Z\",\n" +
                             "  \"description*\": \"string\",\n" +
-                            "  \"goalType\": \"GOAL\",\n" +
-                            "  \"id*\": 0,\n" +
-                            "  \"isDone*\": true,\n" +
                             "  \"title*\": \"string\"\n" +
                             "}"
             )
-            ) ) GoalDTO goalDTO, @PathVariable @ApiParam(value = "Id of the user.",example = "5")Long user_id){
-        return goalService.createAGoal(user_id,goalDTO);
+            ) ) GoalPostDTO goalPostDTO, @PathVariable @ApiParam(value = "Id of the user.",example = "5")Long user_id){
+        return goalService.createAGoal(user_id, goalPostDTO);
     }
 
     @ApiOperation(value = "Delete a goal.")
@@ -84,6 +77,26 @@ public class GoalController {
     public MessageResponse deleteGoal(@PathVariable @ApiParam(value = "Id of the goal.",example = "5")Long goal_id){
         return goalService.deleteGoal(goal_id);
     }
+
+/************************************** SUBGOALS *******/
+@ApiOperation(value = "Create a subgoal under a goal.")
+@PostMapping("/subgoal")
+public MessageResponse createSubgoal(@RequestBody @ApiParam(
+        value = "A JSON value representing a transaction. An example of the expected schema can be found down here.",
+        examples = @Example(value =
+        @ExampleProperty(
+                value = "{\n" +
+                        "    \"deadline\": \"2021-11-20T09:44:23.994Z\",\n" +
+                        "    \"description\": \"string\",\n" +
+                        "    \"main_goal_id*\": 1\n" +
+                        "    \"title*\": \"string\"\n" +
+                        "  }"
+                )
+        )
+    )    SubgoalPostDTO subgoal_dto) {
+    return goalService.createSubgoal(subgoal_dto);
+}
+
 
 }
 

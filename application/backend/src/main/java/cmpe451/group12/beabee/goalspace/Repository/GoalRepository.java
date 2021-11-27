@@ -1,15 +1,12 @@
 package cmpe451.group12.beabee.goalspace.Repository;
 
-import cmpe451.group12.beabee.goalspace.enums.GoalType;
-import cmpe451.group12.beabee.goalspace.mapper.GoalMapper;
-import cmpe451.group12.beabee.goalspace.model.Goal;
+import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,4 +19,9 @@ public interface GoalRepository extends JpaRepository<Goal, Long> {
     @Query(value = "select max(id) from goal", nativeQuery = true)
     Long lastId();
 
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM Goal WHERE id = ?1", nativeQuery = true)
+    void deleteAGoal(@Param("goal_id")  Long goal_id);
 }

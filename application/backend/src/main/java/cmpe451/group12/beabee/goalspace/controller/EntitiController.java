@@ -2,7 +2,7 @@ package cmpe451.group12.beabee.goalspace.controller;
 
 
 import cmpe451.group12.beabee.common.dto.MessageResponse;
-import cmpe451.group12.beabee.goalspace.dto.*;
+import cmpe451.group12.beabee.goalspace.dto.entities.*;
 import cmpe451.group12.beabee.goalspace.service.EntitiService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -38,11 +38,6 @@ public class EntitiController {
         return entitiService.getEntitiesOfAUser(user_id);
     }
 
-    @ApiOperation(value = "Get All Subgoals Of a User")
-    @GetMapping("/user/subgoal/{user_id}")
-    public List<SubgoalDTO> getSubgoalsOfAUser(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id) {
-        return entitiService.getSubgoalsOfAUser(user_id);
-    }
 
     @ApiOperation(value = "Get All Questions Of a User")
     @GetMapping("/user/question/{user_id}")
@@ -89,24 +84,7 @@ public class EntitiController {
     }
 
     /****************************** POSTS ********************************/
-    @ApiOperation(value = "Create a subgoal.")
-    @PostMapping("/subgoal")
-    public MessageResponse createSubgoal(@RequestBody @ApiParam(
-            value = "A JSON value representing a transaction. An example of the expected schema can be found down here.",
-            examples = @Example(value =
-            @ExampleProperty(
-                    value = "{\n" +
-                            "    \"deadline\": \"2021-11-20T09:44:23.994Z\",\n" +
-                            "    \"description\": \"string\",\n" +
-                            "    \"entitiType\": \"SUBGOAL\",\n" +
-                            "    \"mainGoal_id*\": 0,\n" +
-                            "    \"title*\": \"string\"\n" +
-                            "  }"
-            )
-            )
-    ) SubgoalDTO subgoal_dto) {
-        return entitiService.createSubgoal(subgoal_dto);
-    }
+
 
     @ApiOperation(value = "Create a task.")
     @PostMapping("/task")
@@ -158,7 +136,7 @@ public class EntitiController {
                             "    \"title*\": \"string\"\n" +
                             "  }"
             )
-            ) )ReflectionDTO reflection_dto) {
+            ) ) ReflectionDTO reflection_dto) {
         return entitiService.createReflection(reflection_dto);
     }
 
@@ -187,11 +165,6 @@ public class EntitiController {
         return entitiService.getEntiti(id);
     }
 
-    @ApiOperation(value = "Get a subgoal.")
-    @GetMapping("/subgoal/{id}")
-    public SubgoalDTO getSubgoal(@PathVariable @ApiParam(value = "Id of the subgoal.",example = "5")Long id) {
-        return entitiService.getSubgoal(id);
-    }
 
     @ApiOperation(value = "Get a task.")
     @GetMapping("/task/{id}")
@@ -218,11 +191,6 @@ public class EntitiController {
     }
 
     /****************************** DELETES ********************************/
-    @ApiOperation(value = "Delete a subgoal.")
-    @DeleteMapping("/subgoal/{id}")
-    public MessageResponse deleteSubgoal(@PathVariable @ApiParam(value = "Id of the subgoal.",example = "5")Long id) {
-        return entitiService.deleteSubgoal(id);
-    }
 
     @ApiOperation(value = "Delete a task.")
     @DeleteMapping("/task/{id}")
@@ -249,27 +217,7 @@ public class EntitiController {
     }
 
     /****************************** PUTS ********************************/
-    @ApiOperation(value = "Update a subgoal.")
-    @PutMapping("/subgoal/{id}")
-    public MessageResponse updateSubgoal(@RequestBody @ApiParam(
-            value = "A JSON value representing a transaction. An example of the expected schema can be found down here.",
-            examples = @Example(value =
-            @ExampleProperty(
-                    value = "{\n" +
-                            "  \"deadline*\": \"2021-11-20T09:48:42.553Z\",\n" +
-                            "  \"createdAt*\": \"2021-11-20T09:48:42.553Z\",\n" +
-                            "  \"description*\": \"string\",\n" +
-                            "  \"entitiType*\": \"SUBGOAL\",\n" +
-                            "  \"id*\": 0,\n" +
-                            "  \"isDone*\": true,\n" +
-                            "  \"mainGoal_id*\": 0,\n" +
-                            "  \"rating*\": 0,\n" +
-                            "  \"title*\": \"string\"\n" +
-                            "}"
-            )
-            ) ) SubgoalDTO subgoal_dto) {
-        return entitiService.updateSubgoal(subgoal_dto);
-    }
+
 
     @ApiOperation(value = "Update a task.")
     @PutMapping("/task/{id}")

@@ -4,10 +4,13 @@ import cmpe451.group12.beabee.common.dto.MessageResponse;
 import cmpe451.group12.beabee.common.enums.MessageType;
 import cmpe451.group12.beabee.common.repository.UserRepository;
 import cmpe451.group12.beabee.goalspace.Repository.*;
-import cmpe451.group12.beabee.goalspace.dto.*;
+import cmpe451.group12.beabee.goalspace.dto.entities.*;
+import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalGetDTO;
 import cmpe451.group12.beabee.goalspace.enums.EntitiType;
-import cmpe451.group12.beabee.goalspace.mapper.*;
-import cmpe451.group12.beabee.goalspace.model.*;
+import cmpe451.group12.beabee.goalspace.mapper.entities.*;
+import cmpe451.group12.beabee.goalspace.mapper.goals.SubgoalGetMapper;
+import cmpe451.group12.beabee.goalspace.model.entities.*;
+import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +30,7 @@ public class EntitiService {
     private final EntitiMapper entitiMapper;
     private final EntitiRepository entitiRepository;
 
-    private final SubgoalMapper subgoalMapper;
+    private final SubgoalGetMapper subgoalGetMapper;
     private final SubgoalRepository subgoalRepository;
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
@@ -52,7 +55,6 @@ public class EntitiService {
         entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Task")).map(x -> entitiMapper.mapToDto((Task) x)).collect(Collectors.toList()));
         entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Routine")).map(x -> entitiMapper.mapToDto((Routine) x)).collect(Collectors.toList()));
         entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Reflection")).map(x -> entitiMapper.mapToDto((Reflection) x)).collect(Collectors.toList()));
-        entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Subgoal")).map(x -> entitiMapper.mapToDto((Subgoal) x)).collect(Collectors.toList()));
         return entity_dtos;
     }
 
@@ -71,21 +73,10 @@ public class EntitiService {
         entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Task")).map(x -> entitiMapper.mapToDto((Task) x)).collect(Collectors.toList()));
         entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Routine")).map(x -> entitiMapper.mapToDto((Routine) x)).collect(Collectors.toList()));
         entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Reflection")).map(x -> entitiMapper.mapToDto((Reflection) x)).collect(Collectors.toList()));
-        entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Subgoal")).map(x -> entitiMapper.mapToDto((Subgoal) x)).collect(Collectors.toList()));
         return entity_dtos;
     }
 
-    public List<SubgoalDTO> getSubgoalsOfAUser(Long user_id) {
-        if (!userRepository.existsById(user_id)) {
-            return new ArrayList<>();
-        }
-        List<Goal> goals = goalRepository.findAllByUserId(user_id);
-        List<Subgoal> entities = new ArrayList<>();
-        for (Goal g : goals) {
-            entities.addAll(subgoalRepository.findByGoalId(g.getId()));
-        }
-        return entities.stream().map(x -> subgoalMapper.mapToDto(x)).collect(Collectors.toList());
-    }
+
 
 
     public List<QuestionDTO> getQuestionsOfAUser(Long user_id) {
@@ -166,7 +157,6 @@ public class EntitiService {
         entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Task")).map(x -> entitiMapper.mapToDto((Task) x)).collect(Collectors.toList()));
         entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Routine")).map(x -> entitiMapper.mapToDto((Routine) x)).collect(Collectors.toList()));
         entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Reflection")).map(x -> entitiMapper.mapToDto((Reflection) x)).collect(Collectors.toList()));
-        entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Subgoal")).map(x -> entitiMapper.mapToDto((Subgoal) x)).collect(Collectors.toList()));
         return entity_dtos;
     }
 
@@ -189,7 +179,8 @@ public class EntitiService {
 
     /****************************** POSTS ********************************/
 
-    public MessageResponse createSubgoal(SubgoalDTO subgoalDTO) {
+    public MessageResponse createSubgoal(SubgoalGetDTO subgoalGetDTO) {
+        /*
         Optional<Goal> goal_opt = goalRepository.findById(subgoalDTO.getMainGoal_id());
         if (goal_opt.isEmpty()) {
             return new MessageResponse("Goal not found!", MessageType.ERROR);
@@ -198,6 +189,7 @@ public class EntitiService {
         new_subgoal.setMainGoal(goal_opt.get());
         new_subgoal.setEntitiType(EntitiType.SUBGOAL);
         subgoalRepository.save(new_subgoal);
+         */
         return new MessageResponse("Subgoal added.", MessageType.SUCCESS);
     }
 
@@ -267,21 +259,9 @@ public class EntitiService {
         if (entiti_opt.get().getEntitiType().equals(EntitiType.REFLECTION)) {
             return entitiMapper.mapToDto((Reflection) entiti_opt.get());
         }
-        if (entiti_opt.get().getEntitiType().equals(EntitiType.SUBGOAL)) {
-            return entitiMapper.mapToDto((Subgoal) entiti_opt.get());
-        }
         return new EntitiDTO();// it wont reach here anyways
     }
 
-    public SubgoalDTO getSubgoal(Long id) {
-        Optional<Subgoal> subgoal_opt = subgoalRepository.findById(id);
-        if (subgoal_opt.isEmpty()){
-            return new SubgoalDTO();
-        }
-        SubgoalDTO subgoalDTO = subgoalMapper.mapToDto(subgoal_opt.get());
-        subgoalDTO.setMainGoal_id(subgoal_opt.get().getMainGoal().getId());
-        return subgoalDTO;
-    }
 
     public TaskDTO getTask(Long id) {
         Optional<Task> task_opt = taskRepository.findById(id);
@@ -353,20 +333,7 @@ public class EntitiService {
         return new MessageResponse("Question deleted!", MessageType.SUCCESS);
     }
 
-    public MessageResponse deleteSubgoal(Long id) {
-        Optional<Subgoal> subgoal_opt = subgoalRepository.findById(id);
-        if (subgoal_opt.isEmpty()) {
-            return new MessageResponse("Subgoal not found!", MessageType.ERROR);
-        }
-        Goal main_goal = subgoal_opt.get().getMainGoal();
-        Set<Entiti> entities = main_goal.getEntities();
-        entities.remove(subgoal_opt.get());
-        main_goal.setEntities(entities);
-        goalRepository.save(main_goal);
-        subgoalRepository.deleteById(id);
-        return new MessageResponse("Subgoal deleted!", MessageType.SUCCESS);
 
-}
 
     public MessageResponse deleteTask(Long id) {
         Optional<Task>  task_opt = taskRepository.findById(id);
@@ -397,16 +364,6 @@ public class EntitiService {
     }
 
     /****************************** PUTS ********************************/
-    public MessageResponse updateSubgoal(SubgoalDTO subgoal_dto) {
-        if (subgoalRepository.existsById(subgoal_dto.getId())) {
-            Subgoal subgoal = subgoalMapper.mapToEntity(subgoal_dto);
-            Goal goal = goalRepository.getById(subgoal_dto.getMainGoal_id());
-            subgoal.setMainGoal(goal);
-            subgoalRepository.save(subgoal);
-            return new MessageResponse("Updated subgoal", MessageType.SUCCESS);
-        }
-        return new MessageResponse("Couldn't update subgoal!", MessageType.ERROR);
-    }
 
 
     public MessageResponse updateTask(TaskDTO task_dto) {

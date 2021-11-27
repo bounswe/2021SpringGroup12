@@ -1,14 +1,14 @@
 package cmpe451.group12.beabee.login.controller;
 
 import cmpe451.group12.beabee.common.dto.MessageResponse;
-import cmpe451.group12.beabee.login.dto.UserCredentialsDTO;
+import cmpe451.group12.beabee.login.dto.UserCredentialsGetDTO;
+import cmpe451.group12.beabee.login.dto.UserCredentialsPostDTO;
 import cmpe451.group12.beabee.login.service.UserCredentialsService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Example;
 import io.swagger.annotations.ExampleProperty;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,14 +19,14 @@ import javax.mail.MessagingException;
 @RequiredArgsConstructor
 @Validated
 //@RequestMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-@RequestMapping(value = "/users")
+@RequestMapping(value = "/v2/users")
 public class UserCredentialsController {
 
     private final UserCredentialsService userCredentialsService;
 
     @ApiOperation(value = "Get the info of a user.")
     @GetMapping("/{username}")
-    public UserCredentialsDTO getUser(@PathVariable @ApiParam(value = "Username of the user.",example = "string")String username) {
+    public UserCredentialsGetDTO getUser(@PathVariable @ApiParam(value = "Username of the user.",example = "string")String username) {
         return userCredentialsService.getUserByUsername(username);
     }
 
@@ -48,7 +48,7 @@ public class UserCredentialsController {
                             "  \"username*\": \"string\"\n" +
                             "}"
             )
-            ) ) UserCredentialsDTO user, @PathVariable @ApiParam(value = "Password reset token.",example = "string")String token) {
+            ) ) UserCredentialsPostDTO user, @PathVariable @ApiParam(value = "Password reset token.",example = "string")String token) {
         return userCredentialsService.resetPassword(user,token);
     }
 

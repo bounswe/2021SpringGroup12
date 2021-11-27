@@ -2,14 +2,14 @@ package cmpe451.group12.beabee.login.controller;
 
 import cmpe451.group12.beabee.login.dto.AuthenticationResponse;
 import cmpe451.group12.beabee.common.dto.MessageResponse;
-import cmpe451.group12.beabee.login.dto.UserCredentialsDTO;
+import cmpe451.group12.beabee.login.dto.UserCredentialsGetDTO;
+import cmpe451.group12.beabee.login.dto.UserCredentialsPostDTO;
 import cmpe451.group12.beabee.login.service.LoginService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Example;
 import io.swagger.annotations.ExampleProperty;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @CrossOrigin
 //@RequestMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-@RequestMapping(value = "/")
+@RequestMapping(value = "/v2/")
 public class LoginController {
     private final LoginService service;
 
@@ -34,8 +34,8 @@ public class LoginController {
                             "  \"username*\": \"string\"\n" +
                             "}"
             )
-            ) ) UserCredentialsDTO userCredentialsDTO) throws Exception {
-        return service.login(userCredentialsDTO);
+            ) ) UserCredentialsPostDTO userCredentialsPostDTO) throws Exception {
+        return service.login(userCredentialsPostDTO);
     }
 
     @ApiOperation(value = "Signs up a user")
@@ -50,7 +50,7 @@ public class LoginController {
                             "  \"username*\": \"string\"\n" +
                             "}"
             )
-            ) ) UserCredentialsDTO userCredentialsDTO) {
-        return service.signup(userCredentialsDTO);
+            ) ) UserCredentialsPostDTO userCredentialsPostDTO) {
+        return service.signup(userCredentialsPostDTO);
     }
 }

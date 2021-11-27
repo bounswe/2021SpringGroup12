@@ -1,8 +1,6 @@
 package cmpe451.group12.beabee.goalspace.Repository;
 
-import cmpe451.group12.beabee.goalspace.model.Entiti;
-import cmpe451.group12.beabee.goalspace.model.Subgoal;
-import cmpe451.group12.beabee.goalspace.model.Task;
+import cmpe451.group12.beabee.goalspace.model.entities.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

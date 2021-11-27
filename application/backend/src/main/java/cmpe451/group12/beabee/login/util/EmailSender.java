@@ -54,7 +54,7 @@ public class EmailSender  {
             //TODO: after deployment put our amazon link to here
             Map<String, String> env = System.getenv();
             String CLIENT_WEBPAGE_LINK = env.get("CLIENT_WEBPAGE_LINK");
-            String html = "<h1> Sayin " + to.getName() + " "+ to.getSurname() + ", <br/>" + "Sifrenizi yenilemek için linkiniz: " + "<a href= "+CLIENT_WEBPAGE_LINK +"/?token="+to.getPassword_reset_token()+"> https://beabee_website_link/forgot_password/?token="+to.getPassword_reset_token()+"</a>";
+            String html = "<h1> Sayin " + to.getName() + " "+ to.getSurname() + ", <br/>" + "Parolanizi yenilemek için geçici sifreniz: " + to.getPassword_reset_token();
             BodyPart messageBodyPart = new MimeBodyPart();
             MimeMultipart multipart = new MimeMultipart("related");
             messageBodyPart.setContent(html, "text/html");

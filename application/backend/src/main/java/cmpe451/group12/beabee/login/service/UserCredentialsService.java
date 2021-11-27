@@ -3,19 +3,20 @@ package cmpe451.group12.beabee.login.service;
 
 import cmpe451.group12.beabee.common.dto.MessageResponse;
 import cmpe451.group12.beabee.common.enums.MessageType;
-import cmpe451.group12.beabee.common.mapper.UserMapper;
 import cmpe451.group12.beabee.common.model.Users;
 import cmpe451.group12.beabee.common.repository.UserRepository;
-import cmpe451.group12.beabee.goalspace.dto.UserDTO;
-import cmpe451.group12.beabee.login.dto.UserCredentialsDTO;
-import cmpe451.group12.beabee.login.mapper.UserCredentialsMapper;
+import cmpe451.group12.beabee.login.dto.UserCredentialsGetDTO;
+import cmpe451.group12.beabee.login.dto.UserCredentialsPostDTO;
+import cmpe451.group12.beabee.login.mapper.UserCredentialsGetMapper;
+import cmpe451.group12.beabee.login.mapper.UserCredentialsPostMapper;
 import cmpe451.group12.beabee.login.util.EmailSender;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.mail.MessagingException;
-import javax.persistence.EntityNotFoundException;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Random;
@@ -26,18 +27,19 @@ import java.util.concurrent.TimeUnit;
 public class UserCredentialsService {
 
     private  final UserRepository userRepository;
-    private  final  UserCredentialsMapper userCredentialsMapper;
+    private  final UserCredentialsGetMapper userCredentialsGetMapper;
+    private  final UserCredentialsPostMapper userCredentialsPostMapper;
     private final EmailSender emailSender;
 
 
-    public UserCredentialsDTO getUserByUsername(String username) {
+    public UserCredentialsGetDTO getUserByUsername(String username) {
         Optional<Users> user = userRepository.findByUsername(username);
 
        if(user.isPresent()){
            user.get().setPassword("***");
-           return userCredentialsMapper.mapToDto(user.get());
+           return userCredentialsGetMapper.mapToDto(user.get());
        }
-        return new UserCredentialsDTO();
+        return new UserCredentialsGetDTO();
     }
 
     public MessageResponse sendResetPasswordMail(String email_or_username) throws MessagingException {
@@ -58,11 +60,11 @@ public class UserCredentialsService {
             userRepository.save(user.get());
             return new MessageResponse("Please check your e-mail address: " + user.get().getEmail().substring(0,2) + "***" + user.get().getEmail().substring(user.get().getEmail().indexOf('@') - 2, user.get().getEmail().indexOf('@')) + "@**", MessageType.INFO);
         } else {
-            return new MessageResponse("Couldn't find user in the system. Do you want to signup?", MessageType.ERROR);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!");
         }
     }
 
-    public MessageResponse resetPassword(UserCredentialsDTO userDTO, String resetToken) {
+    public MessageResponse resetPassword(UserCredentialsPostDTO userDTO, String resetToken) {
         Optional<Users> user = userRepository.findByUsername(userDTO.getUsername());
         if (user.isPresent()) {
             Date now = new Date(System.currentTimeMillis());
@@ -94,7 +96,7 @@ public class UserCredentialsService {
                 return new MessageResponse("Token does not match?", MessageType.ERROR);
             }
         }
-        return new MessageResponse("Couldn't find user in the system. Do you want to signup?", MessageType.ERROR);
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!");
     }
 
 
