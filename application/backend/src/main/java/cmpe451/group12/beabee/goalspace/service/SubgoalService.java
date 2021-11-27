@@ -7,14 +7,16 @@ import cmpe451.group12.beabee.common.repository.UserRepository;
 import cmpe451.group12.beabee.goalspace.Repository.EntitiRepository;
 import cmpe451.group12.beabee.goalspace.Repository.GoalRepository;
 import cmpe451.group12.beabee.goalspace.Repository.SubgoalRepository;
+import cmpe451.group12.beabee.goalspace.dto.entities.EntitiShortDTO;
 import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalDTOShort;
 import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalGetDTO;
 import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalPostDTO;
 import cmpe451.group12.beabee.goalspace.mapper.entities.EntitiMapper;
+import cmpe451.group12.beabee.goalspace.mapper.entities.EntitiShortMapper;
 import cmpe451.group12.beabee.goalspace.mapper.goals.SubgoalGetMapper;
 import cmpe451.group12.beabee.goalspace.mapper.goals.SubgoalPostMapper;
 import cmpe451.group12.beabee.goalspace.mapper.goals.SubgoalShortMapper;
-import cmpe451.group12.beabee.goalspace.model.entities.Entiti;
+import cmpe451.group12.beabee.goalspace.model.entities.*;
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +39,7 @@ public class SubgoalService {
     private final UserRepository userRepository;
     private final EntitiMapper entitiMapper;
     private final EntitiRepository entitiRepository;
+    private final EntitiShortMapper entitiShortMapper;
 
 
     public MessageResponse createSubgoal(SubgoalPostDTO subgoalPostDTO) {
@@ -53,50 +56,57 @@ public class SubgoalService {
         Set<Subgoal> subgoals_of_parent = parent_subgoal_opt.get().getChild_subgoals();
         subgoals_of_parent.add(new_subgoal);
         parent_subgoal_opt.get().setChild_subgoals(subgoals_of_parent);
+        new_subgoal.setCreator(parent_subgoal_opt.get().getCreator());
         // save to DB
         subgoalRepository.save(new_subgoal);
         subgoalRepository.save(parent_subgoal_opt.get());
         return new MessageResponse("Subgoal added.", MessageType.SUCCESS);
     }
 
+    private Set<EntitiShortDTO> extractEntities(Subgoal subgoal){
+
+        Set<EntitiShortDTO> sublinks = new HashSet<>();
+
+        sublinks.addAll(
+                subgoal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Question"))
+                        .map(x -> entitiShortMapper.mapToDto((Question) x)).collect(Collectors.toSet()));
+        sublinks.addAll(
+                subgoal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Task"))
+                        .map(x -> entitiShortMapper.mapToDto((Task) x)).collect(Collectors.toSet()));
+        sublinks.addAll(
+                subgoal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Routine"))
+                        .map(x -> entitiShortMapper.mapToDto((Routine) x)).collect(Collectors.toSet()));
+        sublinks.addAll(
+                subgoal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Reflection"))
+                        .map(x -> entitiShortMapper.mapToDto((Reflection) x)).collect(Collectors.toSet()));
+        return sublinks;
+    }
+
     public SubgoalGetDTO getSubgoal(Long id) {
-        Optional<Subgoal> subgoal_opt = subgoalRepository.findById(id);
-        if (subgoal_opt.isEmpty()) {
+        Optional<Subgoal> subgoal_from_db_opt = subgoalRepository.findById(id);
+        if (subgoal_from_db_opt.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Subgoal not found!");
         }
-        SubgoalGetDTO subgoalGetDTO = subgoalGetMapper.mapToDto(subgoal_opt.get());
-        if (subgoal_opt.get().getMainGoal() != null) {
-            subgoalGetDTO.setMain_goal_id(subgoal_opt.get().getMainGoal().getId());
+        SubgoalGetDTO subgoalGetDTO = subgoalGetMapper.mapToDto(subgoal_from_db_opt.get());
+        if (subgoal_from_db_opt.get().getMainGoal() != null) {
+            subgoalGetDTO.setMain_goal_id(subgoal_from_db_opt.get().getMainGoal().getId());
+        }else{
+            subgoalGetDTO.setParent_subgoal_id(subgoalRepository.findParentById(id).getId());
         }
-        subgoalGetDTO.setChildSubgoals(subgoalShortMapper.mapToDto(subgoal_opt.get().getChild_subgoals().stream().collect(Collectors.toList())).stream().collect(Collectors.toSet()));
+        subgoalGetDTO.setSublinks(subgoalShortMapper.mapToDto(subgoal_from_db_opt.get().getChild_subgoals().stream().collect(Collectors.toList())).stream().collect(Collectors.toSet()));
+        subgoalGetDTO.setEntities(extractEntities(subgoal_from_db_opt.get()));
         return subgoalGetDTO;
     }
 
-    /**
-     * TODO: sıkıntılı: level-2 altı subgoallere erişmek için recursive bi şey yazmak lazım.
-     */
-    /*
-    public List<SubgoalDTOShort> getSubgoalsOfAUser(Long user_id) {
+
+    // I wrote this but I don't know where it will be used.
+    public List<SubgoalGetDTO> getSubgoalsOfAUser(Long user_id) {
         if (!userRepository.existsById(user_id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!");
         }
-        List<Goal> goals = goalRepository.findAllByUserId(user_id);
-        List<Subgoal> result = new ArrayList<>();
-
-        for (Goal g : goals) {
-            List<Subgoal> subgoals_of_goal_g = subgoalRepository.findByGoalId(g.getId());
-            for (Subgoal s : subgoals_of_goal_g) {
-                List<Subgoal> subgoals_of_subgoal_s = s.getChild_subgoals().stream().collect(Collectors.toList());
-                subgoal_dtos.addAll(subgoalShortMapper.mapToDto(subgoals_of_subgoal_s));
-            }
-            subgoal_dtos.addAll(subgoalGetMapper.mapToDto(subgoalRepository.findByGoalId(g.getId())).stream().map(x -> {
-                x.setMain_goal_id(g.getId());
-                return x;
-            }).collect(Collectors.toList()));
-        }
-        return subgoal_dtos;
+        return subgoalGetMapper.mapToDto(subgoalRepository.findAllByCreator(userRepository.getById(user_id)));
     }
-*/
+
     public List<SubgoalDTOShort> getSubgoalsOfAGoal(Long goal_id) {
         if (!goalRepository.existsById(goal_id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Goal not found!");

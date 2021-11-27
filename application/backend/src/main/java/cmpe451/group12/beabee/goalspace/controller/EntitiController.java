@@ -19,50 +19,50 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 //@RequestMapping(value = "/entities", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-@RequestMapping(value = "/entities")
+@RequestMapping(value = "/v2/entities")
 public class EntitiController {
 
     private final EntitiService entitiService;
 
-
     /****************************** GET ALL ENTITIES ********************************/
+/*
     @ApiOperation(value = "Get All Entities Of a Goal")
     @GetMapping("/goal/{goal_id}")
     public List<EntitiDTO> getEntitiesOfAGoal(@PathVariable @ApiParam(value = "Id of the goal.", example = "5") Long goal_id) {
         return entitiService.getEntitiesOfAGoal(goal_id);
     }
-
+*/
     @ApiOperation(value = "Get All Entities Of a User")
     @GetMapping("/user/{user_id}")
-    public List<EntitiDTO> getEntitiesOfAUser(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id) {
+    public List<EntitiShortDTO> getEntitiesOfAUser(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id) {
         return entitiService.getEntitiesOfAUser(user_id);
     }
 
-
+ /*
     @ApiOperation(value = "Get All Questions Of a User")
     @GetMapping("/user/question/{user_id}")
-    public List<QuestionDTO> getQuestionsOfAUser(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id) {
+    public List<QuestionGetDTO> getQuestionsOfAUser(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id) {
         return entitiService.getQuestionsOfAUser(user_id);
     }
 
     @ApiOperation(value = "Get All Reflections Of a User")
     @GetMapping("/user/reflection/{user_id}")
-    public List<ReflectionDTO> getReflectionsOfAUser(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id) {
+    public List<ReflectionGetDTO> getReflectionsOfAUser(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id) {
         return entitiService.getReflectionsOfAUser(user_id);
     }
 
     @ApiOperation(value = "Get All Routines Of a User")
     @GetMapping("/user/routine/{user_id}")
-    public List<RoutineDTO> getRoutinesOfAUser(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id) {
+    public List<RoutineGetDTO> getRoutinesOfAUser(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id) {
         return entitiService.getRoutinesOfAUser(user_id);
     }
 
     @ApiOperation(value = "Get All Tasks Of a User")
     @GetMapping("/user/task/{user_id}")
-    public List<TaskDTO> getTasksOfAUser(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id) {
+    public List<TaskGetDTO> getTasksOfAUser(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id) {
         return entitiService.getTasksOfAUser(user_id);
     }
-
+*/
     /****************************** LINKING ENTITIES ********************************/
 
     @ApiOperation(value = "Link two entities.")
@@ -71,12 +71,13 @@ public class EntitiController {
         return entitiService.linkEntities(id, child_id);
     }
 
+    /* no need for this, user can get the same result using GET any entity
     @ApiOperation(value = "Get all sublinks of an entity.")
     @GetMapping("/{entity_id}/sublinks")
     public List<EntitiDTO> getSublinksOfAnEntity(@PathVariable @ApiParam(value = "Id of the entity.",example = "5") Long entity_id) {
         return entitiService.getSublinksOfAnEntity(entity_id);
     }
-
+*/
     @ApiOperation(value = "Delete a link between entities.")
     @DeleteMapping("/{id}/delete_link/{child_id}")
     public MessageResponse deleteSublinkOfAnEntity(@PathVariable @ApiParam(value = "Id of the parent entity.",example = "5") Long id, @PathVariable @ApiParam(value = "Id of the child entity.",example = "5") Long child_id) {
@@ -100,7 +101,7 @@ public class EntitiController {
                             "    \"title*\": \"string\"\n" +
                             "  }"
             )
-            ) )TaskDTO task_dto) {
+            ) )TaskPostDTO task_dto) {
         return entitiService.createTask(task_dto);
     }
 
@@ -119,7 +120,7 @@ public class EntitiController {
                             "    \"period*\": \"5\"\n" +
                             "  }"
             )
-            ) )RoutineDTO routine_dto) {
+            ) )RoutinePostDTO routine_dto) {
         return entitiService.createRoutine(routine_dto);
     }
 
@@ -131,13 +132,12 @@ public class EntitiController {
             @ExampleProperty(
                     value = "{\n" +
                             "    \"description\": \"string\",\n" +
-                            "    \"entitiType\": \"REFLECTION\",\n" +
                             "    \"mainGoal_id*\": 0,\n" +
                             "    \"title*\": \"string\"\n" +
                             "  }"
             )
-            ) ) ReflectionDTO reflection_dto) {
-        return entitiService.createReflection(reflection_dto);
+            ) ) ReflectionPostDTO reflection_post_dto) {
+        return entitiService.createReflection(reflection_post_dto);
     }
 
     @ApiOperation(value = "Create a question.")
@@ -154,39 +154,40 @@ public class EntitiController {
                             "    \"title*\": \"string\"\n" +
                             "  }"
             )
-            ) ) QuestionDTO question_dto) {
+            ) ) QuestionPostDTO question_dto) {
         return entitiService.createQuestion(question_dto);
     }
 
     /****************************** GETS ********************************/
+    /*
     @ApiOperation(value = "Get an entity.")
     @GetMapping("/entiti/{id}")
     public EntitiDTO getEntiti(@PathVariable @ApiParam(value = "Id of the entity.",example = "5")Long id) {
         return entitiService.getEntiti(id);
     }
-
+*/
 
     @ApiOperation(value = "Get a task.")
     @GetMapping("/task/{id}")
-    public TaskDTO getTask(@PathVariable @ApiParam(value = "Id of the task.",example = "5")Long id) {
+    public TaskGetDTO getTask(@PathVariable @ApiParam(value = "Id of the task.",example = "5")Long id) {
         return entitiService.getTask(id);
     }
 
     @ApiOperation(value = "Get a routine.")
     @GetMapping("/routine/{id}")
-    public RoutineDTO getRoutine(@PathVariable @ApiParam(value = "Id of the routine.",example = "5")Long id) {
+    public RoutineGetDTO getRoutine(@PathVariable @ApiParam(value = "Id of the routine.",example = "5")Long id) {
         return entitiService.getRoutine(id);
     }
 
     @ApiOperation(value = "Get a reflection.")
     @GetMapping("/reflection/{id}")
-    public ReflectionDTO getReflection(@PathVariable @ApiParam(value = "Id of the reflection.",example = "5")Long id) {
+    public ReflectionGetDTO getReflection(@PathVariable @ApiParam(value = "Id of the reflection.",example = "5")Long id) {
         return entitiService.getReflection(id);
     }
 
     @ApiOperation(value = "Get a question.")
     @GetMapping("/question/{id}")
-    public QuestionDTO getQuestion(@PathVariable @ApiParam(value = "Id of the question.",example = "5") Long id) {
+    public QuestionGetDTO getQuestion(@PathVariable @ApiParam(value = "Id of the question.",example = "5") Long id) {
         return entitiService.getQuestion(id);
     }
 
@@ -220,7 +221,7 @@ public class EntitiController {
 
 
     @ApiOperation(value = "Update a task.")
-    @PutMapping("/task/{id}")
+    @PutMapping("/task/")
     public MessageResponse updateTask(@RequestBody @ApiParam(
             value = "A JSON value representing a transaction. An example of the expected schema can be found down here.",
             examples = @Example(value =
@@ -237,12 +238,12 @@ public class EntitiController {
                             "  \"title*\": \"string\"\n" +
                             "}"
             )
-            ) ) TaskDTO task_dto) {
+            ) ) TaskGetDTO task_dto) {
         return entitiService.updateTask(task_dto);
     }
 
     @ApiOperation(value = "Update a routine.")
-    @PutMapping("/routine/{id}")
+    @PutMapping("/routine/")
     public MessageResponse updateRoutine(@RequestBody @ApiParam(
             value = "A JSON value representing a transaction. An example of the expected schema can be found down here.",
             examples = @Example(value =
@@ -260,12 +261,12 @@ public class EntitiController {
                             "  \"title*\": \"string\"\n" +
                             "}"
             )
-            ) ) RoutineDTO routine_dto) {
+            ) ) RoutineGetDTO routine_dto) {
         return entitiService.updateRoutine(routine_dto);
     }
 
     @ApiOperation(value = "Update a reflection.")
-    @PutMapping("/reflection/{id}")
+    @PutMapping("/reflection/")
     public MessageResponse updateReflection(@RequestBody @ApiParam(
             value = "A JSON value representing a transaction. An example of the expected schema can be found down here.",
             examples = @Example(value =
@@ -280,12 +281,12 @@ public class EntitiController {
                             "  \"title*\": \"string\"\n" +
                             "}"
             )
-            ) )ReflectionDTO reflection_dto) {
+            ) ) ReflectionGetDTO reflection_dto) {
         return entitiService.updateReflection(reflection_dto);
     }
 
     @ApiOperation(value = "Update a question.")
-    @PutMapping("/question/{id}")
+    @PutMapping("/question/")
     public MessageResponse updateQuestion(@RequestBody @ApiParam(
             value = "A JSON value representing a transaction. An example of the expected schema can be found down here.",
             examples = @Example(value =
@@ -300,7 +301,7 @@ public class EntitiController {
                             "  \"title*\": \"string\"\n" +
                             "}"
             )
-            ) )QuestionDTO question_dto) {
+            ) ) QuestionGetDTO question_dto) {
         return entitiService.updateQuestion(question_dto);
     }
 

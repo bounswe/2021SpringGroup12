@@ -1,5 +1,7 @@
 package cmpe451.group12.beabee.goalspace.Repository;
 
+import cmpe451.group12.beabee.common.model.Users;
+import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalDTOShort;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -29,4 +31,6 @@ public interface SubgoalRepository extends JpaRepository<Subgoal, Long> {
 
     @Query(value = "SELECT * FROM subgoal WHERE id IN (SELECT subgoal_id FROM subgoals WHERE child_subgoals_id = ?1)",nativeQuery = true)
     Subgoal findParentById(@Param("id") Long id);
+
+    List<Subgoal> findAllByCreator(Users user);
 }

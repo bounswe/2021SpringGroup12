@@ -49,14 +49,13 @@ public class SubgoalController {
         return subgoalService.getSubgoal(id);
     }
 
-    //TODO
-    /*
+
     @ApiOperation(value = "Get All Subgoals Of a User")
     @GetMapping("/of_user/{user_id}")
-    public List<SubgoalDTOShort> getSubgoalsOfAUser(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id) {
+    public List<SubgoalGetDTO> getSubgoalsOfAUser(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id) {
         return subgoalService.getSubgoalsOfAUser(user_id);
     }
-    */
+
     /*
     @ApiOperation(value = "Get All Subgoals Of a Goal")
     @GetMapping("/of_goal/{goal_id}")

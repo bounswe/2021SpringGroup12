@@ -6,12 +6,18 @@ import cmpe451.group12.beabee.common.model.Users;
 import cmpe451.group12.beabee.common.repository.UserRepository;
 import cmpe451.group12.beabee.goalspace.Repository.GoalRepository;
 import cmpe451.group12.beabee.goalspace.Repository.SubgoalRepository;
+import cmpe451.group12.beabee.goalspace.dto.entities.EntitiShortDTO;
 import cmpe451.group12.beabee.goalspace.dto.goals.GoalDTOShort;
 import cmpe451.group12.beabee.goalspace.dto.goals.GoalGetDTO;
 import cmpe451.group12.beabee.goalspace.dto.goals.GoalPostDTO;
 import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalPostDTO;
 import cmpe451.group12.beabee.goalspace.enums.GoalType;
+import cmpe451.group12.beabee.goalspace.mapper.entities.EntitiShortMapper;
 import cmpe451.group12.beabee.goalspace.mapper.goals.*;
+import cmpe451.group12.beabee.goalspace.model.entities.Question;
+import cmpe451.group12.beabee.goalspace.model.entities.Reflection;
+import cmpe451.group12.beabee.goalspace.model.entities.Routine;
+import cmpe451.group12.beabee.goalspace.model.entities.Task;
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +25,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,6 +43,27 @@ public class GoalService {
     private final GoalGetMapper goalGetMapper;
     private final GoalShortMapper goalShortMapper;
     private final UserRepository userRepository;
+    private final EntitiShortMapper entitiShortMapper;
+
+
+    private Set<EntitiShortDTO> extractEntities(Goal goal){
+
+        Set<EntitiShortDTO> sublinks = new HashSet<>();
+
+        sublinks.addAll(
+                goal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Question"))
+                        .map(x -> entitiShortMapper.mapToDto((Question) x)).collect(Collectors.toSet()));
+        sublinks.addAll(
+                goal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Task"))
+                        .map(x -> entitiShortMapper.mapToDto((Task) x)).collect(Collectors.toSet()));
+        sublinks.addAll(
+                goal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Routine"))
+                        .map(x -> entitiShortMapper.mapToDto((Routine) x)).collect(Collectors.toSet()));
+        sublinks.addAll(
+                goal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Reflection"))
+                        .map(x -> entitiShortMapper.mapToDto((Reflection) x)).collect(Collectors.toSet()));
+        return sublinks;
+    }
 
     public GoalGetDTO getAGoal(Long goal_id) {
         Optional<Goal> goal_from_db_opt = goalRepository.findById(goal_id);
@@ -43,6 +72,7 @@ public class GoalService {
         GoalGetDTO goalGetDTO = goalGetMapper.mapToDto(goal_from_db_opt.get());
         goalGetDTO.setUser_id(goal_from_db_opt.get().getCreator().getUser_id());
         goalGetDTO.setSubgoals(subgoalShortMapper.mapToDto(goal_from_db_opt.get().getSubgoals().stream().collect(Collectors.toList())).stream().collect(Collectors.toSet()));
+        goalGetDTO.setEntities(extractEntities(goal_from_db_opt.get()));
         return  goalGetDTO;
     }
 
@@ -74,7 +104,7 @@ public class GoalService {
     public MessageResponse createAGoal(Long user_id, GoalPostDTO goalPostDTO) {
         Optional<Users> user = userRepository.findById(user_id);
         if (user.isEmpty()){
-            return new MessageResponse("User does not exists!", MessageType.ERROR);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!");
         }
         Goal new_goal = goalPostMapper.mapToEntity(goalPostDTO);
         new_goal.setIsDone(Boolean.FALSE);
@@ -107,7 +137,7 @@ public class GoalService {
         Subgoal new_subgoal = subgoalPostMapper.mapToEntity(subgoalPostDTO);
         new_subgoal.setMainGoal(goal_opt.get());
         new_subgoal.setIsDone(Boolean.FALSE);
-        new_subgoal.setRating(0D);
+        new_subgoal.setCreator(goal_opt.get().getCreator());
         subgoalRepository.save(new_subgoal);
         return new MessageResponse("Subgoal added.", MessageType.SUCCESS);
     }
