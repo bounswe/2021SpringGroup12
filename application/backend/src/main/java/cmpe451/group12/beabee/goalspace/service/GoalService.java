@@ -4,9 +4,9 @@ import cmpe451.group12.beabee.common.dto.MessageResponse;
 import cmpe451.group12.beabee.common.enums.MessageType;
 import cmpe451.group12.beabee.common.model.Users;
 import cmpe451.group12.beabee.common.repository.UserRepository;
-import cmpe451.group12.beabee.goalspace.Repository.GoalRepository;
-import cmpe451.group12.beabee.goalspace.Repository.SubgoalRepository;
-import cmpe451.group12.beabee.goalspace.dto.entities.EntitiShortDTO;
+import cmpe451.group12.beabee.goalspace.Repository.goals.GoalRepository;
+import cmpe451.group12.beabee.goalspace.Repository.goals.SubgoalRepository;
+import cmpe451.group12.beabee.goalspace.dto.entities.EntitiDTOShort;
 import cmpe451.group12.beabee.goalspace.dto.goals.GoalDTOShort;
 import cmpe451.group12.beabee.goalspace.dto.goals.GoalGetDTO;
 import cmpe451.group12.beabee.goalspace.dto.goals.GoalPostDTO;
@@ -46,9 +46,9 @@ public class GoalService {
     private final EntitiShortMapper entitiShortMapper;
 
 
-    private Set<EntitiShortDTO> extractEntities(Goal goal){
+    private Set<EntitiDTOShort> extractEntities(Goal goal){
 
-        Set<EntitiShortDTO> sublinks = new HashSet<>();
+        Set<EntitiDTOShort> sublinks = new HashSet<>();
 
         sublinks.addAll(
                 goal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Question"))

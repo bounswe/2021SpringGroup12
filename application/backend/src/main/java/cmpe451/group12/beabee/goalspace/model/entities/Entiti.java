@@ -3,6 +3,7 @@ package cmpe451.group12.beabee.goalspace.model.entities;
 import cmpe451.group12.beabee.goalspace.enums.EntitiType;
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
+import cmpe451.group12.beabee.goalspace.model.resources.Resource;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -37,7 +38,6 @@ public abstract class Entiti {
     @JoinColumn(name = "subgoal_id")
     private Subgoal subgoal;
 
-
     @Column(name = "entityType")
     private EntitiType entitiType;
     @Column(name = "title")
@@ -51,19 +51,15 @@ public abstract class Entiti {
     @Column(name = "createdAt", updatable = false)
     private Date createdAt;
 
-    /*
-    @JsonIgnoreProperties({"id"})
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="Uplinks")
-    @Column(name = "uplink_id")
-    private Set<Entiti> uplinks;
-     */
-
     @JsonIgnoreProperties({"id"})
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "Sublinks")
     @Column(name = "sublink_id")
     private Set<Entiti> sublinks;
+
+    @JsonIgnoreProperties({"entiti"})
+    @OneToMany(mappedBy = "entiti", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<Resource> resources;
 
     @Override
     public boolean equals(Object obj)

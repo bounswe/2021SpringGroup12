@@ -2,7 +2,7 @@
 package cmpe451.group12.beabee.goalspace.mapper.entities;
 
 
-import cmpe451.group12.beabee.goalspace.dto.entities.EntitiShortDTO;
+import cmpe451.group12.beabee.goalspace.dto.entities.EntitiDTOShort;
 import cmpe451.group12.beabee.goalspace.model.entities.Question;
 import cmpe451.group12.beabee.goalspace.model.entities.Reflection;
 import cmpe451.group12.beabee.goalspace.model.entities.Routine;
@@ -20,11 +20,11 @@ public class EntitiShortMapper {
     }
 
 
-    public EntitiShortDTO mapToDto(Reflection reflection) {
+    public EntitiDTOShort mapToDto(Reflection reflection) {
         if (reflection == null) {
             return null;
         } else {
-            EntitiShortDTO entityDTO = new EntitiShortDTO();
+            EntitiDTOShort entityDTO = new EntitiDTOShort();
             entityDTO.setId(reflection.getId());
             entityDTO.setEntitiType(reflection.getEntitiType());
             entityDTO.setTitle(reflection.getTitle());
@@ -32,11 +32,11 @@ public class EntitiShortMapper {
             return entityDTO;
         }
     }
-    public EntitiShortDTO mapToDto(Question question) {
+    public EntitiDTOShort mapToDto(Question question) {
         if (question == null) {
             return null;
         } else {
-            EntitiShortDTO entityDTO = new EntitiShortDTO();
+            EntitiDTOShort entityDTO = new EntitiDTOShort();
             entityDTO.setId(question.getId());
             entityDTO.setEntitiType(question.getEntitiType());
             entityDTO.setTitle(question.getTitle());
@@ -45,11 +45,11 @@ public class EntitiShortMapper {
             return entityDTO;
         }
     }
-    public EntitiShortDTO mapToDto(Task task) {
+    public EntitiDTOShort mapToDto(Task task) {
         if (task == null) {
             return null;
         } else {
-            EntitiShortDTO entityDTO = new EntitiShortDTO();
+            EntitiDTOShort entityDTO = new EntitiDTOShort();
             entityDTO.setId(task.getId());
             entityDTO.setEntitiType(task.getEntitiType());
             entityDTO.setTitle(task.getTitle());
@@ -59,11 +59,11 @@ public class EntitiShortMapper {
         }
     }
 
-    public EntitiShortDTO mapToDto(Routine routine) {
+    public EntitiDTOShort mapToDto(Routine routine) {
         if (routine == null) {
             return null;
         } else {
-            EntitiShortDTO entityDTO = new EntitiShortDTO();
+            EntitiDTOShort entityDTO = new EntitiDTOShort();
             entityDTO.setId(routine.getId());
             entityDTO.setEntitiType(routine.getEntitiType());
 
@@ -75,11 +75,11 @@ public class EntitiShortMapper {
         }
     }
 
-    public List<EntitiShortDTO> mapToReflectionDto(List<Reflection> reflectionList) {
+    public List<EntitiDTOShort> mapToReflectionDto(List<Reflection> reflectionList) {
         if (reflectionList == null) {
             return null;
         } else {
-            List<EntitiShortDTO> list = new ArrayList(reflectionList.size());
+            List<EntitiDTOShort> list = new ArrayList(reflectionList.size());
             Iterator var3 = reflectionList.iterator();
 
             while(var3.hasNext()) {
@@ -90,11 +90,11 @@ public class EntitiShortMapper {
             return list;
         }
     }
-    public List<EntitiShortDTO> mapToQuestionDto(List<Question> questionList) {
+    public List<EntitiDTOShort> mapToQuestionDto(List<Question> questionList) {
         if (questionList == null) {
             return null;
         } else {
-            List<EntitiShortDTO> list = new ArrayList(questionList.size());
+            List<EntitiDTOShort> list = new ArrayList(questionList.size());
             Iterator var3 = questionList.iterator();
 
             while(var3.hasNext()) {
@@ -105,11 +105,11 @@ public class EntitiShortMapper {
             return list;
         }
     }
-    public List<EntitiShortDTO> mapToTaskDto(List<Task> taskList) {
+    public List<EntitiDTOShort> mapToTaskDto(List<Task> taskList) {
         if (taskList == null) {
             return null;
         } else {
-            List<EntitiShortDTO> list = new ArrayList(taskList.size());
+            List<EntitiDTOShort> list = new ArrayList(taskList.size());
             Iterator var3 = taskList.iterator();
 
             while(var3.hasNext()) {
@@ -120,11 +120,11 @@ public class EntitiShortMapper {
             return list;
         }
     }
-    public List<EntitiShortDTO> mapToRoutineDto(List<Routine> routineList) {
+    public List<EntitiDTOShort> mapToRoutineDto(List<Routine> routineList) {
         if (routineList == null) {
             return null;
         } else {
-            List<EntitiShortDTO> list = new ArrayList(routineList.size());
+            List<EntitiDTOShort> list = new ArrayList(routineList.size());
             Iterator var3 = routineList.iterator();
 
             while(var3.hasNext()) {
