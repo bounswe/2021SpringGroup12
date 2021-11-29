@@ -33,6 +33,10 @@ public class Subgoal {
     @JoinColumn(name = "main_goal_id")
     private Goal mainGoal;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "main_groupgoal_id")
+    private GroupGoal mainGroupgoal;
+
     @Column(name = "title")
     private String title;
     @Column(name = "isDone")

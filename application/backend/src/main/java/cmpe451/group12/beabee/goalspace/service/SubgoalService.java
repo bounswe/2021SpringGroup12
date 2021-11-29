@@ -6,6 +6,7 @@ import cmpe451.group12.beabee.common.enums.MessageType;
 import cmpe451.group12.beabee.common.repository.UserRepository;
 import cmpe451.group12.beabee.goalspace.Repository.entities.EntitiRepository;
 import cmpe451.group12.beabee.goalspace.Repository.goals.GoalRepository;
+import cmpe451.group12.beabee.goalspace.Repository.goals.GroupGoalRepository;
 import cmpe451.group12.beabee.goalspace.Repository.goals.SubgoalRepository;
 import cmpe451.group12.beabee.goalspace.dto.entities.EntitiDTOShort;
 import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalDTOShort;
@@ -18,6 +19,7 @@ import cmpe451.group12.beabee.goalspace.mapper.goals.SubgoalPostMapper;
 import cmpe451.group12.beabee.goalspace.mapper.goals.SubgoalShortMapper;
 import cmpe451.group12.beabee.goalspace.model.entities.*;
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
+import cmpe451.group12.beabee.goalspace.model.goals.GroupGoal;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,6 +38,7 @@ public class SubgoalService {
     private final SubgoalPostMapper subgoalPostMapper;
     private final SubgoalRepository subgoalRepository;
     private final GoalRepository goalRepository;
+    private final GroupGoalRepository groupGoalRepository;
     private final UserRepository userRepository;
     private final EntitiMapper entitiMapper;
     private final EntitiRepository entitiRepository;
@@ -136,7 +139,15 @@ public class SubgoalService {
             goalRepository.save(main_goal);
             subgoalRepository.delete(subgoal_opt.get());
             return new MessageResponse("Subgoal deleted!", MessageType.SUCCESS);
-        } else {
+        } else if (subgoal_opt.get().getMainGroupgoal() != null) {
+            GroupGoal main_groupgoal = subgoal_opt.get().getMainGroupgoal();
+            Set<Subgoal> subgoals = main_groupgoal.getSubgoals();
+            subgoals.remove(subgoal_opt.get());
+            main_groupgoal.setSubgoals(subgoals);
+            groupGoalRepository.save(main_groupgoal);
+            subgoalRepository.delete(subgoal_opt.get());
+            return new MessageResponse("Subgoal deleted!", MessageType.SUCCESS);
+        } else  {
             Subgoal parent_subgoal = subgoalRepository.findParentById(id);
             Set<Subgoal> child_subgoals = parent_subgoal.getChild_subgoals();
             child_subgoals.remove(subgoal_opt.get());
