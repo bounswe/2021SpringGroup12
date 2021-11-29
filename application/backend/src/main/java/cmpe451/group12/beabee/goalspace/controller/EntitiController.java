@@ -34,7 +34,7 @@ public class EntitiController {
 */
     @ApiOperation(value = "Get All Entities Of a User")
     @GetMapping("/user/{user_id}")
-    public List<EntitiShortDTO> getEntitiesOfAUser(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id) {
+    public List<EntitiDTOShort> getEntitiesOfAUser(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id) {
         return entitiService.getEntitiesOfAUser(user_id);
     }
 

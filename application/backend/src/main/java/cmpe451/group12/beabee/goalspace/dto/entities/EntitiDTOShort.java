@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class EntitiShortDTO {
+public class EntitiDTOShort {
 
     private Long id;
     private EntitiType entitiType;

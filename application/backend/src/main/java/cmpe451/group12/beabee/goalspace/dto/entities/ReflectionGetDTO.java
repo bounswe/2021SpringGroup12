@@ -1,7 +1,9 @@
 package cmpe451.group12.beabee.goalspace.dto.entities;
 
 
+import cmpe451.group12.beabee.goalspace.dto.resources.ResourceDTOShort;
 import cmpe451.group12.beabee.goalspace.enums.EntitiType;
+import cmpe451.group12.beabee.goalspace.model.resources.Resource;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +24,7 @@ public class ReflectionGetDTO {
     private String description;
     private Date createdAt;
     private Boolean isDone;
-    private Set<EntitiShortDTO> sublinks;
+    private Set<EntitiDTOShort> sublinks;
+    private Set<ResourceDTOShort> resources;
 
 }

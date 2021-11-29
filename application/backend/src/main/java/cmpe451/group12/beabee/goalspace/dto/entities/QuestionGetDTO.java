@@ -1,6 +1,7 @@
 package cmpe451.group12.beabee.goalspace.dto.entities;
 
 
+import cmpe451.group12.beabee.goalspace.dto.resources.ResourceDTOShort;
 import cmpe451.group12.beabee.goalspace.enums.EntitiType;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,5 +22,7 @@ public class QuestionGetDTO {
     private Date createdAt;
     private Boolean isDone;
 
-    private Set<EntitiShortDTO> sublinks;
+    private Set<EntitiDTOShort> sublinks;
+    private Set<ResourceDTOShort> resources;
+
 }

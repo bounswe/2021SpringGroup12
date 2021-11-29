@@ -1,4 +1,4 @@
-package cmpe451.group12.beabee.goalspace.Repository;
+package cmpe451.group12.beabee.goalspace.Repository.goals;
 
 import cmpe451.group12.beabee.common.model.Users;
 import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalDTOShort;

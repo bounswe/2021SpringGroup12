@@ -1,17 +1,13 @@
 package cmpe451.group12.beabee.goalspace.service;
 
-import cmpe451.group12.beabee.common.dto.MessageResponse;
-import cmpe451.group12.beabee.common.enums.MessageType;
-import cmpe451.group12.beabee.goalspace.Repository.*;
-import cmpe451.group12.beabee.goalspace.dto.entities.TaskGetDTO;
-import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalGetDTO;
+import cmpe451.group12.beabee.goalspace.Repository.entities.EntitiRepository;
+import cmpe451.group12.beabee.goalspace.Repository.entities.TaskRepository;
+import cmpe451.group12.beabee.goalspace.Repository.goals.GoalRepository;
+import cmpe451.group12.beabee.goalspace.Repository.goals.SubgoalRepository;
 import cmpe451.group12.beabee.goalspace.mapper.entities.EntitiMapper;
 import cmpe451.group12.beabee.goalspace.mapper.entities.TaskGetMapper;
 import cmpe451.group12.beabee.goalspace.mapper.goals.SubgoalGetMapper;
-import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 import org.mockito.Mockito;
 
 public class EntitiServiceTest {

@@ -1,21 +1,10 @@
 package cmpe451.group12.beabee.goalspace.service;
 
-import cmpe451.group12.beabee.common.dto.MessageResponse;
-import cmpe451.group12.beabee.common.enums.MessageType;
-import cmpe451.group12.beabee.common.model.Users;
 import cmpe451.group12.beabee.common.repository.UserRepository;
-import cmpe451.group12.beabee.goalspace.Repository.GoalRepository;
-import cmpe451.group12.beabee.goalspace.dto.goals.GoalGetDTO;
+import cmpe451.group12.beabee.goalspace.Repository.goals.GoalRepository;
 import cmpe451.group12.beabee.goalspace.mapper.goals.GoalPostMapper;
-import cmpe451.group12.beabee.goalspace.model.goals.Goal;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 import org.mockito.Mockito;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 
 public class GoalServiceTest {

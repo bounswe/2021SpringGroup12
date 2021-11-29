@@ -4,11 +4,15 @@ import cmpe451.group12.beabee.common.dto.MessageResponse;
 import cmpe451.group12.beabee.common.enums.MessageType;
 import cmpe451.group12.beabee.common.model.Users;
 import cmpe451.group12.beabee.common.repository.UserRepository;
-import cmpe451.group12.beabee.goalspace.Repository.*;
+import cmpe451.group12.beabee.goalspace.Repository.entities.*;
+import cmpe451.group12.beabee.goalspace.Repository.goals.GoalRepository;
+import cmpe451.group12.beabee.goalspace.Repository.goals.SubgoalRepository;
+import cmpe451.group12.beabee.goalspace.Repository.resources.ResourceRepository;
 import cmpe451.group12.beabee.goalspace.dto.entities.*;
 import cmpe451.group12.beabee.goalspace.enums.EntitiType;
 import cmpe451.group12.beabee.goalspace.mapper.entities.*;
 import cmpe451.group12.beabee.goalspace.mapper.goals.SubgoalGetMapper;
+import cmpe451.group12.beabee.goalspace.mapper.resources.ResourceShortMapper;
 import cmpe451.group12.beabee.goalspace.model.entities.*;
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
@@ -17,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -46,6 +51,8 @@ public class EntitiService {
     private final QuestionRepository questionRepository;
     private final QuestionGetMapper questionGetMapper;
 
+    private final ResourceRepository resourceRepository;
+    private final ResourceShortMapper resourceShortMapper;
 
     /****************************** GET ALL ENTITIES ********************************/
 
@@ -66,7 +73,7 @@ public class EntitiService {
     }
 */
 
-    public List<EntitiShortDTO> getEntitiesOfAUser(Long user_id) {
+    public List<EntitiDTOShort> getEntitiesOfAUser(Long user_id) {
         if (!userRepository.existsById(user_id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!");
         }
@@ -83,7 +90,7 @@ public class EntitiService {
             entities.addAll(s.getEntities());
         }
 
-        List<EntitiShortDTO> entity_dtos = new ArrayList<>();
+        List<EntitiDTOShort> entity_dtos = new ArrayList<>();
         entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Question")).map(x -> entitiShortMapper.mapToDto((Question) x)).collect(Collectors.toList()));
         entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Task")).map(x -> entitiShortMapper.mapToDto((Task) x)).collect(Collectors.toList()));
         entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Routine")).map(x -> entitiShortMapper.mapToDto((Routine) x)).collect(Collectors.toList()));
@@ -316,9 +323,9 @@ public class EntitiService {
     }
     */
 
-    private Set<EntitiShortDTO> extractEntities(Entiti entiti){
+    private Set<EntitiDTOShort> extractEntities(Entiti entiti){
 
-        Set<EntitiShortDTO> sublinks = new HashSet<>();
+        Set<EntitiDTOShort> sublinks = new HashSet<>();
 
         sublinks.addAll(
                 entiti.getSublinks().stream().filter(x -> x.getClass().getSimpleName().equals("Question"))
@@ -335,6 +342,7 @@ public class EntitiService {
         return sublinks;
     }
 
+    @Transactional
     public TaskGetDTO getTask(Long id) {
         Optional<Task> task_from_db_opt = taskRepository.findById(id);
         if (task_from_db_opt.isEmpty()) {
@@ -347,10 +355,12 @@ public class EntitiService {
             taskGetDTO.setGoal_id(task_from_db_opt.get().getGoal().getId());
         }
 
+        taskGetDTO.setResources(resourceShortMapper.mapToDto(task_from_db_opt.get().getResources().stream().collect(Collectors.toList())).stream().collect(Collectors.toSet()));
         taskGetDTO.setSublinks(extractEntities(task_from_db_opt.get()));
         return taskGetDTO;
     }
 
+    @Transactional
     public RoutineGetDTO getRoutine(Long id) {
         Optional<Routine> routine_from_db_opt = routineRepository.findById(id);
         if (routine_from_db_opt.isEmpty()) {
@@ -362,11 +372,12 @@ public class EntitiService {
         } else {
             routineGetDTO.setGoal_id(routine_from_db_opt.get().getGoal().getId());
         }
-        Set<EntitiShortDTO> sublinks = new HashSet<>();
-       routineGetDTO.setSublinks(extractEntities(routine_from_db_opt.get()));
+        routineGetDTO.setResources(resourceShortMapper.mapToDto(routine_from_db_opt.get().getResources().stream().collect(Collectors.toList())).stream().collect(Collectors.toSet()));
+        routineGetDTO.setSublinks(extractEntities(routine_from_db_opt.get()));
         return routineGetDTO;
     }
 
+    @Transactional
     public ReflectionGetDTO getReflection(Long id) {
         Optional<Reflection> reflection_from_db_opt = reflectionRepository.findById(id);
         if (reflection_from_db_opt.isEmpty()) {
@@ -378,11 +389,12 @@ public class EntitiService {
         } else {
             reflectionGetDTO.setGoal_id(reflection_from_db_opt.get().getGoal().getId());
         }
-        Set<EntitiShortDTO> sublinks = new HashSet<>();
+        reflectionGetDTO.setResources(resourceShortMapper.mapToDto(reflection_from_db_opt.get().getResources().stream().collect(Collectors.toList())).stream().collect(Collectors.toSet()));
         reflectionGetDTO.setSublinks(extractEntities(reflection_from_db_opt.get()));
         return reflectionGetDTO;
     }
 
+    @Transactional
     public QuestionGetDTO getQuestion(Long id) {
         Optional<Question> question_from_db_opt = questionRepository.findById(id);
         if (question_from_db_opt.isEmpty()) {
@@ -394,7 +406,7 @@ public class EntitiService {
         } else {
             questionGetDTO.setGoal_id(question_from_db_opt.get().getGoal().getId());
         }
-        Set<EntitiShortDTO> sublinks = new HashSet<>();
+        questionGetDTO.setResources(resourceShortMapper.mapToDto(question_from_db_opt.get().getResources().stream().collect(Collectors.toList())).stream().collect(Collectors.toSet()));
         questionGetDTO.setSublinks(extractEntities(question_from_db_opt.get()));
         return questionGetDTO;
     }
@@ -424,6 +436,7 @@ public class EntitiService {
             goalRepository.save(main_goal);
             reflection_from_db_opt.get().setGoal(null);
         }
+        resourceRepository.deleteAll(reflection_from_db_opt.get().getResources());
         reflectionRepository.deleteById(id);
         return new MessageResponse("Reflection deleted!", MessageType.SUCCESS);
     }
@@ -451,6 +464,7 @@ public class EntitiService {
             goalRepository.save(main_goal);
             question_from_db_opt.get().setGoal(null);
         }
+        resourceRepository.deleteAll(question_from_db_opt.get().getResources());
         questionRepository.deleteById(id);
         return new MessageResponse("Question deleted!", MessageType.SUCCESS);
     }
@@ -478,6 +492,7 @@ public class EntitiService {
             goalRepository.save(main_goal);
             task_from_db_opt.get().setGoal(null);
         }
+        resourceRepository.deleteAll(task_from_db_opt.get().getResources());
         taskRepository.deleteById(id);
         return new MessageResponse("Task deleted!", MessageType.SUCCESS);
     }
@@ -505,6 +520,7 @@ public class EntitiService {
             goalRepository.save(main_goal);
             routine_from_db_opt.get().setGoal(null);
         }
+        resourceRepository.deleteAll(routine_from_db_opt.get().getResources());
         routineRepository.deleteById(id);
         return new MessageResponse("Routine deleted!", MessageType.SUCCESS);
     }

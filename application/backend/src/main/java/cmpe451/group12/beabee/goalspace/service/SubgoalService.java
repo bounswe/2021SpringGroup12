@@ -4,10 +4,10 @@ package cmpe451.group12.beabee.goalspace.service;
 import cmpe451.group12.beabee.common.dto.MessageResponse;
 import cmpe451.group12.beabee.common.enums.MessageType;
 import cmpe451.group12.beabee.common.repository.UserRepository;
-import cmpe451.group12.beabee.goalspace.Repository.EntitiRepository;
-import cmpe451.group12.beabee.goalspace.Repository.GoalRepository;
-import cmpe451.group12.beabee.goalspace.Repository.SubgoalRepository;
-import cmpe451.group12.beabee.goalspace.dto.entities.EntitiShortDTO;
+import cmpe451.group12.beabee.goalspace.Repository.entities.EntitiRepository;
+import cmpe451.group12.beabee.goalspace.Repository.goals.GoalRepository;
+import cmpe451.group12.beabee.goalspace.Repository.goals.SubgoalRepository;
+import cmpe451.group12.beabee.goalspace.dto.entities.EntitiDTOShort;
 import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalDTOShort;
 import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalGetDTO;
 import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalPostDTO;
@@ -63,9 +63,9 @@ public class SubgoalService {
         return new MessageResponse("Subgoal added.", MessageType.SUCCESS);
     }
 
-    private Set<EntitiShortDTO> extractEntities(Subgoal subgoal){
+    private Set<EntitiDTOShort> extractEntities(Subgoal subgoal){
 
-        Set<EntitiShortDTO> sublinks = new HashSet<>();
+        Set<EntitiDTOShort> sublinks = new HashSet<>();
 
         sublinks.addAll(
                 subgoal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Question"))

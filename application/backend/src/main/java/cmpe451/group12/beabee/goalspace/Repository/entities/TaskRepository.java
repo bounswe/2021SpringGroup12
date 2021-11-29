@@ -1,4 +1,4 @@
-package cmpe451.group12.beabee.goalspace.Repository;
+package cmpe451.group12.beabee.goalspace.Repository.entities;
 
 import cmpe451.group12.beabee.goalspace.model.entities.Task;
 import org.springframework.data.jpa.repository.JpaRepository;

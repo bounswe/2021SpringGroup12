@@ -2,7 +2,7 @@ package cmpe451.group12.beabee.common.service;
 
 
 import cmpe451.group12.beabee.common.repository.UserRepository;
-import cmpe451.group12.beabee.goalspace.Repository.GoalRepository;
+import cmpe451.group12.beabee.goalspace.Repository.goals.GoalRepository;
 import cmpe451.group12.beabee.common.dto.UserGetDTO;
 import cmpe451.group12.beabee.goalspace.mapper.goals.GoalPostMapper;
 import cmpe451.group12.beabee.common.mapper.UserMapper;
