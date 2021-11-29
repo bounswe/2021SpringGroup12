@@ -2,7 +2,7 @@
 package cmpe451.group12.beabee.goalspace.mapper.entities;
 
 
-import cmpe451.group12.beabee.goalspace.dto.entities.EntitiDTO;
+import cmpe451.group12.beabee.goalspace.dto.entities.EntitiShortDTO;
 import cmpe451.group12.beabee.goalspace.model.entities.Question;
 import cmpe451.group12.beabee.goalspace.model.entities.Reflection;
 import cmpe451.group12.beabee.goalspace.model.entities.Routine;
@@ -14,83 +14,72 @@ import java.util.Iterator;
 import java.util.List;
 
 @Component
-public class EntitiMapper {
+public class EntitiShortMapper {
 
-    public EntitiMapper() {
+    public EntitiShortMapper() {
     }
 
 
-    public EntitiDTO mapToDto(Reflection reflection) {
+    public EntitiShortDTO mapToDto(Reflection reflection) {
         if (reflection == null) {
             return null;
         } else {
-            EntitiDTO entityDTO = new EntitiDTO();
+            EntitiShortDTO entityDTO = new EntitiShortDTO();
             entityDTO.setId(reflection.getId());
             entityDTO.setEntitiType(reflection.getEntitiType());
             entityDTO.setTitle(reflection.getTitle());
-            entityDTO.setIsDone(reflection.getIsDone());
             entityDTO.setDescription(reflection.getDescription());
-            entityDTO.setCreatedAt(reflection.getCreatedAt());
             return entityDTO;
         }
     }
-    public EntitiDTO mapToDto(Question question) {
+    public EntitiShortDTO mapToDto(Question question) {
         if (question == null) {
             return null;
         } else {
-            EntitiDTO entityDTO = new EntitiDTO();
+            EntitiShortDTO entityDTO = new EntitiShortDTO();
             entityDTO.setId(question.getId());
             entityDTO.setEntitiType(question.getEntitiType());
-
             entityDTO.setTitle(question.getTitle());
-            entityDTO.setIsDone(question.getIsDone());
             entityDTO.setDescription(question.getDescription());
-            entityDTO.setCreatedAt(question.getCreatedAt());
+
             return entityDTO;
         }
     }
-    public EntitiDTO mapToDto(Task task) {
+    public EntitiShortDTO mapToDto(Task task) {
         if (task == null) {
             return null;
         } else {
-            EntitiDTO entityDTO = new EntitiDTO();
+            EntitiShortDTO entityDTO = new EntitiShortDTO();
             entityDTO.setId(task.getId());
             entityDTO.setEntitiType(task.getEntitiType());
-
             entityDTO.setTitle(task.getTitle());
-            entityDTO.setIsDone(task.getIsDone());
             entityDTO.setDescription(task.getDescription());
             entityDTO.setDeadline(task.getDeadline());
-            entityDTO.setCreatedAt(task.getCreatedAt());
-            entityDTO.setRating(task.getRating());
             return entityDTO;
         }
     }
 
-    public EntitiDTO mapToDto(Routine routine) {
+    public EntitiShortDTO mapToDto(Routine routine) {
         if (routine == null) {
             return null;
         } else {
-            EntitiDTO entityDTO = new EntitiDTO();
+            EntitiShortDTO entityDTO = new EntitiShortDTO();
             entityDTO.setId(routine.getId());
             entityDTO.setEntitiType(routine.getEntitiType());
 
             entityDTO.setTitle(routine.getTitle());
-            entityDTO.setIsDone(routine.getIsDone());
             entityDTO.setDescription(routine.getDescription());
             entityDTO.setDeadline(routine.getDeadline());
-            entityDTO.setCreatedAt(routine.getCreatedAt());
-            entityDTO.setRating(routine.getRating());
-            entityDTO.setPeriod(routine.getPeriod());
+
             return entityDTO;
         }
     }
 
-    public List<EntitiDTO> mapToReflectionDto(List<Reflection> reflectionList) {
+    public List<EntitiShortDTO> mapToReflectionDto(List<Reflection> reflectionList) {
         if (reflectionList == null) {
             return null;
         } else {
-            List<EntitiDTO> list = new ArrayList(reflectionList.size());
+            List<EntitiShortDTO> list = new ArrayList(reflectionList.size());
             Iterator var3 = reflectionList.iterator();
 
             while(var3.hasNext()) {
@@ -101,11 +90,11 @@ public class EntitiMapper {
             return list;
         }
     }
-    public List<EntitiDTO> mapToQuestionDto(List<Question> questionList) {
+    public List<EntitiShortDTO> mapToQuestionDto(List<Question> questionList) {
         if (questionList == null) {
             return null;
         } else {
-            List<EntitiDTO> list = new ArrayList(questionList.size());
+            List<EntitiShortDTO> list = new ArrayList(questionList.size());
             Iterator var3 = questionList.iterator();
 
             while(var3.hasNext()) {
@@ -116,11 +105,11 @@ public class EntitiMapper {
             return list;
         }
     }
-    public List<EntitiDTO> mapToTaskDto(List<Task> taskList) {
+    public List<EntitiShortDTO> mapToTaskDto(List<Task> taskList) {
         if (taskList == null) {
             return null;
         } else {
-            List<EntitiDTO> list = new ArrayList(taskList.size());
+            List<EntitiShortDTO> list = new ArrayList(taskList.size());
             Iterator var3 = taskList.iterator();
 
             while(var3.hasNext()) {
@@ -131,11 +120,11 @@ public class EntitiMapper {
             return list;
         }
     }
-    public List<EntitiDTO> mapToRoutineDto(List<Routine> routineList) {
+    public List<EntitiShortDTO> mapToRoutineDto(List<Routine> routineList) {
         if (routineList == null) {
             return null;
         } else {
-            List<EntitiDTO> list = new ArrayList(routineList.size());
+            List<EntitiShortDTO> list = new ArrayList(routineList.size());
             Iterator var3 = routineList.iterator();
 
             while(var3.hasNext()) {

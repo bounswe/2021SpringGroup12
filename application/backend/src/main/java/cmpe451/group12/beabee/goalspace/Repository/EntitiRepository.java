@@ -11,7 +11,7 @@ public interface EntitiRepository  extends JpaRepository<Entiti, Long> {
 
     Optional<Entiti> findById(Long entity_id);
 
-    List<Entiti> findAllByMainGoal(Goal goal);
+    List<Entiti> findAllByGoal(Goal goal);
 
 
 

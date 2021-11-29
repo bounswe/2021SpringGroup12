@@ -28,7 +28,6 @@ public class UserCredentialsService {
 
     private  final UserRepository userRepository;
     private  final UserCredentialsGetMapper userCredentialsGetMapper;
-    private  final UserCredentialsPostMapper userCredentialsPostMapper;
     private final EmailSender emailSender;
 
 
@@ -39,7 +38,7 @@ public class UserCredentialsService {
            user.get().setPassword("***");
            return userCredentialsGetMapper.mapToDto(user.get());
        }
-        return new UserCredentialsGetDTO();
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!");
     }
 
     public MessageResponse sendResetPasswordMail(String email_or_username) throws MessagingException {

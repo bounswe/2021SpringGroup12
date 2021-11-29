@@ -1,5 +1,6 @@
 package cmpe451.group12.beabee.goalspace.model.goals;
 
+import cmpe451.group12.beabee.common.model.Users;
 import cmpe451.group12.beabee.goalspace.model.entities.Entiti;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -23,6 +24,10 @@ public class Subgoal {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idgen2")
     @Column(name = "ID")
     private Long id;
+
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private Users creator;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "main_goal_id")

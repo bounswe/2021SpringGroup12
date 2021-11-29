@@ -44,6 +44,9 @@ public class Users{
     @OneToMany(mappedBy = "creator")
     private Set<Goal> goals;
 
+    @JsonIgnoreProperties({"creator"})
+    @OneToMany(mappedBy = "creator")
+    private Set<Goal> subgoals;
     /*
     @JsonIgnoreProperties({"creator"})
     @OneToMany(mappedBy = "creator")

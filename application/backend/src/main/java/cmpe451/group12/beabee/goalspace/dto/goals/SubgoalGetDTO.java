@@ -1,6 +1,7 @@
 package cmpe451.group12.beabee.goalspace.dto.goals;
 
 
+import cmpe451.group12.beabee.goalspace.dto.entities.EntitiShortDTO;
 import cmpe451.group12.beabee.goalspace.enums.EntitiType;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +28,7 @@ public class SubgoalGetDTO {
     private Date deadline;
     private Double rating;
 
-    private Set<SubgoalDTOShort> childSubgoals;
+    private Set<SubgoalDTOShort> sublinks;
+    private Set<EntitiShortDTO> entities;
 
 }

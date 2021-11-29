@@ -25,8 +25,8 @@ public class Goal extends AllGoal{
     @JoinColumn(name = "user_id")
     private Users creator;
     
-    @JsonIgnoreProperties({"mainGoal"})
-    @OneToMany(mappedBy = "mainGoal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"goal"})
+    @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Entiti> entities;
 
 

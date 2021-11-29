@@ -28,13 +28,11 @@ public abstract class Entiti {
     private Long id;
 
     @JsonIgnoreProperties({"entities"})
-//    @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "goal_id")
-    private Goal mainGoal;
+    private Goal goal;
 
     @JsonIgnoreProperties({"entities"})
-//    @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "subgoal_id")
     private Subgoal subgoal;
