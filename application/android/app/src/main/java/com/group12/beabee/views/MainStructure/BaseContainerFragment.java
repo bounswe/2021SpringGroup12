@@ -79,6 +79,7 @@ public class BaseContainerFragment extends Fragment {
     public void AddNewFragment(BaseInnerFragment fragment) {
         fragmentManager = getChildFragmentManager();
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_left, R.anim.slide_right)
                 .replace(R.id.fragment_cont, fragment)
                 .setReorderingAllowed(true)
                 .addToBackStack(null)
