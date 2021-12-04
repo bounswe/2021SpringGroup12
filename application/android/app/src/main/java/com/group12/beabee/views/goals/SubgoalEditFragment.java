@@ -82,9 +82,11 @@ public class SubgoalEditFragment extends BaseInnerFragment {
 
         subgoalDTO.title = etTitle.getText().toString();
         subgoalDTO.description = etDescription.getText().toString();
+        Utils.showLoading(getChildFragmentManager());
         service.updateSubgoal(BeABeeApplication.userId, subgoalDTO).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
                     Utils.ShowErrorToast(getContext(), "Subgoal is successfully updated!");
                     GoBack();
@@ -96,6 +98,7 @@ public class SubgoalEditFragment extends BaseInnerFragment {
             }
             @Override
             public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
                 Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
             }
         });

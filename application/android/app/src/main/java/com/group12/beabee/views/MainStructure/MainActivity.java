@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         viewPagerMain.setAdapter(new MainPagerAdapter(this));
         viewPagerMain.setOffscreenPageLimit(5);
+        viewPagerMain.setUserInputEnabled(false);
         viewPagerMain.registerOnPageChangeCallback(new PagerPageChangeListener());
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationListener());
     }

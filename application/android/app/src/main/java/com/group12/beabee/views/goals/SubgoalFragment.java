@@ -54,9 +54,11 @@ public class SubgoalFragment extends BaseEntityListBottomFragment {
     @Override
     public void onResume() {
         super.onResume();
+        Utils.showLoading(getChildFragmentManager());
         service.getSubgoal(id).enqueue(new Callback<SubgoalDTO>() {
             @Override
             public void onResponse(Call<SubgoalDTO> call, Response<SubgoalDTO> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null) {
                     OnSubgoalReceived(response.body());
                 } else {
@@ -67,14 +69,16 @@ public class SubgoalFragment extends BaseEntityListBottomFragment {
 
             @Override
             public void onFailure(Call<SubgoalDTO> call, Throwable t) {
+                Utils.dismissLoading();
                 Utils.ShowErrorToast(getContext(), "Something went wrong!");
                 GoBack();
             }
         });
-
+        Utils.showLoading(getChildFragmentManager());
         service.getSublinksForEntity(id).enqueue(new Callback<List<Entity>>() {
             @Override
             public void onResponse(Call<List<Entity>> call, Response<List<Entity>> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null) {
                     OnEntitiesReceived(response.body());
                 } else {
@@ -85,6 +89,7 @@ public class SubgoalFragment extends BaseEntityListBottomFragment {
 
             @Override
             public void onFailure(Call<List<Entity>> call, Throwable t) {
+                Utils.dismissLoading();
                 Utils.ShowErrorToast(getContext(), "Something went wrong!");
                 GoBack();
             }

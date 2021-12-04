@@ -1,4 +1,4 @@
-package com.group12.beabee.views.MainStructure;
+package com.group12.beabee.views.dialogs;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,6 +17,7 @@ import com.group12.beabee.Utils;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.Entity;
 import com.group12.beabee.network.BeABeeService;
+import com.group12.beabee.views.MainStructure.BaseEntityListBottomFragment;
 import com.group12.beabee.views.entities.QuestionCreateFragment;
 import com.group12.beabee.views.entities.ReflectionCreateFragment;
 import com.group12.beabee.views.entities.RoutineCreateFragment;
@@ -51,7 +52,6 @@ public class EntitySelectorDialog extends DialogFragment {
         args.putInt("parentId", parentId);
         args.putString("dataType", dataType);
         f.setArguments(args);
-
         return f;
     }
 

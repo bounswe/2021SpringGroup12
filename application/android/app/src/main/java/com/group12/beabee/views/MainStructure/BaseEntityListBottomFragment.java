@@ -12,7 +12,7 @@ import com.group12.beabee.R;
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.responses.Entity;
 import com.group12.beabee.views.BaseInnerFragment;
-import com.group12.beabee.views.MainStructure.PageMode;
+import com.group12.beabee.views.dialogs.EntitySelectorDialog;
 import com.group12.beabee.views.entities.IOnQuestionClickedListener;
 import com.group12.beabee.views.entities.IOnReflectionClickedListener;
 import com.group12.beabee.views.entities.IOnRoutineClickedListener;
@@ -104,9 +104,11 @@ public abstract class BaseEntityListBottomFragment extends BaseInnerFragment imp
         tagAdapter.setItemClickListener(this);
         subgoalAdapter.setItemClickListener(this);
 
+        Utils.showLoading(getChildFragmentManager());
         service.getEntitiesOfUser(BeABeeApplication.userId).enqueue(new Callback<List<Entity>>() {
             @Override
             public void onResponse(Call<List<Entity>> call, Response<List<Entity>> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null) {
                     OnExistingEntitiesReceived(response.body());
                 } else {
@@ -117,6 +119,7 @@ public abstract class BaseEntityListBottomFragment extends BaseInnerFragment imp
 
             @Override
             public void onFailure(Call<List<Entity>> call, Throwable t) {
+                Utils.dismissLoading();
                 Utils.ShowErrorToast(getContext(), "Something went wrong!");
                 GoBack();
             }
