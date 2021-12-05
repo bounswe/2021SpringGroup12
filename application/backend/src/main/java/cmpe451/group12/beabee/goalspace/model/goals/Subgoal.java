@@ -63,8 +63,12 @@ public class Subgoal {
 
     @JsonIgnoreProperties({"assigned"})
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "users")
-    @Column(name = "subgoal_assignee_ids")
+    @JoinTable(
+            name = "Subgoal_Assignees",
+            joinColumns = { @JoinColumn(name = "subgoal_id") },
+            inverseJoinColumns = { @JoinColumn(name = "user_id") }
+    )
+    @Column(name = "assignee_id")
     private Set<Users> assignees;
 
     private Double rating;

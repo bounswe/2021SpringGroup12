@@ -94,7 +94,9 @@ public class SubgoalService {
         SubgoalGetDTO subgoalGetDTO = subgoalGetMapper.mapToDto(subgoal_from_db_opt.get());
         if (subgoal_from_db_opt.get().getMainGoal() != null) {
             subgoalGetDTO.setMain_goal_id(subgoal_from_db_opt.get().getMainGoal().getId());
-        }else{
+        }else if(subgoal_from_db_opt.get().getMainGroupgoal() != null){
+            subgoalGetDTO.setMain_goal_id(subgoal_from_db_opt.get().getMainGroupgoal().getId());
+        }else {
             subgoalGetDTO.setParent_subgoal_id(subgoalRepository.findParentById(id).getId());
         }
         subgoalGetDTO.setSublinks(new HashSet<>(subgoalShortMapper.mapToDto(new ArrayList<>(subgoal_from_db_opt.get().getChild_subgoals()))));
@@ -207,7 +209,9 @@ public class SubgoalService {
             if (!subgoal.getMainGroupgoal().getMembers().contains(user)) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id:" + user_id + " not found!");
             }
-            subgoal.getAssignees().add(user);
+            if (!subgoal.getAssignees().contains(user)) {
+                subgoal.getAssignees().add(user);;
+            }
         }
 
         subgoalRepository.save(subgoal);
@@ -227,9 +231,9 @@ public class SubgoalService {
                     () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id:" + user_id + " not found!")
             );
             if (!subgoal.getMainGroupgoal().getMembers().contains(user)) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id:" + user_id + " is not a member of the group goa1!");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id:" + user_id + " is not a member of the group goal!");
             }
-            if (subgoal.getAssignees().contains(user)) {
+            if (!subgoal.getAssignees().contains(user)) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id:" + user_id + " is not an assignee of the subgoal!");
             }
             user.getAssigned().remove(subgoal);

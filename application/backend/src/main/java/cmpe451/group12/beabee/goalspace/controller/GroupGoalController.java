@@ -92,18 +92,18 @@ public class GroupGoalController {
     }
 
     @ApiOperation(value = "Join a group goal with token")
-    @PostMapping("/{user_id}/{token}")
+    @PostMapping("/{user_id}/join")
     public GroupGoalDTOShort joinWithToken(
             @PathVariable @ApiParam(value = "Id of the user", example = "5") Long user_id,
-            @PathVariable @ApiParam(value = "Token of the group", example = "5wbwf6yUxVBcr48AMbz9cb") String token){
+            @RequestParam(value = "token") @ApiParam(value = "Token of the group", example = "5wbwf6yUxVBcr48AMbz9cb") String token){
         return groupGoalService.joinWithToken(user_id, token);
     }
 
     @ApiOperation(value = "Add a new member to the Group Goal")
-    @PostMapping("/{groupgoal_id}/{username}")
+    @PutMapping("/{groupgoal_id}/members")
     public MessageResponse addMember(
             @PathVariable @ApiParam(value = "Id of the group goal", example = "5") Long groupgoal_id,
-            @PathVariable @ApiParam(value = "Username of the user", example = "5") String username) {
+            @RequestParam @ApiParam(value = "Username of the user", example = "5") String username) {
         return groupGoalService.addMember(groupgoal_id, username);
     }
 
