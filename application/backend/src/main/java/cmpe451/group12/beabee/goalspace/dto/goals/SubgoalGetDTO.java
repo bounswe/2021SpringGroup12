@@ -1,6 +1,8 @@
 package cmpe451.group12.beabee.goalspace.dto.goals;
 
 
+import cmpe451.group12.beabee.common.dto.UserGetDTO;
+import cmpe451.group12.beabee.common.model.Users;
 import cmpe451.group12.beabee.goalspace.dto.entities.EntitiDTOShort;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,5 +30,6 @@ public class SubgoalGetDTO {
 
     private Set<SubgoalDTOShort> sublinks;
     private Set<EntitiDTOShort> entities;
+    private Set<Long> assignees;
 
 }

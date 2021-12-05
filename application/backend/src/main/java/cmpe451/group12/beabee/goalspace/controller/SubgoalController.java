@@ -96,4 +96,17 @@ public class SubgoalController {
         return subgoalService.deleteSubgoal(id);
     }
 
+    @ApiOperation(value = "Assign subgoal to the users.")
+    @PostMapping("/{subgoal_id}")
+    public MessageResponse addAssignees(@PathVariable @ApiParam(value = "Id of the subgoal.", example = "5") long subgoal_id,
+                                        @RequestParam @ApiParam(value = "List if user ids", example = "5,13,24") List<Long> user_ids) {
+        return subgoalService.addAssignees(subgoal_id, user_ids);
+    }
+
+    @ApiOperation(value = "Revoke the assignment of subgoal to the users.")
+    @DeleteMapping("/{subgoal_id}")
+    public MessageResponse removeAssigness(@PathVariable @ApiParam(value = "Id of the subgoal.", example = "5") long subgoal_id,
+                                           @RequestParam @ApiParam(value = "List if user ids", example = "5,13,24") List<Long> user_ids) {
+        return subgoalService.removeAssignees(subgoal_id, user_ids);
+    }
 }

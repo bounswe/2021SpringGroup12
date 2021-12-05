@@ -2,6 +2,7 @@ package cmpe451.group12.beabee.common.model;
 
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import cmpe451.group12.beabee.goalspace.model.goals.GroupGoal;
+import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
@@ -56,6 +57,10 @@ public class Users{
     @JsonIgnoreProperties({"members"})
     @ManyToMany(mappedBy = "members")
     private Set<GroupGoal> memberOf;
+
+    @JsonIgnoreProperties({"assignees"})
+    @ManyToMany(mappedBy = "assignees")
+    private Set<Subgoal> assigned;
 
     /*
     @JsonIgnoreProperties({"creator"})

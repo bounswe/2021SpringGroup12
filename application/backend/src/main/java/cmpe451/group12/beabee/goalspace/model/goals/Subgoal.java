@@ -61,6 +61,12 @@ public class Subgoal {
     @Column(name = "parent_subgoal_id")
     private Set<Subgoal> child_subgoals;
 
+    @JsonIgnoreProperties({"assigned"})
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "users")
+    @Column(name = "subgoal_assignee_ids")
+    private Set<Users> assignees;
+
     private Double rating;
 
 
