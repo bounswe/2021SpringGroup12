@@ -19,8 +19,6 @@ import { Content } from "antd/lib/layout/layout";
 import {Layout} from "antd";
 import Sidebar from "./components/Sidebar";
 
-
-
 export interface IAppProps {}
 
 export interface IAppState {
