@@ -34,6 +34,8 @@ public class RoutineFragment extends BaseEntityListBottomFragment {
     TextView tvDescription;
     @BindView(R.id.cb_isDone)
     CheckBox cbIsDone;
+    @BindView(R.id.tv_dateSelected)
+    TextView tvDateSelected;
     private RoutineDTO routineDTO;
 
 
@@ -100,6 +102,7 @@ public class RoutineFragment extends BaseEntityListBottomFragment {
         tvTitle.setText(data.title);
         tvDescription.setText(data.description);
         cbIsDone.setChecked(data.isDone);
+        tvDateSelected.setText(data.deadline);
     }
 
     @Override

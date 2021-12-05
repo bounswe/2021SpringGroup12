@@ -1,14 +1,22 @@
 package com.group12.beabee.views.entities;
 
+import android.app.DatePickerDialog;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.DialogFragment;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
@@ -19,7 +27,11 @@ import com.group12.beabee.models.responses.TaskDTO;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
 
+import java.text.DateFormat;
+import java.util.Calendar;
+
 import butterknife.BindView;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -29,7 +41,7 @@ import retrofit2.Response;
  * Use the {@link TaskFragmentEdit#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TaskFragmentEdit extends BaseInnerFragment {
+public class TaskFragmentEdit extends BaseInnerFragment implements DatePickerDialog.OnDateSetListener {
 
     @BindView(R.id.et_title)
     EditText etTitle;
@@ -37,6 +49,10 @@ public class TaskFragmentEdit extends BaseInnerFragment {
     EditText etDescription;
     @BindView(R.id.cb_isDone)
     CheckBox cbIsDone;
+    @BindView(R.id.tv_deadline)
+    TextView tvDeadline;
+    @BindView(R.id.btn_pickDate)
+    Button btnPickDate;
 
     private TaskDTO taskDTO;
 
@@ -72,6 +88,17 @@ public class TaskFragmentEdit extends BaseInnerFragment {
         etTitle.setText(taskDTO.title);
         etDescription.setText(taskDTO.description);
         cbIsDone.setChecked(taskDTO.isDone);
+        tvDeadline.setText(taskDTO.deadline);
+        //Button button = (Button) findViewById(R.id.btn_pickDate);
+//        btnPickDate.setOnClickListener(new View.OnClickListener() {
+//            @OnClick
+//            public void onClick(View v) {
+//
+//                //Toast.makeText(this, "Click event works.", Toast.LENGTH_SHORT).show();
+//                DialogFragment datePicker = new DeadlineCalendarFragment(this);
+//                datePicker.show(getChildFragmentManager(), "date picker");
+//            }
+//        });
     }
 
     @Override
@@ -88,6 +115,7 @@ public class TaskFragmentEdit extends BaseInnerFragment {
         taskDTO.title = etTitle.getText().toString();
         taskDTO.description = etDescription.getText().toString();
         taskDTO.isDone = cbIsDone.isChecked();
+        taskDTO.deadline = tvDeadline.getText().toString();
         service.updateTask(taskDTO.id, taskDTO).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
@@ -117,4 +145,35 @@ public class TaskFragmentEdit extends BaseInnerFragment {
     protected int GetLayoutId() {
         return R.layout.fragment_task_edit;
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        String dateString = c.toInstant().toString();
+//
+//
+        tvDeadline.setText(dateString);
+        //String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
+
+
+       // tvDeadline.setText(currentDateString);
+
+    }
+
+    @OnClick(R.id.btn_pickDate)
+    public void onClick(View view) {
+//        Calendar c = Calendar.getInstance();
+//        int year = c.get(Calendar.YEAR);
+//        int month = c.get(Calendar.MONTH);
+//        int day = c.get(Calendar.DAY_OF_MONTH);
+
+        //DialogFragment datePicker = new DatePickerDialog(getContext(), (DatePickerDialog.OnDateSetListener) getContext(), year, month, day);
+        DialogFragment datePicker = new DeadlineCalendarFragment(this);
+        datePicker.show(getActivity().getSupportFragmentManager(), "date picker");
+    }
+
 }

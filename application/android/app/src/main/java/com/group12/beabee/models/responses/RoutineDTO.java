@@ -15,7 +15,7 @@ public class RoutineDTO implements Serializable {
     @SerializedName("mainGoal_id")
     public int mainGoalId;
     public String createdAt;
-    public String deadline = null;
+    public String deadline;
     public String rating = null;
     public String period = null;
     public String created = null;

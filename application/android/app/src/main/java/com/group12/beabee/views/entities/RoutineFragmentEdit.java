@@ -1,14 +1,21 @@
 package com.group12.beabee.views.entities;
 
+import android.app.DatePickerDialog;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
@@ -19,7 +26,10 @@ import com.group12.beabee.models.responses.TaskDTO;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
 
+import java.util.Calendar;
+
 import butterknife.BindView;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -29,7 +39,7 @@ import retrofit2.Response;
  * Use the {@link RoutineFragmentEdit#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RoutineFragmentEdit extends BaseInnerFragment {
+public class RoutineFragmentEdit extends BaseInnerFragment implements DatePickerDialog.OnDateSetListener{
 
     @BindView(R.id.et_title)
     EditText etTitle;
@@ -37,6 +47,10 @@ public class RoutineFragmentEdit extends BaseInnerFragment {
     EditText etDescription;
     @BindView(R.id.cb_isDone)
     CheckBox cbIsDone;
+    @BindView(R.id.tv_deadline)
+    TextView tvDeadline;
+    @BindView(R.id.btn_pickDate)
+    Button btnPickDate;
     private RoutineDTO routineDTO;
 
 
@@ -71,6 +85,7 @@ public class RoutineFragmentEdit extends BaseInnerFragment {
         etTitle.setText(routineDTO.title);
         etDescription.setText(routineDTO.description);
         cbIsDone.setChecked(routineDTO.isDone);
+        tvDeadline.setText(routineDTO.deadline);
     }
 
     @Override
@@ -87,6 +102,7 @@ public class RoutineFragmentEdit extends BaseInnerFragment {
         routineDTO.title = etTitle.getText().toString();
         routineDTO.description = etDescription.getText().toString();
         routineDTO.isDone = cbIsDone.isChecked();
+        routineDTO.deadline = tvDeadline.getText().toString();
         service.updateRoutine(routineDTO.id, routineDTO).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
@@ -114,5 +130,35 @@ public class RoutineFragmentEdit extends BaseInnerFragment {
     @Override
     protected int GetLayoutId() {
         return R.layout.fragment_routine_edit;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        String dateString = c.toInstant().toString();
+//
+//
+        tvDeadline.setText(dateString);
+        //String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
+
+
+        // tvDeadline.setText(currentDateString);
+
+    }
+
+    @OnClick(R.id.btn_pickDate)
+    public void onClick(View view) {
+//        Calendar c = Calendar.getInstance();
+//        int year = c.get(Calendar.YEAR);
+//        int month = c.get(Calendar.MONTH);
+//        int day = c.get(Calendar.DAY_OF_MONTH);
+
+        //DialogFragment datePicker = new DatePickerDialog(getContext(), (DatePickerDialog.OnDateSetListener) getContext(), year, month, day);
+        DialogFragment datePicker = new DeadlineCalendarFragment(this);
+        datePicker.show(getActivity().getSupportFragmentManager(), "date picker");
     }
 }
