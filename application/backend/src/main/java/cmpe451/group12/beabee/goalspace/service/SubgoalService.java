@@ -3,9 +3,11 @@ package cmpe451.group12.beabee.goalspace.service;
 
 import cmpe451.group12.beabee.common.dto.MessageResponse;
 import cmpe451.group12.beabee.common.enums.MessageType;
+import cmpe451.group12.beabee.common.model.Users;
 import cmpe451.group12.beabee.common.repository.UserRepository;
 import cmpe451.group12.beabee.goalspace.Repository.entities.EntitiRepository;
 import cmpe451.group12.beabee.goalspace.Repository.goals.GoalRepository;
+import cmpe451.group12.beabee.goalspace.Repository.goals.GroupGoalRepository;
 import cmpe451.group12.beabee.goalspace.Repository.goals.SubgoalRepository;
 import cmpe451.group12.beabee.goalspace.dto.entities.EntitiDTOShort;
 import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalDTOShort;
@@ -18,6 +20,7 @@ import cmpe451.group12.beabee.goalspace.mapper.goals.SubgoalPostMapper;
 import cmpe451.group12.beabee.goalspace.mapper.goals.SubgoalShortMapper;
 import cmpe451.group12.beabee.goalspace.model.entities.*;
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
+import cmpe451.group12.beabee.goalspace.model.goals.GroupGoal;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,6 +39,7 @@ public class SubgoalService {
     private final SubgoalPostMapper subgoalPostMapper;
     private final SubgoalRepository subgoalRepository;
     private final GoalRepository goalRepository;
+    private final GroupGoalRepository groupGoalRepository;
     private final UserRepository userRepository;
     private final EntitiMapper entitiMapper;
     private final EntitiRepository entitiRepository;
@@ -90,11 +94,14 @@ public class SubgoalService {
         SubgoalGetDTO subgoalGetDTO = subgoalGetMapper.mapToDto(subgoal_from_db_opt.get());
         if (subgoal_from_db_opt.get().getMainGoal() != null) {
             subgoalGetDTO.setMain_goal_id(subgoal_from_db_opt.get().getMainGoal().getId());
-        }else{
+        }else if(subgoal_from_db_opt.get().getMainGroupgoal() != null){
+            subgoalGetDTO.setMain_goal_id(subgoal_from_db_opt.get().getMainGroupgoal().getId());
+        }else {
             subgoalGetDTO.setParent_subgoal_id(subgoalRepository.findParentById(id).getId());
         }
-        subgoalGetDTO.setSublinks(subgoalShortMapper.mapToDto(subgoal_from_db_opt.get().getChild_subgoals().stream().collect(Collectors.toList())).stream().collect(Collectors.toSet()));
+        subgoalGetDTO.setSublinks(new HashSet<>(subgoalShortMapper.mapToDto(new ArrayList<>(subgoal_from_db_opt.get().getChild_subgoals()))));
         subgoalGetDTO.setEntities(extractEntities(subgoal_from_db_opt.get()));
+        subgoalGetDTO.setAssignees(subgoal_from_db_opt.get().getAssignees().stream().map(Users::getUser_id).collect(Collectors.toSet()));
         return subgoalGetDTO;
     }
 
@@ -134,17 +141,38 @@ public class SubgoalService {
             subgoals.remove(subgoal_opt.get());
             main_goal.setSubgoals(subgoals);
             goalRepository.save(main_goal);
+            for (Users user : subgoal_opt.get().getAssignees()) {
+                user.getAssigned().remove(subgoal_opt.get());
+                userRepository.save(user);
+            }
             subgoalRepository.delete(subgoal_opt.get());
             return new MessageResponse("Subgoal deleted!", MessageType.SUCCESS);
-        } else {
+        } else if (subgoal_opt.get().getMainGroupgoal() != null) {
+            GroupGoal main_groupgoal = subgoal_opt.get().getMainGroupgoal();
+            Set<Subgoal> subgoals = main_groupgoal.getSubgoals();
+            subgoals.remove(subgoal_opt.get());
+            main_groupgoal.setSubgoals(subgoals);
+            groupGoalRepository.save(main_groupgoal);
+            for (Users user : subgoal_opt.get().getAssignees()) {
+                user.getAssigned().remove(subgoal_opt.get());
+                userRepository.save(user);
+            }
+            subgoalRepository.delete(subgoal_opt.get());
+            return new MessageResponse("Subgoal deleted!", MessageType.SUCCESS);
+        } else  {
             Subgoal parent_subgoal = subgoalRepository.findParentById(id);
             Set<Subgoal> child_subgoals = parent_subgoal.getChild_subgoals();
             child_subgoals.remove(subgoal_opt.get());
             parent_subgoal.setChild_subgoals(child_subgoals);
             subgoalRepository.save(parent_subgoal);
+            for (Users user : subgoal_opt.get().getAssignees()) {
+                user.getAssigned().remove(subgoal_opt.get());
+                userRepository.save(user);
+            }
             subgoalRepository.delete(subgoal_opt.get());
             return new MessageResponse("Subgoal deleted!", MessageType.SUCCESS);
         }
+
     }
 
     public MessageResponse updateSubgoal(SubgoalGetDTO subgoal_dto) {
@@ -167,4 +195,54 @@ public class SubgoalService {
         return new MessageResponse("Updated subgoal", MessageType.SUCCESS);
     }
 
+    public MessageResponse addAssignees(long subgoal_id, List<Long> user_ids) {
+        Subgoal subgoal = subgoalRepository.findById(subgoal_id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Subgoal not found!")
+        );
+        if (subgoal.getMainGroupgoal() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Subgoal is not linked to a group goal!");
+        }
+        for(Long user_id: user_ids) {
+            Users user = userRepository.findById(user_id).orElseThrow(
+                    () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id:" + user_id + " not found!")
+            );
+            if (!subgoal.getMainGroupgoal().getMembers().contains(user)) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id:" + user_id + " not found!");
+            }
+            if (!subgoal.getAssignees().contains(user)) {
+                subgoal.getAssignees().add(user);;
+            }
+        }
+
+        subgoalRepository.save(subgoal);
+
+        return new MessageResponse("Assigned to users successfully!", MessageType.SUCCESS);
+    }
+
+    public MessageResponse removeAssignees(long subgoal_id, List<Long> user_ids) {
+        Subgoal subgoal = subgoalRepository.findById(subgoal_id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Subgoal not found!")
+        );
+        if (subgoal.getMainGroupgoal() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Subgoal is not linked to a group goal!");
+        }
+        for(Long user_id: user_ids) {
+            Users user = userRepository.findById(user_id).orElseThrow(
+                    () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id:" + user_id + " not found!")
+            );
+            if (!subgoal.getMainGroupgoal().getMembers().contains(user)) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id:" + user_id + " is not a member of the group goal!");
+            }
+            if (!subgoal.getAssignees().contains(user)) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id:" + user_id + " is not an assignee of the subgoal!");
+            }
+            user.getAssigned().remove(subgoal);
+            userRepository.save(user);
+            subgoal.getAssignees().remove(user);
+        }
+
+        subgoalRepository.save(subgoal);
+
+        return new MessageResponse("Assignment revoked from users successfully!", MessageType.SUCCESS);
+    }
 }

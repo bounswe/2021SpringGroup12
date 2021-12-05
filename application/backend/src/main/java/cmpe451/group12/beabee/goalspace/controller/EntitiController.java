@@ -98,6 +98,7 @@ public class EntitiController {
                             "    \"description\": \"string\",\n" +
                             "    \"entitiType\": \"TASK\",\n" +
                             "    \"mainGoal_id*\": 0,\n" +
+                            "    \"mainGroupgoal_id*\": 0,\n" +
                             "    \"title*\": \"string\"\n" +
                             "  }"
             )
@@ -116,6 +117,7 @@ public class EntitiController {
                             "    \"description\": \"string\",\n" +
                             "    \"entitiType\": \"ROUTINE\",\n" +
                             "    \"mainGoal_id*\": 0,\n" +
+                            "    \"mainGroupgoal_id*\": 0,\n" +
                             "    \"title*\": \"string\"\n" +
                             "    \"period*\": \"5\"\n" +
                             "  }"
@@ -133,6 +135,7 @@ public class EntitiController {
                     value = "{\n" +
                             "    \"description\": \"string\",\n" +
                             "    \"mainGoal_id*\": 0,\n" +
+                            "    \"mainGroupgoal_id*\": 0,\n" +
                             "    \"title*\": \"string\"\n" +
                             "  }"
             )
@@ -151,6 +154,7 @@ public class EntitiController {
                             "    \"description\": \"string\",\n" +
                             "    \"entitiType\": \"QUESTION\",\n" +
                             "    \"mainGoal_id*\": 0,\n" +
+                            "    \"mainGroupgoal_id*\": 0,\n" +
                             "    \"title*\": \"string\"\n" +
                             "  }"
             )

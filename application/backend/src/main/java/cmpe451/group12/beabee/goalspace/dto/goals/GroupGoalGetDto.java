@@ -1,9 +1,7 @@
 package cmpe451.group12.beabee.goalspace.dto.goals;
 
-
-import cmpe451.group12.beabee.common.dto.UserGetDTO;
-import cmpe451.group12.beabee.common.model.Users;
 import cmpe451.group12.beabee.goalspace.dto.entities.EntitiDTOShort;
+import cmpe451.group12.beabee.goalspace.enums.GoalType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,24 +10,30 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class SubgoalGetDTO {
+public class GroupGoalGetDto
+{
 
     private Long id;
 
+    private Long user_id;
 
-    private Long main_goal_id;
-
-    private Long parent_subgoal_id;
+    private GoalType goalType;
 
     private String title;
-    private String description;
-    private Date createdAt;
+
     private Boolean isDone;
+
+    private String description;
+
     private Date deadline;
-    private Double rating;
 
-    private Set<SubgoalDTOShort> sublinks;
+    private Date createdAt;
+
+    private Set<SubgoalDTOShort> subgoals;
+
     private Set<EntitiDTOShort> entities;
-    private Set<Long> assignees;
 
+    private String token;
+
+    private Set<Long> members;
 }

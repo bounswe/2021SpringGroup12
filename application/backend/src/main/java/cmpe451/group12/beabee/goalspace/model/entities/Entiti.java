@@ -2,6 +2,7 @@ package cmpe451.group12.beabee.goalspace.model.entities;
 
 import cmpe451.group12.beabee.goalspace.enums.EntitiType;
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
+import cmpe451.group12.beabee.goalspace.model.goals.GroupGoal;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
 import cmpe451.group12.beabee.goalspace.model.resources.Resource;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -32,6 +33,11 @@ public abstract class Entiti {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "goal_id")
     private Goal goal;
+
+    @JsonIgnoreProperties({"entities"})
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "groupgoal_id")
+    private GroupGoal groupgoal;
 
     @JsonIgnoreProperties({"entities"})
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
