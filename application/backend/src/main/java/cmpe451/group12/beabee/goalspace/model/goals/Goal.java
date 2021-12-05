@@ -29,6 +29,7 @@ public class Goal extends AllGoal{
     @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Entiti> entities;
 
+    private Double rating;
 
     @JsonIgnoreProperties({"mainGoal"})
     @OneToMany(mappedBy = "mainGoal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

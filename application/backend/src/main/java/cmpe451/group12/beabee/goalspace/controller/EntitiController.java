@@ -2,6 +2,7 @@ package cmpe451.group12.beabee.goalspace.controller;
 
 
 import cmpe451.group12.beabee.common.dto.MessageResponse;
+import cmpe451.group12.beabee.goalspace.dto.DateDTO;
 import cmpe451.group12.beabee.goalspace.dto.entities.*;
 import cmpe451.group12.beabee.goalspace.service.EntitiService;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:8085")
@@ -63,11 +65,12 @@ public class EntitiController {
         return entitiService.getTasksOfAUser(user_id);
     }
 */
+
     /****************************** LINKING ENTITIES ********************************/
 
     @ApiOperation(value = "Link two entities.")
     @PostMapping("/{id}/link/{child_id}")
-    public MessageResponse linkEntities(@PathVariable @ApiParam(value = "Id of the parent entity.",example = "5") Long id, @PathVariable @ApiParam(value = "Id of the child entity.",example = "5") Long child_id) {
+    public MessageResponse linkEntities(@PathVariable @ApiParam(value = "Id of the parent entity.", example = "5") Long id, @PathVariable @ApiParam(value = "Id of the child entity.", example = "5") Long child_id) {
         return entitiService.linkEntities(id, child_id);
     }
 
@@ -80,7 +83,7 @@ public class EntitiController {
 */
     @ApiOperation(value = "Delete a link between entities.")
     @DeleteMapping("/{id}/delete_link/{child_id}")
-    public MessageResponse deleteSublinkOfAnEntity(@PathVariable @ApiParam(value = "Id of the parent entity.",example = "5") Long id, @PathVariable @ApiParam(value = "Id of the child entity.",example = "5") Long child_id) {
+    public MessageResponse deleteSublinkOfAnEntity(@PathVariable @ApiParam(value = "Id of the parent entity.", example = "5") Long id, @PathVariable @ApiParam(value = "Id of the child entity.", example = "5") Long child_id) {
         return entitiService.deleteSublinkOfAnEntity(id, child_id);
     }
 
@@ -101,7 +104,7 @@ public class EntitiController {
                             "    \"title*\": \"string\"\n" +
                             "  }"
             )
-            ) )TaskPostDTO task_dto) {
+            )) TaskPostDTO task_dto) {
         return entitiService.createTask(task_dto);
     }
 
@@ -120,7 +123,7 @@ public class EntitiController {
                             "    \"period*\": \"5\"\n" +
                             "  }"
             )
-            ) )RoutinePostDTO routine_dto) {
+            )) RoutinePostDTO routine_dto) {
         return entitiService.createRoutine(routine_dto);
     }
 
@@ -136,7 +139,7 @@ public class EntitiController {
                             "    \"title*\": \"string\"\n" +
                             "  }"
             )
-            ) ) ReflectionPostDTO reflection_post_dto) {
+            )) ReflectionPostDTO reflection_post_dto) {
         return entitiService.createReflection(reflection_post_dto);
     }
 
@@ -154,7 +157,7 @@ public class EntitiController {
                             "    \"title*\": \"string\"\n" +
                             "  }"
             )
-            ) ) QuestionPostDTO question_dto) {
+            )) QuestionPostDTO question_dto) {
         return entitiService.createQuestion(question_dto);
     }
 
@@ -166,28 +169,27 @@ public class EntitiController {
         return entitiService.getEntiti(id);
     }
 */
-
     @ApiOperation(value = "Get a task.")
     @GetMapping("/task/{id}")
-    public TaskGetDTO getTask(@PathVariable @ApiParam(value = "Id of the task.",example = "5")Long id) {
+    public TaskGetDTO getTask(@PathVariable @ApiParam(value = "Id of the task.", example = "5") Long id) {
         return entitiService.getTask(id);
     }
 
     @ApiOperation(value = "Get a routine.")
     @GetMapping("/routine/{id}")
-    public RoutineGetDTO getRoutine(@PathVariable @ApiParam(value = "Id of the routine.",example = "5")Long id) {
+    public RoutineGetDTO getRoutine(@PathVariable @ApiParam(value = "Id of the routine.", example = "5") Long id) {
         return entitiService.getRoutine(id);
     }
 
     @ApiOperation(value = "Get a reflection.")
     @GetMapping("/reflection/{id}")
-    public ReflectionGetDTO getReflection(@PathVariable @ApiParam(value = "Id of the reflection.",example = "5")Long id) {
+    public ReflectionGetDTO getReflection(@PathVariable @ApiParam(value = "Id of the reflection.", example = "5") Long id) {
         return entitiService.getReflection(id);
     }
 
     @ApiOperation(value = "Get a question.")
     @GetMapping("/question/{id}")
-    public QuestionGetDTO getQuestion(@PathVariable @ApiParam(value = "Id of the question.",example = "5") Long id) {
+    public QuestionGetDTO getQuestion(@PathVariable @ApiParam(value = "Id of the question.", example = "5") Long id) {
         return entitiService.getQuestion(id);
     }
 
@@ -195,25 +197,25 @@ public class EntitiController {
 
     @ApiOperation(value = "Delete a task.")
     @DeleteMapping("/task/{id}")
-    public MessageResponse deleteTask(@PathVariable @ApiParam(value = "Id of the task.",example = "5")Long id) {
+    public MessageResponse deleteTask(@PathVariable @ApiParam(value = "Id of the task.", example = "5") Long id) {
         return entitiService.deleteTask(id);
     }
 
     @ApiOperation(value = "Delete a routine.")
     @DeleteMapping("/routine/{id}")
-    public MessageResponse deleteRoutine(@PathVariable @ApiParam(value = "Id of the routine.",example = "5") Long id) {
+    public MessageResponse deleteRoutine(@PathVariable @ApiParam(value = "Id of the routine.", example = "5") Long id) {
         return entitiService.deleteRoutine(id);
     }
 
     @ApiOperation(value = "Delete a reflection.")
     @DeleteMapping("/reflection/{id}")
-    public MessageResponse deleteReflection(@PathVariable @ApiParam(value = "Id of the reflection.",example = "5") Long id) {
+    public MessageResponse deleteReflection(@PathVariable @ApiParam(value = "Id of the reflection.", example = "5") Long id) {
         return entitiService.deleteReflection(id);
     }
 
     @ApiOperation(value = "Delete a question.")
     @DeleteMapping("/question/{id}")
-    public MessageResponse deleteQuestion(@PathVariable @ApiParam(value = "Id of the question.",example = "5") Long id) {
+    public MessageResponse deleteQuestion(@PathVariable @ApiParam(value = "Id of the question.", example = "5") Long id) {
         return entitiService.deleteQuestion(id);
     }
 
@@ -238,7 +240,7 @@ public class EntitiController {
                             "  \"title*\": \"string\"\n" +
                             "}"
             )
-            ) ) TaskGetDTO task_dto) {
+            )) TaskGetDTO task_dto) {
         return entitiService.updateTask(task_dto);
     }
 
@@ -261,7 +263,7 @@ public class EntitiController {
                             "  \"title*\": \"string\"\n" +
                             "}"
             )
-            ) ) RoutineGetDTO routine_dto) {
+            )) RoutineGetDTO routine_dto) {
         return entitiService.updateRoutine(routine_dto);
     }
 
@@ -281,7 +283,7 @@ public class EntitiController {
                             "  \"title*\": \"string\"\n" +
                             "}"
             )
-            ) ) ReflectionGetDTO reflection_dto) {
+            )) ReflectionGetDTO reflection_dto) {
         return entitiService.updateReflection(reflection_dto);
     }
 
@@ -301,9 +303,23 @@ public class EntitiController {
                             "  \"title*\": \"string\"\n" +
                             "}"
             )
-            ) ) QuestionGetDTO question_dto) {
+            )) QuestionGetDTO question_dto) {
         return entitiService.updateQuestion(question_dto);
     }
 
+    /***************************************** EXTEND ****************************/
+    @ApiOperation(value = "Extend an entity.")
+    @PutMapping("/extend/{entiti_id}")
+    public MessageResponse extendEntiti(@PathVariable @ApiParam(value = "Id of the entity.", example = "5")Long entiti_id, @RequestBody @ApiParam(
+            value = "A JSON value representing a transaction. An example of the expected schema can be found down here.",
+            examples = @Example(value =
+            @ExampleProperty(
+                    value = "{\n" +
+                            "  \"newDeadline\": \"2021-11-20T09:48:42.553Z\",\n" +
+                            "}"
+            )
+            ))DateDTO dateDTO) {
+        return entitiService.extendEntiti(entiti_id, dateDTO.getNewDeadline());
+    }
 
 }

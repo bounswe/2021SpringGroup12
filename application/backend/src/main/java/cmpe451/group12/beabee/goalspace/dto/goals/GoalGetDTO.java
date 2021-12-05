@@ -27,6 +27,8 @@ public class GoalGetDTO {
 
     private Date createdAt;
 
+    private Date completedAt;
+
     private Set<SubgoalDTOShort> subgoals;
 
     private Set<EntitiDTOShort> entities;

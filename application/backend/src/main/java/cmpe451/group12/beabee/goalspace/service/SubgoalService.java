@@ -26,6 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +53,7 @@ public class SubgoalService {
         // initialize fields of new subgoal
         new_subgoal.setIsDone(Boolean.FALSE);
         new_subgoal.setRating(0D);
+        new_subgoal.setExtension_count(0L);
         // Add this subgoal to parent subgoal
         Set<Subgoal> subgoals_of_parent = parent_subgoal_opt.get().getChild_subgoals();
         subgoals_of_parent.add(new_subgoal);
@@ -62,8 +64,57 @@ public class SubgoalService {
         subgoalRepository.save(parent_subgoal_opt.get());
         return new MessageResponse("Subgoal added.", MessageType.SUCCESS);
     }
+    /********************* EXTEND AND COMPLETE start *************/
+    public MessageResponse extendSubgoal(Long subgoal_id, Date newDeadline) {
+        Subgoal subgoal_from_db = subgoalRepository.findById(subgoal_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Subgoal not found!"));
+        if (newDeadline.compareTo(subgoal_from_db.getDeadline()) <= 0) {
+            return new MessageResponse("New deadline must be later than current deadline!", MessageType.ERROR);
+        }
+        subgoal_from_db.setDeadline(newDeadline);
+        subgoal_from_db.setExtension_count(subgoal_from_db.getExtension_count() + 1);
+        subgoalRepository.save(subgoal_from_db);
+        return new MessageResponse("Subgoal extended successfully!", MessageType.SUCCESS);
+    }
 
-    private Set<EntitiDTOShort> extractEntities(Subgoal subgoal){
+    public MessageResponse completeSubgoal(Long subgoal_id, Long rating) {
+        Subgoal subgoal_from_db = subgoalRepository.findById(subgoal_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Subgoal not found!"));
+        if (subgoal_from_db.getIsDone()) {
+            return new MessageResponse("Already completed!", MessageType.ERROR);
+        }
+        subgoal_from_db.setIsDone(Boolean.TRUE);
+        subgoal_from_db.setCompletedAt(new Date(System.currentTimeMillis()));
+        if(subgoal_from_db.getChild_subgoals().size() == 0){
+            // it has not child subgoals
+            subgoal_from_db.setRating(rating.doubleValue());
+        }else {
+            // it has child subgoals
+            /* NOTE : this code is GEM!
+             * Gets all children and grandchildren and grandchildren ...
+             * */
+            List<Subgoal> children = subgoal_from_db.getChild_subgoals().stream()
+                    .flatMap(SubgoalService::flatMapRecursive).collect(Collectors.toList());
+            /* set completed but not rated children's rating */
+            children.stream().forEach(x->{x.setCompletedAt(new Date(System.currentTimeMillis())); x.setIsDone(Boolean.TRUE);});
+            children.stream().filter(x-> x.getRating() == 0).forEach(x->x.setRating(rating.doubleValue()));
+            /* calculate current rating as average of its children*/
+            //System.out.println(children.stream().map(x->{return x.getId() + " "+ x.getRating();}).collect(Collectors.toList()));
+            subgoal_from_db.setRating(children.stream().map(x -> x.getRating()).mapToDouble(Double::doubleValue).summaryStatistics().getAverage());
+            subgoalRepository.saveAll(children);
+        }
+        subgoalRepository.save(subgoal_from_db);
+        return new MessageResponse("Subgoal completed successfully!", MessageType.SUCCESS);
+    }
+
+    private static Stream<Subgoal> flatMapRecursive(Subgoal item) {
+        return Stream.concat(Stream.of(item), Optional.ofNullable(item.getChild_subgoals())
+                .orElseGet(Collections::emptySet)
+                .stream()
+                .flatMap(SubgoalService::flatMapRecursive));
+    }
+    /********************* EXTEND AND COMPLETE finish *************/
+
+
+    private Set<EntitiDTOShort> extractEntities(Subgoal subgoal) {
 
         Set<EntitiDTOShort> sublinks = new HashSet<>();
 
@@ -90,7 +141,7 @@ public class SubgoalService {
         SubgoalGetDTO subgoalGetDTO = subgoalGetMapper.mapToDto(subgoal_from_db_opt.get());
         if (subgoal_from_db_opt.get().getMainGoal() != null) {
             subgoalGetDTO.setMain_goal_id(subgoal_from_db_opt.get().getMainGoal().getId());
-        }else{
+        } else {
             subgoalGetDTO.setParent_subgoal_id(subgoalRepository.findParentById(id).getId());
         }
         subgoalGetDTO.setSublinks(subgoalShortMapper.mapToDto(subgoal_from_db_opt.get().getChild_subgoals().stream().collect(Collectors.toList())).stream().collect(Collectors.toSet()));

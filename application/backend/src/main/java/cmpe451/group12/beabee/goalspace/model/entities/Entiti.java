@@ -51,6 +51,9 @@ public abstract class Entiti {
     @Column(name = "createdAt", updatable = false)
     private Date createdAt;
 
+    @Column(name = "completedAt")
+    private Date completedAt;
+
     @JsonIgnoreProperties({"id"})
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "Sublinks")

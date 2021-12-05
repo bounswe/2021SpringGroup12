@@ -2,6 +2,7 @@ package cmpe451.group12.beabee.goalspace.controller;
 
 
 import cmpe451.group12.beabee.common.dto.MessageResponse;
+import cmpe451.group12.beabee.goalspace.dto.DateDTO;
 import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalDTOShort;
 import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalGetDTO;
 import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalPostDTO;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:8085")
@@ -43,9 +45,10 @@ public class SubgoalController {
         return subgoalService.createSubgoal(subgoal_dto);
     }
 
+
     @ApiOperation(value = "Get a subgoal.")
     @GetMapping("/{id}")
-    public SubgoalGetDTO getSubgoal(@PathVariable @ApiParam(value = "Id of the subgoal.",example = "5")Long id) {
+    public SubgoalGetDTO getSubgoal(@PathVariable @ApiParam(value = "Id of the subgoal.", example = "5") Long id) {
         return subgoalService.getSubgoal(id);
     }
 
@@ -87,13 +90,36 @@ public class SubgoalController {
                             "  \"title*\": \"string\"\n" +
                             "}"
             )
-            ) ) SubgoalGetDTO subgoal_dto) {
+            )) SubgoalGetDTO subgoal_dto) {
         return subgoalService.updateSubgoal(subgoal_dto);
     }
+
     @ApiOperation(value = "Delete a subgoal.")
     @DeleteMapping("/{id}")
-    public MessageResponse deleteSubgoal(@PathVariable @ApiParam(value = "Id of the subgoal.",example = "5")Long id) {
+    public MessageResponse deleteSubgoal(@PathVariable @ApiParam(value = "Id of the subgoal.", example = "5") Long id) {
         return subgoalService.deleteSubgoal(id);
+    }
+
+
+    /***************************************** EXTEND ****************************/
+    @ApiOperation(value = "Extend the deadline of a subgoal.")
+    @PutMapping("/extend/{subgoal_id}")
+    public MessageResponse extendSubgoal(@PathVariable @ApiParam(value = "Id of the subgoal.", example = "5") Long subgoal_id, @RequestBody @ApiParam(
+            value = "A JSON value representing a transaction. An example of the expected schema can be found down here.",
+            examples = @Example(value =
+            @ExampleProperty(
+                    value = "{\n" +
+                            "  \"newDeadline\": \"2021-11-20T09:48:42.553Z\",\n" +
+                            "}"
+            )
+            )) DateDTO dateDTO) {
+        return subgoalService.extendSubgoal(subgoal_id, dateDTO.getNewDeadline());
+    }
+
+    @ApiOperation(value = "Extend the deadline of a subgoal.")
+    @PutMapping("/complete/{subgoal_id}/{rating}")
+    public MessageResponse completeSubgoal(@PathVariable @ApiParam(value = "Id of the subgoal.", example = "5") Long subgoal_id, @PathVariable @ApiParam(value = "Rating of the subgoal.", example = "5") Long rating) {
+        return subgoalService.completeSubgoal(subgoal_id, rating);
     }
 
 }

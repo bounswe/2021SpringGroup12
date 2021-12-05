@@ -211,6 +211,7 @@ public class EntitiService {
         Task new_task = taskPostMapper.mapToEntity(taskPostDTO);
         new_task.setEntitiType(EntitiType.TASK);
         new_task.setIsDone(Boolean.FALSE);
+        new_task.setExtension_count(0L);
         if (taskPostDTO.getGoal_id() == null) {
             Optional<Subgoal> subgoal_opt = subgoalRepository.findById(taskPostDTO.getSubgoal_id());
             if (subgoal_opt.isEmpty()) {
@@ -283,6 +284,7 @@ public class EntitiService {
         Routine new_routine = routinePostMapper.mapToEntity(routinePostDTO);
         new_routine.setEntitiType(EntitiType.ROUTINE);
         new_routine.setIsDone(Boolean.FALSE);
+        new_routine.setExtension_count(0L);
         if (routinePostDTO.getGoal_id() == null) {
             Optional<Subgoal> subgoal_opt = subgoalRepository.findById(routinePostDTO.getSubgoal_id());
             if (subgoal_opt.isEmpty()) {
@@ -594,9 +596,33 @@ public class EntitiService {
             question_from_db_opt.get().setTitle(question_dto.getTitle());
         if (question_dto.getIsDone() != null)
             question_from_db_opt.get().setIsDone(question_dto.getIsDone());
-        questionRepository.save(question_from_db_opt.get());
+            questionRepository.save(question_from_db_opt.get());
         return new MessageResponse("Updated question", MessageType.SUCCESS);
 
     }
 
+    /************************************ EXTEND ********************************/
+    public MessageResponse extendEntiti(Long entiti_id, Date newDeadline) {
+        Entiti entiti_from_db = entitiRepository.findById(entiti_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Entity not found!"));
+
+        if(entiti_from_db.getEntitiType().equals(EntitiType.ROUTINE)){
+            Routine routine = (Routine) entiti_from_db;
+            if (newDeadline.compareTo(routine.getDeadline()) <= 0 ) {
+                return new MessageResponse("New deadline must be later than current deadline!", MessageType.ERROR);
+            }
+            routine.setDeadline(newDeadline);
+            routine.setExtension_count(routine.getExtension_count() + 1);
+            entitiRepository.save(routine);
+        }
+        if(entiti_from_db.getEntitiType().equals(EntitiType.TASK)){
+            Task task = (Task) entiti_from_db;
+            if (newDeadline.compareTo(task.getDeadline()) <= 0 ) {
+                return new MessageResponse("New deadline must be later than current deadline!", MessageType.ERROR);
+            }
+            task.setDeadline(newDeadline);
+            task.setExtension_count(task.getExtension_count() + 1);
+            entitiRepository.save(task);
+        }
+        return new MessageResponse("Entity extended successfully!", MessageType.SUCCESS);
+    }
 }
