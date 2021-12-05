@@ -18,6 +18,7 @@ import {LinkEntity} from "./pages/LinkEntity"
 import { Content } from "antd/lib/layout/layout";
 import {Layout} from "antd";
 import Sidebar from "./components/Sidebar";
+import UserCalendar from "./components/UserCalendar";
 
 
 
@@ -95,6 +96,9 @@ export default class App extends React.Component<IAppProps, IAppState> {
                 </Route>
                 <Route path="/addGoal">
                   <AddGoal />
+                </Route>
+                <Route path="/calendar">
+                  <UserCalendar />
                 </Route>
                 <Route path="/goal/:goal_id" children={<GoalPage />} />
                 <Route path="/editGoal/:goal_id" children={<EditGoal />} />
