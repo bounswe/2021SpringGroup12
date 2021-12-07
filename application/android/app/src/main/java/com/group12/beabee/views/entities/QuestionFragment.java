@@ -113,6 +113,11 @@ public class QuestionFragment extends BaseEntityListBottomFragment {
     }
 
     @Override
+    protected String GetPageTitle() {
+        return "question";
+    }
+
+    @Override
     protected int GetLayoutId() {
         return R.layout.fragment_question;
     }

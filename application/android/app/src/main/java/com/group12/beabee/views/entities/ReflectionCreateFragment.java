@@ -109,6 +109,11 @@ public class ReflectionCreateFragment extends BaseInnerFragment {
     }
 
     @Override
+    protected String GetPageTitle() {
+        return "create reflection";
+    }
+
+    @Override
     protected int GetLayoutId() {
         return R.layout.fragment_reflection_create;
     }

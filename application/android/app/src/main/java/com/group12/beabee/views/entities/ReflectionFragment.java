@@ -112,6 +112,11 @@ public class ReflectionFragment extends BaseEntityListBottomFragment {
     }
 
     @Override
+    protected String GetPageTitle() {
+        return "reflection";
+    }
+
+    @Override
     protected int GetLayoutId() {
         return R.layout.fragment_reflection;
     }

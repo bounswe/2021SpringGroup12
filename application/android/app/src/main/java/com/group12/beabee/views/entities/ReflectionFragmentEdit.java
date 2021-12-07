@@ -114,6 +114,11 @@ public class ReflectionFragmentEdit extends BaseInnerFragment {
     }
 
     @Override
+    protected String GetPageTitle() {
+        return "edit reflection";
+    }
+
+    @Override
     protected int GetLayoutId() {
         return R.layout.fragment_reflection_edit;
     }

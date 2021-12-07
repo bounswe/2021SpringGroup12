@@ -109,6 +109,11 @@ public class RoutineCreateFragment extends BaseInnerFragment {
     }
 
     @Override
+    protected String GetPageTitle() {
+        return "create routine";
+    }
+
+    @Override
     protected int GetLayoutId() {
         return R.layout.fragment_routine_create;
     }

@@ -108,6 +108,11 @@ public class GoalEditFragment extends BaseInnerFragment {
     }
 
     @Override
+    protected String GetPageTitle() {
+        return "Edit GOAL";
+    }
+
+    @Override
     protected int GetLayoutId() {
         return R.layout.fragment_goal_edit;
     }

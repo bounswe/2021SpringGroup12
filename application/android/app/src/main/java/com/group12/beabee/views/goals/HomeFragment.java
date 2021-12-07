@@ -113,6 +113,11 @@ public class HomeFragment extends BaseInnerFragment implements IOnGoalClickedLis
     }
 
     @Override
+    protected String GetPageTitle() {
+        return "My Goals";
+    }
+
+    @Override
     protected int GetLayoutId() {
         return R.layout.fragment_home;
     }

@@ -62,6 +62,11 @@ public class GoalFragment extends BaseEntityListBottomFragment {
     }
 
     @Override
+    protected String GetPageTitle() {
+        return "GOAL";
+    }
+
+    @Override
     protected int GetLayoutId() {
         return R.layout.fragment_goal;
     }

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,6 +35,8 @@ public class BaseContainerFragment extends Fragment {
     ImageButton btnApprove;
     @BindView(R.id.btn_add)
     ImageButton btnAdd;
+    @BindView(R.id.tv_page_title)
+    TextView tvPageTitle;
 
     private FragmentManager fragmentManager;
     private BaseInnerFragment initialFragment;
@@ -79,7 +82,7 @@ public class BaseContainerFragment extends Fragment {
     public void AddNewFragment(BaseInnerFragment fragment) {
         fragmentManager = getChildFragmentManager();
         fragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.slide_left, R.anim.slide_right)
+                .setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit)
                 .replace(R.id.fragment_cont, fragment)
                 .setReorderingAllowed(true)
                 .addToBackStack(null)
@@ -111,6 +114,10 @@ public class BaseContainerFragment extends Fragment {
                 ModeListWithBack();
                 break;
         }
+    }
+
+    public void SetPageTitle(String title) {
+        tvPageTitle.setText(title);
     }
 
     private void ModeEdit() {

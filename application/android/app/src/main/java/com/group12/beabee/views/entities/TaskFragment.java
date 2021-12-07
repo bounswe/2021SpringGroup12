@@ -113,6 +113,11 @@ public class TaskFragment extends BaseEntityListBottomFragment {
     }
 
     @Override
+    protected String GetPageTitle() {
+        return "Task";
+    }
+
+    @Override
     protected int GetLayoutId() {
         return R.layout.fragment_task;
     }

@@ -114,6 +114,11 @@ public class RoutineFragment extends BaseEntityListBottomFragment {
     }
 
     @Override
+    protected String GetPageTitle() {
+        return "routine";
+    }
+
+    @Override
     protected int GetLayoutId() {
         return R.layout.fragment_routine;
     }

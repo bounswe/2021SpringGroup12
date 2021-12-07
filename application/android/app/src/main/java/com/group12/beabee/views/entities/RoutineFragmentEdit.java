@@ -112,6 +112,11 @@ public class RoutineFragmentEdit extends BaseInnerFragment {
     }
 
     @Override
+    protected String GetPageTitle() {
+        return "edit routine";
+    }
+
+    @Override
     protected int GetLayoutId() {
         return R.layout.fragment_routine_edit;
     }

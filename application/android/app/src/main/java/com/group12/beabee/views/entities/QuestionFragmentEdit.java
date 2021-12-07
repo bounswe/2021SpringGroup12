@@ -112,6 +112,11 @@ public class QuestionFragmentEdit extends BaseInnerFragment {
     }
 
     @Override
+    protected String GetPageTitle() {
+        return "edit question";
+    }
+
+    @Override
     protected int GetLayoutId() {
         return R.layout.fragment_question_edit;
     }

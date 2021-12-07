@@ -110,6 +110,11 @@ public class SubgoalEditFragment extends BaseInnerFragment {
     }
 
     @Override
+    protected String GetPageTitle() {
+        return "Edit Subgoal";
+    }
+
+    @Override
     protected int GetLayoutId() {
         return R.layout.fragment_subgoal_edit;
     }

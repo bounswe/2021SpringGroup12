@@ -105,6 +105,11 @@ public class SubgoalCreateFragment extends BaseInnerFragment {
     }
 
     @Override
+    protected String GetPageTitle() {
+        return "create subgoal";
+    }
+
+    @Override
     protected int GetLayoutId() {
         return R.layout.fragment_subgoal_edit;
     }

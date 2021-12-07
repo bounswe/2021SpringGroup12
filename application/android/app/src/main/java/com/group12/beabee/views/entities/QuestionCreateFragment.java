@@ -109,6 +109,11 @@ public class QuestionCreateFragment extends BaseInnerFragment {
     }
 
     @Override
+    protected String GetPageTitle() {
+        return "create question";
+    }
+
+    @Override
     protected int GetLayoutId() {
         return R.layout.fragment_question_create;
     }

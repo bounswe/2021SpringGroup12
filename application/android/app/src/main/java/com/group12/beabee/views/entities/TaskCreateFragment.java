@@ -110,6 +110,11 @@ public class TaskCreateFragment extends BaseInnerFragment {
     }
 
     @Override
+    protected String GetPageTitle() {
+        return "create task";
+    }
+
+    @Override
     protected int GetLayoutId() {
         return R.layout.fragment_task_create;
     }

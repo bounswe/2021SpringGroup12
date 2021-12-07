@@ -114,6 +114,11 @@ public class TaskFragmentEdit extends BaseInnerFragment {
     }
 
     @Override
+    protected String GetPageTitle() {
+        return "Edit Task";
+    }
+
+    @Override
     protected int GetLayoutId() {
         return R.layout.fragment_task_edit;
     }

@@ -249,5 +249,8 @@ public abstract class BaseEntityListBottomFragment extends BaseInnerFragment imp
     protected abstract PageMode GetPageMode() ;
 
     @Override
+    protected abstract String GetPageTitle();
+
+    @Override
     protected abstract int GetLayoutId();
 }
