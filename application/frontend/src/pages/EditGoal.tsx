@@ -9,6 +9,7 @@ const token = localStorage.getItem("token");
 
 export function EditGoal() {
     const onFinish = (values: any) => {
+        console.log(values["deadline"])
         console.log('Received values of form: ', values);
         values['id'] = goal_id
         axios.put(`/goals/`, values, {
@@ -46,7 +47,7 @@ export function EditGoal() {
             .catch(error => {
                 console.error('There was an error!', error);
             });
-    }, [goal_id, onFinish])
+    }, [goal_id])
 
     let message;
     if (!isLoaded) {

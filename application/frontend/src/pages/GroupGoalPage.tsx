@@ -3,28 +3,28 @@ import {useParams} from "react-router";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {Link} from "react-router-dom";
-import {Button, Input, Space, Table, Tag} from "antd";
+import {Button, List, Space, Table} from "antd";
 
 const token = localStorage.getItem("token");
-const user_id = localStorage.getItem("user_id")
 
-export function GoalPage() {
+export function GroupGoalPage() {
     const [goal, setGoal] = useState({
         title: "Loading",
-        description: "Loading"
+        description: "Loading",
+        token: "Loading",
+        members: [],
+        entities: [],
+        subgoals: []
     })
-    const [entities, setEntities] = useState([])
-    const [subgoals, setSubgoals] = useState([])
-    const [isLoaded, setLoaded] = useState(false)
     // @ts-ignore
     const {goal_id} = useParams();
 
     let delete_count = 0
     console.log('Burada 22')
 
-    const deleteEntity = (entity: { key: any, entityType: string}) => {
+    const deleteEntity = (goal: { key: any, entityType: string}) => {
         console.log('Received values of delete: ', goal);
-        axios.delete(`/entities/${entity.entityType.toLowerCase()}/${entity.key}`,
+        axios.delete(`/entities/${goal.entityType.toLowerCase()}/${goal.key}`,
             {
                 headers: { Authorization: `Bearer ${token}`},
                 data: {}
@@ -33,7 +33,7 @@ export function GoalPage() {
 
     const deleteGoal = (goal: { key: any; }) => {
         console.log('Received values of delete: ', goal);
-        axios.delete(`/goals/${goal.key}`,
+        axios.delete(`/groupgoals/${goal.key}`,
             {
                 headers: { Authorization: `Bearer ${token}`},
                 data: {}
@@ -41,25 +41,25 @@ export function GoalPage() {
     };
 
     const subgoal_columns =  [
-            {
-                title: 'Title',
-                dataIndex: 'title',
-                key: 'title',
-                render: (text: any,
-                         goal: { key: string | number | boolean | {} | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactNodeArray | React.ReactPortal | null | undefined; }) =>
-                    <Link to={"/goals/" + goal.key}> {text} </Link>
-                ,
-            },
-            {
-                title: 'Description',
-                dataIndex: 'description',
-                key: 'description',
-            },
-            {
-                title: 'Deadline',
-                dataIndex: 'deadline',
-                key: 'deadline',
-            },
+        {
+            title: 'Title',
+            dataIndex: 'title',
+            key: 'title',
+            render: (text: any,
+                     goal: { key: string | number | boolean | {} | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactNodeArray | React.ReactPortal | null | undefined; }) =>
+                <Link to={"/goals/" + goal.key}> {text} </Link>
+            ,
+        },
+        {
+            title: 'Description',
+            dataIndex: 'description',
+            key: 'description',
+        },
+        {
+            title: 'Deadline',
+            dataIndex: 'deadline',
+            key: 'deadline',
+        },
         {
             dataIndex: "description",
             title: 'Action',
@@ -82,7 +82,7 @@ export function GoalPage() {
                 )
         }
 
-        ];
+    ];
 
     const columns = [
         {
@@ -132,7 +132,7 @@ export function GoalPage() {
     ];
 
     useEffect(() => {
-        axios.get(`/goals/${goal_id}`,
+        axios.get(`/groupgoals/${goal_id}`,
             {
                 headers: { Authorization: `Bearer ${token}`},
                 data: {}
@@ -147,28 +147,30 @@ export function GoalPage() {
             .then(goal_info => {
                 console.log(typeof goal_info["entities"])
                 setGoal(goal_info)
-                setEntities(goal_info["entities"])
-                setSubgoals(goal_info["subgoals"])
-                setLoaded(true)
             })
             .catch(error => {
                 console.error('There was an error!', error);
             });
     }, [delete_count]);
-    if (!isLoaded) {
-        return <h2>Loading...</h2>
-    }
     return (
         <div>
             <h2>Name: {goal['title']}</h2>
             <h2>Description: {goal['description']}</h2>
-            <Table columns={subgoal_columns} dataSource={subgoals} />
+            <h2>Token: {goal['token']}</h2>
+            <List
+                size="small"
+                header={<div>Members</div>}
+                bordered
+                dataSource={goal['members']}
+                renderItem={item => <List.Item>{item}</List.Item>}
+            />
+            <Table columns={subgoal_columns} dataSource={goal['subgoals']} />
             <Link to={"/addEntity/" + goal_id}>
                 <button type="button">
                     Add SubGoal
                 </button>
             </Link>
-            <Table columns={columns} dataSource={entities} />
+            <Table columns={columns} dataSource={goal['entities']} />
             <Link to={"/addEntity/" + goal_id}>
                 <button type="button">
                     Add Entity

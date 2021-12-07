@@ -5,7 +5,7 @@ import App from "./App";
 import axios from "axios";
 import { BrowserRouter } from "react-router-dom";
 
-axios.defaults.baseURL = "http://3.144.201.198:8085/"
+axios.defaults.baseURL = "http://localhost:8085/v2/"
 console.log(axios.defaults.baseURL)
 
 ReactDOM.render(
