@@ -27,10 +27,6 @@ import java.util.stream.Collectors;
 public class ResourceService {
 
     private final ResourceRepository resourceRepository;
-    private final TaskRepository taskRepository;
-    private final QuestionRepository questionRepository;
-    private final ReflectionRepository reflectionRepository;
-    private final RoutineRepository routineRepository;
     private final EntitiRepository entitiRepository;
 
 

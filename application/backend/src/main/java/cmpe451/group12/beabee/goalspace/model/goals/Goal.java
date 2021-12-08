@@ -3,15 +3,15 @@ package cmpe451.group12.beabee.goalspace.model.goals;
 import cmpe451.group12.beabee.common.model.Users;
 import cmpe451.group12.beabee.goalspace.model.entities.Entiti;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 public class Goal extends AllGoal{
@@ -35,4 +35,16 @@ public class Goal extends AllGoal{
     @OneToMany(mappedBy = "mainGoal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Subgoal> subgoals;
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof Goal)) {
+            return false;
+        }
+        Goal other = (Goal) o;
+        return (other.id == this.id) && (this.rating == other.rating) ;
+    }
 }

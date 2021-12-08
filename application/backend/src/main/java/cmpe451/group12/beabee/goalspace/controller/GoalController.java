@@ -125,7 +125,7 @@ public class GoalController {
     @ApiOperation(value = "Get analytics of a goal.")
     @GetMapping("/analytics/{goal_id}")
     public GoalAnalyticsDTO getAnalytics(@PathVariable @ApiParam(value = "Id of the goal.", example = "5")Long goal_id){
-        return goalService.getAnalytics(goal_id);
+        return goalService.getAnalytics(goal_id );
     }
 }
 

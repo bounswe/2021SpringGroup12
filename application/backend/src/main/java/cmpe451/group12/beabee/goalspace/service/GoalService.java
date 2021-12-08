@@ -172,7 +172,6 @@ public class GoalService {
                 .stream()
                 .flatMap(GoalService::flatMapRecursive));
     }
-    /********************* EXTEND AND COMPLETE finish *************/
 
     /************ SUBGOAL CREATION ******/
     public MessageResponse createSubgoal(SubgoalPostDTO subgoalPostDTO) {
@@ -215,7 +214,6 @@ public class GoalService {
             goalAnalyticsDTO.setGoalsWithCommonLifetime(goalShortMapper.mapToDto(common_goals).stream().collect(Collectors.toSet()));
         }
         if (goal_from_db.getSubgoals().size() > 0) {
-            //there is no subgoal, yet
             Set<Subgoal> subgoals_to_calculate_completion_time = goal_from_db.getSubgoals();
             subgoals_to_calculate_completion_time.stream().forEach(x -> {
                 x.setCompletedAt(new Date(System.currentTimeMillis()));
@@ -232,4 +230,6 @@ public class GoalService {
 
         return goalAnalyticsDTO;
     }
-}
+
+
+    }

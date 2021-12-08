@@ -12,7 +12,9 @@ import cmpe451.group12.beabee.goalspace.mapper.goals.GoalShortMapper;
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import cmpe451.group12.beabee.goalspace.service.GoalService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Comparator;
@@ -35,11 +37,22 @@ public class UserService {
         return userMapper.mapToDto(userRepository.findById(id).orElseThrow(EntityNotFoundException::new));
     }
 
-    public UserAnalyticsDTO getAnalytics(Long user_id) {
+    public UserAnalyticsDTO getAnalytics(Long user_id, Long days_before) {
+        if (days_before!= null && days_before<0){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Filter parameter must be positive!");
+        }
+        Date beginning =  new Date(System.currentTimeMillis() - System.currentTimeMillis());
+
+        if(days_before != null){
+            beginning =  new Date(System.currentTimeMillis() - days_before * 24 * 3600 * 1000);
+        }
         UserAnalyticsDTO userAnalyticsDTO = new UserAnalyticsDTO();
-        List<Goal> goals = goalRepository.findAllByUserId(user_id);
+        Date finalBeginning = beginning;
+        List<Goal> goals = goalRepository.findAllByUserId(user_id).stream().filter(x->x.getCreatedAt().after(finalBeginning)).collect(Collectors.toList());
         if (goals.size() == 0) {
             //this user has no goal yet
+            userAnalyticsDTO.setActiveGoalCount(0L);
+            userAnalyticsDTO.setCompletedGoalCount(0L);
             return userAnalyticsDTO;
         }
         List<GoalAnalyticsDTO> goalAnalyticsDTOs = goals.stream().map(x -> goalService.getAnalytics(x.getId())).collect(Collectors.toList());

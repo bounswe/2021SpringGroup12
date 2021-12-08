@@ -20,7 +20,6 @@ import java.util.Set;
 @Setter
 @EntityListeners(AuditingEntityListener.class)
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@EqualsAndHashCode
 public abstract class Entiti {
 
     @Id
