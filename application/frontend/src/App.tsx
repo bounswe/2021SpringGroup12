@@ -19,7 +19,7 @@ import { Content } from "antd/lib/layout/layout";
 import {Layout} from "antd";
 import Sidebar from "./components/Sidebar";
 import UserCalendar from "./components/UserCalendar";
-import {GroupGoalPage} from "./pages/GroupGoalPage";
+import {GoalTypes} from "./helpers/GoalTypes";
 
 
 
@@ -92,22 +92,23 @@ export default class App extends React.Component<IAppProps, IAppState> {
                 <Route exact path="/">
                   <Home user={this.state.username} />
                 </Route>
-                <Route path="/goals">
+                <Route exact path="/goalsPage">
                   <GoalsPage />
                 </Route>
-                <Route path="/addGoal">
+                <Route exact path="/addGoal">
                   <AddGoal />
                 </Route>
-                <Route path="/calendar">
+                <Route exact path="/calendar">
                   <UserCalendar />
                 </Route>
-                <Route path="/goal/:goal_id" children={<GoalPage />} />
-                <Route path="/groupgoal/:goal_id" children={<GroupGoalPage />} />
-                <Route path="/editGoal/:goal_id" children={<EditGoal />} />
-                <Route path="/entity/:entity_id" children={<EntityPage />} />
-                <Route path="/addEntity/:goal_id" children={<AddEntity /> } />
-                <Route path="/editEntity/:entity_id" children={<EditEntity /> } />
-                <Route path="/linkEntityfrom/:entity_id" children={<LinkEntity /> } />
+                <Route exact path="/goals/:goal_id" children={<GoalPage goalType={GoalTypes.Normal}/>} />
+                <Route exact path="/subgoals/:goal_id" children={<GoalPage goalType={GoalTypes.Sub}/>} />
+                <Route exact path="/groupgoals/:goal_id" children={<GoalPage goalType={GoalTypes.Group}/>} />
+                <Route exact path="/editGoal/:goal_id" children={<EditGoal />} />
+                <Route exact path="/entity/:entity_id" children={<EntityPage />} />
+                <Route exact path="/addEntity/:goal_id" children={<AddEntity /> } />
+                <Route exact path="/editEntity/:entity_id" children={<EditEntity /> } />
+                <Route exact path="/linkEntityfrom/:entity_id" children={<LinkEntity /> } />
               </Switch>
             </Content>
           </Layout>

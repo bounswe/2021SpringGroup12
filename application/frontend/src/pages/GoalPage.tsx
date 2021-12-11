@@ -3,19 +3,24 @@ import {useParams} from "react-router";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {Link} from "react-router-dom";
-import {Button, Input, Space, Table, Tag} from "antd";
+import {Button, List, Space, Table} from "antd";
+import {GoalTypes} from "../helpers/GoalTypes";
 
 const token = localStorage.getItem("token");
 const user_id = localStorage.getItem("user_id")
 
-export function GoalPage() {
+export function GoalPage(params :{goalType: any}) {
+    const goalType = params.goalType
+    console.log("goalType", goalType)
     const [goal, setGoal] = useState({
         title: "Loading",
-        description: "Loading"
+        description: "Loading",
+        token: "Loading",
+        assignees: [],
+        members: [],
+        entities: [],
+        subgoals: []
     })
-    const [entities, setEntities] = useState([])
-    const [subgoals, setSubgoals] = useState([])
-    const [isLoaded, setLoaded] = useState(false)
     // @ts-ignore
     const {goal_id} = useParams();
 
@@ -46,8 +51,8 @@ export function GoalPage() {
                 dataIndex: 'title',
                 key: 'title',
                 render: (text: any,
-                         goal: { key: string | number | boolean | {} | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactNodeArray | React.ReactPortal | null | undefined; }) =>
-                    <Link to={"/goals/" + goal.key}> {text} </Link>
+                         goal: any) =>
+                    <Link to={`/${GoalTypes.Sub}/${goal.id}`}> {text} </Link>
                 ,
             },
             {
@@ -65,14 +70,14 @@ export function GoalPage() {
             title: 'Action',
             key: 'action',
             render: (text: any,
-                     goal: { key: string | number | boolean | {} | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactNodeArray | React.ReactPortal | null | undefined; }) =>
+                     goal: any) =>
                 (   <div>
                         <Space size="middle">
                             <Button type="primary" onClick={() => deleteGoal(goal)}>
                                 Delete
                             </Button>
                         </Space>
-                        <Link to={"/editGoal/" + goal.key}>
+                        <Link to={"/editGoal/" + goal.id}>
                             <button type="button">
                                 Edit
                             </button>
@@ -81,7 +86,6 @@ export function GoalPage() {
 
                 )
         }
-
         ];
 
     const columns = [
@@ -90,8 +94,8 @@ export function GoalPage() {
             dataIndex: 'title',
             key: 'title',
             render: (text: any,
-                     entity: {key: number}) =>
-                <Link to={"/entity/" + entity.key}> {text} </Link>
+                     entity: any) =>
+                <Link to={"/entity/" + entity.id}> {text} </Link>
             ,
         },
         {
@@ -126,13 +130,12 @@ export function GoalPage() {
                             </button>
                         </Link>
                     </div>
-
                 ),
         },
     ];
 
     useEffect(() => {
-        axios.get(`/goals/${goal_id}`,
+        axios.get(`/${goalType}/${goal_id}`,
             {
                 headers: { Authorization: `Bearer ${token}`},
                 data: {}
@@ -146,29 +149,55 @@ export function GoalPage() {
             })
             .then(goal_info => {
                 console.log(typeof goal_info["entities"])
+                console.log(goal_info)
+                if (goalType === GoalTypes.Sub) {
+                    goal_info['subgoals'] = goal_info['sublinks']
+                }
+                goal_info['subgoals'].forEach((subgoal: any, i: number) => {
+                    subgoal.key = i
+                })
+                goal_info['entities'].forEach((entity: any, i: number) => {
+                    entity.key = i
+                })
                 setGoal(goal_info)
-                setEntities(goal_info["entities"])
-                setSubgoals(goal_info["subgoals"])
-                setLoaded(true)
+
             })
             .catch(error => {
                 console.error('There was an error!', error);
             });
-    }, [delete_count]);
-    if (!isLoaded) {
-        return <h2>Loading...</h2>
-    }
+    }, [goal_id, goalType]);
+
+    const showAssignees = goal['assignees'] !== undefined && goal['assignees'].length > 0
     return (
         <div>
             <h2>Name: {goal['title']}</h2>
             <h2>Description: {goal['description']}</h2>
-            <Table columns={subgoal_columns} dataSource={subgoals} />
+            {goalType === GoalTypes.Group &&
+            <div>
+                <h2>Token: {goal['token']}</h2>
+                <List
+                    size="small"
+                    header={<div>Members</div>}
+                    bordered
+                    dataSource={goal['members']}
+                    renderItem={item => <List.Item>{item}</List.Item>}
+                />
+            </div>}
+            {showAssignees &&
+            <List
+                size="small"
+                header={<div>Assignees</div>}
+                bordered
+                dataSource={goal['assignees']}
+                renderItem={item => <List.Item>{item}</List.Item>}
+            />}
+            <Table columns={subgoal_columns} dataSource={goal['subgoals']} />
             <Link to={"/addEntity/" + goal_id}>
                 <button type="button">
                     Add SubGoal
                 </button>
             </Link>
-            <Table columns={columns} dataSource={entities} />
+            <Table columns={columns} dataSource={goal['entities']} />
             <Link to={"/addEntity/" + goal_id}>
                 <button type="button">
                     Add Entity

@@ -2,6 +2,7 @@ import {Button, Form, Input, Space, Table, Tag} from 'antd';
 import * as React from "react";
 import { Link } from 'react-router-dom';
 import axios from "axios";
+import {GoalTypes} from "../helpers/GoalTypes";
 export class GoalsPage extends React.Component {
     state = {
         isGroupsLoaded: false,
@@ -14,7 +15,7 @@ export class GoalsPage extends React.Component {
 
     deleteGoal = (goal: { key: any; }) => {
         console.log('Received values of delete: ', goal);
-        axios.delete(`/goals/${goal.key}`,
+        axios.delete(`/${GoalTypes.Normal}/${goal.key}`,
             {
                 headers: { Authorization: `Bearer ${this.token}`},
                 data: {}
@@ -24,7 +25,7 @@ export class GoalsPage extends React.Component {
     joinGroup = (input: {token: string}) => {
         const token = input.token
         console.log('Token: ', token);
-        axios.post(`/groupgoals/${this.user_id}/join`, {},
+        axios.post(`/${GoalTypes.Group}/${this.user_id}/join`, {},
             {
                 headers: {Authorization: `Bearer ${this.token}`},
                 params: {
@@ -43,7 +44,7 @@ export class GoalsPage extends React.Component {
     getGoals(isGroupGoal: boolean = false) {
         console.log(this.token)
         console.log(axios.defaults.baseURL)
-        const url = isGroupGoal ? `/groupgoals/member_of/${this.user_id}` : `/goals/of_user/${this.user_id}`
+        const url = isGroupGoal ? `/${GoalTypes.Group}/member_of/${this.user_id}` : `/${GoalTypes.Normal}/of_user/${this.user_id}`
         console.log(url)
         axios.get(url,
             {
@@ -103,7 +104,7 @@ export class GoalsPage extends React.Component {
                 key: 'title',
                 render: (text: any,
                          goal: { key: string | number | boolean | {} | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactNodeArray | React.ReactPortal | null | undefined; }) =>
-                    <Link to={(isGroupGoal ? "/groupgoal/" : "/goal/") + goal.key}> {text} </Link>
+                    <Link to={(isGroupGoal ? `/${GoalTypes.Group}/` : `/${GoalTypes.Normal}/`) + goal.key}> {text} </Link>
                 ,
             },
             {
