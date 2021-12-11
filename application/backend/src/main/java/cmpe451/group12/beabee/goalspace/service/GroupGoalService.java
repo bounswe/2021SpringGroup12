@@ -160,6 +160,8 @@ public class GroupGoalService
         new_subgoal.setMainGroupgoal(groupGoal);
         new_subgoal.setIsDone(Boolean.FALSE);
         new_subgoal.setCreator(groupGoal.getCreator());
+        new_subgoal.setExtension_count(0L);
+        new_subgoal.setRating(0D);
         subgoalRepository.save(new_subgoal);
 
         return new MessageResponse("Subgoal added.", MessageType.SUCCESS);

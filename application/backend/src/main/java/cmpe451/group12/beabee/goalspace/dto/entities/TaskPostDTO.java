@@ -11,9 +11,8 @@ import java.util.Date;
 public class TaskPostDTO {
 
 
-    private Long goal_id;
-    private Long groupgoal_id;
-    private Long subgoal_id;
+    private ParentType parentType;
+    private Long parent_id;
     private String title;
     private String description;
     private Date deadline;
