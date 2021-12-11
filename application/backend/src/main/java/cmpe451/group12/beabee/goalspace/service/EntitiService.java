@@ -26,6 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -59,22 +60,26 @@ public class EntitiService {
 
     /****************************** GET ALL ENTITIES ********************************/
 
-    /* no need for this. They can already get this info on GET a goal endpoint.
-
-    public List<EntitiDTO> getEntitiesOfAGoal(Long goal_id) {
-        if (!goalRepository.existsById(goal_id)) {
-            return new ArrayList<>();
-        }
-
-        List<Entiti> entities = entitiRepository.findAllByGoal(goalRepository.getById(goal_id));
-        List<EntitiDTO> entity_dtos = new ArrayList<>();
-        entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Question")).map(x -> entitiMapper.mapToDto((Question) x)).collect(Collectors.toList()));
-        entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Task")).map(x -> entitiMapper.mapToDto((Task) x)).collect(Collectors.toList()));
-        entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Routine")).map(x -> entitiMapper.mapToDto((Routine) x)).collect(Collectors.toList()));
-        entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Reflection")).map(x -> entitiMapper.mapToDto((Reflection) x)).collect(Collectors.toList()));
-        return entity_dtos;
+    public List<EntitiDTOShort> getEntitiesOfAGoal(Long goal_id) {
+        Goal goal_from_db = goalRepository.findById(goal_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!"));
+        List<Subgoal> subgoals = goal_from_db.getSubgoals().stream()
+                .flatMap(EntitiService::recursiveSubgoals).collect(Collectors.toList());
+        List<Entiti> all_entities = subgoals.stream().map(x -> x.getEntities()).flatMap(Set::stream).collect(Collectors.toList());
+        List<EntitiDTOShort> result = new ArrayList<>();
+        result.addAll(all_entities.stream().filter(x -> x.getClass().getSimpleName().equals("Question")).map(x -> entitiShortMapper.mapToDto((Question) x)).collect(Collectors.toList()));
+        result.addAll(all_entities.stream().filter(x -> x.getClass().getSimpleName().equals("Task")).map(x -> entitiShortMapper.mapToDto((Task) x)).collect(Collectors.toList()));
+        result.addAll(all_entities.stream().filter(x -> x.getClass().getSimpleName().equals("Reflection")).map(x -> entitiShortMapper.mapToDto((Reflection) x)).collect(Collectors.toList()));
+        result.addAll(all_entities.stream().filter(x -> x.getClass().getSimpleName().equals("Routine")).map(x -> entitiShortMapper.mapToDto((Routine) x)).collect(Collectors.toList()));
+        return  result;
     }
-*/
+
+    private static Stream<Subgoal> recursiveSubgoals(Subgoal item) {
+        return Stream.concat(Stream.of(item), Optional.ofNullable(item.getChild_subgoals())
+                .orElseGet(Collections::emptySet)
+                .stream()
+                .flatMap(EntitiService::recursiveSubgoals));
+    }
+
 
     public List<EntitiDTOShort> getEntitiesOfAUser(Long user_id) {
         if (!userRepository.existsById(user_id)) {
@@ -104,59 +109,6 @@ public class EntitiService {
         return entity_dtos;
     }
 
-   /*TODO: this is complex. Need to implement recursive queries. Or maybe I can just add user_id field to all entities and subgoals. Will think about it.
-
-    public List<QuestionGetDTO> getQuestionsOfAUser(Long user_id) {
-        if (!userRepository.existsById(user_id)) {
-            return new ArrayList<>();
-        }
-        List<Goal> goals = goalRepository.findAllByUserId(user_id);
-        List<Question> entities = new ArrayList<>();
-        for (Goal g : goals) {
-            entities.addAll(questionRepository.findByGoalId(g.getId()));
-        }
-        return entities.stream().map(x -> questionGetMapper.mapToDto(x)).collect(Collectors.toList());
-    }
-
-    public List<ReflectionGetDTO> getReflectionsOfAUser(Long user_id) {
-        if (!userRepository.existsById(user_id)) {
-            return new ArrayList<>();
-        }
-        List<Goal> goals = goalRepository.findAllByUserId(user_id);
-        List<Reflection> entities = new ArrayList<>();
-        for (Goal g : goals) {
-            entities.addAll(reflectionRepository.findByGoalId(g.getId()));
-        }
-        return entities.stream().map(x -> reflectionGetMapper.mapToDto(x)).collect(Collectors.toList());
-    }
-
-    public List<RoutineGetDTO> getRoutinesOfAUser(Long user_id) {
-        if (!userRepository.existsById(user_id)) {
-            return new ArrayList<>();
-        }
-        List<Goal> goals = goalRepository.findAllByUserId(user_id);
-        List<Routine> entities = new ArrayList<>();
-        for (Goal g : goals) {
-            entities.addAll(routineRepository.findByGoalId(g.getId()));
-        }
-        return entities.stream().map(x -> routineGetMapper.mapToDto(x)).collect(Collectors.toList());
-    }
-
-
-    public List<TaskGetDTO> getTasksOfAUser(Long user_id) {
-        if (!userRepository.existsById(user_id)) {
-            return new ArrayList<>();
-        }
-        List<Goal> goals = goalRepository.findAllByUserId(user_id);
-        List<Task> entities = new ArrayList<>();
-        for (Goal g : goals) {
-            entities.addAll(taskRepository.findByGoalId(g.getId()));
-        }
-        return entities.stream().map(x -> taskGetMapper.mapToDto(x)).collect(Collectors.toList());
-    }
-
-
-    */
     /****************************** LINKING ENTITIES ********************************/
 
     public MessageResponse linkEntities(Long id, Long child_id) {
