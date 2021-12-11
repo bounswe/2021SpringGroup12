@@ -2,6 +2,9 @@ package cmpe451.group12.beabee.goalspace.controller;
 
 
 import cmpe451.group12.beabee.common.dto.MessageResponse;
+import cmpe451.group12.beabee.goalspace.dto.DateDTO;
+import cmpe451.group12.beabee.goalspace.dto.analytics.GoalAnalyticsDTO;
+import cmpe451.group12.beabee.goalspace.dto.analytics.SubgoalAnalyticsDTO;
 import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalDTOShort;
 import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalGetDTO;
 import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalPostDTO;
@@ -108,5 +111,33 @@ public class SubgoalController {
     public MessageResponse removeAssigness(@PathVariable @ApiParam(value = "Id of the subgoal.", example = "5") long subgoal_id,
                                            @RequestParam @ApiParam(value = "List if user ids", example = "5,13,24") List<Long> user_ids) {
         return subgoalService.removeAssignees(subgoal_id, user_ids);
+    }
+
+    /***************************************** EXTEND ****************************/
+    @ApiOperation(value = "Extend the deadline of a subgoal.")
+    @PutMapping("/extend/{subgoal_id}")
+    public MessageResponse extendSubgoal(@PathVariable @ApiParam(value = "Id of the subgoal.", example = "5") Long subgoal_id, @RequestBody @ApiParam(
+            value = "A JSON value representing a transaction. An example of the expected schema can be found down here.",
+            examples = @Example(value =
+            @ExampleProperty(
+                    value = "{\n" +
+                            "  \"newDeadline\": \"2021-11-20T09:48:42.553Z\",\n" +
+                            "}"
+            )
+            )) DateDTO dateDTO) {
+        return subgoalService.extendSubgoal(subgoal_id, dateDTO.getNewDeadline());
+    }
+
+    @ApiOperation(value = "Complete a subgoal.")
+    @PutMapping("/complete/{subgoal_id}/{rating}")
+    public MessageResponse completeSubgoal(@PathVariable @ApiParam(value = "Id of the subgoal.", example = "5") Long subgoal_id, @PathVariable @ApiParam(value = "Rating of the subgoal.", example = "5") Long rating) {
+        return subgoalService.completeSubgoal(subgoal_id, rating);
+    }
+
+    /********************* ANALYTICS **************/
+    @ApiOperation(value = "Get analytics of a subgoal.")
+    @GetMapping("/analytics/{subgoal_id}")
+    public SubgoalAnalyticsDTO getAnalytics(@PathVariable @ApiParam(value = "Id of the subgoal.", example = "5")Long subgoal_id){
+        return subgoalService.getAnalytics(subgoal_id);
     }
 }

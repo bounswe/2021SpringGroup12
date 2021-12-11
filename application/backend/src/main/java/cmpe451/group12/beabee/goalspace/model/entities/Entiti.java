@@ -30,7 +30,7 @@ public abstract class Entiti {
     private Long id;
 
     @JsonIgnoreProperties({"entities"})
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JoinColumn(name = "goal_id")
     private Goal goal;
 
@@ -43,6 +43,9 @@ public abstract class Entiti {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "subgoal_id")
     private Subgoal subgoal;
+
+    @Column(name = "completedAt")
+    private Date completedAt;
 
     @Column(name = "entityType")
     private EntitiType entitiType;

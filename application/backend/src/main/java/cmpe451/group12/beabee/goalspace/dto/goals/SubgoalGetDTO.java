@@ -20,7 +20,7 @@ public class SubgoalGetDTO {
     private Long main_goal_id;
 
     private Long parent_subgoal_id;
-
+    private Date completedAt;
     private String title;
     private String description;
     private Date createdAt;

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,4 +25,7 @@ public interface GoalRepository extends JpaRepository<Goal, Long> {
     @Transactional
     @Query(value = "DELETE FROM Goal WHERE id = ?1", nativeQuery = true)
     void deleteAGoal(@Param("goal_id")  Long goal_id);
+
+    List<Goal> findAllByCreatedAtIsBetweenOrCompletedAtBetween(Date time1, Date time2,Date time3, Date time4);
+
 }

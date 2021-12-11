@@ -59,23 +59,6 @@ public class EntitiService {
 
     /****************************** GET ALL ENTITIES ********************************/
 
-    /* no need for this. They can already get this info on GET a goal endpoint.
-
-    public List<EntitiDTO> getEntitiesOfAGoal(Long goal_id) {
-        if (!goalRepository.existsById(goal_id)) {
-            return new ArrayList<>();
-        }
-
-        List<Entiti> entities = entitiRepository.findAllByGoal(goalRepository.getById(goal_id));
-        List<EntitiDTO> entity_dtos = new ArrayList<>();
-        entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Question")).map(x -> entitiMapper.mapToDto((Question) x)).collect(Collectors.toList()));
-        entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Task")).map(x -> entitiMapper.mapToDto((Task) x)).collect(Collectors.toList()));
-        entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Routine")).map(x -> entitiMapper.mapToDto((Routine) x)).collect(Collectors.toList()));
-        entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Reflection")).map(x -> entitiMapper.mapToDto((Reflection) x)).collect(Collectors.toList()));
-        return entity_dtos;
-    }
-*/
-
     public List<EntitiDTOShort> getEntitiesOfAUser(Long user_id) {
         if (!userRepository.existsById(user_id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!");
@@ -104,59 +87,7 @@ public class EntitiService {
         return entity_dtos;
     }
 
-   /*TODO: this is complex. Need to implement recursive queries. Or maybe I can just add user_id field to all entities and subgoals. Will think about it.
 
-    public List<QuestionGetDTO> getQuestionsOfAUser(Long user_id) {
-        if (!userRepository.existsById(user_id)) {
-            return new ArrayList<>();
-        }
-        List<Goal> goals = goalRepository.findAllByUserId(user_id);
-        List<Question> entities = new ArrayList<>();
-        for (Goal g : goals) {
-            entities.addAll(questionRepository.findByGoalId(g.getId()));
-        }
-        return entities.stream().map(x -> questionGetMapper.mapToDto(x)).collect(Collectors.toList());
-    }
-
-    public List<ReflectionGetDTO> getReflectionsOfAUser(Long user_id) {
-        if (!userRepository.existsById(user_id)) {
-            return new ArrayList<>();
-        }
-        List<Goal> goals = goalRepository.findAllByUserId(user_id);
-        List<Reflection> entities = new ArrayList<>();
-        for (Goal g : goals) {
-            entities.addAll(reflectionRepository.findByGoalId(g.getId()));
-        }
-        return entities.stream().map(x -> reflectionGetMapper.mapToDto(x)).collect(Collectors.toList());
-    }
-
-    public List<RoutineGetDTO> getRoutinesOfAUser(Long user_id) {
-        if (!userRepository.existsById(user_id)) {
-            return new ArrayList<>();
-        }
-        List<Goal> goals = goalRepository.findAllByUserId(user_id);
-        List<Routine> entities = new ArrayList<>();
-        for (Goal g : goals) {
-            entities.addAll(routineRepository.findByGoalId(g.getId()));
-        }
-        return entities.stream().map(x -> routineGetMapper.mapToDto(x)).collect(Collectors.toList());
-    }
-
-
-    public List<TaskGetDTO> getTasksOfAUser(Long user_id) {
-        if (!userRepository.existsById(user_id)) {
-            return new ArrayList<>();
-        }
-        List<Goal> goals = goalRepository.findAllByUserId(user_id);
-        List<Task> entities = new ArrayList<>();
-        for (Goal g : goals) {
-            entities.addAll(taskRepository.findByGoalId(g.getId()));
-        }
-        return entities.stream().map(x -> taskGetMapper.mapToDto(x)).collect(Collectors.toList());
-    }
-
-
-    */
     /****************************** LINKING ENTITIES ********************************/
 
     public MessageResponse linkEntities(Long id, Long child_id) {
@@ -172,24 +103,6 @@ public class EntitiService {
         entitiRepository.save(entity);
         return new MessageResponse("Linking operation is successful.", MessageType.SUCCESS);
     }
-
-    /* no need, since we return sublinks in GET entity endpoint
-    public List<EntitiDTO> getSublinksOfAnEntity(Long entity_id) {
-        if (!entitiRepository.existsById(entity_id)) {
-            return new ArrayList<>();
-        }
-        List<Entiti> entities = entitiRepository.findById(entity_id).get().getSublinks().stream().collect(Collectors.toList());
-        for (int i = 0; i < entities.size(); i++) {
-            System.out.println(entities.get(i));
-        }
-        List<EntitiDTO> entity_dtos = new ArrayList<>();
-        entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Question")).map(x -> entitiMapper.mapToDto((Question) x)).collect(Collectors.toList()));
-        entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Task")).map(x -> entitiMapper.mapToDto((Task) x)).collect(Collectors.toList()));
-        entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Routine")).map(x -> entitiMapper.mapToDto((Routine) x)).collect(Collectors.toList()));
-        entity_dtos.addAll(entities.stream().filter(x -> x.getClass().getSimpleName().equals("Reflection")).map(x -> entitiMapper.mapToDto((Reflection) x)).collect(Collectors.toList()));
-        return entity_dtos;
-    }
-*/
 
     public MessageResponse deleteSublinkOfAnEntity(Long id, Long child_id) {
         Optional<Entiti> entity = entitiRepository.findById(id);
@@ -217,6 +130,7 @@ public class EntitiService {
         Task new_task = taskPostMapper.mapToEntity(taskPostDTO);
         new_task.setEntitiType(EntitiType.TASK);
         new_task.setIsDone(Boolean.FALSE);
+        new_task.setExtension_count(0L);
         if (taskPostDTO.getSubgoal_id() != null) {
             Optional<Subgoal> subgoal_opt = subgoalRepository.findById(taskPostDTO.getSubgoal_id());
             if (subgoal_opt.isEmpty()) {
@@ -301,6 +215,7 @@ public class EntitiService {
         Routine new_routine = routinePostMapper.mapToEntity(routinePostDTO);
         new_routine.setEntitiType(EntitiType.ROUTINE);
         new_routine.setIsDone(Boolean.FALSE);
+        new_routine.setExtension_count(0L);
         if (routinePostDTO.getSubgoal_id() != null) {
             Optional<Subgoal> subgoal_opt = subgoalRepository.findById(routinePostDTO.getSubgoal_id());
             if (subgoal_opt.isEmpty()) {
@@ -663,6 +578,32 @@ public class EntitiService {
         questionRepository.save(question_from_db_opt.get());
         return new MessageResponse("Updated question", MessageType.SUCCESS);
 
+    }
+
+
+    /************************************ EXTEND ********************************/
+    public MessageResponse extendEntiti(Long entiti_id, Date newDeadline) {
+        Entiti entiti_from_db = entitiRepository.findById(entiti_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Entity not found!"));
+
+        if(entiti_from_db.getEntitiType().equals(EntitiType.ROUTINE)){
+            Routine routine = (Routine) entiti_from_db;
+            if (newDeadline.compareTo(routine.getDeadline()) <= 0 ) {
+                return new MessageResponse("New deadline must be later than current deadline!", MessageType.ERROR);
+            }
+            routine.setDeadline(newDeadline);
+            routine.setExtension_count(routine.getExtension_count() + 1);
+            entitiRepository.save(routine);
+        }
+        if(entiti_from_db.getEntitiType().equals(EntitiType.TASK)){
+            Task task = (Task) entiti_from_db;
+            if (newDeadline.compareTo(task.getDeadline()) <= 0 ) {
+                return new MessageResponse("New deadline must be later than current deadline!", MessageType.ERROR);
+            }
+            task.setDeadline(newDeadline);
+            task.setExtension_count(task.getExtension_count() + 1);
+            entitiRepository.save(task);
+        }
+        return new MessageResponse("Entity extended successfully!", MessageType.SUCCESS);
     }
 
 }
