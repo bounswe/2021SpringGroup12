@@ -18,7 +18,7 @@ public class SubgoalDetail implements Serializable {
     public String description;
     public boolean isDone;
     public String createdAt;
-    public String deadLine;
+    public String deadline;
     public List<EntityShort> entities;
     public List<SubgoalShort> sublinks;
 }

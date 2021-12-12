@@ -83,7 +83,7 @@ public class SubgoalCreateFragment extends BaseInnerFragment {
         subgoal.mainGoalId = -1;
         subgoal.mainGroupGoalId = -1;
         subgoal.parentSubgoalId = -1;
-        subgoal.deadLine = "";
+        subgoal.deadline = "";
 
         Callback<BasicResponse> callback = new Callback<BasicResponse>() {
             @Override
