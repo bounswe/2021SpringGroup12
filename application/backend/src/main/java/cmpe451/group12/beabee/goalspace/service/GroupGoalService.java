@@ -18,6 +18,8 @@ import cmpe451.group12.beabee.goalspace.model.entities.Routine;
 import cmpe451.group12.beabee.goalspace.model.entities.Task;
 import cmpe451.group12.beabee.goalspace.model.goals.GroupGoal;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
+import cmpe451.group12.beabee.login.dto.UserCredentialsGetDTO;
+import cmpe451.group12.beabee.login.mapper.UserCredentialsGetMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -39,6 +41,8 @@ public class GroupGoalService
     private final GroupGoalShortMapper groupGoalShortMapper;
     private final UserRepository userRepository;
     private final EntitiShortMapper entitiShortMapper;
+    private final UserCredentialsGetMapper userCredentialsGetMapper;
+
 
     private Set<EntitiDTOShort> extractEntities(GroupGoal groupGoal){
 
@@ -67,6 +71,7 @@ public class GroupGoalService
         groupGoalGetDto.setUser_id(groupGoal.getCreator().getUser_id());
         groupGoalGetDto.setSubgoals(new HashSet<>(subgoalShortMapper.mapToDto(new ArrayList<>(groupGoal.getSubgoals()))));
         groupGoalGetDto.setEntities(extractEntities(groupGoal));
+        //groupGoalGetDto.setMembers(userCredentialsGetMapper.mapToDto(groupGoal.getMembers().stream().map(x->{x.setPassword("***"); return x;}).collect(Collectors.toList())).stream().collect(Collectors.toSet()));
         return groupGoalGetDto;
     }
 
