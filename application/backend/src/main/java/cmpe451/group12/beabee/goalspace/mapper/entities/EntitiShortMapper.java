@@ -69,7 +69,7 @@ public class EntitiShortMapper {
 
             entityDTO.setTitle(routine.getTitle());
             entityDTO.setDescription(routine.getDescription());
-            entityDTO.setDeadline(routine.getDeadline());
+            entityDTO.setDeadline(routine.getDeadline().get(routine.getDeadline().size()-1));
 
             return entityDTO;
         }

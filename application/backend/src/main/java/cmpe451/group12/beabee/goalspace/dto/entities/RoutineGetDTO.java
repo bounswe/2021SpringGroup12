@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -24,7 +25,7 @@ public class RoutineGetDTO {
     private String description;
     private Date createdAt;
     private Boolean isDone;
-    private Date deadline;
+    private List<Date> deadline;
     private Long period;
     private Set<EntitiDTOShort> sublinks;
     private Set<ResourceDTOShort> resources;

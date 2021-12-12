@@ -78,9 +78,9 @@ public class EntitiMapper {
             entityDTO.setTitle(routine.getTitle());
             entityDTO.setIsDone(routine.getIsDone());
             entityDTO.setDescription(routine.getDescription());
-            entityDTO.setDeadline(routine.getDeadline());
+            entityDTO.setDeadline(routine.getDeadline().get(routine.getDeadline().size()-1));
             entityDTO.setCreatedAt(routine.getCreatedAt());
-            entityDTO.setRating(routine.getRating());
+            entityDTO.setRating(routine.getRating().stream().mapToDouble(Double::doubleValue).summaryStatistics().getAverage());
             entityDTO.setPeriod(routine.getPeriod());
             return entityDTO;
         }
