@@ -40,12 +40,14 @@ public abstract class BaseInnerFragment extends Fragment {
         service = BeABeeService.serviceAPI;
         parentFragment = ((BaseContainerFragment) getParentFragment());
         parentFragment.SetMode(GetPageMode());
+        parentFragment.SetPageTitle(GetPageTitle());
     }
 
     @Override
     public void onResume() {
         super.onResume();
         parentFragment.SetMode(GetPageMode());
+        parentFragment.SetPageTitle(GetPageTitle());
         parentFragment.SetBackBtnListener(view -> OnBackClicked());
         parentFragment.SetCancelBtnListener(view -> OnCancelClicked());
         parentFragment.SetApproveBtnListener(view -> OnApproveClicked());
@@ -99,6 +101,8 @@ public abstract class BaseInnerFragment extends Fragment {
     }
 
     protected abstract PageMode GetPageMode();
+
+    protected abstract String GetPageTitle();
 
     protected abstract int GetLayoutId();
 }

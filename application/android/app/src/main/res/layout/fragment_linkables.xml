@@ -3,82 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <TextView
-        android:id="@+id/tv_tags_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="Tags"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/addTagButton"
-        android:layout_width="46dp"
-        android:layout_height="37dp"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/ic_action_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/rv_tags"
-        app:layout_constraintTop_toBottomOf="@id/tv_tags_title" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_tags"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="@id/addTagButton"
-        app:layout_constraintEnd_toStartOf="@id/addTagButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/addTagButton"
-        tools:listitem="@layout/item_tag_cardview" />
-
-    <TextView
-        android:id="@+id/tv_subgoals"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="Subgoals"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rv_tags" />
-
-    <ImageButton
-        android:id="@+id/addSubgoalButton"
-        android:layout_width="46dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="10dp"
-        android:src="@drawable/ic_action_name"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_subgoals"
-        app:layout_constraintStart_toEndOf="@+id/tv_subgoals"
-        app:layout_constraintTop_toTopOf="@+id/tv_subgoals" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_subgoals"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_subgoals"
-        tools:listitem="@layout/item_subgoal_cardview" />
-
-    <View
-        android:id="@+id/view4"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="10dp"
-        android:background="#777777"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rv_subgoals" />
+    android:layout_height="wrap_content"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp">
 
     <TextView
         android:id="@+id/tv_tasks"
@@ -86,10 +13,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Tasks"
-        android:textSize="25sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view4" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/addTaskButton"
@@ -128,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Routines"
-        android:textSize="25sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view2" />
@@ -169,7 +96,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Questions"
-        android:textSize="25sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
@@ -212,7 +139,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Reflections"
-        android:textSize="25sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view3" />

@@ -9,8 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.group12.beabee.R;
-import com.group12.beabee.models.ReflectionShort;
-import com.group12.beabee.models.responses.Entity;
+import com.group12.beabee.models.responses.EntityShort;
 
 import java.util.List;
 
@@ -20,10 +19,10 @@ import butterknife.ButterKnife;
 public class ReflectionCardViewAdapter extends RecyclerView.Adapter<ReflectionCardViewAdapter.ViewHolder> {
 
 
-    private List<Entity> reflectionShortList;
+    private List<EntityShort> reflectionShortList;
     private IOnReflectionClickedListener onItemClickedListener;
 
-    public void setData(List<Entity> reflectionShorts){
+    public void setData(List<EntityShort> reflectionShorts){
         reflectionShortList = reflectionShorts;
         notifyDataSetChanged();
     }
@@ -65,7 +64,7 @@ public class ReflectionCardViewAdapter extends RecyclerView.Adapter<ReflectionCa
 
         }
 
-        public void BindData(Entity reflectionShort){
+        public void BindData(EntityShort reflectionShort){
             tvtitle.setText(reflectionShort.title);
             tvdescription.setText(reflectionShort.description);
             itemParent.setOnClickListener(v -> onItemClickedListener.OnReflectionClicked(reflectionShort.id));

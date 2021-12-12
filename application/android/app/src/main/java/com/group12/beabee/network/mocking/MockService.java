@@ -1,18 +1,26 @@
 package com.group12.beabee.network.mocking;
 
-import com.group12.beabee.models.GoalDTO;
+
 import com.group12.beabee.models.GroupGoalDTO;
+import com.group12.beabee.models.requests.Goal;
 import com.group12.beabee.models.requests.LoginRequest;
+import com.group12.beabee.models.requests.Question;
+import com.group12.beabee.models.requests.Reflection;
+import com.group12.beabee.models.requests.Routine;
 import com.group12.beabee.models.requests.SignUpRequest;
+import com.group12.beabee.models.requests.Subgoal;
+import com.group12.beabee.models.requests.Task;
 import com.group12.beabee.models.responses.BasicResponse;
-import com.group12.beabee.models.responses.Entity;
+import com.group12.beabee.models.responses.EntityShort;
+import com.group12.beabee.models.responses.GoalDetail;
+import com.group12.beabee.models.responses.GoalShort;
+import com.group12.beabee.models.responses.QuestionDetail;
+import com.group12.beabee.models.responses.ReflectionDetail;
+import com.group12.beabee.models.responses.RoutineDetail;
+import com.group12.beabee.models.responses.SubgoalDetail;
 import com.group12.beabee.models.responses.LoginResponse;
-import com.group12.beabee.models.responses.QuestionDTO;
-import com.group12.beabee.models.responses.ReflectionDTO;
-import com.group12.beabee.models.responses.RoutineDTO;
+import com.group12.beabee.models.responses.TaskDetail;
 import com.group12.beabee.models.responses.SignUpResponse;
-import com.group12.beabee.models.responses.SubgoalDTO;
-import com.group12.beabee.models.responses.TaskDTO;
 import com.group12.beabee.models.responses.UserDTO;
 import com.group12.beabee.network.ServiceAPI;
 
@@ -57,29 +65,27 @@ public class MockService implements ServiceAPI {
     }
 
     @Override
-    public Call<List<GoalDTO>> getGoalsOfUser(int userId) {
-        List<GoalDTO> tempList = new ArrayList<>();
+    public Call<List<GoalShort>> getGoalsOfUser(int userId) {
+        List<GoalShort> tempList = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            GoalDTO temp = new GoalDTO();
+            GoalShort temp = new GoalShort();
             temp.id = i;
             temp.title = "title"+i;
             temp.description = "description"+i;
-            temp.goalType = "GOAL";
-            temp.createdAt = "2021-11-15T18:01:25.047Z";
             temp.deadLine = "2021-11-15T18:01:25.047Z";
             tempList.add(temp);
         }
-        return new MockCall<List<GoalDTO>>() {
+        return new MockCall<List<GoalShort>>() {
             @Override
-            public void enqueue(Callback<List<GoalDTO>> callback) {
+            public void enqueue(Callback<List<GoalShort>> callback) {
                 callback.onResponse(this, Response.success(tempList));
             }
         };
     }
 
     @Override
-    public Call<GoalDTO> getGoalDetail(int goalId) {
-        GoalDTO temp = new GoalDTO();
+    public Call<GoalDetail> getGoalDetail(int goalId) {
+        GoalDetail temp = new GoalDetail();
         temp.id = 1;
         temp.title = "title"+1;
         temp.description = "description"+1;
@@ -87,73 +93,59 @@ public class MockService implements ServiceAPI {
         temp.createdAt = "2021-11-15T18:01:25.047Z";
         temp.deadLine = "2021-11-15T18:01:25.047Z";
 
-        return new MockCall<GoalDTO>() {
+        return new MockCall<GoalDetail>() {
             @Override
-            public void enqueue(Callback<GoalDTO> callback) {
+            public void enqueue(Callback<GoalDetail> callback) {
                 callback.onResponse(this, Response.success(temp));
             }
         };
     }
 
     @Override
-    public Call<BasicResponse> createGoalOfUser(int userId, GoalDTO goal) {
+    public Call<BasicResponse> createGoalOfUser(int userId, Goal goal) {
         return returnBasicResponse();
     }
 
     @Override
-    public Call<BasicResponse> updateGoalOfUser(GoalDTO userDTO) {
+    public Call<BasicResponse> updateGoalOfUser(GoalDetail goalDetail) {
         return returnBasicResponse();
     }
 
     @Override
-    public Call<List<Entity>> getSublinksForEntity(int entityId) {
-        List<Entity> tempList = new ArrayList<>();
+    public Call<List<EntityShort>> getEntitiesOfUser(int userId) {
+        List<EntityShort> tempList = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            Entity temp = new Entity();
+            EntityShort temp = new EntityShort();
             temp.id = i;
             temp.title = "title"+i;
             temp.description = "description"+i;
+            temp.entityType = "TASK";
+            temp.deadline = "2021-12-11T16:50:33.578Z";
             tempList.add(temp);
         }
-        return new MockCall<List<Entity>>() {
+        return new MockCall<List<EntityShort>>() {
             @Override
-            public void enqueue(Callback<List<Entity>> callback) {
+            public void enqueue(Callback<List<EntityShort>> callback) {
                 callback.onResponse(this, Response.success(tempList));
             }
         };
     }
 
     @Override
-    public Call<List<Entity>> getSublinksForGoal(int goalId) {
-        List<Entity> tempList = new ArrayList<>();
+    public Call<List<EntityShort>> getEntitiesOfGoal(int goalId) {
+        List<EntityShort> tempList = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            Entity temp = new Entity();
+            EntityShort temp = new EntityShort();
             temp.id = i;
             temp.title = "title"+i;
             temp.description = "description"+i;
+            temp.entityType = "TASK";
+            temp.deadline = "2021-12-11T16:50:33.578Z";
             tempList.add(temp);
         }
-        return new MockCall<List<Entity>>() {
+        return new MockCall<List<EntityShort>>() {
             @Override
-            public void enqueue(Callback<List<Entity>> callback) {
-                callback.onResponse(this, Response.success(tempList));
-            }
-        };
-    }
-
-    @Override
-    public Call<List<Entity>> getEntitiesOfUser(int userId) {
-        List<Entity> tempList = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            Entity temp = new Entity();
-            temp.id = i;
-            temp.title = "title"+i;
-            temp.description = "description"+i;
-            tempList.add(temp);
-        }
-        return new MockCall<List<Entity>>() {
-            @Override
-            public void enqueue(Callback<List<Entity>> callback) {
+            public void enqueue(Callback<List<EntityShort>> callback) {
                 callback.onResponse(this, Response.success(tempList));
             }
         };
@@ -167,103 +159,108 @@ public class MockService implements ServiceAPI {
     //TODO implement these
 
     @Override
-    public Call<SubgoalDTO> getSubgoal(int id) {
+    public Call<SubgoalDetail> getSubgoal(int id) {
         return null;
     }
 
     @Override
-    public Call<BasicResponse> updateSubgoal(int id, SubgoalDTO subgoalDTO) {
-        return null;
+    public Call<BasicResponse> updateSubgoal(SubgoalDetail subgoalDetail) {
+        return returnBasicResponse();
     }
 
     @Override
     public Call<BasicResponse> deleteSubgoal(int id) {
+        return returnBasicResponse();
+    }
+
+    @Override
+    public Call<BasicResponse> createSubgoalUnderSubgoal(Subgoal subgoal) {
+        return returnBasicResponse();
+    }
+
+    @Override
+    public Call<BasicResponse> createSubgoalUnderGoal(Subgoal subgoal) {
+        return returnBasicResponse();
+    }
+
+    @Override
+    public Call<TaskDetail> getTask(int id) {
         return null;
     }
 
     @Override
-    public Call<BasicResponse> createSubgoal(SubgoalDTO subgoalDTO) {
-        return null;
-    }
-
-    @Override
-    public Call<TaskDTO> getTask(int id) {
-        return null;
-    }
-
-    @Override
-    public Call<BasicResponse> updateTask(int id, TaskDTO taskDTO) {
-        return null;
+    public Call<BasicResponse> updateTask(TaskDetail taskDetail) {
+        return returnBasicResponse();
     }
 
     @Override
     public Call<BasicResponse> deleteTask(int id) {
+        return returnBasicResponse();
+    }
+
+    @Override
+    public Call<BasicResponse> createTask(Task task) {
+        return returnBasicResponse();
+    }
+
+    @Override
+    public Call<ReflectionDetail> getReflection(int id) {
         return null;
     }
 
     @Override
-    public Call<BasicResponse> createTask(TaskDTO taskDTO) {
-        return null;
-    }
-
-    @Override
-    public Call<ReflectionDTO> getReflection(int id) {
-        return null;
-    }
-
-    @Override
-    public Call<BasicResponse> updateReflection(int id, ReflectionDTO reflectionDTO) {
-        return null;
+    public Call<BasicResponse> updateReflection(ReflectionDetail reflectionDetail) {
+        return returnBasicResponse();
     }
 
     @Override
     public Call<BasicResponse> deleteReflection(int id) {
+        return returnBasicResponse();
+    }
+
+    @Override
+    public Call<BasicResponse> createReflection(Reflection reflection) {
+        return returnBasicResponse();
+    }
+
+    @Override
+    public Call<RoutineDetail> getRoutine(int id) {
         return null;
     }
 
     @Override
-    public Call<BasicResponse> createReflection(ReflectionDTO reflectionDTO) {
-        return null;
-    }
-
-    @Override
-    public Call<RoutineDTO> getRoutine(int id) {
-        return null;
-    }
-
-    @Override
-    public Call<BasicResponse> updateRoutine(int id, RoutineDTO routineDTO) {
-        return null;
+    public Call<BasicResponse> updateRoutine(RoutineDetail routineDetail) {
+        return returnBasicResponse();
     }
 
     @Override
     public Call<BasicResponse> deleteRoutine(int id) {
+        return returnBasicResponse();
+    }
+
+    @Override
+    public Call<BasicResponse> createRoutine(Routine routine) {
+        return returnBasicResponse();
+    }
+
+    @Override
+    public Call<QuestionDetail> getQuestion(int id) {
         return null;
     }
 
     @Override
-    public Call<BasicResponse> createRoutine(RoutineDTO routineDTO) {
-        return null;
-    }
-
-    @Override
-    public Call<QuestionDTO> getQuestion(int id) {
-        return null;
-    }
-
-    @Override
-    public Call<BasicResponse> updateQuestion(int id, QuestionDTO questionDTO) {
-        return null;
+    public Call<BasicResponse> updateQuestion(QuestionDetail questionDetail) {
+        return returnBasicResponse();
     }
 
     @Override
     public Call<BasicResponse> deleteQuestion(int id) {
-        return null;
+        return returnBasicResponse();
     }
 
     @Override
-    public Call<BasicResponse> createQuestion(QuestionDTO questionDTO) {
-        return null;
+    public Call<BasicResponse> createQuestion(Question question) {
+        return returnBasicResponse();
     }
 
     @Override

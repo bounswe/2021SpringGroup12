@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.GoalDTO;
+import com.group12.beabee.models.requests.Goal;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
@@ -33,7 +33,7 @@ public class GoalCreateFragment extends BaseInnerFragment {
     @BindView(R.id.et_description)
     EditText etDescription;
 
-    private GoalDTO goal;
+    private Goal goal;
 
     public GoalCreateFragment() {
         // Required empty public constructor
@@ -68,14 +68,14 @@ public class GoalCreateFragment extends BaseInnerFragment {
             Utils.ShowErrorToast(getContext(), "The description should be at least 5 chars length!");
             return;
         }
-        goal = new GoalDTO();
-        goal.goalType = "GOAL";
-        goal.isDone = false;
+        goal = new Goal();
         goal.title = etTitle.getText().toString();
         goal.description = etDescription.getText().toString();
+        Utils.showLoading(getChildFragmentManager());
         service.createGoalOfUser(BeABeeApplication.userId, goal).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
                     Utils.ShowErrorToast(getContext(), "Goal is successfully created!");
                     GoBack();
@@ -87,6 +87,7 @@ public class GoalCreateFragment extends BaseInnerFragment {
             }
             @Override
             public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
                 Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
             }
         });
@@ -95,6 +96,11 @@ public class GoalCreateFragment extends BaseInnerFragment {
     @Override
     protected PageMode GetPageMode() {
         return PageMode.Edit;
+    }
+
+    @Override
+    protected String GetPageTitle() {
+        return "create GOAL";
     }
 
     @Override

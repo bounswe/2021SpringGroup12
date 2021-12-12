@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
+import com.group12.beabee.Utils;
 import com.group12.beabee.models.requests.LoginRequest;
 import com.group12.beabee.models.responses.LoginResponse;
 import com.group12.beabee.network.BeABeeService;
@@ -48,10 +49,12 @@ public class LoginActivity extends AppCompatActivity {
         loginRequest.email = etEmail.getText().toString();
         loginRequest.password = etPassword.getText().toString();
 
+        Utils.showLoading(getSupportFragmentManager());
         serviceAPI.loginRequest(loginRequest).enqueue(new Callback<LoginResponse>() {
 
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")){
                     BeABeeApplication.AuthToken = response.body().jwt;
                     BeABeeApplication.userId = response.body().userDTO.userId;
@@ -66,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
+                Utils.dismissLoading();
                 Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
