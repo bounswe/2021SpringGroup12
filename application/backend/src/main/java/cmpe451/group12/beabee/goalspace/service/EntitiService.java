@@ -135,7 +135,7 @@ public class EntitiService {
 
     public MessageResponse createReflection(ReflectionPostDTO reflectionPostDTO) {
         Reflection new_reflection = reflectionPostMapper.mapToEntity(reflectionPostDTO);
-        new_reflection.setEntitiType(EntitiType.ROUTINE);
+        new_reflection.setEntitiType(EntitiType.REFLECTION);
         new_reflection.setIsDone(Boolean.FALSE);
         if (reflectionPostDTO.getParentType().equals(ParentType.GOAL)){
             Goal goal = goalRepository.findById(reflectionPostDTO.getParent_id()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent goal not found!"));
