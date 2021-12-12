@@ -20,7 +20,7 @@ import {Layout} from "antd";
 import Sidebar from "./components/Sidebar";
 import UserCalendar from "./components/UserCalendar";
 import {GroupGoalPage} from "./pages/GroupGoalPage";
-
+import { ResourcePage } from "./pages/ResourcePage";
 
 
 export interface IAppProps {}
@@ -104,10 +104,11 @@ export default class App extends React.Component<IAppProps, IAppState> {
                 <Route path="/goal/:goal_id" children={<GoalPage />} />
                 <Route path="/groupgoal/:goal_id" children={<GroupGoalPage />} />
                 <Route path="/editGoal/:goal_id" children={<EditGoal />} />
-                <Route path="/entity/:entity_id" children={<EntityPage />} />
-                <Route path="/addEntity/:goal_id" children={<AddEntity /> } />
-                <Route path="/editEntity/:entity_id" children={<EditEntity /> } />
-                <Route path="/linkEntityfrom/:entity_id" children={<LinkEntity /> } />
+                <Route path="/entity/:entitiType/:entity_id" children={<EntityPage />} />
+                <Route path="/addEntity/:parentType/:entitiType/:parent_id" children={<AddEntity /> } />
+                <Route path="/editEntity/:entitiType/:entity_id" children={<EditEntity /> } />
+                <Route path="/linkEntityfrom/:goal_id/:entity_id" children={<LinkEntity /> } />
+                <Route path="/resources/:resource_id" children={<ResourcePage /> } />
               </Switch>
             </Content>
           </Layout>

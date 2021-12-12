@@ -15,7 +15,8 @@ export function EntityPage() {
     const [entities, setEntities] = useState([])
     const [isLoaded, setLoaded] = useState(false)
     // @ts-ignore
-    const {entity_id} = useParams();
+    const {entitiType,entity_id} = useParams();
+    const [resources, setResources] = useState([]);
 
     const columns = [
         {
@@ -88,6 +89,41 @@ export function EntityPage() {
         },
     ];
 
+    const Resourcecolumns = [
+        {
+            title: 'Title',
+            dataIndex: 'name',
+            key: 'name',
+            render: (text: any,
+                     resource: any) =>
+                <Link to={"/resources/" + resource.id}> {text} </Link>
+            ,
+        },
+        {
+            title: 'file type',
+            dataIndex: 'contentType',
+            key: 'contentType',
+        },
+        {
+            title: 'Created At',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (text: any,
+                     entity: { key: number, entityType: string}) =>
+                (   <div>
+                        <Space size="middle">
+                                Delete Resource
+                        </Space>
+                    </div>
+
+                ),
+        },
+    ];
+
     const deleteLink = (entity: { key: any}) => {
         console.log('Received values of delete: ', entity);
         axios.delete(`/entities/${entity_id}/delete_link/${entity.key}`,
@@ -97,10 +133,11 @@ export function EntityPage() {
             }).then(() => getEntities())
     };
 
+    const [goal_id,setGoalID]=useState()
 
     const getEntities = () => {
         console.log(axios.defaults.baseURL)
-        axios.get(`/entities/${entity_id}/sublinks`,
+        axios.get(`/entities/${entitiType.toLowerCase()}/${entity_id}`,
             {
                 headers: { Authorization: `Bearer ${token}`},
                 data: {}
@@ -114,7 +151,8 @@ export function EntityPage() {
             })
             .then(data => {
                 let tmp = []
-                for (let i = 0; i < data.length; i++) {
+                let sublinks=data.sublinks
+                for (let i = 0; i < sublinks.length; i++) {
                     tmp.push({
                         key: data[i]['id'],
                         title: data[i]['title'],
@@ -129,7 +167,9 @@ export function EntityPage() {
                 // @ts-ignore
                 setEntities(tmp)
                 setLoaded(true)
-                console.log('Success!')
+                setResources(data.resources)
+                setGoalID(data.goal_id)
+                console.log(resources)
             })
             .catch(error => {
                 console.error('There was an error!', error);
@@ -137,7 +177,7 @@ export function EntityPage() {
     }
 
     useEffect(() => {
-        axios.get(`/entities/entiti/${entity_id}`,  // we need goal id from params
+        axios.get(`/entities/${entitiType.toLowerCase()}/${entity_id}`,  // we need goal id from params
             {
                 headers: { Authorization: `Bearer ${token}`},
                 data: {}
@@ -169,11 +209,15 @@ export function EntityPage() {
             <h2>Description: {entity['description']}</h2>
             <h2>Linked Entities</h2>
             <Table columns={columns} dataSource={entities} />
-            <Link to={"/linkEntityfrom/" + entity_id}>
+            <br></br>
+            <Link to={"/linkEntityfrom/" +goal_id+ "/"+ entity_id}> 
                 <button type="button">
                     Link Entity
                 </button>
             </Link>
+            <br></br>
+            <h2>Resources:</h2>
+            <Table columns={Resourcecolumns} dataSource={resources} />
         </div>)
 }
 

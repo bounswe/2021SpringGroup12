@@ -12,17 +12,20 @@ export function AddEntity() {
 
     const [isSubmitted, setSubmitted] = useState(false)
     // @ts-ignore
-    const {goal_id} = useParams();
+    const {parentType,entitiType,parent_id} = useParams();
 
     const onFinish = (values: any) => {
-        console.log('Received values of form: ', values);
-        values['mainGoal_id'] = goal_id
-        console.log(values)
-        axios.post(`/entities/${values['entityType'].toLowerCase()}`, values,  {
+        console.log('Received values of form: ', parent_id);
+        values['parent_id'] = parseInt(parent_id) //for now, it adds entity to a goal
+        values['parentType'] = parentType.toUpperCase()
+        values["deadline"]=values["deadline"].toDate()
+        console.log("he: "+ JSON.stringify(values))
+        axios.post(`/entities/${entitiType}`, values,  {
             headers: { Authorization: `Bearer ${token}`},
         }).then(() => setSubmitted(true))
     };
 
+    
     const form = EntityForm(onFinish)
     let message;
     if (isSubmitted) {
@@ -31,11 +34,28 @@ export function AddEntity() {
     return (
         <div>
             {form}
-            <Link to={"/goal/" + goal_id} >
+            {parentType == "goal" &&
+            <Link to={"/goal/" + parent_id} >
                 <button type="button">
                     Return to Goal
                 </button>
             </Link>
+            }
+            {parentType == "subgoal" &&
+            <Link to={"/subgoal/" + parent_id} >
+                <button type="button">
+                    Return to SubGoal
+                </button>
+            </Link>
+            }
+            {(parentType == "question" || parentType == "reflection"
+             || parentType == "task" || parentType == "routine") &&
+            <Link to={`/entity/${parentType}/${parent_id}/` + parent_id} >
+                <button type="button">
+                    Return to SubGoal
+                </button>
+            </Link>
+            }
             {message}
         </div>
 

@@ -9,28 +9,100 @@ import { LinkEntityForm } from "../components/LinkEntityForm";
 const token = localStorage.getItem("token")
 
 export function LinkEntity() {
+    const [possible_entities, setEntities] = useState([])
+    const [user_id, setUserID] = useState([])
+
+    const columns = [
+        {
+            title: 'Title',
+            dataIndex: 'title',
+            key: 'title',
+            render: (text: any,
+                     entity: {key: number}) =>
+                <Link to={"/entity/" + entity.key}> {text} </Link>
+            ,
+        },
+        {
+            title: 'Description',
+            dataIndex: 'description',
+            key: 'description',
+        },
+        {
+            title: 'Entity Type',
+            dataIndex: 'entityType',
+            key: 'entityType',
+        },
+    ];
 
 
     const [isSubmitted, setSubmitted] = useState(false)
     // @ts-ignore
-    const {entity_id} = useParams();
 
-    const onFinish = (values: any) => {
-        console.log('Received values of form: ', values);
-        values['entity_id'] = entity_id
-        axios.post(`/entities/${values['entityType'].toLowerCase()}`, values,  {
+    const {goal_id, entity_id} = useParams();
+    useEffect(() => {
+        //to get the user id
+        axios.get(`/goals/${goal_id}`,
+        {
             headers: { Authorization: `Bearer ${token}`},
-        }).then(() => setSubmitted(true))
-    };
+            data: {}
+        })
+        .then(response => {
+            // check for error response
+            if (response.status === 200) {
+                return response.data
+            }
+            throw response
+        })
+        .then(data => {
+            setUserID(data.user_id)
+            // @ts-ignore
+            console.log(data.user_id)
 
-    const form = LinkEntityForm(onFinish)
+        })
+        .catch(error => {
+            console.error('There was an error!', error);
+        });
+
+        axios.get(`/entities/user/${user_id}`,
+            {
+                headers: { Authorization: `Bearer ${token}`},
+                data: {}
+            })
+            .then(response => {
+                // check for error response
+                if (response.status === 200) {
+                    return response.data
+                }
+                throw response
+            })
+            .then(data => {
+                let tmp = []
+                let sublinks=data.sublinks
+                for (let i = 0; i < sublinks.length; i++) {
+                    tmp.push({
+                        key: data[i]['id'],
+                        title: data[i]['title'],
+                        description: data[i]['description'],
+                        entityType: data[i]['entitiType'],
+                    })
+                }
+                // @ts-ignore
+                setEntities(tmp)
+
+            })
+            .catch(error => {
+                console.error('There was an error!', error);
+            });
+    }, []);
+
+
     let message;
     if (isSubmitted) {
         message = <h2>Entity Added Successfully!</h2>
     }
     return (
         <div>
-            {form}
+            <Table columns={columns} dataSource={possible_entities} />
             <Link to={"/entity/" + entity_id} >
                 <button type="button">
                     Return to Entity

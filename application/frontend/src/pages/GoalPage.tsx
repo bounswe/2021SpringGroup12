@@ -20,11 +20,11 @@ export function GoalPage() {
     const {goal_id} = useParams();
 
     let delete_count = 0
-    console.log('Burada 22')
+    console.log(goal_id)
 
-    const deleteEntity = (entity: { key: any, entityType: string}) => {
+    const deleteEntity = (entity: { key: any, entitiType: string}) => {
         console.log('Received values of delete: ', goal);
-        axios.delete(`/entities/${entity.entityType.toLowerCase()}/${entity.key}`,
+        axios.delete(`/entities/${entity.entitiType.toLowerCase()}/${entity.key}`,
             {
                 headers: { Authorization: `Bearer ${token}`},
                 data: {}
@@ -39,97 +39,8 @@ export function GoalPage() {
                 data: {}
             }).then(() => delete_count++)
     };
+    
 
-    const subgoal_columns =  [
-            {
-                title: 'Title',
-                dataIndex: 'title',
-                key: 'title',
-                render: (text: any,
-                         goal: { key: string | number | boolean | {} | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactNodeArray | React.ReactPortal | null | undefined; }) =>
-                    <Link to={"/goals/" + goal.key}> {text} </Link>
-                ,
-            },
-            {
-                title: 'Description',
-                dataIndex: 'description',
-                key: 'description',
-            },
-            {
-                title: 'Deadline',
-                dataIndex: 'deadline',
-                key: 'deadline',
-            },
-        {
-            dataIndex: "description",
-            title: 'Action',
-            key: 'action',
-            render: (text: any,
-                     goal: { key: string | number | boolean | {} | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactNodeArray | React.ReactPortal | null | undefined; }) =>
-                (   <div>
-                        <Space size="middle">
-                            <Button type="primary" onClick={() => deleteGoal(goal)}>
-                                Delete
-                            </Button>
-                        </Space>
-                        <Link to={"/editGoal/" + goal.key}>
-                            <button type="button">
-                                Edit
-                            </button>
-                        </Link>
-                    </div>
-
-                )
-        }
-
-        ];
-
-    const columns = [
-        {
-            title: 'Title',
-            dataIndex: 'title',
-            key: 'title',
-            render: (text: any,
-                     entity: {key: number}) =>
-                <Link to={"/entity/" + entity.key}> {text} </Link>
-            ,
-        },
-        {
-            title: 'Description',
-            dataIndex: 'description',
-            key: 'description',
-        },
-        {
-            title: 'Entity Type',
-            dataIndex: 'entitiType',
-            key: 'entitiType',
-        },
-        {
-            title: 'Rating',
-            dataIndex: 'rating',
-            key: 'rating',
-        },
-        {
-            title: 'Action',
-            key: 'action',
-            render: (text: any,
-                     entity: { key: number, entityType: string}) =>
-                (   <div>
-                        <Space size="middle">
-                            <Button type="primary" onClick={() => deleteEntity(entity)}>
-                                Delete
-                            </Button>
-                        </Space>
-                        <Link to={"/editEntity/" + entity.key}>
-                            <button type="button">
-                                Edit
-                            </button>
-                        </Link>
-                    </div>
-
-                ),
-        },
-    ];
 
     useEffect(() => {
         axios.get(`/goals/${goal_id}`,
@@ -139,6 +50,7 @@ export function GoalPage() {
             })
             .then(response => {
                 // check for error response
+                console.log("response: " , response)
                 if (response.status === 200) {
                     return response.data
                 }
@@ -148,6 +60,9 @@ export function GoalPage() {
                 console.log(typeof goal_info["entities"])
                 setGoal(goal_info)
                 setEntities(goal_info["entities"])
+                for (let i = 0; i < entities.length; i++) {
+                    
+                }
                 setSubgoals(goal_info["subgoals"])
                 setLoaded(true)
             })
@@ -155,6 +70,99 @@ export function GoalPage() {
                 console.error('There was an error!', error);
             });
     }, [delete_count]);
+
+    const subgoal_columns =  [
+        {
+            title: 'Title',
+            dataIndex: 'title',
+            key: 'title',
+            render: (text: any,
+                     goal: { key: string | number | boolean | {} | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactNodeArray | React.ReactPortal | null | undefined; }) =>
+                <Link to={"/goals/" + goal.key}> {text} </Link>
+            ,
+        },
+        {
+            title: 'Description',
+            dataIndex: 'description',
+            key: 'description',
+        },
+        {
+            title: 'Deadline',
+            dataIndex: 'deadline',
+            key: 'deadline',
+        },
+    {
+        dataIndex: "description",
+        title: 'Action',
+        key: 'action',
+        render: (text: any,
+                 goal: { key: string | number | boolean | {} | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactNodeArray | React.ReactPortal | null | undefined; }) =>
+            (   <div>
+                    <Space size="middle">
+                        <Button type="primary" onClick={() => deleteGoal(goal)}>
+                            Delete
+                        </Button>
+                    </Space>
+                    <Link to={"/editGoal/" + goal.key}>
+                        <button type="button">
+                            Edit
+                        </button>
+                    </Link>
+                </div>
+
+            )
+    }
+
+    ];
+
+const columns = [
+    {
+        title: 'Title',
+        dataIndex: 'title',
+        key: 'title',
+        render: (text: any,
+                 entity: any) =>
+            <Link to={"/entity/" + entity.entitiType + "/" + entity.id}> {text} </Link>
+        ,
+    },
+    {
+        title: 'Description',
+        dataIndex: 'description',
+        key: 'description',
+    },
+    {
+        title: 'Entity Type',
+        dataIndex: 'entitiType',
+        key: 'entitiType',
+    },
+    {
+        title: 'Rating',
+        dataIndex: 'rating',
+        key: 'rating',
+    },
+    {
+        title: 'Action',
+        key: 'action',
+        id: "id",
+        render: (text: any,
+                 entity: { key: number, entitiType: string, id: number}) =>
+            (   <div>
+                    <Space size="middle">
+                        <Button type="primary" onClick={() => deleteEntity(entity)}>
+                            Delete
+                        </Button>
+                    </Space>
+                    <Link to={"/editEntity/" + entity.entitiType + "/" + entity.id}>
+                        <button type="button">
+                            Edit
+                        </button>
+                    </Link>
+                </div>
+
+            ),
+    },
+];
+
     if (!isLoaded) {
         return <h2>Loading...</h2>
     }
@@ -169,9 +177,24 @@ export function GoalPage() {
                 </button>
             </Link>
             <Table columns={columns} dataSource={entities} />
-            <Link to={"/addEntity/" + goal_id}>
+            <Link to={"/addEntity/goal/question/" + goal_id}>
                 <button type="button">
-                    Add Entity
+                    Add Question
+                </button>
+            </Link>
+            <Link to={"/addEntity/goal/reflection/" + goal_id}>
+                <button type="button">
+                    Add Reflection
+                </button>
+            </Link>
+            <Link to={"/addEntity/goal/routine/" + goal_id}>
+                <button type="button">
+                    Add Routine
+                </button>
+            </Link>
+            <Link to={"/addEntity/goal/task/" + goal_id}>
+                <button type="button">
+                    Add Task
                 </button>
             </Link>
         </div>)
