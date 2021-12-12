@@ -122,7 +122,7 @@ public class GroupGoalService
         new_groupgoal.setIsDone(Boolean.FALSE);
         new_groupgoal.setCreator(user);
 
-        //Do we still need this?
+        //Do we still need this? -nah. doesn't matter whether we keep it
         new_groupgoal.setGoalType(GoalType.GROUPGOAL);
 
         //Use UUID converted to URL62 Base to guarantee uniqueness and improve readability

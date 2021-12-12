@@ -141,5 +141,4 @@ public class GoalService {
         subgoalRepository.save(new_subgoal);
         return new MessageResponse("Subgoal added.", MessageType.SUCCESS);
     }
-
 }
