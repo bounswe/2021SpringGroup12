@@ -24,7 +24,7 @@ jobs:
           cache: 'gradle'
       - name: Build project
         working-directory: ./application/backend
-        run: ./gradlew build
+        run: ./gradlew bootJar
       - name: Build image
         run: docker build ./application/backend -t beabee/beabee_spring:latest
       - name: Docker login
