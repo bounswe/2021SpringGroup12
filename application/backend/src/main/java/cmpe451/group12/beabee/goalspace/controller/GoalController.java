@@ -80,6 +80,26 @@ public class GoalController {
     public MessageResponse deleteGoal(@PathVariable @ApiParam(value = "Id of the goal.", example = "5") Long goal_id) {
         return goalService.deleteGoal(goal_id);
     }
+    @ApiOperation(value = "Extend the deadline of a goal.")
+    @PutMapping("/extend/{goal_id}")
+    public MessageResponse extendGoal(@PathVariable @ApiParam(value = "Id of the goal.", example = "5") Long goal_id,
+                                      @RequestBody @ApiParam(
+                                              value = "A JSON value representing a transaction. An example of the expected schema can be found down here.",
+                                              examples = @Example(value =
+                                              @ExampleProperty(
+                                                      value = "{\n" +
+                                                              "  \"newDeadline\": \"2021-11-20T09:48:42.553Z\",\n" +
+                                                              "}"
+                                              )
+                                              )) DateDTO dateDTO) {
+        return goalService.extendGoal(goal_id, dateDTO.getNewDeadline());
+    }
+
+    @ApiOperation(value = "Complete a goal.")
+    @PutMapping("/complete/{goal_id}")
+    public MessageResponse completeGoal(@PathVariable @ApiParam(value = "Id of the goal.", example = "5")Long goal_id) {
+        return goalService.completeGoal(goal_id);
+    }
 
     @ApiOperation(value = "Extend the deadline of a goal.")
     @PutMapping("/extend/{goal_id}")
@@ -119,7 +139,7 @@ public class GoalController {
             )
     ) SubgoalPostDTO subgoal_dto) {
         return goalService.createSubgoal(subgoal_dto);
-    }
+
 
     /********************* ANALYTICS **************/
     @ApiOperation(value = "Get analytics of a goal.")

@@ -27,44 +27,20 @@ public class EntitiController {
     private final EntitiService entitiService;
 
     /****************************** GET ALL ENTITIES ********************************/
-/*
-    @ApiOperation(value = "Get All Entities Of a Goal")
+
+
+    @ApiOperation(value = "Get all entities of a Goal including entities of subgoals' and entities of subgoals' of subgoals")
     @GetMapping("/goal/{goal_id}")
-    public List<EntitiDTO> getEntitiesOfAGoal(@PathVariable @ApiParam(value = "Id of the goal.", example = "5") Long goal_id) {
+    public List<EntitiDTOShort> getEntitiesOfAGoal(@PathVariable @ApiParam(value = "Id of the goal.", example = "5") Long goal_id) {
         return entitiService.getEntitiesOfAGoal(goal_id);
     }
-*/
+
     @ApiOperation(value = "Get All Entities Of a User")
     @GetMapping("/user/{user_id}")
     public List<EntitiDTOShort> getEntitiesOfAUser(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id) {
         return entitiService.getEntitiesOfAUser(user_id);
     }
 
- /*
-    @ApiOperation(value = "Get All Questions Of a User")
-    @GetMapping("/user/question/{user_id}")
-    public List<QuestionGetDTO> getQuestionsOfAUser(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id) {
-        return entitiService.getQuestionsOfAUser(user_id);
-    }
-
-    @ApiOperation(value = "Get All Reflections Of a User")
-    @GetMapping("/user/reflection/{user_id}")
-    public List<ReflectionGetDTO> getReflectionsOfAUser(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id) {
-        return entitiService.getReflectionsOfAUser(user_id);
-    }
-
-    @ApiOperation(value = "Get All Routines Of a User")
-    @GetMapping("/user/routine/{user_id}")
-    public List<RoutineGetDTO> getRoutinesOfAUser(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id) {
-        return entitiService.getRoutinesOfAUser(user_id);
-    }
-
-    @ApiOperation(value = "Get All Tasks Of a User")
-    @GetMapping("/user/task/{user_id}")
-    public List<TaskGetDTO> getTasksOfAUser(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id) {
-        return entitiService.getTasksOfAUser(user_id);
-    }
-*/
 
     /****************************** LINKING ENTITIES ********************************/
 
@@ -74,13 +50,6 @@ public class EntitiController {
         return entitiService.linkEntities(id, child_id);
     }
 
-    /* no need for this, user can get the same result using GET any entity
-    @ApiOperation(value = "Get all sublinks of an entity.")
-    @GetMapping("/{entity_id}/sublinks")
-    public List<EntitiDTO> getSublinksOfAnEntity(@PathVariable @ApiParam(value = "Id of the entity.",example = "5") Long entity_id) {
-        return entitiService.getSublinksOfAnEntity(entity_id);
-    }
-*/
     @ApiOperation(value = "Delete a link between entities.")
     @DeleteMapping("/{id}/delete_link/{child_id}")
     public MessageResponse deleteSublinkOfAnEntity(@PathVariable @ApiParam(value = "Id of the parent entity.", example = "5") Long id, @PathVariable @ApiParam(value = "Id of the child entity.", example = "5") Long child_id) {
@@ -101,6 +70,7 @@ public class EntitiController {
                             "    \"description\": \"string\",\n" +
                             "    \"entitiType\": \"TASK\",\n" +
                             "    \"mainGoal_id*\": 0,\n" +
+                            "    \"mainGroupgoal_id*\": 0,\n" +
                             "    \"title*\": \"string\"\n" +
                             "  }"
             )
@@ -119,6 +89,7 @@ public class EntitiController {
                             "    \"description\": \"string\",\n" +
                             "    \"entitiType\": \"ROUTINE\",\n" +
                             "    \"mainGoal_id*\": 0,\n" +
+                            "    \"mainGroupgoal_id*\": 0,\n" +
                             "    \"title*\": \"string\"\n" +
                             "    \"period*\": \"5\"\n" +
                             "  }"
@@ -136,6 +107,7 @@ public class EntitiController {
                     value = "{\n" +
                             "    \"description\": \"string\",\n" +
                             "    \"mainGoal_id*\": 0,\n" +
+                            "    \"mainGroupgoal_id*\": 0,\n" +
                             "    \"title*\": \"string\"\n" +
                             "  }"
             )
@@ -154,6 +126,7 @@ public class EntitiController {
                             "    \"description\": \"string\",\n" +
                             "    \"entitiType\": \"QUESTION\",\n" +
                             "    \"mainGoal_id*\": 0,\n" +
+                            "    \"mainGroupgoal_id*\": 0,\n" +
                             "    \"title*\": \"string\"\n" +
                             "  }"
             )
@@ -308,6 +281,7 @@ public class EntitiController {
     }
 
     /***************************************** EXTEND ****************************/
+
     @ApiOperation(value = "Extend an entity.")
     @PutMapping("/extend/{entiti_id}")
     public MessageResponse extendEntiti(@PathVariable @ApiParam(value = "Id of the entity.", example = "5")Long entiti_id, @RequestBody @ApiParam(
@@ -318,7 +292,8 @@ public class EntitiController {
                             "  \"newDeadline\": \"2021-11-20T09:48:42.553Z\",\n" +
                             "}"
             )
-            ))DateDTO dateDTO) {
+
+            )) DateDTO dateDTO) {
         return entitiService.extendEntiti(entiti_id, dateDTO.getNewDeadline());
     }
 

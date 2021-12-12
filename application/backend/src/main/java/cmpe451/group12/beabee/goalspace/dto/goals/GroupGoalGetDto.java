@@ -4,19 +4,21 @@ import cmpe451.group12.beabee.goalspace.dto.entities.EntitiDTOShort;
 import cmpe451.group12.beabee.goalspace.enums.GoalType;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.util.Date;
 import java.util.Set;
 
 @Getter
 @Setter
-public class GoalGetDTO {
+public class GroupGoalGetDto
+{
 
     private Long id;
 
     private Long user_id;
 
     private GoalType goalType;
-    private Date completedAt;
+
     private String title;
 
     private Boolean isDone;
@@ -27,9 +29,11 @@ public class GoalGetDTO {
 
     private Date createdAt;
 
-    private Date completedAt;
-
     private Set<SubgoalDTOShort> subgoals;
 
     private Set<EntitiDTOShort> entities;
+
+    private String token;
+
+    private Set<Long> members;
 }

@@ -21,17 +21,17 @@ public class Goal extends AllGoal{
     @Column(name = "ID")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private Users creator;
     
-    @JsonIgnoreProperties({"goal"})
-    @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"goal", "groupgoal"})
+    @OneToMany(mappedBy = "goal", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Entiti> entities;
 
     private Double rating;
 
-    @JsonIgnoreProperties({"mainGoal"})
+    @JsonIgnoreProperties({"mainGroupgoal, mainGoal"})
     @OneToMany(mappedBy = "mainGoal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Subgoal> subgoals;
 

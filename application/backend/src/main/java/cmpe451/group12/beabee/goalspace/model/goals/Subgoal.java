@@ -35,6 +35,10 @@ public class Subgoal {
     @JoinColumn(name = "main_goal_id")
     private Goal mainGoal;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "main_groupgoal_id")
+    private GroupGoal mainGroupgoal;
+
     @Column(name = "title")
     private String title;
     @Column(name = "isDone")
@@ -64,6 +68,16 @@ public class Subgoal {
     @JoinTable(name = "Subgoals")
     @Column(name = "parent_subgoal_id")
     private Set<Subgoal> child_subgoals;
+
+    @JsonIgnoreProperties({"assigned"})
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "Subgoal_Assignees",
+            joinColumns = { @JoinColumn(name = "subgoal_id") },
+            inverseJoinColumns = { @JoinColumn(name = "user_id") }
+    )
+    @Column(name = "assignee_id")
+    private Set<Users> assignees;
 
     private Double rating;
 

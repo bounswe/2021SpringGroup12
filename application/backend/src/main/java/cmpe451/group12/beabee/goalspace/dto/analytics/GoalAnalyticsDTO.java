@@ -35,4 +35,9 @@ public class GoalAnalyticsDTO {
 
     private Set<GoalDTOShort> goalsWithCommonLifetime;
 
+    private Long activeSubgoalCount ;
+    private Long completedSubgoalCount ;
+
+
 }
+

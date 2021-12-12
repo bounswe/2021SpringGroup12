@@ -24,9 +24,11 @@ public class UserController {
 
 
     @ApiOperation(value = "Get analytics of a user.")
+
     @GetMapping(value = {"/analytics/{user_id}", "/analytics/{user_id}/{days_before}"})
     public UserAnalyticsDTO getAnalytics(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id,
                                          @PathVariable(required = false) @ApiParam(value = "How many days before the report will start. It's optional. If not present, report will start from the beginning.", example = "5") Long days_before) {
         return userService.getAnalytics(user_id, days_before);
     }
 }
+

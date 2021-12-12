@@ -32,5 +32,4 @@ public interface GoalRepository extends JpaRepository<Goal, Long> {
 
     //List<Goal> findAllByCreatedAtIsBetween(Date time1, Date time2);
 
-
 }

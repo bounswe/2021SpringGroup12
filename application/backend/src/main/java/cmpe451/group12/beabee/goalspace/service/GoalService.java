@@ -4,6 +4,7 @@ import cmpe451.group12.beabee.common.dto.MessageResponse;
 import cmpe451.group12.beabee.common.enums.MessageType;
 import cmpe451.group12.beabee.common.model.Users;
 import cmpe451.group12.beabee.common.repository.UserRepository;
+import cmpe451.group12.beabee.goalspace.Repository.entities.EntitiRepository;
 import cmpe451.group12.beabee.goalspace.Repository.goals.GoalRepository;
 import cmpe451.group12.beabee.goalspace.Repository.goals.SubgoalRepository;
 import cmpe451.group12.beabee.goalspace.dto.analytics.GoalAnalyticsDTO;
@@ -44,7 +45,8 @@ public class GoalService {
     private final UserRepository userRepository;
     private final EntitiShortMapper entitiShortMapper;
 
-
+    private final EntitiRepository entitiRepository;
+    private final SubgoalService subgoalService;
     private Set<EntitiDTOShort> extractEntities(Goal goal) {
 
         Set<EntitiDTOShort> sublinks = new HashSet<>();
@@ -123,6 +125,12 @@ public class GoalService {
      */
     public MessageResponse deleteGoal(Long goal_id) {
         Goal goal_from_db = goalRepository.findById(goal_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Goal not found!"));
+
+        entitiRepository.deleteAll(goal_from_db.getEntities());
+        List<Subgoal> all_subgoals = goal_from_db.getSubgoals().stream()
+                .flatMap(GoalService::flatMapRecursive).collect(Collectors.toList());
+        all_subgoals.stream().forEach(x->{x.setChild_subgoals(null);}); //to handle foreign-key constraints
+        subgoalRepository.deleteAll(all_subgoals);
         goalRepository.deleteAGoal(goal_from_db.getId());
         return new MessageResponse("Goal deleted.", MessageType.SUCCESS);
     }
@@ -189,6 +197,60 @@ public class GoalService {
         return new MessageResponse("Subgoal added.", MessageType.SUCCESS);
     }
 
+
+
+    /********************* EXTEND AND COMPLETE start *************/
+    public MessageResponse extendGoal(Long goal_id, Date newDeadline) {
+        Goal goal_from_db = goalRepository.findById(goal_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Goal not found!"));
+        if (newDeadline.compareTo(goal_from_db.getDeadline()) <= 0) {
+            return new MessageResponse("New deadline must be later than current deadline!", MessageType.ERROR);
+        }
+        goal_from_db.setDeadline(newDeadline);
+        goal_from_db.setExtension_count(goal_from_db.getExtension_count() + 1);
+        goalRepository.save(goal_from_db);
+        return new MessageResponse("Goal extended successfully!", MessageType.SUCCESS);
+    }
+
+    public MessageResponse completeGoal(Long goal_id) {
+        Goal goal_from_db = goalRepository.findById(goal_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Goal not found!"));
+        if (goal_from_db.getIsDone()) {
+            return new MessageResponse("Already completed!", MessageType.ERROR);
+        }
+        Set<Subgoal> subgoals = goal_from_db.getSubgoals();
+        if(subgoals.stream().filter(x->!x.getIsDone()).count()>0){
+            return new MessageResponse("This goal has some subgoals that are uncompleted! Finish those first!", MessageType.ERROR);
+        }
+        goal_from_db.setIsDone(Boolean.TRUE);
+        goal_from_db.setCompletedAt(new Date(System.currentTimeMillis()));
+        goal_from_db.setRating(subgoals.stream().map(x -> x.getRating()).mapToDouble(Double::doubleValue).summaryStatistics().getAverage());
+        /*
+        List<Subgoal> subgoals = goal_from_db.getSubgoals().stream()
+                .flatMap(GoalService::flatMapRecursive).collect(Collectors.toList());
+        //System.out.println(subgoals.stream().map(x -> {return x.getId() +" "+x.getRating();}).collect(Collectors.toList()));
+
+        subgoals.stream().forEach(x -> {
+            x.setCompletedAt(new Date(System.currentTimeMillis()));
+            x.setIsDone(Boolean.TRUE);
+        });
+        // calculate current rating as average of its children, discard not rated children
+        goal_from_db.setRating(subgoals.stream().filter(x -> x.getRating() > 0).map(x -> x.getRating()).mapToDouble(Double::doubleValue).summaryStatistics().getAverage());
+        // rate unrated children with the average
+        subgoals.stream().filter(x -> x.getRating() == 0).forEach(x -> x.setRating(goal_from_db.getRating()));
+        //System.out.println(children.stream().map(x->{return x.getId() + " "+ x.getRating();}).collect(Collectors.toList()));
+        subgoalRepository.saveAll(subgoals);
+        */
+        goalRepository.save(goal_from_db);
+        return new MessageResponse("Goal completed successfully!", MessageType.SUCCESS);
+    }
+
+    private static Stream<Subgoal> flatMapRecursive(Subgoal item) {
+        return Stream.concat(Stream.of(item), Optional.ofNullable(item.getChild_subgoals())
+                .orElseGet(Collections::emptySet)
+                .stream()
+                .flatMap(GoalService::flatMapRecursive));
+    }
+    /********************* EXTEND AND COMPLETE finish *************/
+
     /********************* ANALYTICS **************/
     public GoalAnalyticsDTO getAnalytics(Long goal_id) {
         Goal goal_from_db = goalRepository.findById(goal_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Goal not found!"));
@@ -200,6 +262,7 @@ public class GoalService {
         goalAnalyticsDTO.setStartTime(goal_from_db.getCreatedAt());
         if (goal_from_db.getIsDone()) {
             goalAnalyticsDTO.setStatus(GoalAnalyticsDTO.Status.COMPLETED);
+
             goalAnalyticsDTO.setFinishTime(goal_from_db.getCompletedAt());
             goalAnalyticsDTO.setCompletionTimeInMiliseconds(goal_from_db.getCompletedAt().getTime() - goal_from_db.getCreatedAt().getTime());
 
@@ -208,28 +271,32 @@ public class GoalService {
             goalAnalyticsDTO.setGoalsWithCommonLifetime(goalShortMapper.mapToDto(common_goals).stream().collect(Collectors.toSet()));
 
         } else {
+
+            goalAnalyticsDTO.setRating(goal_from_db.getSubgoals().stream().filter(z->z.getIsDone()).map(x ->
+                    x.getRating()).mapToDouble(Double::doubleValue).summaryStatistics().getAverage());
             goalAnalyticsDTO.setStatus(GoalAnalyticsDTO.Status.ACTIVE);
             List<Goal> common_goals = goalRepository.findAllByCreatedAtIsBetweenOrCompletedAtBetween(goal_from_db.getCreatedAt(), new Date(System.currentTimeMillis()), goal_from_db.getCreatedAt(), new Date(System.currentTimeMillis())).stream().filter(x -> x.getCreator().equals(goal_from_db.getCreator())).collect(Collectors.toList());
             common_goals.remove(goal_from_db);
             goalAnalyticsDTO.setGoalsWithCommonLifetime(goalShortMapper.mapToDto(common_goals).stream().collect(Collectors.toSet()));
         }
         if (goal_from_db.getSubgoals().size() > 0) {
-            Set<Subgoal> subgoals_to_calculate_completion_time = goal_from_db.getSubgoals();
-            subgoals_to_calculate_completion_time.stream().forEach(x -> {
-                x.setCompletedAt(new Date(System.currentTimeMillis()));
-            });
 
-            goalAnalyticsDTO.setLongestSubgoal(subgoalShortMapper.mapToDto(subgoals_to_calculate_completion_time.stream().max(Comparator.comparing(x -> x.getCompletedAt().getTime() - x.getCreatedAt().getTime())).get()));
-            goalAnalyticsDTO.setShortestSubgoal(subgoalShortMapper.mapToDto(subgoals_to_calculate_completion_time.stream().min(Comparator.comparing(x -> x.getCompletedAt().getTime() - x.getCreatedAt().getTime())).get()));
-            goalAnalyticsDTO.setBestSubgoal(subgoalShortMapper.mapToDto(goal_from_db.getSubgoals().stream().max(Comparator.comparing(Subgoal::getRating)).get()));
-            goalAnalyticsDTO.setWorstSubgoal(subgoalShortMapper.mapToDto(goal_from_db.getSubgoals().stream().min(Comparator.comparing(Subgoal::getRating)).get()));
+
+            goalAnalyticsDTO.setLongestSubgoal(subgoalShortMapper.mapToDto(goal_from_db.getSubgoals().stream().filter(z->z.getIsDone()).max(Comparator.comparing(x -> x.getCompletedAt().getTime() - x.getCreatedAt().getTime())).get()));
+            goalAnalyticsDTO.setShortestSubgoal(subgoalShortMapper.mapToDto(goal_from_db.getSubgoals().stream().filter(z->z.getIsDone()).min(Comparator.comparing(x -> x.getCompletedAt().getTime() - x.getCreatedAt().getTime())).get()));
+            goalAnalyticsDTO.setBestSubgoal(subgoalShortMapper.mapToDto(goal_from_db.getSubgoals().stream().filter(z->z.getIsDone()).max(Comparator.comparing(Subgoal::getRating)).get()));
+            goalAnalyticsDTO.setWorstSubgoal(subgoalShortMapper.mapToDto(goal_from_db.getSubgoals().stream().filter(z->z.getIsDone()).min(Comparator.comparing(Subgoal::getRating)).get()));
 
             goalAnalyticsDTO.setAverageCompletionTimeOfSubgoals((long) goal_from_db.getSubgoals().stream().filter(x -> x.getCompletedAt() != null).map(x ->
                     x.getCompletedAt().getTime() - x.getCreatedAt().getTime()).mapToLong(Long::longValue).summaryStatistics().getAverage());
         }
 
+        goalAnalyticsDTO.setActiveSubgoalCount(goal_from_db.getSubgoals().stream().filter(x->!x.getIsDone()).count());
+        goalAnalyticsDTO.setCompletedSubgoalCount(goal_from_db.getSubgoals().stream().filter(x->x.getIsDone()).count());
+
         return goalAnalyticsDTO;
     }
 
 
-    }
+}
+

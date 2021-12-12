@@ -17,3 +17,4 @@ public class ValidationControllerAdvice {
         return ResponseEntity.ok(new MessageResponse(message, MessageType.ERROR));
     }
 }
+
