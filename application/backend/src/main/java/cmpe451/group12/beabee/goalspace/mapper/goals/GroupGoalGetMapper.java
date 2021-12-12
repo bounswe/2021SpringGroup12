@@ -7,6 +7,7 @@ import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalDTOShort;
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import cmpe451.group12.beabee.goalspace.model.goals.GroupGoal;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
+import cmpe451.group12.beabee.login.dto.UserCredentialsGetDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -33,7 +34,12 @@ public class GroupGoalGetMapper {
             groupgoalGetDTO.setToken(groupGoal.getToken());
             groupgoalGetDTO.setMembers(
                     groupGoal.getMembers().stream()
-                            .map(Users::getUser_id)
+                            .map(x->{
+                                UserCredentialsGetDTO userCredentialsGetDTO = new UserCredentialsGetDTO();
+                                userCredentialsGetDTO.setUser_id(x.getUser_id());
+                                userCredentialsGetDTO.setUsername(x.getUsername());
+                                return userCredentialsGetDTO;
+                            })
                             .collect(Collectors.toSet())
             );
             return groupgoalGetDTO;

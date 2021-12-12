@@ -2,6 +2,7 @@ package cmpe451.group12.beabee.goalspace.dto.goals;
 
 import cmpe451.group12.beabee.goalspace.dto.entities.EntitiDTOShort;
 import cmpe451.group12.beabee.goalspace.enums.GoalType;
+import cmpe451.group12.beabee.login.dto.UserCredentialsGetDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,5 +36,5 @@ public class GroupGoalGetDto
 
     private String token;
 
-    private Set<Long> members;
+    private Set<UserCredentialsGetDTO> members;
 }
