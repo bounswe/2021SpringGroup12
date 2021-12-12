@@ -24,7 +24,7 @@ jobs:
           cache: 'gradle'
       - name: Build project
         working-directory: ./application/backend
-        run: ./gradlew build
+        run: ./gradlew bootJar
       - name: Build image
         run: docker build ./application/backend -t beabee/beabee_spring:latest
       - name: Docker login
@@ -41,12 +41,27 @@ jobs:
     needs: publish
     
     steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Create ssh host
+        run: |
+          mkdir -p ~/.ssh/
+                    echo "$SSH_KEY" > ~/.ssh/staging.key
+          chmod 600 ~/.ssh/staging.key
+          cat >>~/.ssh/config <<END
+          Host staging
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/staging.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ec2-3-144-201-198.us-east-2.compute.amazonaws.com
+      - name: Copy docker compose file
+        run: scp ./application/docker-compose.yml staging:docker-compose.yml
+      - name: Pull images from the docker hub
+        run: ssh staging docker pull beabeeapp/beabee
+      - name: Run the images
+        run: ssh staging docker-compose up -d
 
-# TODO Waiting for AWS registaration to cmoplete.
 
