@@ -8,12 +8,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.GoalDTO;
 import com.group12.beabee.models.responses.BasicResponse;
-import com.group12.beabee.models.responses.SubgoalDTO;
+import com.group12.beabee.models.responses.SubgoalDetail;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
 
@@ -34,7 +32,7 @@ public class SubgoalEditFragment extends BaseInnerFragment {
     @BindView(R.id.et_description)
     EditText etDescription;
 
-    private SubgoalDTO subgoalDTO;
+    private SubgoalDetail subgoalDetail;
 
     public SubgoalEditFragment() {
         // Required empty public constructor
@@ -47,10 +45,10 @@ public class SubgoalEditFragment extends BaseInnerFragment {
      * @return A new instance of fragment TaskEdit.
      */
     // TODO: Rename and change types and number of parameters
-    public static SubgoalEditFragment newInstance(SubgoalDTO subgoalDTO) {
+    public static SubgoalEditFragment newInstance(SubgoalDetail subgoalDetail) {
         SubgoalEditFragment fragment = new SubgoalEditFragment();
         Bundle args = new Bundle();
-        args.putSerializable("subgoal", subgoalDTO);
+        args.putSerializable("subgoal", subgoalDetail);
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,14 +57,14 @@ public class SubgoalEditFragment extends BaseInnerFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (getArguments()!=null){
-            subgoalDTO = (SubgoalDTO) getArguments().getSerializable("subgoal");
+            subgoalDetail = (SubgoalDetail) getArguments().getSerializable("subgoal");
         }
-        if (subgoalDTO==null){
+        if (subgoalDetail ==null){
             Utils.ShowErrorToast(getContext(), "Something is wrong!!");
             GoBack();
         }
-        etTitle.setText(subgoalDTO.title);
-        etDescription.setText(subgoalDTO.description);
+        etTitle.setText(subgoalDetail.title);
+        etDescription.setText(subgoalDetail.description);
     }
 
     @Override
@@ -80,11 +78,13 @@ public class SubgoalEditFragment extends BaseInnerFragment {
             return;
         }
 
-        subgoalDTO.title = etTitle.getText().toString();
-        subgoalDTO.description = etDescription.getText().toString();
-        service.updateSubgoal(BeABeeApplication.userId, subgoalDTO).enqueue(new Callback<BasicResponse>() {
+        subgoalDetail.title = etTitle.getText().toString();
+        subgoalDetail.description = etDescription.getText().toString();
+        Utils.showLoading(getChildFragmentManager());
+        service.updateSubgoal(subgoalDetail).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
                     Utils.ShowErrorToast(getContext(), "Subgoal is successfully updated!");
                     GoBack();
@@ -96,6 +96,7 @@ public class SubgoalEditFragment extends BaseInnerFragment {
             }
             @Override
             public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
                 Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
             }
         });
@@ -104,6 +105,11 @@ public class SubgoalEditFragment extends BaseInnerFragment {
     @Override
     protected PageMode GetPageMode() {
         return PageMode.Edit;
+    }
+
+    @Override
+    protected String GetPageTitle() {
+        return "Edit Subgoal";
     }
 
     @Override

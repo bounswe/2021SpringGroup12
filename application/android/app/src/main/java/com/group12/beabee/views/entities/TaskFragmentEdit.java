@@ -18,12 +18,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.responses.BasicResponse;
-import com.group12.beabee.models.responses.SubgoalDTO;
-import com.group12.beabee.models.responses.TaskDTO;
+import com.group12.beabee.models.responses.TaskDetail;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
 
@@ -54,7 +52,7 @@ public class TaskFragmentEdit extends BaseInnerFragment implements DatePickerDia
     @BindView(R.id.btn_pickDate)
     Button btnPickDate;
 
-    private TaskDTO taskDTO;
+    private TaskDetail taskDetail;
 
     public TaskFragmentEdit() {
         // Required empty public constructor
@@ -66,10 +64,10 @@ public class TaskFragmentEdit extends BaseInnerFragment implements DatePickerDia
      *
      * @return A new instance of fragment TaskEdit.
      */
-    public static TaskFragmentEdit newInstance(TaskDTO taskDTO) {
+    public static TaskFragmentEdit newInstance(TaskDetail taskDetail) {
         TaskFragmentEdit fragment = new TaskFragmentEdit();
         Bundle args = new Bundle();
-        args.putSerializable("task", taskDTO);
+        args.putSerializable("task", taskDetail);
         fragment.setArguments(args);
         return fragment;
     }
@@ -79,26 +77,16 @@ public class TaskFragmentEdit extends BaseInnerFragment implements DatePickerDia
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (getArguments()!=null){
-            taskDTO = (TaskDTO) getArguments().getSerializable("task");
+            taskDetail = (TaskDetail) getArguments().getSerializable("task");
         }
-        if (taskDTO==null){
+        if (taskDetail ==null){
             Utils.ShowErrorToast(getContext(), "Something is wrong!!");
             GoBack();
         }
-        etTitle.setText(taskDTO.title);
-        etDescription.setText(taskDTO.description);
-        cbIsDone.setChecked(taskDTO.isDone);
-        tvDeadline.setText(taskDTO.deadline);
-        //Button button = (Button) findViewById(R.id.btn_pickDate);
-//        btnPickDate.setOnClickListener(new View.OnClickListener() {
-//            @OnClick
-//            public void onClick(View v) {
-//
-//                //Toast.makeText(this, "Click event works.", Toast.LENGTH_SHORT).show();
-//                DialogFragment datePicker = new DeadlineCalendarFragment(this);
-//                datePicker.show(getChildFragmentManager(), "date picker");
-//            }
-//        });
+        etTitle.setText(taskDetail.title);
+        etDescription.setText(taskDetail.description);
+        cbIsDone.setChecked(taskDetail.isDone);
+        tvDeadline.setText(taskDetail.deadline);
     }
 
     @Override
@@ -112,13 +100,15 @@ public class TaskFragmentEdit extends BaseInnerFragment implements DatePickerDia
             return;
         }
 
-        taskDTO.title = etTitle.getText().toString();
-        taskDTO.description = etDescription.getText().toString();
-        taskDTO.isDone = cbIsDone.isChecked();
-        taskDTO.deadline = tvDeadline.getText().toString();
-        service.updateTask(taskDTO.id, taskDTO).enqueue(new Callback<BasicResponse>() {
+        taskDetail.title = etTitle.getText().toString();
+        taskDetail.description = etDescription.getText().toString();
+        taskDetail.isDone = cbIsDone.isChecked();
+        taskDetail.deadline = tvDeadline.getText().toString();
+        Utils.showLoading(getParentFragmentManager());
+        service.updateTask(taskDetail).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
                     Utils.ShowErrorToast(getContext(), "Task is successfully updated!");
                     GoBack();
@@ -130,6 +120,7 @@ public class TaskFragmentEdit extends BaseInnerFragment implements DatePickerDia
             }
             @Override
             public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
                 Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
             }
         });
@@ -139,6 +130,11 @@ public class TaskFragmentEdit extends BaseInnerFragment implements DatePickerDia
     @Override
     protected PageMode GetPageMode() {
         return PageMode.Edit;
+    }
+
+    @Override
+    protected String GetPageTitle() {
+        return "Edit Task";
     }
 
     @Override
@@ -154,24 +150,13 @@ public class TaskFragmentEdit extends BaseInnerFragment implements DatePickerDia
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         String dateString = c.toInstant().toString();
-//
-//
         tvDeadline.setText(dateString);
-        //String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
-
-
-       // tvDeadline.setText(currentDateString);
 
     }
 
     @OnClick(R.id.btn_pickDate)
     public void onClick(View view) {
-//        Calendar c = Calendar.getInstance();
-//        int year = c.get(Calendar.YEAR);
-//        int month = c.get(Calendar.MONTH);
-//        int day = c.get(Calendar.DAY_OF_MONTH);
 
-        //DialogFragment datePicker = new DatePickerDialog(getContext(), (DatePickerDialog.OnDateSetListener) getContext(), year, month, day);
         DialogFragment datePicker = new DeadlineCalendarFragment(this);
         datePicker.show(getActivity().getSupportFragmentManager(), "date picker");
     }

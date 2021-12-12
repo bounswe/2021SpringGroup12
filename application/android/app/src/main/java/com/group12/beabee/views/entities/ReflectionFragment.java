@@ -4,16 +4,15 @@ import android.os.Bundle;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.responses.Entity;
-import com.group12.beabee.models.responses.ReflectionDTO;
-import com.group12.beabee.views.MainStructure.BaseEntityListBottomFragment;
+import com.group12.beabee.models.ParentType;
+import com.group12.beabee.models.responses.ReflectionDetail;
+import com.group12.beabee.views.MainStructure.BaseEntityLinkableFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
-
-import java.util.List;
 
 import butterknife.BindView;
 import retrofit2.Call;
@@ -25,15 +24,18 @@ import retrofit2.Response;
  * Use the {@link ReflectionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ReflectionFragment extends BaseEntityListBottomFragment {
+public class ReflectionFragment extends BaseEntityLinkableFragment {
 
     @BindView(R.id.tv_title)
+    @Nullable
     TextView tvTitle;
     @BindView(R.id.tv_description)
+    @Nullable
     TextView tvDescription;
     @BindView(R.id.cb_isDone)
+    @Nullable
     CheckBox cbIsDone;
-    private ReflectionDTO reflectionDTO;
+    private ReflectionDetail reflectionDetail;
 
 
     public ReflectionFragment() {
@@ -57,9 +59,11 @@ public class ReflectionFragment extends BaseEntityListBottomFragment {
     @Override
     public void onResume() {
         super.onResume();
-        service.getReflection(id).enqueue(new Callback<ReflectionDTO>() {
+        Utils.showLoading(getParentFragmentManager());
+        service.getReflection(id).enqueue(new Callback<ReflectionDetail>() {
             @Override
-            public void onResponse(Call<ReflectionDTO> call, Response<ReflectionDTO> response) {
+            public void onResponse(Call<ReflectionDetail> call, Response<ReflectionDetail> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null) {
                     OnReflectionReceived(response.body());
                 } else {
@@ -69,41 +73,26 @@ public class ReflectionFragment extends BaseEntityListBottomFragment {
             }
 
             @Override
-            public void onFailure(Call<ReflectionDTO> call, Throwable t) {
-                Utils.ShowErrorToast(getContext(), "Something went wrong!");
-                GoBack();
-            }
-        });
-        service.getSublinksForEntity(id).enqueue(new Callback<List<Entity>>() {
-            @Override
-            public void onResponse(Call<List<Entity>> call, Response<List<Entity>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    OnEntitiesReceived(response.body());
-                } else {
-                    Utils.ShowErrorToast(getContext(), "Something went wrong!");
-                    GoBack();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Entity>> call, Throwable t) {
+            public void onFailure(Call<ReflectionDetail> call, Throwable t) {
+                Utils.dismissLoading();
                 Utils.ShowErrorToast(getContext(), "Something went wrong!");
                 GoBack();
             }
         });
     }
 
-    private void OnReflectionReceived(ReflectionDTO data) {
-        reflectionDTO = data;
+    private void OnReflectionReceived(ReflectionDetail data) {
+        reflectionDetail = data;
         tvTitle.setText(data.title);
         tvDescription.setText(data.description);
         cbIsDone.setChecked(data.isDone);
+        SetEntityLinks(data.entities);
     }
 
     @Override
     protected void OnEditClicked() {
         super.OnEditClicked();
-        OpenNewFragment(ReflectionFragmentEdit.newInstance(reflectionDTO));
+        OpenNewFragment(ReflectionFragmentEdit.newInstance(reflectionDetail));
     }
 
     @Override
@@ -112,7 +101,17 @@ public class ReflectionFragment extends BaseEntityListBottomFragment {
     }
 
     @Override
-    protected int GetLayoutId() {
+    protected ParentType GetLinkableType() {
+        return ParentType.ENTITY;
+    }
+
+    @Override
+    protected String GetPageTitle() {
+        return "Reflection";
+    }
+
+    @Override
+    protected int GetLayout() {
         return R.layout.fragment_reflection;
     }
 }

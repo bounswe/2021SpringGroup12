@@ -4,17 +4,15 @@ import android.os.Bundle;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.responses.Entity;
-import com.group12.beabee.models.responses.TaskDTO;
-import com.group12.beabee.views.MainStructure.BaseEntityListBottomFragment;
+import com.group12.beabee.models.ParentType;
+import com.group12.beabee.models.responses.TaskDetail;
+import com.group12.beabee.views.MainStructure.BaseEntityLinkableFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
-import com.group12.beabee.views.goals.SubgoalEditFragment;
-
-import java.util.List;
 
 import butterknife.BindView;
 import retrofit2.Call;
@@ -26,17 +24,21 @@ import retrofit2.Response;
  * Use the {@link TaskFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TaskFragment extends BaseEntityListBottomFragment {
+public class TaskFragment extends BaseEntityLinkableFragment {
 
     @BindView(R.id.tv_title)
+    @Nullable
     TextView tvTitle;
     @BindView(R.id.tv_description)
+    @Nullable
     TextView tvDescription;
     @BindView(R.id.cb_isDone)
+    @Nullable
     CheckBox cbIsDone;
     @BindView(R.id.tv_dateSelected)
+    @Nullable
     TextView tvDateSelected;
-    private TaskDTO taskDTO;
+    private TaskDetail taskDetail;
 
 
     public TaskFragment() {
@@ -60,9 +62,11 @@ public class TaskFragment extends BaseEntityListBottomFragment {
     @Override
     public void onResume() {
         super.onResume();
-        service.getTask(id).enqueue(new Callback<TaskDTO>() {
+        Utils.showLoading(getParentFragmentManager());
+        service.getTask(id).enqueue(new Callback<TaskDetail>() {
             @Override
-            public void onResponse(Call<TaskDTO> call, Response<TaskDTO> response) {
+            public void onResponse(Call<TaskDetail> call, Response<TaskDetail> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null) {
                     OnTaskReceived(response.body());
                 } else {
@@ -72,44 +76,27 @@ public class TaskFragment extends BaseEntityListBottomFragment {
             }
 
             @Override
-            public void onFailure(Call<TaskDTO> call, Throwable t) {
-                Utils.ShowErrorToast(getContext(), "Something went wrong!");
-                GoBack();
-            }
-        });
-        service.getSublinksForEntity(id).enqueue(new Callback<List<Entity>>() {
-            @Override
-            public void onResponse(Call<List<Entity>> call, Response<List<Entity>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    OnEntitiesReceived(response.body());
-                } else {
-                    Utils.ShowErrorToast(getContext(), "Something went wrong!");
-                    GoBack();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Entity>> call, Throwable t) {
+            public void onFailure(Call<TaskDetail> call, Throwable t) {
+                Utils.dismissLoading();
                 Utils.ShowErrorToast(getContext(), "Something went wrong!");
                 GoBack();
             }
         });
     }
 
-    private void OnTaskReceived(TaskDTO data) {
-        taskDTO = data;
+    private void OnTaskReceived(TaskDetail data) {
+        taskDetail = data;
         tvTitle.setText(data.title);
         tvDescription.setText(data.description);
         cbIsDone.setChecked(data.isDone);
         tvDateSelected.setText(data.deadline);
-
-
+        SetEntityLinks(data.entities);
     }
 
     @Override
     protected void OnEditClicked() {
         super.OnEditClicked();
-        OpenNewFragment(TaskFragmentEdit.newInstance(taskDTO));
+        OpenNewFragment(TaskFragmentEdit.newInstance(taskDetail));
     }
 
     @Override
@@ -118,7 +105,17 @@ public class TaskFragment extends BaseEntityListBottomFragment {
     }
 
     @Override
-    protected int GetLayoutId() {
+    protected ParentType GetLinkableType() {
+        return ParentType.ENTITY;
+    }
+
+    @Override
+    protected String GetPageTitle() {
+        return "Task";
+    }
+
+    @Override
+    protected int GetLayout() {
         return R.layout.fragment_task;
     }
 }

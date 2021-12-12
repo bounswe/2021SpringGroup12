@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
@@ -23,7 +24,8 @@ public class BeABeeService {
 
     public static ServiceAPI serviceAPI;
     public final static String BASE_URL = "http://18.117.95.170:8085/";
-    public final static String BASE_URL_DEV = "http://3.144.201.198:8085/";
+    public final static String BASE_URL_DEV = "http://3.144.201.198:8085/v2/";
+    public final static String BASE_URL_LOCAL = "http://192.168.1.205:8085/v2/";
     private final static boolean isMock = false;
 
     public static void InitNetworking() {

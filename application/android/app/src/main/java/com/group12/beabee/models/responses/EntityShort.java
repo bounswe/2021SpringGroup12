@@ -3,22 +3,13 @@ package com.group12.beabee.models.responses;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.Date;
 
-public class TaskDTO implements Serializable {
+public class EntityShort implements Serializable {
+    public int id;
     public String title;
     public String description;
     @SerializedName("entitiType")
     /** Can be SUBGOAL, TASK, ROUTINE, QUESTION, REFLECTION*/
     public String entityType;
-    public int id;
-    public boolean isDone;
-    @SerializedName("mainGoal_id")
-    public int mainGoalId;
-    public String createdAt;
     public String deadline;
-    public String rating = null;
-    public String period = null;
-    public String created = null;
-
 }

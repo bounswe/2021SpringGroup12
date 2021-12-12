@@ -1,6 +1,5 @@
 package com.group12.beabee.views;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -8,9 +7,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.group12.beabee.R;
-import com.group12.beabee.models.requests.LoginRequest;
+import com.group12.beabee.Utils;
 import com.group12.beabee.models.requests.SignUpRequest;
-import com.group12.beabee.models.responses.LoginResponse;
 import com.group12.beabee.models.responses.SignUpResponse;
 import com.group12.beabee.network.BeABeeService;
 import com.group12.beabee.network.ServiceAPI;
@@ -57,16 +55,19 @@ public class SignUpActivity extends AppCompatActivity {
         signUpRequest.email = etEmail.getText().toString();
         signUpRequest.password = password;
 
+        Utils.showLoading(getSupportFragmentManager());
         serviceAPI.signUpRequest(signUpRequest).enqueue(new Callback<SignUpResponse>() {
 
             @Override
             public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
+                Utils.dismissLoading();
                 Toast.makeText(SignUpActivity.this, response.body().message, Toast.LENGTH_LONG).show();
                 finish();
             }
 
             @Override
             public void onFailure(Call<SignUpResponse> call, Throwable t) {
+                Utils.dismissLoading();
                 Toast.makeText(SignUpActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
                 finish();
             }
