@@ -9,12 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
+import com.group12.beabee.models.ParentType;
+import com.group12.beabee.models.requests.Question;
 import com.group12.beabee.models.responses.BasicResponse;
-import com.group12.beabee.models.responses.QuestionDTO;
-import com.group12.beabee.models.responses.ReflectionDTO;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
 
@@ -37,8 +36,9 @@ public class QuestionCreateFragment extends BaseInnerFragment {
     @BindView(R.id.cb_isDone)
     CheckBox cbIsDone;
 
-    private QuestionDTO questionDTO;
+    private Question question;
     private int parentId;
+    private ParentType parentType;
 
     public QuestionCreateFragment() {
         // Required empty public constructor
@@ -50,10 +50,11 @@ public class QuestionCreateFragment extends BaseInnerFragment {
      *
      * @return A new instance of fragment TaskEdit.
      */
-    public static QuestionCreateFragment newInstance(int parentId) {
+    public static QuestionCreateFragment newInstance(int parentId, ParentType parentType) {
         QuestionCreateFragment fragment = new QuestionCreateFragment();
         Bundle args = new Bundle();
         args.putInt("parentId", parentId);
+        args.putSerializable("parentType", parentType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,6 +63,7 @@ public class QuestionCreateFragment extends BaseInnerFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         parentId = getArguments().getInt("parentId", -1);
+        parentType = ((ParentType) getArguments().getSerializable("parentType"));
     }
 
 
@@ -75,15 +77,17 @@ public class QuestionCreateFragment extends BaseInnerFragment {
             Utils.ShowErrorToast(getContext(), "The description should be at least 5 chars long!");
             return;
         }
-        questionDTO = new QuestionDTO();
-        questionDTO.entityType = "QUESTION";
-        questionDTO.mainGoalId = BeABeeApplication.currentMainGoal;
-        questionDTO.isDone = cbIsDone.isChecked();
-        questionDTO.title = etTitle.getText().toString();
-        questionDTO.description = etDescription.getText().toString();
-        service.createQuestion(questionDTO).enqueue(new Callback<BasicResponse>() {
+        question = new Question();
+        question.title = etTitle.getText().toString();
+        question.description = etDescription.getText().toString();
+        question.parentId = parentId;
+        question.parentType = parentType;
+        question.deadline = "";
+        Utils.showLoading(getParentFragmentManager());
+        service.createQuestion(question).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
                     Utils.ShowErrorToast(getContext(), "Question is successfully created!");
 //                    if (parentId >=0){
@@ -98,6 +102,7 @@ public class QuestionCreateFragment extends BaseInnerFragment {
             }
             @Override
             public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
                 Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
             }
         });
@@ -110,7 +115,7 @@ public class QuestionCreateFragment extends BaseInnerFragment {
 
     @Override
     protected String GetPageTitle() {
-        return "create question";
+        return "Create Question";
     }
 
     @Override

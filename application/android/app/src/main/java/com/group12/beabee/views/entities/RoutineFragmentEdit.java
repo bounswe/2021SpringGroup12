@@ -10,12 +10,10 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.responses.BasicResponse;
-import com.group12.beabee.models.responses.RoutineDTO;
-import com.group12.beabee.models.responses.TaskDTO;
+import com.group12.beabee.models.responses.RoutineDetail;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
 
@@ -37,7 +35,7 @@ public class RoutineFragmentEdit extends BaseInnerFragment {
     EditText etDescription;
     @BindView(R.id.cb_isDone)
     CheckBox cbIsDone;
-    private RoutineDTO routineDTO;
+    private RoutineDetail routineDetail;
 
 
     public RoutineFragmentEdit() {
@@ -50,10 +48,10 @@ public class RoutineFragmentEdit extends BaseInnerFragment {
      *
      * @return A new instance of fragment RoutineEdit.
      */
-    public static RoutineFragmentEdit newInstance(RoutineDTO routineDTO) {
+    public static RoutineFragmentEdit newInstance(RoutineDetail routineDetail) {
         RoutineFragmentEdit fragment = new RoutineFragmentEdit();
         Bundle args = new Bundle();
-        args.putSerializable("routineDTO", routineDTO);
+        args.putSerializable("routineDTO", routineDetail);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,15 +60,15 @@ public class RoutineFragmentEdit extends BaseInnerFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (getArguments()!=null){
-            routineDTO = (RoutineDTO) getArguments().getSerializable("routineDTO");
+            routineDetail = (RoutineDetail) getArguments().getSerializable("routineDTO");
         }
-        if (routineDTO ==null){
+        if (routineDetail ==null){
             Utils.ShowErrorToast(getContext(), "Something is wrong!!");
             GoBack();
         }
-        etTitle.setText(routineDTO.title);
-        etDescription.setText(routineDTO.description);
-        cbIsDone.setChecked(routineDTO.isDone);
+        etTitle.setText(routineDetail.title);
+        etDescription.setText(routineDetail.description);
+        cbIsDone.setChecked(routineDetail.isDone);
     }
 
     @Override
@@ -84,12 +82,14 @@ public class RoutineFragmentEdit extends BaseInnerFragment {
             return;
         }
 
-        routineDTO.title = etTitle.getText().toString();
-        routineDTO.description = etDescription.getText().toString();
-        routineDTO.isDone = cbIsDone.isChecked();
-        service.updateRoutine(routineDTO.id, routineDTO).enqueue(new Callback<BasicResponse>() {
+        routineDetail.title = etTitle.getText().toString();
+        routineDetail.description = etDescription.getText().toString();
+        routineDetail.isDone = cbIsDone.isChecked();
+        Utils.showLoading(getParentFragmentManager());
+        service.updateRoutine(routineDetail).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
                     Utils.ShowErrorToast(getContext(), "Routine is successfully updated!");
                     GoBack();
@@ -101,6 +101,7 @@ public class RoutineFragmentEdit extends BaseInnerFragment {
             }
             @Override
             public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
                 Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
             }
         });
@@ -113,7 +114,7 @@ public class RoutineFragmentEdit extends BaseInnerFragment {
 
     @Override
     protected String GetPageTitle() {
-        return "edit routine";
+        return "Edit Routine";
     }
 
     @Override

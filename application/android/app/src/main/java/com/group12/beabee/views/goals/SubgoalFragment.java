@@ -1,20 +1,29 @@
 package com.group12.beabee.views.goals;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.responses.Entity;
-import com.group12.beabee.models.responses.SubgoalDTO;
-import com.group12.beabee.views.MainStructure.BaseEntityListBottomFragment;
+import com.group12.beabee.models.ParentType;
+import com.group12.beabee.models.responses.SubgoalDetail;
+import com.group12.beabee.models.responses.SubgoalShort;
+import com.group12.beabee.views.MainStructure.BaseEntityLinkableFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
+import com.group12.beabee.views.entities.IOnTagClickedListener;
+import com.group12.beabee.views.entities.TagCardViewAdapter;
 
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
+import butterknife.Optional;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -24,13 +33,25 @@ import retrofit2.Response;
  * Use the {@link SubgoalFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SubgoalFragment extends BaseEntityListBottomFragment {
+public class SubgoalFragment extends BaseEntityLinkableFragment  implements IOnSubgoalClickedListener, IOnTagClickedListener {
 
     @BindView(R.id.tv_title)
+    @Nullable
     TextView tvTitle;
     @BindView(R.id.tv_description)
+    @Nullable
     TextView tvDescription;
-    private SubgoalDTO subgoalDTO;
+    @BindView(R.id.rv_subgoals)
+    @Nullable
+    RecyclerView rvSubgoal;
+    @BindView(R.id.rv_tags)
+    @Nullable
+    RecyclerView rvTag;
+
+    private SubgoalDetail subgoalDetail;
+
+    private TagCardViewAdapter tagAdapter;
+    private SubgoalCardViewAdapter subgoalAdapter;
 
     public SubgoalFragment() {
         // Required empty public constructor
@@ -52,12 +73,28 @@ public class SubgoalFragment extends BaseEntityListBottomFragment {
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        subgoalAdapter = new SubgoalCardViewAdapter();
+        tagAdapter = new TagCardViewAdapter();
+
+        tagAdapter.setItemClickListener(this);
+        subgoalAdapter.setItemClickListener(this);
+    }
+
+    @Override
+    public void onReady() {
+        rvTag.setAdapter(tagAdapter);
+        rvSubgoal.setAdapter(subgoalAdapter);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         Utils.showLoading(getChildFragmentManager());
-        service.getSubgoal(id).enqueue(new Callback<SubgoalDTO>() {
+        service.getSubgoal(id).enqueue(new Callback<SubgoalDetail>() {
             @Override
-            public void onResponse(Call<SubgoalDTO> call, Response<SubgoalDTO> response) {
+            public void onResponse(Call<SubgoalDetail> call, Response<SubgoalDetail> response) {
                 Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null) {
                     OnSubgoalReceived(response.body());
@@ -68,44 +105,27 @@ public class SubgoalFragment extends BaseEntityListBottomFragment {
             }
 
             @Override
-            public void onFailure(Call<SubgoalDTO> call, Throwable t) {
+            public void onFailure(Call<SubgoalDetail> call, Throwable t) {
                 Utils.dismissLoading();
                 Utils.ShowErrorToast(getContext(), "Something went wrong!");
                 GoBack();
             }
         });
         Utils.showLoading(getChildFragmentManager());
-        service.getSublinksForEntity(id).enqueue(new Callback<List<Entity>>() {
-            @Override
-            public void onResponse(Call<List<Entity>> call, Response<List<Entity>> response) {
-                Utils.dismissLoading();
-                if (response.isSuccessful() && response.body() != null) {
-                    OnEntitiesReceived(response.body());
-                } else {
-                    Utils.ShowErrorToast(getContext(), "Something went wrong!");
-                    GoBack();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Entity>> call, Throwable t) {
-                Utils.dismissLoading();
-                Utils.ShowErrorToast(getContext(), "Something went wrong!");
-                GoBack();
-            }
-        });
     }
 
-    private void OnSubgoalReceived(SubgoalDTO data) {
-        subgoalDTO = data;
+    private void OnSubgoalReceived(SubgoalDetail data) {
+        subgoalDetail = data;
         tvTitle.setText(data.title);
         tvDescription.setText(data.description);
+        SetEntityLinks(data.entities);
+        SetSubgoals(data.sublinks);
     }
 
     @Override
     protected void OnEditClicked() {
         super.OnEditClicked();
-        OpenNewFragment(SubgoalEditFragment.newInstance(subgoalDTO));
+        OpenNewFragment(SubgoalEditFragment.newInstance(subgoalDetail));
     }
 
     @Override
@@ -114,12 +134,37 @@ public class SubgoalFragment extends BaseEntityListBottomFragment {
     }
 
     @Override
+    protected ParentType GetLinkableType() {
+        return ParentType.SUBGOAL;
+    }
+
+    @Override
     protected String GetPageTitle() {
         return "SUBGOAL";
     }
 
     @Override
-    protected int GetLayoutId() {
+    protected int GetLayout() {
         return R.layout.fragment_subgoal;
+    }
+
+    @OnClick(R.id.addSubgoalButton)
+    @Optional
+    public void addSubgoalButton(View view){
+        OpenNewFragment(SubgoalCreateFragment.newInstance(subgoalDetail.id, SubgoalCreateFragment.FROM_SUBGOAL));
+    }
+
+    @Override
+    public void OnSubgoalClicked(int id) {
+        OpenNewFragment(SubgoalFragment.newInstance(id));
+    }
+
+    @Override
+    public void OnTagClicked(int id) {
+
+    }
+
+    private void SetSubgoals(List<SubgoalShort> subgoals) {
+        subgoalAdapter.setData(subgoals);
     }
 }

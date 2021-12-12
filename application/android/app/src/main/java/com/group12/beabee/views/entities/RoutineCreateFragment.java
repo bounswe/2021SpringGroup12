@@ -12,9 +12,10 @@ import androidx.fragment.app.Fragment;
 import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
+import com.group12.beabee.models.ParentType;
+import com.group12.beabee.models.requests.Routine;
+import com.group12.beabee.models.requests.Task;
 import com.group12.beabee.models.responses.BasicResponse;
-import com.group12.beabee.models.responses.RoutineDTO;
-import com.group12.beabee.models.responses.TaskDTO;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
 
@@ -37,8 +38,8 @@ public class RoutineCreateFragment extends BaseInnerFragment {
     @BindView(R.id.cb_isDone)
     CheckBox cbIsDone;
 
-    private RoutineDTO routineDTO;
     private int parentId;
+    private ParentType parentType;
 
     public RoutineCreateFragment() {
         // Required empty public constructor
@@ -50,10 +51,11 @@ public class RoutineCreateFragment extends BaseInnerFragment {
      *
      * @return A new instance of fragment TaskEdit.
      */
-    public static RoutineCreateFragment newInstance(int parentId) {
+    public static RoutineCreateFragment newInstance(int parentId, ParentType parentType) {
         RoutineCreateFragment fragment = new RoutineCreateFragment();
         Bundle args = new Bundle();
         args.putInt("parentId", parentId);
+        args.putSerializable("parentType", parentType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,6 +64,7 @@ public class RoutineCreateFragment extends BaseInnerFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         parentId = getArguments().getInt("parentId", -1);
+        parentType = ((ParentType) getArguments().getSerializable("parentType"));
     }
 
 
@@ -75,20 +78,20 @@ public class RoutineCreateFragment extends BaseInnerFragment {
             Utils.ShowErrorToast(getContext(), "The description should be at least 5 chars long!");
             return;
         }
-        routineDTO = new RoutineDTO();
-        routineDTO.entityType = "ROUTINE";
-        routineDTO.mainGoalId = BeABeeApplication.currentMainGoal;
-        routineDTO.isDone = cbIsDone.isChecked();
-        routineDTO.title = etTitle.getText().toString();
-        routineDTO.description = etDescription.getText().toString();
-        service.createRoutine(routineDTO).enqueue(new Callback<BasicResponse>() {
+        Routine routine = new Routine();
+        routine.deadline = "";
+        routine.period = 100;
+        routine.parentId = parentId;
+        routine.parentType = parentType;
+        routine.title = etTitle.getText().toString();
+        routine.description = etDescription.getText().toString();
+        Utils.showLoading(getParentFragmentManager());
+        service.createRoutine(routine).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
                     Utils.ShowErrorToast(getContext(), "Routine is successfully created!");
-//                    if (parentId >=0){
-//                        CreateLink(parentId, routineDTO.id, ()->GoBack());
-//                    }else
                         GoBack();
                 } else if(!response.isSuccessful() || response.body() == null){
                     Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
@@ -98,6 +101,7 @@ public class RoutineCreateFragment extends BaseInnerFragment {
             }
             @Override
             public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
                 Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
             }
         });
@@ -110,7 +114,7 @@ public class RoutineCreateFragment extends BaseInnerFragment {
 
     @Override
     protected String GetPageTitle() {
-        return "create routine";
+        return "Create Routine";
     }
 
     @Override

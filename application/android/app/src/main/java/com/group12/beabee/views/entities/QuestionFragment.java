@@ -2,6 +2,7 @@ package com.group12.beabee.views.entities;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.widget.CheckBox;
@@ -9,12 +10,10 @@ import android.widget.TextView;
 
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.responses.Entity;
-import com.group12.beabee.models.responses.QuestionDTO;
-import com.group12.beabee.views.MainStructure.BaseEntityListBottomFragment;
+import com.group12.beabee.models.ParentType;
+import com.group12.beabee.models.responses.QuestionDetail;
+import com.group12.beabee.views.MainStructure.BaseEntityLinkableFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
-
-import java.util.List;
 
 import butterknife.BindView;
 import retrofit2.Call;
@@ -26,15 +25,18 @@ import retrofit2.Response;
  * Use the {@link QuestionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class QuestionFragment extends BaseEntityListBottomFragment {
+public class QuestionFragment extends BaseEntityLinkableFragment {
 
     @BindView(R.id.tv_title)
+    @Nullable
     TextView tvTitle;
     @BindView(R.id.tv_description)
+    @Nullable
     TextView tvDescription;
     @BindView(R.id.cb_isDone)
+    @Nullable
     CheckBox cbIsDone;
-    private QuestionDTO questionDTO;
+    private QuestionDetail questionDetail;
 
 
     public QuestionFragment() {
@@ -58,9 +60,11 @@ public class QuestionFragment extends BaseEntityListBottomFragment {
     @Override
     public void onResume() {
         super.onResume();
-        service.getQuestion(id).enqueue(new Callback<QuestionDTO>() {
+        Utils.showLoading(getParentFragmentManager());
+        service.getQuestion(id).enqueue(new Callback<QuestionDetail>() {
             @Override
-            public void onResponse(Call<QuestionDTO> call, Response<QuestionDTO> response) {
+            public void onResponse(Call<QuestionDetail> call, Response<QuestionDetail> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null) {
                     OnReflectionReceived(response.body());
                 } else {
@@ -70,41 +74,27 @@ public class QuestionFragment extends BaseEntityListBottomFragment {
             }
 
             @Override
-            public void onFailure(Call<QuestionDTO> call, Throwable t) {
+            public void onFailure(Call<QuestionDetail> call, Throwable t) {
+                Utils.dismissLoading();
                 Utils.ShowErrorToast(getContext(), "Something went wrong!");
                 GoBack();
             }
         });
-        service.getSublinksForEntity(id).enqueue(new Callback<List<Entity>>() {
-            @Override
-            public void onResponse(Call<List<Entity>> call, Response<List<Entity>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    OnEntitiesReceived(response.body());
-                } else {
-                    Utils.ShowErrorToast(getContext(), "Something went wrong!");
-                    GoBack();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<List<Entity>> call, Throwable t) {
-                Utils.ShowErrorToast(getContext(), "Something went wrong!");
-                GoBack();
-            }
-        });
     }
 
-    private void OnReflectionReceived(QuestionDTO data) {
-        questionDTO = data;
+    private void OnReflectionReceived(QuestionDetail data) {
+        questionDetail = data;
         tvTitle.setText(data.title);
         tvDescription.setText(data.description);
         cbIsDone.setChecked(data.isDone);
+        SetEntityLinks(data.entities);
     }
 
     @Override
     protected void OnEditClicked() {
         super.OnEditClicked();
-        OpenNewFragment(QuestionFragmentEdit.newInstance(questionDTO));
+        OpenNewFragment(QuestionFragmentEdit.newInstance(questionDetail));
     }
 
     @Override
@@ -113,12 +103,17 @@ public class QuestionFragment extends BaseEntityListBottomFragment {
     }
 
     @Override
-    protected String GetPageTitle() {
-        return "question";
+    protected ParentType GetLinkableType() {
+        return ParentType.ENTITY;
     }
 
     @Override
-    protected int GetLayoutId() {
+    protected String GetPageTitle() {
+        return "Question";
+    }
+
+    @Override
+    protected int GetLayout() {
         return R.layout.fragment_question;
     }
 

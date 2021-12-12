@@ -10,11 +10,10 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.responses.BasicResponse;
-import com.group12.beabee.models.responses.QuestionDTO;
+import com.group12.beabee.models.responses.QuestionDetail;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
 
@@ -37,7 +36,7 @@ public class QuestionFragmentEdit extends BaseInnerFragment {
     @BindView(R.id.cb_isDone)
     CheckBox cbIsDone;
 
-    private QuestionDTO questionDTO;
+    private QuestionDetail questionDetail;
 
     public QuestionFragmentEdit() {
         // Required empty public constructor
@@ -49,10 +48,10 @@ public class QuestionFragmentEdit extends BaseInnerFragment {
      *
      * @return A new instance of fragment QuestionEdit.
      */
-    public static QuestionFragmentEdit newInstance(QuestionDTO questionDTO) {
+    public static QuestionFragmentEdit newInstance(QuestionDetail questionDetail) {
         QuestionFragmentEdit fragment = new QuestionFragmentEdit();
         Bundle args = new Bundle();
-        args.putSerializable("questionDTO", questionDTO);
+        args.putSerializable("questionDTO", questionDetail);
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,15 +60,15 @@ public class QuestionFragmentEdit extends BaseInnerFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (getArguments() != null) {
-            questionDTO = (QuestionDTO) getArguments().getSerializable("questionDTO");
+            questionDetail = (QuestionDetail) getArguments().getSerializable("questionDTO");
         }
-        if (questionDTO == null) {
+        if (questionDetail == null) {
             Utils.ShowErrorToast(getContext(), "Something is wrong!!");
             GoBack();
         }
-        etTitle.setText(questionDTO.title);
-        etDescription.setText(questionDTO.description);
-        cbIsDone.setChecked(questionDTO.isDone);
+        etTitle.setText(questionDetail.title);
+        etDescription.setText(questionDetail.description);
+        cbIsDone.setChecked(questionDetail.isDone);
     }
 
     @Override
@@ -83,12 +82,14 @@ public class QuestionFragmentEdit extends BaseInnerFragment {
             return;
         }
 
-        questionDTO.title = etTitle.getText().toString();
-        questionDTO.description = etDescription.getText().toString();
-        questionDTO.isDone = cbIsDone.isChecked();
-        service.updateQuestion(questionDTO.id, questionDTO).enqueue(new Callback<BasicResponse>() {
+        questionDetail.title = etTitle.getText().toString();
+        questionDetail.description = etDescription.getText().toString();
+        questionDetail.isDone = cbIsDone.isChecked();
+        Utils.showLoading(getParentFragmentManager());
+        service.updateQuestion(questionDetail).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
                     Utils.ShowErrorToast(getContext(), "Question is successfully updated!");
                     GoBack();
@@ -101,6 +102,7 @@ public class QuestionFragmentEdit extends BaseInnerFragment {
 
             @Override
             public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
                 Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
             }
         });
@@ -113,7 +115,7 @@ public class QuestionFragmentEdit extends BaseInnerFragment {
 
     @Override
     protected String GetPageTitle() {
-        return "edit question";
+        return "Edit Question";
     }
 
     @Override

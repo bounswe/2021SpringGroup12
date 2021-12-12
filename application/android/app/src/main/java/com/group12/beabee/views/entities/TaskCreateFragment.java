@@ -9,15 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
+import com.group12.beabee.models.ParentType;
+import com.group12.beabee.models.requests.Task;
 import com.group12.beabee.models.responses.BasicResponse;
-import com.group12.beabee.models.responses.SubgoalDTO;
-import com.group12.beabee.models.responses.TaskDTO;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
-import com.group12.beabee.views.goals.SubgoalCreateFragment;
 
 import butterknife.BindView;
 import retrofit2.Call;
@@ -38,8 +36,8 @@ public class TaskCreateFragment extends BaseInnerFragment {
     @BindView(R.id.cb_isDone)
     CheckBox cbIsDone;
 
-    private TaskDTO taskDTO;
     private int parentId;
+    private ParentType parentType;
 
     public TaskCreateFragment() {
         // Required empty public constructor
@@ -51,10 +49,11 @@ public class TaskCreateFragment extends BaseInnerFragment {
      *
      * @return A new instance of fragment TaskEdit.
      */
-    public static TaskCreateFragment newInstance(int parentId) {
+    public static TaskCreateFragment newInstance(int parentId, ParentType parentType) {
         TaskCreateFragment fragment = new TaskCreateFragment();
         Bundle args = new Bundle();
         args.putInt("parentId", parentId);
+        args.putSerializable("parentType", parentType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -63,6 +62,7 @@ public class TaskCreateFragment extends BaseInnerFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         parentId = getArguments().getInt("parentId", -1);
+        parentType = ((ParentType) getArguments().getSerializable("parentType"));
     }
 
 
@@ -76,21 +76,20 @@ public class TaskCreateFragment extends BaseInnerFragment {
             Utils.ShowErrorToast(getContext(), "The description should be at least 5 chars long!");
             return;
         }
-        taskDTO = new TaskDTO();
-        taskDTO.entityType = "TASK";
-        taskDTO.mainGoalId = BeABeeApplication.currentMainGoal;
-        taskDTO.isDone = cbIsDone.isChecked();
-        taskDTO.title = etTitle.getText().toString();
-        taskDTO.description = etDescription.getText().toString();
-        service.createTask(taskDTO).enqueue(new Callback<BasicResponse>() {
+        Task task = new Task();
+        task.deadline = "";
+        task.parentId = parentId;
+        task.parentType = parentType;
+        task.title = etTitle.getText().toString();
+        task.description = etDescription.getText().toString();
+        Utils.showLoading(getParentFragmentManager());
+        service.createTask(task).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
                     Utils.ShowErrorToast(getContext(), "Task is successfully created!");
-//                    if (parentId >=0){
-//                        CreateLink(parentId, taskDTO.id, ()->GoBack());
-//                    }else
-                        GoBack();
+                    GoBack();
                 } else if(!response.isSuccessful() || response.body() == null){
                     Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
                 } else {
@@ -99,6 +98,7 @@ public class TaskCreateFragment extends BaseInnerFragment {
             }
             @Override
             public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
                 Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
             }
         });
@@ -111,7 +111,7 @@ public class TaskCreateFragment extends BaseInnerFragment {
 
     @Override
     protected String GetPageTitle() {
-        return "create task";
+        return "Create Task";
     }
 
     @Override

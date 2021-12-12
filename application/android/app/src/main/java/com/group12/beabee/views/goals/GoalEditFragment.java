@@ -3,7 +3,6 @@ package com.group12.beabee.views.goals;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,12 +10,10 @@ import androidx.fragment.app.Fragment;
 
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.GoalDTO;
 import com.group12.beabee.models.responses.BasicResponse;
+import com.group12.beabee.models.responses.GoalDetail;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
-
-import java.io.Serializable;
 
 import butterknife.BindView;
 import retrofit2.Call;
@@ -35,7 +32,7 @@ public class GoalEditFragment extends BaseInnerFragment {
     @BindView(R.id.et_description)
     EditText etDescription;
 
-    private GoalDTO goal;
+    private GoalDetail goal;
 
     public GoalEditFragment() {
         // Required empty public constructor
@@ -48,10 +45,10 @@ public class GoalEditFragment extends BaseInnerFragment {
      * @return A new instance of fragment TaskEdit.
      */
     // TODO: Rename and change types and number of parameters
-    public static GoalEditFragment newInstance(GoalDTO goalDTO) {
+    public static GoalEditFragment newInstance(GoalDetail goalDetail) {
         GoalEditFragment fragment = new GoalEditFragment();
         Bundle args = new Bundle();
-        args.putSerializable("goal", goalDTO);
+        args.putSerializable("goal", goalDetail);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,7 +57,7 @@ public class GoalEditFragment extends BaseInnerFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (getArguments()!=null){
-            goal = (GoalDTO) getArguments().getSerializable("goal");
+            goal = (GoalDetail) getArguments().getSerializable("goal");
         }
         if (goal==null){
             Utils.ShowErrorToast(getContext(), "Something is wrong!!");
@@ -83,9 +80,11 @@ public class GoalEditFragment extends BaseInnerFragment {
 
         goal.title = etTitle.getText().toString();
         goal.description = etDescription.getText().toString();
+        Utils.showLoading(getChildFragmentManager());
         service.updateGoalOfUser(goal).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
                     Utils.ShowErrorToast(getContext(), "Goal is successfully updated!");
                     GoBack();
@@ -97,6 +96,7 @@ public class GoalEditFragment extends BaseInnerFragment {
             }
             @Override
             public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
                 Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
             }
         });

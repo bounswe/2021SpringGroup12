@@ -24,7 +24,7 @@ public class BeABeeService {
 
     public static ServiceAPI serviceAPI;
     public final static String BASE_URL = "http://18.117.95.170:8085/";
-    public final static String BASE_URL_DEV = "http://3.144.201.198:8085/";
+    public final static String BASE_URL_DEV = "http://3.144.201.198:8085/v2/";
     public final static String BASE_URL_LOCAL = "http://192.168.1.205:8085/v2/";
     private final static boolean isMock = false;
 
@@ -33,7 +33,7 @@ public class BeABeeService {
             serviceAPI = new MockService();
         } else {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL_LOCAL)
+                    .baseUrl(BASE_URL_DEV)
 //                    .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(okHttpClient())

@@ -9,8 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.group12.beabee.R;
-import com.group12.beabee.models.SubgoalShort;
-import com.group12.beabee.models.responses.Entity;
+import com.group12.beabee.models.responses.SubgoalShort;
 
 import java.util.List;
 
@@ -19,10 +18,10 @@ import butterknife.ButterKnife;
 
 public class SubgoalCardViewAdapter extends RecyclerView.Adapter<SubgoalCardViewAdapter.ViewHolder> {
 
-    private List<Entity> subgoalShortList;
+    private List<SubgoalShort> subgoalShortList;
     private IOnSubgoalClickedListener onItemClickedListener;
 
-    public void setData(List<Entity> subgoalShorts){
+    public void setData(List<SubgoalShort> subgoalShorts){
         subgoalShortList = subgoalShorts;
         notifyDataSetChanged();
     }
@@ -63,7 +62,7 @@ public class SubgoalCardViewAdapter extends RecyclerView.Adapter<SubgoalCardView
             ButterKnife.bind(this, itemView);
         }
 
-        public void BindData(Entity subgoalShort) {
+        public void BindData(SubgoalShort subgoalShort) {
             tvTitle.setText(subgoalShort.title);
             tvDescription.setText(subgoalShort.description);
             itemParent.setOnClickListener(v -> onItemClickedListener.OnSubgoalClicked(subgoalShort.id));

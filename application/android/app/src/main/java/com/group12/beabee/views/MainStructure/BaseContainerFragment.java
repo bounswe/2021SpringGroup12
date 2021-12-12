@@ -89,6 +89,13 @@ public class BaseContainerFragment extends Fragment {
                 .commit();
     }
 
+    public boolean OnBackPressed() {
+        if (fragmentManager.getBackStackEntryCount() <= 1)
+            return false;
+        RemoveFragmentFromStack();
+        return true;
+    }
+
     public void RemoveFragmentFromStack() {
         fragmentManager.popBackStack();
     }

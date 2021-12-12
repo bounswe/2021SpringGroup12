@@ -9,12 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
+import com.group12.beabee.models.ParentType;
+import com.group12.beabee.models.requests.Reflection;
 import com.group12.beabee.models.responses.BasicResponse;
-import com.group12.beabee.models.responses.ReflectionDTO;
-import com.group12.beabee.models.responses.RoutineDTO;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
 
@@ -37,8 +36,9 @@ public class ReflectionCreateFragment extends BaseInnerFragment {
     @BindView(R.id.cb_isDone)
     CheckBox cbIsDone;
 
-    private ReflectionDTO reflectionDTO;
+    private Reflection reflection;
     private int parentId;
+    private ParentType parentType;
 
     public ReflectionCreateFragment() {
         // Required empty public constructor
@@ -50,10 +50,11 @@ public class ReflectionCreateFragment extends BaseInnerFragment {
      *
      * @return A new instance of fragment TaskEdit.
      */
-    public static ReflectionCreateFragment newInstance(int parentId) {
+    public static ReflectionCreateFragment newInstance(int parentId, ParentType parentType) {
         ReflectionCreateFragment fragment = new ReflectionCreateFragment();
         Bundle args = new Bundle();
         args.putInt("parentId", parentId);
+        args.putSerializable("parentType", parentType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,8 +63,8 @@ public class ReflectionCreateFragment extends BaseInnerFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         parentId = getArguments().getInt("parentId", -1);
+        parentType = ((ParentType) getArguments().getSerializable("parentType"));
     }
-
 
     @Override
     protected void OnApproveClicked() {
@@ -75,15 +76,16 @@ public class ReflectionCreateFragment extends BaseInnerFragment {
             Utils.ShowErrorToast(getContext(), "The description should be at least 5 chars long!");
             return;
         }
-        reflectionDTO = new ReflectionDTO();
-        reflectionDTO.entityType = "REFLECTION";
-        reflectionDTO.mainGoalId = BeABeeApplication.currentMainGoal;
-        reflectionDTO.isDone = cbIsDone.isChecked();
-        reflectionDTO.title = etTitle.getText().toString();
-        reflectionDTO.description = etDescription.getText().toString();
-        service.createReflection(reflectionDTO).enqueue(new Callback<BasicResponse>() {
+        reflection = new Reflection();
+        reflection.title = etTitle.getText().toString();
+        reflection.description = etDescription.getText().toString();
+        reflection.parentId = parentId;
+        reflection.parentType = parentType;
+        Utils.showLoading(getParentFragmentManager());
+        service.createReflection(reflection).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
                     Utils.ShowErrorToast(getContext(), "Reflection is successfully created!");
 //                    if (parentId >=0){
@@ -98,6 +100,7 @@ public class ReflectionCreateFragment extends BaseInnerFragment {
             }
             @Override
             public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
                 Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
             }
         });
@@ -110,7 +113,7 @@ public class ReflectionCreateFragment extends BaseInnerFragment {
 
     @Override
     protected String GetPageTitle() {
-        return "create reflection";
+        return "Create Reflection";
     }
 
     @Override

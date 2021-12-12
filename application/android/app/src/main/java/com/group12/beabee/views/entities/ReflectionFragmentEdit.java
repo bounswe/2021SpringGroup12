@@ -10,16 +10,12 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.responses.BasicResponse;
-import com.group12.beabee.models.responses.ReflectionDTO;
-import com.group12.beabee.models.responses.RoutineDTO;
+import com.group12.beabee.models.responses.ReflectionDetail;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
-
-import java.sql.Ref;
 
 import butterknife.BindView;
 import retrofit2.Call;
@@ -40,7 +36,7 @@ public class ReflectionFragmentEdit extends BaseInnerFragment {
     @BindView(R.id.cb_isDone)
     CheckBox cbIsDone;
 
-    private ReflectionDTO reflectionDTO;
+    private ReflectionDetail reflectionDetail;
 
     public ReflectionFragmentEdit() {
         // Required empty public constructor
@@ -52,10 +48,10 @@ public class ReflectionFragmentEdit extends BaseInnerFragment {
      *
      * @return A new instance of fragment ReflectionEdit.
      */
-    public static ReflectionFragmentEdit newInstance(ReflectionDTO reflectionDTO) {
+    public static ReflectionFragmentEdit newInstance(ReflectionDetail reflectionDetail) {
         ReflectionFragmentEdit fragment = new ReflectionFragmentEdit();
         Bundle args = new Bundle();
-        args.putSerializable("reflectionDTO", reflectionDTO);
+        args.putSerializable("reflectionDTO", reflectionDetail);
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,15 +60,15 @@ public class ReflectionFragmentEdit extends BaseInnerFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (getArguments()!=null){
-            reflectionDTO = (ReflectionDTO) getArguments().getSerializable("reflectionDTO");
+            reflectionDetail = (ReflectionDetail) getArguments().getSerializable("reflectionDTO");
         }
-        if (reflectionDTO ==null){
+        if (reflectionDetail ==null){
             Utils.ShowErrorToast(getContext(), "Something is wrong!!");
             GoBack();
         }
-        etTitle.setText(reflectionDTO.title);
-        etDescription.setText(reflectionDTO.description);
-        cbIsDone.setChecked(reflectionDTO.isDone);
+        etTitle.setText(reflectionDetail.title);
+        etDescription.setText(reflectionDetail.description);
+        cbIsDone.setChecked(reflectionDetail.isDone);
     }
 
     @Override
@@ -86,12 +82,14 @@ public class ReflectionFragmentEdit extends BaseInnerFragment {
             return;
         }
 
-        reflectionDTO.title = etTitle.getText().toString();
-        reflectionDTO.description = etDescription.getText().toString();
-        reflectionDTO.isDone = cbIsDone.isChecked();
-        service.updateReflection(reflectionDTO.id, reflectionDTO).enqueue(new Callback<BasicResponse>() {
+        reflectionDetail.title = etTitle.getText().toString();
+        reflectionDetail.description = etDescription.getText().toString();
+        reflectionDetail.isDone = cbIsDone.isChecked();
+        Utils.showLoading(getParentFragmentManager());
+        service.updateReflection(reflectionDetail).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
                     Utils.ShowErrorToast(getContext(), "Reflection is successfully updated!");
                     GoBack();
@@ -103,6 +101,7 @@ public class ReflectionFragmentEdit extends BaseInnerFragment {
             }
             @Override
             public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
                 Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
             }
         });
@@ -115,7 +114,7 @@ public class ReflectionFragmentEdit extends BaseInnerFragment {
 
     @Override
     protected String GetPageTitle() {
-        return "edit reflection";
+        return "Edit Reflection";
     }
 
     @Override
