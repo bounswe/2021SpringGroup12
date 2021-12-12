@@ -177,7 +177,7 @@ public class EntitiService {
 
     public MessageResponse createTask(TaskPostDTO taskPostDTO) {
         Task new_task = taskPostMapper.mapToEntity(taskPostDTO);
-        new_task.setEntitiType(EntitiType.ROUTINE);
+        new_task.setEntitiType(EntitiType.TASK);
         new_task.setIsDone(Boolean.FALSE);
         new_task.setExtension_count(0L);
         if (taskPostDTO.getParentType().equals(ParentType.GOAL)){
