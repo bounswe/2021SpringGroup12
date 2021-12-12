@@ -3,7 +3,6 @@ package com.group12.beabee.views.goals;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,11 +11,10 @@ import androidx.fragment.app.Fragment;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.GoalDTO;
+import com.group12.beabee.models.GroupGoalDTO;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
-
-import java.io.Serializable;
 
 import butterknife.BindView;
 import retrofit2.Call;
@@ -25,19 +23,19 @@ import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link GoalEditFragment#newInstance} factory method to
+ * Use the {@link GroupGoalEditFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GoalEditFragment extends BaseInnerFragment {
+public class GroupGoalEditFragment extends BaseInnerFragment {
 
     @BindView(R.id.et_title)
     EditText etTitle;
     @BindView(R.id.et_description)
     EditText etDescription;
 
-    private GoalDTO goal;
+    private GroupGoalDTO goal;
 
-    public GoalEditFragment() {
+    public GroupGoalEditFragment() {
         // Required empty public constructor
     }
 
@@ -48,8 +46,8 @@ public class GoalEditFragment extends BaseInnerFragment {
      * @return A new instance of fragment TaskEdit.
      */
     // TODO: Rename and change types and number of parameters
-    public static GoalEditFragment newInstance(GoalDTO goalDTO) {
-        GoalEditFragment fragment = new GoalEditFragment();
+    public static GroupGoalEditFragment newInstance(GroupGoalDTO goalDTO) {
+        GroupGoalEditFragment fragment = new GroupGoalEditFragment();
         Bundle args = new Bundle();
         args.putSerializable("goal", goalDTO);//var olan datayı koydum
         fragment.setArguments(args);
@@ -60,7 +58,7 @@ public class GoalEditFragment extends BaseInnerFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (getArguments()!=null){
-            goal = (GoalDTO) getArguments().getSerializable("goal");
+            goal = (GroupGoalDTO) getArguments().getSerializable("goal");
         }
         if (goal==null){
             Utils.ShowErrorToast(getContext(), "Something is wrong!!");
@@ -83,7 +81,7 @@ public class GoalEditFragment extends BaseInnerFragment {
 
         goal.title = etTitle.getText().toString();
         goal.description = etDescription.getText().toString();
-        service.updateGoalOfUser(goal).enqueue(new Callback<BasicResponse>() {
+        service.updateGG(goal).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
@@ -109,6 +107,6 @@ public class GoalEditFragment extends BaseInnerFragment {
 
     @Override
     protected int GetLayoutId() {
-        return R.layout.fragment_goal_edit;
+        return R.layout.fragment_group_goal_edit;
     }
 }

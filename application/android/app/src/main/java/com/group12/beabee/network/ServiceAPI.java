@@ -1,6 +1,7 @@
 package com.group12.beabee.network;
 
 import com.group12.beabee.models.GoalDTO;
+import com.group12.beabee.models.GroupGoalDTO;
 import com.group12.beabee.models.requests.LoginRequest;
 import com.group12.beabee.models.requests.SignUpRequest;
 import com.group12.beabee.models.responses.BasicResponse;
@@ -25,98 +26,126 @@ import retrofit2.http.Path;
 
 public interface ServiceAPI {
 
-    @POST("/signup")
+    @POST("signup")
     Call<SignUpResponse> signUpRequest(@Body() SignUpRequest signUpRequest);
 
-    @POST("/login")
+    @POST("login")
     Call<LoginResponse> loginRequest(@Body() LoginRequest loginRequest);
 
-    @GET("/goals/of_user/{user_id}")
+    @GET("goals/of_user/{user_id}")
     Call<List<GoalDTO>> getGoalsOfUser(@Path("user_id") int userId);
 
-    @GET("/goals/{goal_id}")
+    @GET("goals/{goal_id}")
     Call<GoalDTO> getGoalDetail(@Path("goal_id") int goalId);
 
-    @POST("/goals/{user_id}")
+    @POST("goals/{user_id}")
     Call<BasicResponse> createGoalOfUser(@Path("user_id") int userId, @Body GoalDTO userDTO);
 
-    @PUT("/goals")
+    @PUT("goals")
     Call<BasicResponse> updateGoalOfUser(@Body GoalDTO userDTO);
 
-    @GET("/entities/{entity_id}/sublinks")
+    @GET("entities/{entity_id}/sublinks")
     Call<List<Entity>> getSublinksForEntity(@Path("entity_id") int entityId);
 
-    @GET("/entities/goal/{goal_id}")
+    @GET("entities/goal/{goal_id}")
     Call<List<Entity>> getSublinksForGoal(@Path("goal_id") int goalId);
 
-    @GET("/entities/user/{user_id}")
+    @GET("entities/user/{user_id}")
     Call<List<Entity>> getEntitiesOfUser(@Path("user_id") int userId);
 
-    @POST("/entities/{id}/link/{child_id}")
+    @POST("entities/{id}/link/{child_id}")
     Call<BasicResponse> linkEntities(@Path("id") int id, @Path("child_id") int childId);
 
 
-    @GET("/entities/entiti/{id}")
+    @GET("entities/entiti/{id}")
     Call<SubgoalDTO> getSubgoal(@Path("id") int id);
 
-    @PUT("/entities/subgoal/{id}")
+    @PUT("entities/subgoal/{id}")
     Call<BasicResponse> updateSubgoal(@Path("id") int id, @Body SubgoalDTO subgoalDTO);
 
-    @DELETE("/entities/subgoal/{id}")
+    @DELETE("entities/subgoal/{id}")
     Call<BasicResponse> deleteSubgoal(@Path("id") int id);
 
-    @POST("/entities/subgoal")
+    @POST("entities/subgoal")
     Call<BasicResponse> createSubgoal(@Body SubgoalDTO subgoalDTO);
 
 
-    @GET("/entities/entiti/{id}")
+    @GET("entities/entiti/{id}")
     Call<TaskDTO> getTask(@Path("id") int id);
 
-    @PUT("/entities/task/{id}")
+    @PUT("entities/task/{id}")
     Call<BasicResponse> updateTask(@Path("id") int id, @Body TaskDTO taskDTO);
 
-    @DELETE("/entities/task/{id}")
+    @DELETE("entities/task/{id}")
     Call<BasicResponse> deleteTask(@Path("id") int id);
 
-    @POST("/entities/task")
+    @POST("entities/task")
     Call<BasicResponse> createTask(@Body TaskDTO taskDTO);
 
 
-    @GET("/entities/entiti/{id}")
+    @GET("entities/entiti/{id}")
     Call<ReflectionDTO> getReflection(@Path("id") int id);
 
-    @PUT("/entities/reflection/{id}")
+    @PUT("entities/reflection/{id}")
     Call<BasicResponse> updateReflection(@Path("id") int id, @Body ReflectionDTO reflectionDTO);
 
-    @DELETE("/entities/reflection/{id}")
+    @DELETE("entities/reflection/{id}")
     Call<BasicResponse> deleteReflection(@Path("id") int id);
 
-    @POST("/entities/reflection")
+    @POST("entities/reflection")
     Call<BasicResponse> createReflection(@Body ReflectionDTO reflectionDTO);
 
 
-    @GET("/entities/entiti/{id}")
+    @GET("entities/entiti/{id}")
     Call<RoutineDTO> getRoutine(@Path("id") int id);
 
-    @PUT("/entities/routine/{id}")
+    @PUT("entities/routine/{id}")
     Call<BasicResponse> updateRoutine(@Path("id") int id, @Body RoutineDTO routineDTO);
 
-    @DELETE("/entities/routine/{id}")
+    @DELETE("entities/routine/{id}")
     Call<BasicResponse> deleteRoutine(@Path("id") int id);
 
-    @POST("/entities/routine")
+    @POST("entities/routine")
     Call<BasicResponse> createRoutine(@Body RoutineDTO routineDTO);
 
 
-    @GET("/entities/entiti/{id}")
+    @GET("entities/entiti/{id}")
     Call<QuestionDTO> getQuestion(@Path("id") int id);
 
-    @PUT("/entities/question/{id}")
+    @PUT("entities/question/{id}")
     Call<BasicResponse> updateQuestion(@Path("id") int id, @Body QuestionDTO questionDTO);
 
-    @DELETE("/entities/question/{id}")
+    @DELETE("entities/question/{id}")
     Call<BasicResponse> deleteQuestion(@Path("id") int id);
 
-    @POST("/entities/question")
+    @POST("entities/question")
     Call<BasicResponse> createQuestion(@Body QuestionDTO questionDTO);
+
+
+    //GROUP GOAL LINKS:
+    @PUT("groupgoals")
+    Call<BasicResponse> updateGG(@Body GroupGoalDTO userDTO);
+
+    @GET("groupgoals/{groupgoal_id}")
+    Call<GroupGoalDTO> getGGDetail(@Path("groupgoal_id") int goalId);
+
+    @DELETE("groupgoals/{groupgoal_id}")
+    Call<GroupGoalDTO> deleteGG(@Path("groupgoal_id") int goalId);
+
+    @POST("groupgoals/{user_id}")
+    Call<BasicResponse> createGG(@Path("user_id") int user_id, @Body GroupGoalDTO ggDTO);
+
+
+    @GET("groupgoals/created_by/{user_id}")
+    Call<List<GroupGoalDTO>> getAllGGCreatedByUser(@Path("user_id") int user_id, @Body GroupGoalDTO ggDTO);
+
+    @GET("groupgoals/member_of/{user_id}")
+    Call<List<GroupGoalDTO>> getAllGGofUser(@Path("user_id") int user_id);
+
+    @POST("groupgoals/subgoal")
+    Call<BasicResponse> createSubgoalInGG(@Body GroupGoalDTO userDTO);
+
+
+
+
 }

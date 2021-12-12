@@ -59,9 +59,9 @@ public class RoutineFragment extends BaseEntityListBottomFragment {
     @Override
     public void onResume() {
         super.onResume();
-        service.getRoutine(id).enqueue(new Callback<RoutineDTO>() {
+        service.getRoutine(id).enqueue(new Callback<RoutineDTO>() { //ISTEK ATMA
             @Override
-            public void onResponse(Call<RoutineDTO> call, Response<RoutineDTO> response) {
+            public void onResponse(Call<RoutineDTO> call, Response<RoutineDTO> response) { //attığın isteğin tütü r.DTO
                 if (response.isSuccessful() && response.body() != null) {
                     OnRoutineReceived(response.body());
                 } else {

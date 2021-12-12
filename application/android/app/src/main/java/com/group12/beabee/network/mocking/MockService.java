@@ -1,6 +1,7 @@
 package com.group12.beabee.network.mocking;
 
 import com.group12.beabee.models.GoalDTO;
+import com.group12.beabee.models.GroupGoalDTO;
 import com.group12.beabee.models.requests.LoginRequest;
 import com.group12.beabee.models.requests.SignUpRequest;
 import com.group12.beabee.models.responses.BasicResponse;
@@ -262,6 +263,41 @@ public class MockService implements ServiceAPI {
 
     @Override
     public Call<BasicResponse> createQuestion(QuestionDTO questionDTO) {
+        return null;
+    }
+
+    @Override
+    public Call<GroupGoalDTO> deleteGG(int goalId) {
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> createGG(int user_id, GroupGoalDTO ggDTO) {
+        return returnBasicResponse();
+    }
+
+    @Override
+    public Call<BasicResponse> updateGG(GroupGoalDTO userDTO) {
+        return null;
+    }
+
+    @Override
+    public Call<GroupGoalDTO> getGGDetail(int goalId) {
+        return null;
+    }
+
+    @Override
+    public Call<List<GroupGoalDTO>> getAllGGCreatedByUser(int user_id, GroupGoalDTO ggDTO) {
+        return null;
+    }
+
+    @Override
+    public Call<List<GroupGoalDTO>> getAllGGofUser(int user_id) {
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> createSubgoalInGG(GroupGoalDTO userDTO) {
         return null;
     }
 
