@@ -1,9 +1,5 @@
 package cmpe451.group12.beabee.goalspace.dto.analytics;
 
-public class SubgoalAnalyticsDTO {
-
-import cmpe451.group12.beabee.goalspace.dto.goals.GoalDTOShort;
-import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalDTOShort;
 import lombok.Getter;
 import lombok.Setter;
 
