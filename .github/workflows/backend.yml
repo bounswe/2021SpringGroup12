@@ -57,17 +57,11 @@ jobs:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_KEY: ${{ secrets.SSH_KEY }}
           SSH_HOST: ec2-3-144-201-198.us-east-2.compute.amazonaws.com
-      - name: Copy docker compose file
-        uses: appleboy/scp-action@v0.1.2
-        with:
-            host: ec2-3-144-201-198.us-east-2.compute.amazonaws.com
-            username: ${{ secrets.SSH_USER }}
-            key: ${{ secrets.SSH_KEY }}
-            source: application/docker-compose.yml
-            target: docker-compose.yml
+      - name: Download compose file
+        run: ssh staging 'wget -L https://raw.githubusercontent.com/bounswe/2021SpringGroup12/dev/backend/application/docker-compose.yml' 
       - name: Pull images from the docker hub
-        run: ssh staging docker pull beabeeapp/beabee
+        run: ssh staging 'docker pull beabeeapp/beabee'
       - name: Run the images
-        run: ssh staging docker-compose up -d
+        run: ssh staging 'docker-compose up -d'
 
 
