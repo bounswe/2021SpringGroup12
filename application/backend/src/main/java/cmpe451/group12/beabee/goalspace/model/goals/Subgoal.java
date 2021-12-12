@@ -102,4 +102,9 @@ public class Subgoal {
         // the state of 'this' Object.
         return (geek.id == this.id);
     }
+    @Override
+    public String toString() {
+        return  "Goal_id: " + this.id;
+    }
+
 }

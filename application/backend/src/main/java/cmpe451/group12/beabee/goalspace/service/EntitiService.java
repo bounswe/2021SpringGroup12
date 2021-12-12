@@ -179,6 +179,7 @@ public class EntitiService {
         Task new_task = taskPostMapper.mapToEntity(taskPostDTO);
         new_task.setEntitiType(EntitiType.ROUTINE);
         new_task.setIsDone(Boolean.FALSE);
+        new_task.setExtension_count(0L);
         if (taskPostDTO.getParentType().equals(ParentType.GOAL)){
             Goal goal = goalRepository.findById(taskPostDTO.getParent_id()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent goal not found!"));
             new_task.setGoal(goal);
@@ -263,6 +264,7 @@ public class EntitiService {
         Routine new_routine = routinePostMapper.mapToEntity(routinePostDTO);
         new_routine.setEntitiType(EntitiType.ROUTINE);
         new_routine.setIsDone(Boolean.FALSE);
+        new_routine.setExtension_count(0L);
         if (routinePostDTO.getParentType().equals(ParentType.GOAL)){
             Goal goal = goalRepository.findById(routinePostDTO.getParent_id()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent goal not found!"));
             new_routine.setGoal(goal);
@@ -630,10 +632,13 @@ public class EntitiService {
 
         if(entiti_from_db.getEntitiType().equals(EntitiType.ROUTINE)){
             Routine routine = (Routine) entiti_from_db;
-            if (newDeadline.compareTo(routine.getDeadline()) <= 0 ) {
+            if (newDeadline.compareTo(routine.getDeadline().get(routine.getDeadline().size()-1)) <= 0 ) {
                 return new MessageResponse("New deadline must be later than current deadline!", MessageType.ERROR);
             }
-            routine.setDeadline(newDeadline);
+            List<Date> deadlines = routine.getDeadline();
+            deadlines.add(newDeadline);
+            deadlines.remove(deadlines.get(deadlines.size()-2));
+            routine.setDeadline(deadlines);
             routine.setExtension_count(routine.getExtension_count() + 1);
             entitiRepository.save(routine);
         }
@@ -649,4 +654,21 @@ public class EntitiService {
         return new MessageResponse("Entity extended successfully!", MessageType.SUCCESS);
     }
 
+    /********************************** ROUTINE RATE *****************/
+    public MessageResponse rateRoutine(Long routine_id, Long rating){
+        Routine routine_from_db = routineRepository.findById(routine_id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Routine not found!"));
+        List<Double> ratings = routine_from_db.getRating();
+        ratings.add(rating.doubleValue());
+        routine_from_db.setRating(ratings);
+
+        List<Date> deadlines = routine_from_db.getDeadline();
+        System.out.println(routine_from_db.getDeadline().size());
+        deadlines.add(new Date(routine_from_db.getDeadline().get(routine_from_db.getDeadline().size()-1).getTime() +  routine_from_db.getPeriod() *(1000*60*60*24)));
+        routine_from_db.setDeadline(deadlines);
+
+        routineRepository.save(routine_from_db);
+
+        return new MessageResponse("This deadline evaluated successfully, move on to next deadline!",MessageType.SUCCESS);
+
+    }
 }

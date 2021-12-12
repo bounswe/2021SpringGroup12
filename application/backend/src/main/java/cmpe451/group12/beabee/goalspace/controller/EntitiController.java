@@ -292,5 +292,11 @@ public class EntitiController {
             )) DateDTO dateDTO) {
         return entitiService.extendEntiti(entiti_id, dateDTO.getNewDeadline());
     }
+    /********************************** ROUTINE RATE *****************/
 
+    @ApiOperation(value = "Rate a routine.")
+    @PutMapping("/rate/{routine_id}/{rating}")
+    public MessageResponse rateRoutine(@PathVariable @ApiParam(value = "Id of the routine.", example = "5") Long routine_id,@PathVariable @ApiParam(value = "Rating of the routine.", example = "5") Long rating) {
+    return entitiService.rateRoutine(routine_id,rating);
+    }
 }
