@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.group12.beabee.R;
 import com.group12.beabee.models.TagShort;
-import com.group12.beabee.models.TaskShort;
 
 import java.util.List;
 

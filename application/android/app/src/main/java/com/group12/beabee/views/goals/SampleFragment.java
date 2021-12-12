@@ -11,6 +11,11 @@ public class SampleFragment extends BaseInnerFragment {
     }
 
     @Override
+    protected String GetPageTitle() {
+        return "Sample Page";
+    }
+
+    @Override
     protected int GetLayoutId() {
         return R.layout.fragment_sample;
     }

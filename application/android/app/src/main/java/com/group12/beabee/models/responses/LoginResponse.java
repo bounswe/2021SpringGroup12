@@ -7,7 +7,7 @@ public class LoginResponse {
     /** Can be "SUCCESS", "ERROR" or "INFO" */
     public String messageType;
     public String jwt;
-    @SerializedName("userCredentialsDTO")
+    @SerializedName("userCredentialsGetDTO")
     public UserDTO userDTO;
 }
 
