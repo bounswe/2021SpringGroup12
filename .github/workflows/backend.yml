@@ -22,8 +22,10 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
           cache: 'gradle'
+      - name: Build project
+        run: ./application/backend/gradlew build
       - name: Build image
-        run: ./application/backend/gradlew bootBuildImage
+        run: docker build ./application/backend -t beabee/beabee_spring:latest
       - name: Docker login
         uses: docker/login-action@v1.10.0
         with:
