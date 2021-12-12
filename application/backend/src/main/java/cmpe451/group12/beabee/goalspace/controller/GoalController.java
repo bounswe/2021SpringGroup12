@@ -119,7 +119,7 @@ public class GoalController {
     @ApiOperation(value = "Complete a goal.")
     @PutMapping("/complete/{goal_id}")
     public MessageResponse completeGoal(@PathVariable @ApiParam(value = "Id of the goal.", example = "5")Long goal_id) {
-    return goalService.completeGoal(goal_id);
+        return goalService.completeGoal(goal_id);
     }
 
     /************************************** SUBGOALS *******/
@@ -139,7 +139,7 @@ public class GoalController {
             )
     ) SubgoalPostDTO subgoal_dto) {
         return goalService.createSubgoal(subgoal_dto);
-
+    }
 
     /********************* ANALYTICS **************/
     @ApiOperation(value = "Get analytics of a goal.")
