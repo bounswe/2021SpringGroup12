@@ -58,12 +58,13 @@ jobs:
           SSH_KEY: ${{ secrets.SSH_KEY }}
           SSH_HOST: ec2-3-144-201-198.us-east-2.compute.amazonaws.com
       - name: Copy docker compose file
-        uses: siva1024/scp-deployer@v1.0
+        uses: appleboy/scp-action@v0.1.2
         with:
             host: ec2-3-144-201-198.us-east-2.compute.amazonaws.com
             username: ${{ secrets.SSH_USER }}
             key: ${{ secrets.SSH_KEY }}
-            source: ./application/docker-compose.yml
+            source: application/docker-compose.yml
+            target: docker-compose.yml
       - name: Pull images from the docker hub
         run: ssh staging docker pull beabeeapp/beabee
       - name: Run the images
