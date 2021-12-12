@@ -15,6 +15,6 @@ public class Routine extends Entiti {
     private Long period;
 
     private Date deadline;
-
+    private Long extension_count;
     private Double rating;
 }

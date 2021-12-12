@@ -104,6 +104,7 @@ public class ResourceService {
         resourceResponse.setContentType(resourceEntity.getContentType());
         resourceResponse.setSize(resourceEntity.getSize());
         resourceResponse.setUrl(downloadURL);
+        resourceResponse.setCreatedAt(resourceEntity.getCreatedAt());
 
         return resourceResponse;
     }

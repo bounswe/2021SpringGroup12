@@ -37,8 +37,14 @@ public abstract class AllGoal  {
     @Column(name = "createdAt",updatable = false)
     private Date createdAt;
 
+    @Column(name = "completedAt")
+    private Date completedAt;
+
     @Column(name = "deadline")
     private Date deadline;
+
+    @Column(name = "extension_count")
+    private Long extension_count;
     //@Column(name = "tags")
     //private Set<String> tags;
 

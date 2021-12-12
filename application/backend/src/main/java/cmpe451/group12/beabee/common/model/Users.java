@@ -1,5 +1,6 @@
 package cmpe451.group12.beabee.common.model;
 
+import cmpe451.group12.beabee.goalspace.model.entities.Entiti;
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import cmpe451.group12.beabee.goalspace.model.goals.GroupGoal;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
@@ -62,11 +63,12 @@ public class Users{
     @ManyToMany(mappedBy = "assignees")
     private Set<Subgoal> assigned;
 
-    /*
+
     @JsonIgnoreProperties({"creator"})
     @OneToMany(mappedBy = "creator")
-    private Set<Entity> entities;
+    private Set<Entiti> entities;
 
+    /*
     @JsonIgnoreProperties({"id"})
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(name="Person_Followers")

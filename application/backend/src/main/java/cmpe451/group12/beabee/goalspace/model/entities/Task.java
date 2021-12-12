@@ -14,6 +14,6 @@ public class Task extends Entiti {
 
     
     private Date deadline;
-
+    private Long extension_count;
     private Double rating;
 }

@@ -16,7 +16,7 @@ public class GoalGetDTO {
     private Long user_id;
 
     private GoalType goalType;
-
+    private Date completedAt;
     private String title;
 
     private Boolean isDone;
