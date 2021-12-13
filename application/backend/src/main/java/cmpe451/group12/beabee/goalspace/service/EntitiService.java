@@ -671,6 +671,17 @@ public class EntitiService {
         routineRepository.save(routine_from_db);
 
         return new MessageResponse("This deadline evaluated successfully, move on to next deadline!",MessageType.SUCCESS);
-
     }
+
+    /********************************** TASK RATE *****************/
+    public MessageResponse completeTask(Long task_id, Long rating){
+        Task task_from_db = taskRepository.findById(task_id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found!"));
+        task_from_db.setRating(rating.doubleValue());
+        task_from_db.setCompletedAt(new Date(System.currentTimeMillis()));
+        task_from_db.setIsDone(Boolean.TRUE);
+        taskRepository.save(task_from_db);
+        return new MessageResponse("Task completed !",MessageType.SUCCESS);
+    }
+
+
 }

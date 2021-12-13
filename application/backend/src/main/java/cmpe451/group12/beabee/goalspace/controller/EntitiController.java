@@ -2,17 +2,22 @@ package cmpe451.group12.beabee.goalspace.controller;
 
 
 import cmpe451.group12.beabee.common.dto.MessageResponse;
+import cmpe451.group12.beabee.common.enums.MessageType;
 import cmpe451.group12.beabee.goalspace.dto.DateDTO;
 import cmpe451.group12.beabee.goalspace.dto.entities.*;
+import cmpe451.group12.beabee.goalspace.model.entities.Task;
 import cmpe451.group12.beabee.goalspace.service.EntitiService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Example;
 import io.swagger.annotations.ExampleProperty;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:8085")
@@ -298,5 +303,13 @@ public class EntitiController {
     @PutMapping("/rate/{routine_id}/{rating}")
     public MessageResponse rateRoutine(@PathVariable @ApiParam(value = "Id of the routine.", example = "5") Long routine_id,@PathVariable @ApiParam(value = "Rating of the routine.", example = "5") Long rating) {
     return entitiService.rateRoutine(routine_id,rating);
+    }
+
+
+    /********************************** TASK COMPLETE *****************/
+    @ApiOperation(value = "Complete a task.")
+    @PutMapping("/compelte/{task_id}/{rating}")
+    public MessageResponse completeTask(@PathVariable @ApiParam(value = "Id of the task.", example = "5") Long task_id, @PathVariable @ApiParam(value = "Rating of the routine.", example = "5") Long rating){
+        return entitiService.completeTask(task_id,rating);
     }
 }
