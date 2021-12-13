@@ -41,16 +41,38 @@
         app:layout_constraintStart_toEndOf="@+id/tv_descriptionTitle"
         app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
+
+    <TextView
+        android:id="@+id/tv_dateTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Deadline: "
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_description" />
+
+
+    <TextView
+        android:id="@+id/tv_dateSelected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="12.12.2021"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/tv_dateTitle"
+        app:layout_constraintTop_toBottomOf="@+id/tv_description" />
+
+
     <TextView
         android:id="@+id/tv_tags_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         android:text="Tags"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_descriptionTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_dateTitle" />
 
     <ImageButton
         android:id="@+id/addTagButton"

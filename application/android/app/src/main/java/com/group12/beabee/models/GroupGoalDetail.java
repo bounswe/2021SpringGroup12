@@ -17,7 +17,7 @@ public class GroupGoalDetail implements Serializable {
     public int user_id;
     public boolean isDone;
     public String createdAt;
-    public String deadLine;
+    public String deadline;
     public List<EntityShort> entities;
     public List<SubgoalShort> subgoals;
 }

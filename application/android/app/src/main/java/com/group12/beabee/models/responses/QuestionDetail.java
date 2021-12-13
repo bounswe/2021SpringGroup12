@@ -18,7 +18,7 @@ public class QuestionDetail implements Serializable {
     public String entitiType;
     public boolean isDone;
     public String createdAt;
-    public String deadLine;
+    public String deadline;
     @SerializedName("sublinks")
     public List<EntityShort> entities;
 }

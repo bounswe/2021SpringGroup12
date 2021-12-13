@@ -18,7 +18,7 @@ public class RoutineDetail implements Serializable {
     public String entitiType;
     public boolean isDone;
     public String createdAt;
-    public String deadLine;
+    public List <String> deadline;
     public int period;
     @SerializedName("sublinks")
     public List<EntityShort> entities;

@@ -92,7 +92,7 @@ public class MockService implements ServiceAPI {
         temp.description = "description"+1;
         temp.goalType = "GOAL";
         temp.createdAt = "2021-11-15T18:01:25.047Z";
-        temp.deadLine = "2021-11-15T18:01:25.047Z";
+        temp.deadline = "2021-11-15T18:01:25.047Z";
 
         return new MockCall<GoalDetail>() {
             @Override

@@ -36,6 +36,12 @@ public class RoutineFragment extends BaseEntityLinkableFragment {
     @BindView(R.id.cb_isDone)
     @Nullable
     CheckBox cbIsDone;
+    @BindView(R.id.tv_dateSelected)
+    @Nullable
+    TextView tvDateSelected;
+    @BindView(R.id.tv_periodSelected)
+    @Nullable
+    TextView tvPeriodSelected;
     private RoutineDetail routineDetail;
 
 
@@ -89,6 +95,8 @@ public class RoutineFragment extends BaseEntityLinkableFragment {
         tvDescription.setText(data.description);
         cbIsDone.setChecked(data.isDone);
         SetEntityLinks(data.entities);
+        tvDateSelected.setText(data.deadline.get(data.deadline.size()-1));
+        tvPeriodSelected.setText(String.valueOf(data.period));
     }
 
     @Override

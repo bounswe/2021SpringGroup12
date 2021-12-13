@@ -35,6 +35,9 @@ public class TaskFragment extends BaseEntityLinkableFragment {
     @BindView(R.id.cb_isDone)
     @Nullable
     CheckBox cbIsDone;
+    @BindView(R.id.tv_dateSelected)
+    @Nullable
+    TextView tvDateSelected;
     private TaskDetail taskDetail;
 
 
@@ -86,6 +89,7 @@ public class TaskFragment extends BaseEntityLinkableFragment {
         tvTitle.setText(data.title);
         tvDescription.setText(data.description);
         cbIsDone.setChecked(data.isDone);
+        tvDateSelected.setText(data.deadline);
         SetEntityLinks(data.entities);
     }
 
