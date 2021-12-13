@@ -16,6 +16,7 @@ import com.group12.beabee.network.BeABeeService;
 import com.group12.beabee.network.ServiceAPI;
 import com.group12.beabee.views.goals.GoalFragment;
 import com.group12.beabee.views.goals.Home2Fragment;
+import com.group12.beabee.views.goals.Home3Fragment;
 import com.group12.beabee.views.goals.HomeFragment;
 import com.group12.beabee.views.goals.SubgoalFragment;
 
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                     baseContainerFragment = fragmentActivity.containers[1];
                     break;
                 case 2:
-                    fragmentActivity.containers[2] = new BaseContainerFragment(new HomeFragment());
+                    fragmentActivity.containers[2] = new BaseContainerFragment(new Home3Fragment());
                     baseContainerFragment = fragmentActivity.containers[2];
                     break;
                 case 3:
