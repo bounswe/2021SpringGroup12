@@ -18,6 +18,7 @@ public class SubgoalGetDTO {
 
 
     private Long main_goal_id;
+    private Long main_groupgoal_id;
 
     private Long parent_subgoal_id;
     private Date completedAt;
