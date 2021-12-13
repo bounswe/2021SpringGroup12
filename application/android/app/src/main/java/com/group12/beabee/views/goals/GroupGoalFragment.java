@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.GroupGoalDTO;
+import com.group12.beabee.models.GroupGoalDetail;
 import com.group12.beabee.models.ParentType;
 import com.group12.beabee.models.User;
 import com.group12.beabee.models.responses.BasicResponse;
@@ -56,7 +56,7 @@ public class GroupGoalFragment extends BaseEntityLinkableFragment implements IOn
     @BindView(R.id.rv_tags)
     @Nullable
     RecyclerView rvTag;
-    private GroupGoalDTO goalDTO;
+    private GroupGoalDetail goalDTO;
     private TagCardViewAdapter tagAdapter;
     private SubgoalCardViewAdapter subgoalAdapter;
 
@@ -126,9 +126,9 @@ public class GroupGoalFragment extends BaseEntityLinkableFragment implements IOn
     public void onResume() {
         super.onResume();
         Utils.showLoading(getChildFragmentManager());
-        service.getGGDetail(id).enqueue(new Callback<GroupGoalDTO>() {
+        service.getGGDetail(id).enqueue(new Callback<GroupGoalDetail>() {
             @Override
-            public void onResponse(Call<GroupGoalDTO> call, Response<GroupGoalDTO> response) {
+            public void onResponse(Call<GroupGoalDetail> call, Response<GroupGoalDetail> response) {
                 Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null) {
                     OnGroupGoalDTOReceived(response.body());
@@ -139,7 +139,7 @@ public class GroupGoalFragment extends BaseEntityLinkableFragment implements IOn
             }
 
             @Override
-            public void onFailure(Call<GroupGoalDTO> call, Throwable t) {
+            public void onFailure(Call<GroupGoalDetail> call, Throwable t) {
                 Utils.dismissLoading();
                 Utils.ShowErrorToast(getActivity(), "Something went wrong!");
                 GoBack();
@@ -167,7 +167,7 @@ public class GroupGoalFragment extends BaseEntityLinkableFragment implements IOn
         subgoalAdapter.setData(subgoals);
     }
 
-    private void OnGroupGoalDTOReceived(GroupGoalDTO data) {
+    private void OnGroupGoalDTOReceived(GroupGoalDetail data) {
         goalDTO = data;
         tvTitle.setText(data.title);
         tvDescription.setText(data.description);
@@ -187,9 +187,11 @@ public class GroupGoalFragment extends BaseEntityLinkableFragment implements IOn
     @OnClick(R.id.btn_delete)
     @Optional
     public void OnDelete(){
+        Utils.showLoading(getParentFragmentManager());
         service.deleteGG(id).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null) {
                     Utils.ShowErrorToast(getActivity(), "Group Goal Deleted successfully");
                 } else {
@@ -200,6 +202,7 @@ public class GroupGoalFragment extends BaseEntityLinkableFragment implements IOn
 
             @Override
             public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
                 Utils.ShowErrorToast(getActivity(), "Something went wrong!");
                 GoBack();
             }
@@ -209,6 +212,7 @@ public class GroupGoalFragment extends BaseEntityLinkableFragment implements IOn
     @OnClick(R.id.btn_leave)
     @Optional
     public void leaveGroup(View view) {
+        Utils.showLoading(getParentFragmentManager());
         service.leaveGG(BeABeeApplication.userId,id).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {

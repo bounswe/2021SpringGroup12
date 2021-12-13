@@ -6,7 +6,7 @@ import com.group12.beabee.models.responses.SubgoalShort;
 import java.io.Serializable;
 import java.util.List;
 
-public class GroupGoalDTO implements Serializable {
+public class GroupGoalDetail implements Serializable {
     public int id;
     public String title;
     public String description;

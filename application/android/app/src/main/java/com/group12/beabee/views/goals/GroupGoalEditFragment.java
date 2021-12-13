@@ -10,9 +10,8 @@ import androidx.fragment.app.Fragment;
 
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.GroupGoalDTO;
+import com.group12.beabee.models.GroupGoalDetail;
 import com.group12.beabee.models.responses.BasicResponse;
-import com.group12.beabee.models.responses.GoalDetail;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
 
@@ -33,12 +32,12 @@ public class GroupGoalEditFragment extends BaseInnerFragment {
     @BindView(R.id.et_description)
     EditText etDescription;
 
-    private GroupGoalDTO goal;
+    private GroupGoalDetail goal;
 
     public GroupGoalEditFragment() {
         // Required empty public constructor
     }
-    public static GroupGoalEditFragment newInstance(GroupGoalDTO goalDetail) {
+    public static GroupGoalEditFragment newInstance(GroupGoalDetail goalDetail) {
         GroupGoalEditFragment fragment = new GroupGoalEditFragment();
         Bundle args = new Bundle();
         args.putSerializable("goal", goalDetail);
@@ -50,7 +49,7 @@ public class GroupGoalEditFragment extends BaseInnerFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (getArguments()!=null){
-            goal = (GroupGoalDTO) getArguments().getSerializable("goal");
+            goal = (GroupGoalDetail) getArguments().getSerializable("goal");
         }
         if (goal==null){
             Utils.ShowErrorToast(getContext(), "Something is wrong!!");

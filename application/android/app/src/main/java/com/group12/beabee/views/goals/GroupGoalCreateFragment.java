@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.GroupGoalDTO;
+import com.group12.beabee.models.requests.Goal;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
@@ -35,7 +35,7 @@ public class GroupGoalCreateFragment extends BaseInnerFragment {
     @Nullable
     EditText etDescription;
 
-    private GroupGoalDTO goal;
+    private Goal goal;
 
     public GroupGoalCreateFragment() {
         // Required empty public constructor
@@ -70,9 +70,7 @@ public class GroupGoalCreateFragment extends BaseInnerFragment {
             Utils.ShowErrorToast(getContext(), "The description should be at least 5 chars length!");
             return;
         }
-        goal = new GroupGoalDTO();
-        goal.goalType = "GROUPGOAL";
-        goal.isDone = false;
+        goal = new Goal();
         goal.title = etTitle.getText().toString();
         goal.description = etDescription.getText().toString();
         Utils.showLoading(getChildFragmentManager());

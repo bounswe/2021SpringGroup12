@@ -9,7 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.group12.beabee.R;
-import com.group12.beabee.models.GroupGoalDTO;
+import com.group12.beabee.models.GroupGoalDetail;
+import com.group12.beabee.models.responses.GroupGoalShort;
 
 import java.util.List;
 
@@ -18,10 +19,10 @@ import butterknife.ButterKnife;
 
 public class GroupGoalsAdapter extends RecyclerView.Adapter<GroupGoalsAdapter.ViewHolder> {
 
-    private List<GroupGoalDTO> goalShortList;
+    private List<GroupGoalShort> goalShortList;
     private IOnGoalClickedListener onItemClickedListener;
 
-    public void setData(List<GroupGoalDTO> goalShorts){
+    public void setData(List<GroupGoalShort> goalShorts){
         goalShortList = goalShorts;
         notifyDataSetChanged();
     }
@@ -62,7 +63,7 @@ public class GroupGoalsAdapter extends RecyclerView.Adapter<GroupGoalsAdapter.Vi
             ButterKnife.bind(this, itemView);
         }
 
-        public void BindData(GroupGoalDTO goalShort) {
+        public void BindData(GroupGoalShort goalShort) {
             tvTitle.setText(goalShort.title);
             tvDescription.setText(goalShort.description);
             itemParent.setOnClickListener(v -> onItemClickedListener.OnGoalClicked(goalShort.id));

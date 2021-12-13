@@ -1,7 +1,7 @@
 package com.group12.beabee.network.mocking;
 
 
-import com.group12.beabee.models.GroupGoalDTO;
+import com.group12.beabee.models.GroupGoalDetail;
 import com.group12.beabee.models.requests.Goal;
 import com.group12.beabee.models.requests.LoginRequest;
 import com.group12.beabee.models.requests.Question;
@@ -14,6 +14,7 @@ import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.EntityShort;
 import com.group12.beabee.models.responses.GoalDetail;
 import com.group12.beabee.models.responses.GoalShort;
+import com.group12.beabee.models.responses.GroupGoalShort;
 import com.group12.beabee.models.responses.QuestionDetail;
 import com.group12.beabee.models.responses.ReflectionDetail;
 import com.group12.beabee.models.responses.RoutineDetail;
@@ -30,7 +31,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Body;
 
 public class MockService implements ServiceAPI {
 
@@ -270,7 +270,7 @@ public class MockService implements ServiceAPI {
     }
 
     @Override
-    public Call<BasicResponse> addMember(GroupGoalDTO goalDTO, UserDTO userDTO) {
+    public Call<BasicResponse> addMember(GroupGoalDetail goalDTO, UserDTO userDTO) {
         return null;
     }
 
@@ -280,7 +280,7 @@ public class MockService implements ServiceAPI {
     }
 
     @Override
-    public Call<BasicResponse> createGG(int user_id, GroupGoalDTO ggDTO) {
+    public Call<BasicResponse> createGG(int user_id, Goal ggDTO) {
         return returnBasicResponse();
     }
 
@@ -295,22 +295,22 @@ public class MockService implements ServiceAPI {
     }
 
     @Override
-    public Call<BasicResponse> updateGG(GroupGoalDTO userDTO) {
+    public Call<BasicResponse> updateGG(GroupGoalDetail userDTO) {
         return null;
     }
 
     @Override
-    public Call<GroupGoalDTO> getGGDetail(int goalId) {
+    public Call<GroupGoalDetail> getGGDetail(int goalId) {
         return null;
     }
 
     @Override
-    public Call<List<GroupGoalDTO>> getAllGGCreatedByUser(int user_id, GroupGoalDTO ggDTO) {
+    public Call<List<GroupGoalShort>> getAllGGCreatedByUser(int user_id, GroupGoalDetail ggDTO) {
         return null;
     }
 
     @Override
-    public Call<List<GroupGoalDTO>> getAllGGofUser(int user_id) {
+    public Call<List<GroupGoalShort>> getAllGGofUser(int user_id) {
         return null;
     }
 

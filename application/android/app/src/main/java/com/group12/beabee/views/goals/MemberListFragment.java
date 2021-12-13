@@ -2,21 +2,17 @@ package com.group12.beabee.views.goals;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.group12.beabee.R;
-import com.group12.beabee.models.GroupGoalDTO;
 import com.group12.beabee.models.User;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 

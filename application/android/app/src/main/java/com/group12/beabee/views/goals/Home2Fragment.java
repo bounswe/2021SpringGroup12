@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.GroupGoalDTO;
-import com.group12.beabee.models.responses.BasicResponse;
+import com.group12.beabee.models.GroupGoalDetail;
+import com.group12.beabee.models.responses.GroupGoalShort;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
 
@@ -50,9 +50,11 @@ public class Home2Fragment extends BaseInnerFragment implements IOnGoalClickedLi
     @Override
     public void onResume() {
         super.onResume();
-        service.getAllGGofUser(BeABeeApplication.userId).enqueue(new Callback<List<GroupGoalDTO>>() {
+        Utils.showLoading(getParentFragmentManager());
+        service.getAllGGofUser(BeABeeApplication.userId).enqueue(new Callback<List<GroupGoalShort>>() {
             @Override
-            public void onResponse(Call<List<GroupGoalDTO>> call, Response<List<GroupGoalDTO>> response) {
+            public void onResponse(Call<List<GroupGoalShort>> call, Response<List<GroupGoalShort>> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null){
                     OnGoalsReceived(response.body());
                 }else{
@@ -61,7 +63,8 @@ public class Home2Fragment extends BaseInnerFragment implements IOnGoalClickedLi
             }
 
             @Override
-            public void onFailure(Call<List<GroupGoalDTO>> call, Throwable t) {
+            public void onFailure(Call<List<GroupGoalShort>> call, Throwable t) {
+                Utils.dismissLoading();
                 Utils.ShowErrorToast(getContext(),"Something went wrong!");
             }
         });
@@ -72,7 +75,7 @@ public class Home2Fragment extends BaseInnerFragment implements IOnGoalClickedLi
         OpenNewFragment(GroupGoalCreateFragment.newInstance());
     }
 
-    private void OnGoalsReceived(List<GroupGoalDTO> goals){
+    private void OnGoalsReceived(List<GroupGoalShort> goals){
         if (goals==null || goals.size()==0)
         {
             rvGoals.setVisibility(View.GONE);
@@ -86,7 +89,6 @@ public class Home2Fragment extends BaseInnerFragment implements IOnGoalClickedLi
 
     @Override
     public void OnGoalClicked(int id) {
-        //sendreqquest for goaldata Open
         BeABeeApplication.currentGroupGoal = id;
         OpenNewFragment(GroupGoalFragment.newInstance(id));
     }

@@ -3,20 +3,15 @@ package com.group12.beabee.views.goals;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
 import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.GroupGoalDTO;
 import com.group12.beabee.models.responses.BasicResponse;
-import com.group12.beabee.models.responses.SubgoalDetail;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -59,9 +54,11 @@ public class JoinTokenFragment extends BaseInnerFragment {
     @Optional
     public void joinGroup(View view) {
         String token=ettoken.getText().toString();
+        Utils.showLoading(getParentFragmentManager());
         service.joinGG(BeABeeApplication.userId,token).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null){
                     Utils.ShowErrorToast(getContext(), "You joined to a Group Goal!");
                     GoBack();
@@ -72,6 +69,7 @@ public class JoinTokenFragment extends BaseInnerFragment {
 
             @Override
             public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
                 Utils.ShowErrorToast(getContext(),"Something went wrong!");
             }
         });

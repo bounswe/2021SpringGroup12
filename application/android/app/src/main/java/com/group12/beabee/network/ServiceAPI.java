@@ -1,7 +1,7 @@
 package com.group12.beabee.network;
 
 import com.group12.beabee.models.requests.Goal;
-import com.group12.beabee.models.GroupGoalDTO;
+import com.group12.beabee.models.GroupGoalDetail;
 import com.group12.beabee.models.requests.LoginRequest;
 import com.group12.beabee.models.requests.Question;
 import com.group12.beabee.models.requests.Reflection;
@@ -13,6 +13,7 @@ import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.EntityShort;
 import com.group12.beabee.models.responses.GoalDetail;
 import com.group12.beabee.models.responses.GoalShort;
+import com.group12.beabee.models.responses.GroupGoalShort;
 import com.group12.beabee.models.responses.QuestionDetail;
 import com.group12.beabee.models.responses.ReflectionDetail;
 import com.group12.beabee.models.responses.RoutineDetail;
@@ -135,22 +136,22 @@ public interface ServiceAPI {
 
     //GROUP GOAL LINKS:
     @PUT("groupgoals")
-    Call<BasicResponse> updateGG(@Body GroupGoalDTO userDTO);
+    Call<BasicResponse> updateGG(@Body GroupGoalDetail userDTO);
 
     @GET("groupgoals/{groupgoal_id}")
-    Call<GroupGoalDTO> getGGDetail(@Path("groupgoal_id") int goalId);
+    Call<GroupGoalDetail> getGGDetail(@Path("groupgoal_id") int goalId);
 
     @DELETE("groupgoals/{groupgoal_id}")
     Call<BasicResponse> deleteGG(@Path("groupgoal_id") int goalId);
 
     @PUT("groupgoals/{groupgoal_id}/members")
-    Call<BasicResponse> addMember(@Body GroupGoalDTO goalDTO, UserDTO userDTO);
+    Call<BasicResponse> addMember(@Body GroupGoalDetail goalDTO, UserDTO userDTO);
 
     @POST("groupgoals/{groupgoal_id}/token")
     Call<BasicResponse> createToken(@Path("groupgoal_id") int goalId);
 
     @POST("groupgoals/{user_id}")
-    Call<BasicResponse> createGG(@Path("user_id") int user_id, @Body GroupGoalDTO ggDTO);
+    Call<BasicResponse> createGG(@Path("user_id") int user_id, @Body Goal ggDTO);
 
     @DELETE("groupgoals/{user_id}/{groupgoal_id}")
     Call<BasicResponse> leaveGG(@Path("user_id") int userId, @Path("groupgoal_id") int goalId);
@@ -159,10 +160,10 @@ public interface ServiceAPI {
     Call<BasicResponse> joinGG(@Path("user_id") int user_id,@Query("token") String token);
 
     @GET("groupgoals/created_by/{user_id}")
-    Call<List<GroupGoalDTO>> getAllGGCreatedByUser(@Path("user_id") int user_id, @Body GroupGoalDTO ggDTO);
+    Call<List<GroupGoalShort>> getAllGGCreatedByUser(@Path("user_id") int user_id, @Body GroupGoalDetail ggDTO);
 
     @GET("groupgoals/member_of/{user_id}")
-    Call<List<GroupGoalDTO>> getAllGGofUser(@Path("user_id") int user_id);
+    Call<List<GroupGoalShort>> getAllGGofUser(@Path("user_id") int user_id);
 
     @POST("groupgoals/subgoal")
     Call<BasicResponse> createSubgoalInGG(@Body Subgoal subgoal);
