@@ -97,7 +97,7 @@ public class SubgoalService {
         if (subgoal_from_db_opt.get().getMainGoal() != null) {
             subgoalGetDTO.setMain_goal_id(subgoal_from_db_opt.get().getMainGoal().getId());
         } else if (subgoal_from_db_opt.get().getMainGroupgoal() != null) {
-            subgoalGetDTO.setMain_goal_id(subgoal_from_db_opt.get().getMainGroupgoal().getId());
+            subgoalGetDTO.setMain_groupgoal_id(subgoal_from_db_opt.get().getMainGroupgoal().getId());
         } else {
             subgoalGetDTO.setParent_subgoal_id(subgoalRepository.findParentById(id).getId());
         }
