@@ -229,12 +229,16 @@ public class GoalService {
             goalAnalyticsDTO.setGoalsWithCommonLifetime(goalShortMapper.mapToDto(common_goals).stream().collect(Collectors.toSet()));
         }
         if (goal_from_db.getSubgoals().size() > 0) {
-
-            goalAnalyticsDTO.setLongestSubgoal(subgoalShortMapper.mapToDto(goal_from_db.getSubgoals().stream().filter(z->z.getIsDone()).max(Comparator.comparing(x -> x.getCompletedAt().getTime() - x.getCreatedAt().getTime())).get()));
-            goalAnalyticsDTO.setShortestSubgoal(subgoalShortMapper.mapToDto(goal_from_db.getSubgoals().stream().filter(z->z.getIsDone()).min(Comparator.comparing(x -> x.getCompletedAt().getTime() - x.getCreatedAt().getTime())).get()));
-            goalAnalyticsDTO.setBestSubgoal(subgoalShortMapper.mapToDto(goal_from_db.getSubgoals().stream().filter(z->z.getIsDone()).max(Comparator.comparing(Subgoal::getRating)).get()));
-            goalAnalyticsDTO.setWorstSubgoal(subgoalShortMapper.mapToDto(goal_from_db.getSubgoals().stream().filter(z->z.getIsDone()).min(Comparator.comparing(Subgoal::getRating)).get()));
-
+            Optional<Subgoal> subgoal_longest_opt = goal_from_db.getSubgoals().stream().filter(z -> z.getIsDone()).max(Comparator.comparing(x -> x.getCompletedAt().getTime() - x.getCreatedAt().getTime()));
+            if (subgoal_longest_opt.isPresent()){
+                goalAnalyticsDTO.setLongestSubgoal(goal_from_db.getSubgoals().stream().filter(z->z.getIsDone()).max(Comparator.comparing(x -> x.getCompletedAt().getTime() - x.getCreatedAt().getTime())).map(x->subgoalShortMapper.mapToDto(x)).get());
+                goalAnalyticsDTO.setShortestSubgoal(subgoalShortMapper.mapToDto(goal_from_db.getSubgoals().stream().filter(z->z.getIsDone()).min(Comparator.comparing(x -> x.getCompletedAt().getTime() - x.getCreatedAt().getTime())).get()));
+            }
+            Optional<Subgoal> subgoal_best_opt = goal_from_db.getSubgoals().stream().filter(z -> z.getIsDone()).max(Comparator.comparing(Subgoal::getRating));
+            if (subgoal_best_opt.isPresent()) {
+                goalAnalyticsDTO.setBestSubgoal(subgoalShortMapper.mapToDto(goal_from_db.getSubgoals().stream().filter(z -> z.getIsDone()).max(Comparator.comparing(Subgoal::getRating)).get()));
+                goalAnalyticsDTO.setWorstSubgoal(subgoalShortMapper.mapToDto(goal_from_db.getSubgoals().stream().filter(z -> z.getIsDone()).min(Comparator.comparing(Subgoal::getRating)).get()));
+            }
             goalAnalyticsDTO.setAverageCompletionTimeOfSubgoals((long) goal_from_db.getSubgoals().stream().filter(x -> x.getCompletedAt() != null).map(x ->
                     x.getCompletedAt().getTime() - x.getCreatedAt().getTime()).mapToLong(Long::longValue).summaryStatistics().getAverage());
         }
