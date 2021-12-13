@@ -3,7 +3,8 @@ import {useParams} from "react-router";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {Link} from "react-router-dom";
-import {Button, Space, Table, Tag} from "antd";
+import {Button, Space, Table, Tag,message,Form,Upload} from "antd";
+import { LoadingOutlined, PlusOutlined,UploadOutlined } from '@ant-design/icons';
 
 const token = localStorage.getItem("token")
 
@@ -13,10 +14,29 @@ export function EntityPage() {
         description: "Loading"
     })
     const [entities, setEntities] = useState([])
+    const [deadline, setDeadline] = useState("")
     const [isLoaded, setLoaded] = useState(false)
     // @ts-ignore
     const {entitiType,entity_id} = useParams();
     const [resources, setResources] = useState([]);
+
+    const Deneme = {
+        name: 'resource',
+        action: 'http://3.144.201.198:8085/v2/resources/' + entity_id,
+        headers: {
+          authorization: 'authorization',
+        },
+        onChange(info: any) {
+          if (info.file.status !== 'uploading') {
+            console.log(info.file, info.fileList);
+          }
+          if (info.file.status === 'done') {
+            message.success(`${info.file.name} file uploaded successfully`);
+          } else if (info.file.status === 'error') {
+            message.error(`${info.file.name} file upload failed.`);
+          }
+        },
+      };
 
     const columns = [
         {
@@ -110,13 +130,15 @@ export function EntityPage() {
             key: 'createdAt',
         },
         {
-            title: 'Action',
-            key: 'action',
+            title: 'Delete',
+            key: 'resource_id',
             render: (text: any,
-                     entity: { key: number, entityType: string}) =>
+                     resource: { key: string,id:number}) =>
                 (   <div>
                         <Space size="middle">
+                            <Button type="primary" onClick={() => deleteResource(resource)}>
                                 Delete Resource
+                            </Button>
                         </Space>
                     </div>
 
@@ -132,6 +154,16 @@ export function EntityPage() {
                 data: {}
             }).then(() => getEntities())
     };
+
+    const deleteResource = (resource: { key: any,id:number}) => {
+        console.log('Received values of delete: ', resource.id);
+        axios.delete(`/resources/${resource.id}`,
+            {
+                headers: { Authorization: `Bearer ${token}`},
+                data: {}
+            }).then(() => getEntities())
+    };
+
 
     const [goal_id,setGoalID]=useState()
 
@@ -152,6 +184,11 @@ export function EntityPage() {
             .then(data => {
                 let tmp = []
                 let sublinks=data.sublinks
+                console.log("data:" + JSON.stringify(data))
+                if(entitiType.toLowerCase() =="task"){
+                    setDeadline(data.deadline)
+                    console.log(data.deadline)
+                }
                 for (let i = 0; i < sublinks.length; i++) {
                     tmp.push({
                         key: data[i]['id'],
@@ -207,6 +244,9 @@ export function EntityPage() {
         <div>
             <h2>Name: {entity['title']}</h2>
             <h2>Description: {entity['description']}</h2>
+            {(entitiType.toLowerCase() == "routine" || entitiType.toLowerCase() == "task") && 
+            <h2>Deadline: {deadline}</h2>
+                        }
             <h2>Linked Entities</h2>
             <Table columns={columns} dataSource={entities} />
             <br></br>
@@ -218,6 +258,12 @@ export function EntityPage() {
             <br></br>
             <h2>Resources:</h2>
             <Table columns={Resourcecolumns} dataSource={resources} />
+            <Form.Item>
+                <Upload {...Deneme}>
+                    <Button icon={<UploadOutlined />}>Upload Resources (max 3mb)</Button>
+                </Upload>
+            </Form.Item>  
+
         </div>)
 }
 

@@ -18,7 +18,9 @@ export function AddEntity() {
         console.log('Received values of form: ', parent_id);
         values['parent_id'] = parseInt(parent_id) //for now, it adds entity to a goal
         values['parentType'] = parentType.toUpperCase()
+        if(entitiType=="QUESTION" || entitiType=="TASK"){
         values["deadline"]=values["deadline"].toDate()
+        }
         console.log("he: "+ JSON.stringify(values))
         axios.post(`/entities/${entitiType}`, values,  {
             headers: { Authorization: `Bearer ${token}`},

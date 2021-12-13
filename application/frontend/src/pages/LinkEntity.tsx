@@ -39,8 +39,8 @@ export function LinkEntity() {
     // @ts-ignore
 
     const {goal_id, entity_id} = useParams();
-    useEffect(() => {
-        //to get the user id
+
+    const get_user_id = (goal_id: { goal_id:number}) => {
         axios.get(`/goals/${goal_id}`,
         {
             headers: { Authorization: `Bearer ${token}`},
@@ -56,13 +56,20 @@ export function LinkEntity() {
         .then(data => {
             setUserID(data.user_id)
             // @ts-ignore
-            console.log(data.user_id)
+            console.log("user-id: "+user_id)
 
         })
         .catch(error => {
             console.error('There was an error!', error);
         });
 
+    };
+
+
+    useEffect(() => {
+        //to get the user id
+        get_user_id(goal_id);
+        console.log("user: "+user_id)
         axios.get(`/entities/user/${user_id}`,
             {
                 headers: { Authorization: `Bearer ${token}`},
@@ -77,10 +84,10 @@ export function LinkEntity() {
             })
             .then(data => {
                 let tmp = []
-                let sublinks=data.sublinks
-                for (let i = 0; i < sublinks.length; i++) {
+                console.log(data);
+                for (let i = 0; i < data.length; i++) {
                     tmp.push({
-                        key: data[i]['id'],
+                        id: data[i]['id'],
                         title: data[i]['title'],
                         description: data[i]['description'],
                         entityType: data[i]['entitiType'],
@@ -95,13 +102,16 @@ export function LinkEntity() {
             });
     }, []);
 
+    console.log("possibke: "+ possible_entities)
 
     let message;
     if (isSubmitted) {
         message = <h2>Entity Added Successfully!</h2>
     }
     return (
+
         <div>
+            <h1>Entitites to Link:</h1>
             <Table columns={columns} dataSource={possible_entities} />
             <Link to={"/entity/" + entity_id} >
                 <button type="button">
