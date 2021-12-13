@@ -9,8 +9,8 @@
     <item
         android:id="@+id/page_2"
         android:enabled="true"
-        android:icon="@drawable/ic_baseline_home_24"
-        android:title="2"/>
+        android:icon="@drawable/group"
+        android:title="Group Goal"/>
 
     <item
         android:id="@+id/page_3"
