@@ -68,6 +68,7 @@ public class EntitiService {
         List<Subgoal> subgoals = goal_from_db.getSubgoals().stream()
                 .flatMap(EntitiService::recursiveSubgoals).collect(Collectors.toList());
         List<Entiti> all_entities = subgoals.stream().map(x -> x.getEntities()).flatMap(Set::stream).collect(Collectors.toList());
+        all_entities.addAll(goal_from_db.getEntities());
         List<EntitiDTOShort> result = new ArrayList<>();
         result.addAll(all_entities.stream().filter(x -> x.getClass().getSimpleName().equals("Question")).map(x -> entitiShortMapper.mapToDto((Question) x)).collect(Collectors.toList()));
         result.addAll(all_entities.stream().filter(x -> x.getClass().getSimpleName().equals("Task")).map(x -> entitiShortMapper.mapToDto((Task) x)).collect(Collectors.toList()));
