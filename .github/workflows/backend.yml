@@ -63,5 +63,7 @@ jobs:
         run: ssh staging 'docker pull beabeeapp/beabee'
       - name: Run the images
         run: ssh staging 'docker-compose up -d'
+      - name: Prune old images
+        run: ssh staging 'docker system prune -f -a'
 
 
