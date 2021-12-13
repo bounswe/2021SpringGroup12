@@ -113,7 +113,7 @@ public class ResourceService {
                     .body("Resource not found!");
         }
         try {
-            resourceRepository.delete(resourceEntityOptional.get());
+            resourceRepository.deleteById(resourceEntityOptional.get().getId());
             return ResponseEntity.status(HttpStatus.OK)
                     .body(String.format("Resource deleted successfully: %s", resourceEntityOptional.get().getName()));
         } catch (Exception e) {
