@@ -1,73 +1,62 @@
-import { Badge, Calendar } from "antd";
+import { Calendar, Tooltip } from "antd";
 import { Moment } from "moment";
-import * as React from "react";
+import { Goal } from "../redux/reducers";
+import { AimOutlined } from "@ant-design/icons";
 
-export interface IUserCalendatProps {}
+export interface IUserCalendarProps {
+  goalList: Goal[];
+}
 
-type CalendarItemType = {
-  type: "warning" | "success" | "error" | "default" | "processing" | undefined;
-  content: string;
-};
-
-export default function UserCralendat(props: IUserCalendatProps) {
+export default function UserCalendar(props: IUserCalendarProps) {
   const getListData = (value: Moment) => {
-    let listData: CalendarItemType[] = [];
-
-    switch (value.date()) {
-      case 8:
-        listData = [
-          { type: "warning", content: "This is warning event." },
-          { type: "success", content: "This is usual event." },
-        ];
-        break;
-      case 10:
-        listData = [
-          { type: "warning", content: "This is warning event." },
-          { type: "success", content: "This is usual event." },
-          { type: "error", content: "This is error event." },
-        ];
-        break;
-      case 15:
-        listData = [
-          { type: "warning", content: "This is warning event" },
-          { type: "success", content: "This is very long usual event。。...." },
-          { type: "error", content: "This is error event 1." },
-          { type: "error", content: "This is error event 2." },
-          { type: "error", content: "This is error event 3." },
-          { type: "error", content: "This is error event 4." },
-        ];
-        break;
-      default:
-    }
+    let listData = props.goalList.filter((item) => {
+      return (
+        item.deadline.getDay() === value.date() &&
+        item.deadline.getMonth() === value.month()
+      );
+    });
     return listData;
   };
 
   const dateCellRender = (value: Moment) => {
     const listData = getListData(value);
     return (
-      <ul className="events">
+      <ul>
         {listData.map((item) => (
-          <li key={item.content}>{item.content}</li>
+          <Tooltip title={item.description}>
+            <li key={item.id}>
+              <AimOutlined /> {item.title}
+            </li>
+          </Tooltip>
         ))}
       </ul>
     );
   };
 
   const getMonthData = (value: Moment) => {
-    if (value.month() === 8) {
-      return 1394;
-    }
+    const monthlyGoals = props.goalList.filter(
+      (item) => item.deadline.getMonth() === value.month()
+    );
+    return monthlyGoals;
   };
 
   const monthCellRender = (value: Moment) => {
     //appears only "Year" display
-    const num = getMonthData(value);
-    return num ? (
-      <div className="notes-month">
-        <section>{num}</section>
-        <span>Backlog number</span>
+    const monthData = getMonthData(value);
+    return (
+      <div>
+        <ul>
+          {monthData.map((item) => (
+            <Tooltip title={item.description}>
+              <li key={item.title}>
+                <AimOutlined /> {item.title}
+              </li>
+            </Tooltip>
+          ))}
+          {}
+        </ul>
       </div>
-    ) : null;
+    );
   };
   return (
     <div>
