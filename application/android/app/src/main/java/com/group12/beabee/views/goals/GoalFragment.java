@@ -40,6 +40,9 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
     @BindView(R.id.tv_description)
     @Nullable
     TextView tvDescription;
+    @BindView(R.id.tv_dateSelected)
+    @Nullable
+    TextView tvDateSelected;
     @BindView(R.id.rv_subgoals)
     @Nullable
     RecyclerView rvSubgoal;
@@ -165,6 +168,7 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
         goalDetail = data;
         tvTitle.setText(data.title);
         tvDescription.setText(data.description);
+        tvDateSelected.setText(data.deadline);
         SetEntityLinks(data.entities);
         SetSubgoals(data.subgoals);
     }
