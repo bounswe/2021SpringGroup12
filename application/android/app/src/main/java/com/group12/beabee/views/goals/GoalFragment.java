@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.ParentType;
+import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.GoalDetail;
 import com.group12.beabee.models.responses.SubgoalShort;
 import com.group12.beabee.views.MainStructure.BaseEntityLinkableFragment;
@@ -103,9 +104,6 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
         super.onViewCreated(view, savedInstanceState);
         subgoalAdapter = new SubgoalCardViewAdapter();
         tagAdapter = new TagCardViewAdapter();
-
-
-
         tagAdapter.setItemClickListener(this);
         subgoalAdapter.setItemClickListener(this);
     }
@@ -146,6 +144,9 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
     public void addSubgoalButton(View view) {
         OpenNewFragment(SubgoalCreateFragment.newInstance(goalDetail.id, SubgoalCreateFragment.FROM_GOAL));
     }
+
+    /*    @DELETE("groupgoals/{user_id}/{groupgoal_id}")
+    Call<BasicResponse> leaveGG(@Path("groupgoal_id") int goalId,@Path("user_id") int userId, @Body GroupGoalDTO ggDTO);*/
 
     @Override
     public void OnSubgoalClicked(int id) {

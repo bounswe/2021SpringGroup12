@@ -1,5 +1,7 @@
 package com.group12.beabee.network.mocking;
 
+
+import com.group12.beabee.models.GroupGoalDetail;
 import com.group12.beabee.models.requests.Goal;
 import com.group12.beabee.models.requests.LoginRequest;
 import com.group12.beabee.models.requests.Question;
@@ -12,6 +14,7 @@ import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.EntityShort;
 import com.group12.beabee.models.responses.GoalDetail;
 import com.group12.beabee.models.responses.GoalShort;
+import com.group12.beabee.models.responses.GroupGoalShort;
 import com.group12.beabee.models.responses.QuestionDetail;
 import com.group12.beabee.models.responses.ReflectionDetail;
 import com.group12.beabee.models.responses.RoutineDetail;
@@ -259,6 +262,61 @@ public class MockService implements ServiceAPI {
     @Override
     public Call<BasicResponse> createQuestion(Question question) {
         return returnBasicResponse();
+    }
+
+    @Override
+    public Call<BasicResponse> deleteGG(int goalId) {
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> addMember(GroupGoalDetail goalDTO, UserDTO userDTO) {
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> createToken(int goalId) {
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> createGG(int user_id, Goal ggDTO) {
+        return returnBasicResponse();
+    }
+
+    @Override
+    public Call<BasicResponse> leaveGG(int goalId, int userId) {
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> joinGG(int user_id,String token) {
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> updateGG(GroupGoalDetail userDTO) {
+        return null;
+    }
+
+    @Override
+    public Call<GroupGoalDetail> getGGDetail(int goalId) {
+        return null;
+    }
+
+    @Override
+    public Call<List<GroupGoalShort>> getAllGGCreatedByUser(int user_id, GroupGoalDetail ggDTO) {
+        return null;
+    }
+
+    @Override
+    public Call<List<GroupGoalShort>> getAllGGofUser(int user_id) {
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> createSubgoalInGG(Subgoal subgoal) {
+        return null;
     }
 
     private Call<BasicResponse> returnBasicResponse(){
