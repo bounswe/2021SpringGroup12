@@ -13,15 +13,24 @@ export interface Goal {
   id: number;
   title: string;
 }
+export interface Entity {
+  deadline: Date;
+  description: string;
+  id: number;
+  entitiType: string;
+  title: string;
+}
 
 export interface AppState {
   user: User | null;
   goals: Goal[];
+  entities: Entity[];
 }
 
 const initialState: AppState = {
   user: null,
   goals: [],
+  entities: [],
 };
 
 export const rootReducer = (
@@ -38,6 +47,11 @@ export const rootReducer = (
       return {
         ...state,
         goals: action.payload,
+      };
+    case ActionType.GET_ALL_ENTITIES:
+      return {
+        ...state,
+        entities: action.payload,
       };
 
     default:

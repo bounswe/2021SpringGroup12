@@ -1,10 +1,11 @@
 import { Calendar, Tooltip } from "antd";
 import { Moment } from "moment";
-import { Goal } from "../redux/reducers";
+import { Entity, Goal } from "../redux/reducers";
 import { AimOutlined } from "@ant-design/icons";
 
 export interface IUserCalendarProps {
   goalList: Goal[];
+  entityList: Entity[];
 }
 
 export default function UserCalendar(props: IUserCalendarProps) {
