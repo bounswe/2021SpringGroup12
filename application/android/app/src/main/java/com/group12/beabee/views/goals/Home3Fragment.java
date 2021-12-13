@@ -110,7 +110,7 @@ public class Home3Fragment extends BaseInnerFragment {
         numofGoals.setText(String.format("%d",analytics.activeGoalCount));
         if(analytics.bestGoal==null){
             bestgoal_name.setText("");
-            bestgoal_des.setText("No such evaluated goals");
+            bestgoal_des.setText("No such evaluated goal");
         }
         else{
             bestgoal_name.setText(analytics.bestGoal.title);
@@ -118,7 +118,7 @@ public class Home3Fragment extends BaseInnerFragment {
         }
         if(analytics.worstGoal==null){
             worstgoal_name.setText("");
-            worstgoal_des.setText("No such evaluated goals");
+            worstgoal_des.setText("No such evaluated goal");
         }
         else{
             worstgoal_name.setText(analytics.worstGoal.title);
