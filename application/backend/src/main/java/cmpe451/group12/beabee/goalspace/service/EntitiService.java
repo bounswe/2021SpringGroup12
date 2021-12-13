@@ -664,7 +664,6 @@ public class EntitiService {
         routine_from_db.setRating(ratings);
 
         List<Date> deadlines = routine_from_db.getDeadline();
-        System.out.println(routine_from_db.getDeadline().size());
         deadlines.add(new Date(routine_from_db.getDeadline().get(routine_from_db.getDeadline().size()-1).getTime() +  routine_from_db.getPeriod() *(1000*60*60*24)));
         routine_from_db.setDeadline(deadlines);
 
@@ -673,7 +672,7 @@ public class EntitiService {
         return new MessageResponse("This deadline evaluated successfully, move on to next deadline!",MessageType.SUCCESS);
     }
 
-    /********************************** TASK RATE *****************/
+    /********************************** TASK COMPLETE *****************/
     public MessageResponse completeTask(Long task_id, Long rating){
         Task task_from_db = taskRepository.findById(task_id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found!"));
         task_from_db.setRating(rating.doubleValue());
@@ -682,6 +681,17 @@ public class EntitiService {
         taskRepository.save(task_from_db);
         return new MessageResponse("Task completed !",MessageType.SUCCESS);
     }
+    /********************************** ROUTINE COMPLETE *****************/
+    public MessageResponse completeRoutine(Long routine_id, Long rating){
+        Routine routine_from_db = routineRepository.findById(routine_id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Routine not found!"));
+        List<Double> ratings = routine_from_db.getRating();
+        ratings.add(rating.doubleValue());
+        routine_from_db.setRating(ratings);
+        routine_from_db.setIsDone(Boolean.TRUE);
+        routine_from_db.setCompletedAt(new Date(System.currentTimeMillis()));
+        routineRepository.save(routine_from_db);
 
+        return new MessageResponse("This deadline evaluated successfully, move on to next deadline!",MessageType.SUCCESS);
+    }
 
 }
