@@ -66,6 +66,29 @@
         app:layout_constraintStart_toEndOf="@+id/tv_descriptionTitle"
         app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
+
+    <TextView
+        android:id="@+id/tv_dateTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Deadline: "
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_description" />
+
+
+    <TextView
+        android:id="@+id/tv_dateSelected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="12.12.2021"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/tv_dateTitle"
+        app:layout_constraintTop_toBottomOf="@+id/tv_description" />
+
+
     <TextView
         android:id="@+id/tv_joincode"
         android:layout_width="wrap_content"
@@ -79,7 +102,7 @@
         android:text="Group join code"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_description" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_dateSelected" />
 
     <ImageView
         android:id="@+id/btn_copy"

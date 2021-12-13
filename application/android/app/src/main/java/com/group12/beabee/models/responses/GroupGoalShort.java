@@ -6,5 +6,5 @@ public class GroupGoalShort implements Serializable {
     public int id;
     public String title;
     public String description;
-    public String deadLine;
+    public String deadline;
 }

@@ -45,5 +45,42 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_descriptionTitle"
             app:layout_constraintBottom_toBottomOf="@id/tv_descriptionTitle"/>
+
+
+        <TextView
+            android:id="@+id/tv_dateTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Deadline: "
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_description" />
+
+
+        <TextView
+            android:id="@+id/tv_deadline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="date "
+            android:textSize="20sp"
+            app:layout_constraintStart_toEndOf="@+id/tv_dateTitle"
+            app:layout_constraintTop_toBottomOf="@+id/et_description" />
+
+
+        <Button
+            android:id="@+id/btn_pickDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:text="Set a Deadline"
+            android:textColor="@android:color/white"
+            android:enabled="true"
+            app:layout_constraintStart_toEndOf="@+id/tv_dateTitle"
+            app:layout_constraintTop_toBottomOf="@+id/tv_deadline" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

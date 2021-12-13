@@ -47,6 +47,9 @@ public class GroupGoalFragment extends BaseEntityLinkableFragment implements IOn
     @BindView(R.id.tv_description)
     @Nullable
     TextView tvDescription;
+    @BindView(R.id.tv_dateSelected)
+    @Nullable
+    TextView tvDateSelected;
     @BindView(R.id.tv_joincode)
     @Nullable
     TextView tvtoken;
@@ -171,6 +174,7 @@ public class GroupGoalFragment extends BaseEntityLinkableFragment implements IOn
         goalDTO = data;
         tvTitle.setText(data.title);
         tvDescription.setText(data.description);
+        tvDateSelected.setText(data.deadline);
         tvtoken.setText(data.token);
         SetEntityLinks(data.entities);
         SetSubgoals(data.subgoals);
