@@ -49,6 +49,8 @@ public class RoutineFragmentEdit extends BaseInnerFragment implements DatePicker
     TextView tvDeadline;
     @BindView(R.id.btn_pickDate)
     Button btnPickDate;
+    @BindView(R.id.et_pickPeriod)
+    EditText etPeriod;
     private RoutineDetail routineDetail;
 
 
@@ -83,7 +85,8 @@ public class RoutineFragmentEdit extends BaseInnerFragment implements DatePicker
         etTitle.setText(routineDetail.title);
         etDescription.setText(routineDetail.description);
         cbIsDone.setChecked(routineDetail.isDone);
-        tvDeadline.setText(routineDetail.deadline);
+        tvDeadline.setText(routineDetail.deadline.get(routineDetail.deadline.size()-1));
+        etPeriod.setText(String.valueOf(routineDetail.period));
     }
 
     @Override
@@ -100,7 +103,8 @@ public class RoutineFragmentEdit extends BaseInnerFragment implements DatePicker
         routineDetail.title = etTitle.getText().toString();
         routineDetail.description = etDescription.getText().toString();
         routineDetail.isDone = cbIsDone.isChecked();
-        routineDetail.deadline = tvDeadline.getText().toString();
+        routineDetail.deadline.set(routineDetail.deadline.size()-1, tvDeadline.getText().toString());
+        routineDetail.period = Integer.parseInt(etPeriod.getText().toString());
         Utils.showLoading(getParentFragmentManager());
         service.updateRoutine(routineDetail).enqueue(new Callback<BasicResponse>() {
             @Override

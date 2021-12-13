@@ -89,16 +89,13 @@
             app:layout_constraintTop_toBottomOf="@+id/btn_pickDate" />
 
 
-        <Button
-            android:id="@+id/btn_pickPeriod"
+        <EditText
+            android:id="@+id/et_pickPeriod"
+            android:inputType="number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:text="Select Period"
-            android:enabled="false"
-            android:textColor="@android:color/white"
+            android:hint="Enter routine period in days"
+            android:textSize="20sp"
             app:layout_constraintStart_toEndOf="@+id/tv_periodTitle"
             app:layout_constraintTop_toBottomOf="@+id/btn_pickDate" />
 
@@ -111,14 +108,14 @@
             android:text="Current status"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_pickPeriod"/>
+            app:layout_constraintTop_toBottomOf="@+id/et_pickPeriod"/>
 
         <CheckBox
             android:id="@+id/cb_isDone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@+id/tv_statusTitle"
-            app:layout_constraintTop_toBottomOf="@+id/btn_pickPeriod" />
+            app:layout_constraintTop_toBottomOf="@+id/et_pickPeriod" />
 
 
 
