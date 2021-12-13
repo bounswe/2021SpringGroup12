@@ -306,7 +306,7 @@ public class EntitiController {
     }
 
 
-    /********************************** TASK COMPLETE *****************/
+    /********************************** COMPLETE ENTITIES*****************/
     @ApiOperation(value = "Complete a task.")
     @PutMapping("/complete/{task_id}/{rating}")
     public MessageResponse completeTask(@PathVariable @ApiParam(value = "Id of the task.", example = "5") Long task_id, @PathVariable @ApiParam(value = "Rating of the task.", example = "5") Long rating) {
@@ -318,4 +318,17 @@ public class EntitiController {
     public MessageResponse completeRoutine(@PathVariable @ApiParam(value = "Id of the routine.", example = "5") Long routine_id, @PathVariable @ApiParam(value = "Rating of the routine.", example = "5") Long rating) {
         return entitiService.completeRoutine(routine_id, rating);
     }
+
+    @ApiOperation(value = "Complete a question.")
+    @PutMapping("/complete/{question_id}")
+    public MessageResponse completeQuestion(@PathVariable @ApiParam(value = "Id of the task.", example = "5") Long question_id) {
+        return entitiService.completeQuestion(question_id);
+    }
+
+    @ApiOperation(value = "Complete a reflection.")
+    @PutMapping("/complete/{reflection_id}")
+    public MessageResponse completeRefection(@PathVariable @ApiParam(value = "Id of the reflection.", example = "5") Long reflection_id) {
+        return entitiService.completeRefection(reflection_id);
+    }
+
 }
