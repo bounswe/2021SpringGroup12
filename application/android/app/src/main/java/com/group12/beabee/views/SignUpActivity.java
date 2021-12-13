@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.group12.beabee.InputValidator;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.requests.SignUpRequest;
@@ -54,6 +55,21 @@ public class SignUpActivity extends AppCompatActivity {
         signUpRequest.username = etUsername.getText().toString();
         signUpRequest.email = etEmail.getText().toString();
         signUpRequest.password = password;
+
+        if (!InputValidator.IsTextNonEmpty(signUpRequest.username)){
+            Utils.ShowErrorToast(this, "Username must not be empty!!");
+            return;
+        }
+
+        if (!InputValidator.IsTextNonEmpty(signUpRequest.password)){
+            Utils.ShowErrorToast(this, "Password must not be empty!!");
+            return;
+        }
+
+        if (!InputValidator.IsTextEmailFormat(signUpRequest.email)){
+            Utils.ShowErrorToast(this, "Email should be in correct email format!!");
+            return;
+        }
 
         Utils.showLoading(getSupportFragmentManager());
         serviceAPI.signUpRequest(signUpRequest).enqueue(new Callback<SignUpResponse>() {
