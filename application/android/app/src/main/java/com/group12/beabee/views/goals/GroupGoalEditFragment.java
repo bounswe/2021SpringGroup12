@@ -10,9 +10,9 @@ import androidx.fragment.app.Fragment;
 
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.GoalDTO;
 import com.group12.beabee.models.GroupGoalDTO;
 import com.group12.beabee.models.responses.BasicResponse;
+import com.group12.beabee.models.responses.GoalDetail;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
 
@@ -38,18 +38,10 @@ public class GroupGoalEditFragment extends BaseInnerFragment {
     public GroupGoalEditFragment() {
         // Required empty public constructor
     }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment TaskEdit.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static GroupGoalEditFragment newInstance(GroupGoalDTO goalDTO) {
+    public static GroupGoalEditFragment newInstance(GroupGoalDTO goalDetail) {
         GroupGoalEditFragment fragment = new GroupGoalEditFragment();
         Bundle args = new Bundle();
-        args.putSerializable("goal", goalDTO);//var olan datayı koydum
+        args.putSerializable("goal", goalDetail);
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,12 +56,12 @@ public class GroupGoalEditFragment extends BaseInnerFragment {
             Utils.ShowErrorToast(getContext(), "Something is wrong!!");
             GoBack();
         }
-        etTitle.setText(goal.title); //edit
+        etTitle.setText(goal.title);
         etDescription.setText(goal.description);
     }
 
     @Override
-    protected void OnApproveClicked() {//sağ üsteki tuşa basınca NOLUR
+    protected void OnApproveClicked() {
         if (etTitle.getText().toString().length()<3) {
             Utils.ShowErrorToast(getContext(), "The title should be at least 3 chars length!");
             return;
@@ -81,9 +73,11 @@ public class GroupGoalEditFragment extends BaseInnerFragment {
 
         goal.title = etTitle.getText().toString();
         goal.description = etDescription.getText().toString();
+        Utils.showLoading(getChildFragmentManager());
         service.updateGG(goal).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
                     Utils.ShowErrorToast(getContext(), "Goal is successfully updated!");
                     GoBack();
@@ -95,6 +89,7 @@ public class GroupGoalEditFragment extends BaseInnerFragment {
             }
             @Override
             public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
                 Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
             }
         });
@@ -103,6 +98,11 @@ public class GroupGoalEditFragment extends BaseInnerFragment {
     @Override
     protected PageMode GetPageMode() {
         return PageMode.Edit;
+    }
+
+    @Override
+    protected String GetPageTitle() {
+        return "Edit GOAL";
     }
 
     @Override

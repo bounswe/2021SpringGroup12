@@ -115,6 +115,7 @@ public class SubgoalCreateFragment extends BaseInnerFragment {
                 break;
             case FROM_GROUPGOAL:
                 subgoal.mainGroupGoalId = parentId;
+                service.createSubgoalInGG(subgoal).enqueue(callback);
                 break;
         }
 

@@ -11,12 +11,15 @@ import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.GroupGoalDTO;
+import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
 
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
+import butterknife.Optional;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -94,7 +97,19 @@ public class Home2Fragment extends BaseInnerFragment implements IOnGoalClickedLi
     }
 
     @Override
+    protected String GetPageTitle() {
+        return "My Group Goals";
+    }
+
+    @Override
     protected int GetLayoutId() {
         return R.layout.fragment_home2_groupgoals;
+    }
+
+
+    @OnClick(R.id.btn_tokenpaste)
+    @Optional
+    public void leaveGroup(View view) {
+        OpenNewFragment(JoinTokenFragment.newInstance());
     }
 }

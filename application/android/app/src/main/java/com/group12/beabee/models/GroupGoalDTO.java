@@ -1,6 +1,7 @@
 package com.group12.beabee.models;
 
-import com.group12.beabee.models.responses.Entity;
+import com.group12.beabee.models.responses.EntityShort;
+import com.group12.beabee.models.responses.SubgoalShort;
 
 import java.io.Serializable;
 import java.util.List;
@@ -17,6 +18,6 @@ public class GroupGoalDTO implements Serializable {
     public boolean isDone;
     public String createdAt;
     public String deadLine;
-    public List<Entity> entities;
-    public List<Entity> subgoals;
+    public List<EntityShort> entities;
+    public List<SubgoalShort> subgoals;
 }

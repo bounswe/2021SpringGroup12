@@ -30,6 +30,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Body;
 
 public class MockService implements ServiceAPI {
 
@@ -264,13 +265,33 @@ public class MockService implements ServiceAPI {
     }
 
     @Override
-    public Call<GroupGoalDTO> deleteGG(int goalId) {
+    public Call<BasicResponse> deleteGG(int goalId) {
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> addMember(GroupGoalDTO goalDTO, UserDTO userDTO) {
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> createToken(int goalId) {
         return null;
     }
 
     @Override
     public Call<BasicResponse> createGG(int user_id, GroupGoalDTO ggDTO) {
         return returnBasicResponse();
+    }
+
+    @Override
+    public Call<BasicResponse> leaveGG(int goalId, int userId) {
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> joinGG(int user_id,String token) {
+        return null;
     }
 
     @Override
@@ -294,7 +315,7 @@ public class MockService implements ServiceAPI {
     }
 
     @Override
-    public Call<BasicResponse> createSubgoalInGG(GroupGoalDTO userDTO) {
+    public Call<BasicResponse> createSubgoalInGG(Subgoal subgoal) {
         return null;
     }
 

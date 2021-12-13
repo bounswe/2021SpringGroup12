@@ -29,8 +29,10 @@ import retrofit2.Response;
 public class GroupGoalCreateFragment extends BaseInnerFragment {
 
     @BindView(R.id.et_title)
+    @Nullable
     EditText etTitle;
     @BindView(R.id.et_description)
+    @Nullable
     EditText etDescription;
 
     private GroupGoalDTO goal;
@@ -73,9 +75,11 @@ public class GroupGoalCreateFragment extends BaseInnerFragment {
         goal.isDone = false;
         goal.title = etTitle.getText().toString();
         goal.description = etDescription.getText().toString();
+        Utils.showLoading(getChildFragmentManager());
         service.createGG(BeABeeApplication.userId, goal).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
                     Utils.ShowErrorToast(getContext(), "Goal is successfully created!");
                     GoBack();
@@ -87,6 +91,7 @@ public class GroupGoalCreateFragment extends BaseInnerFragment {
             }
             @Override
             public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
                 Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
             }
         });
@@ -95,6 +100,11 @@ public class GroupGoalCreateFragment extends BaseInnerFragment {
     @Override
     protected PageMode GetPageMode() {
         return PageMode.Edit;
+    }
+
+    @Override
+    protected String GetPageTitle() {
+        return "create GROUPGOAL";
     }
 
     @Override

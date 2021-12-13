@@ -53,6 +53,11 @@ public class MemberListFragment extends BaseInnerFragment implements IOnMemberLi
     }
 
     @Override
+    protected String GetPageTitle() {
+        return null;
+    }
+
+    @Override
     protected int GetLayoutId() {
         return R.layout.fragment_members;
     }
