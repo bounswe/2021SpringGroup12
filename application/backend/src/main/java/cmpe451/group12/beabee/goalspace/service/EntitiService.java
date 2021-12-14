@@ -694,4 +694,19 @@ public class EntitiService {
         return new MessageResponse("This deadline evaluated successfully, move on to next deadline!",MessageType.SUCCESS);
     }
 
+    public MessageResponse completeQuestion(Long question_id) {
+        Question question_from_db = questionRepository.findById(question_id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Question not found!"));
+        question_from_db.setCompletedAt(new Date(System.currentTimeMillis()));
+        question_from_db.setIsDone(Boolean.TRUE);
+        questionRepository.save(question_from_db);
+        return new MessageResponse("Question completed !",MessageType.SUCCESS);
+
+    }
+
+    public MessageResponse completeRefection(Long reflection_id) {
+        Reflection reflection_from_db = reflectionRepository.findById(reflection_id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reflection not found!"));
+        reflection_from_db.setCompletedAt(new Date(System.currentTimeMillis()));
+        reflection_from_db.setIsDone(Boolean.TRUE);
+        reflectionRepository.save(reflection_from_db);
+        return new MessageResponse("Reflection completed !",MessageType.SUCCESS);}
 }
