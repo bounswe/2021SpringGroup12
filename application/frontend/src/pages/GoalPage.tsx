@@ -16,19 +16,19 @@ export function GoalPage() {
     const [entities, setEntities] = useState([])
     const [subgoals, setSubgoals] = useState([])
     const [isLoaded, setLoaded] = useState(false)
+    const[delete_count,setDeleteCount] =useState(0)
     // @ts-ignore
     const {goal_id} = useParams();
 
-    let delete_count = 0
     console.log(goal_id)
-
-    const deleteEntity = (entity: { key: any, entitiType: string}) => {
+    let delete_count_goal=0;
+    const deleteEntity = (entity: { key: any, entitiType: string,id:number}) => {
         console.log('Received values of delete: ', goal);
-        axios.delete(`/entities/${entity.entitiType.toLowerCase()}/${entity.key}`,
+        axios.delete(`/entities/${entity.entitiType.toLowerCase()}/${entity.id}`,
             {
                 headers: { Authorization: `Bearer ${token}`},
                 data: {}
-            }).then(() => delete_count++)
+            }).then(() => setDeleteCount(delete_count+1))
     };
 
     const deleteGoal = (goal: { key: any; }) => {
@@ -37,7 +37,7 @@ export function GoalPage() {
             {
                 headers: { Authorization: `Bearer ${token}`},
                 data: {}
-            }).then(() => delete_count++)
+            }).then(() => delete_count_goal++)
     };
     
 

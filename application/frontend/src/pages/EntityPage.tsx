@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {Link} from "react-router-dom";
 import {Button, Space, Table, Tag,message,Form,Upload} from "antd";
-import { LoadingOutlined, PlusOutlined,UploadOutlined } from '@ant-design/icons';
+import {UploadOutlined } from '@ant-design/icons';
 
 const token = localStorage.getItem("token")
 
@@ -19,6 +19,7 @@ export function EntityPage() {
     // @ts-ignore
     const {entitiType,entity_id} = useParams();
     const [resources, setResources] = useState([]);
+    const [resource_count, setResourceCount]=useState(0);
 
     const Deneme = {
         name: 'resource',
@@ -32,6 +33,7 @@ export function EntityPage() {
           }
           if (info.file.status === 'done') {
             message.success(`${info.file.name} file uploaded successfully`);
+            setResourceCount(resource_count+1);
           } else if (info.file.status === 'error') {
             message.error(`${info.file.name} file upload failed.`);
           }
@@ -59,39 +61,10 @@ export function EntityPage() {
             key: 'entityType',
         },
         {
-            title: 'Period',
-            dataIndex: 'period',
-            key: 'period',
-        },
-        {
             title: 'Rating',
             dataIndex: 'rating',
             key: 'rating',
         },
-        {
-            title: 'Deadline',
-            dataIndex: 'deadline',
-            key: 'deadline',
-        },
-        {
-            title: 'Is Done',
-            dataIndex: 'isDone',
-            key: 'isDone',
-            render: (isDone: boolean) => {
-                let color = 'red';
-                let text = 'NOT DONE'
-                if (isDone) {
-                    color = 'green';
-                    text = 'DONE'
-                }
-                return (
-                    <Tag color={color}>
-                        {text}
-                    </Tag>
-                );
-            }
-        },
-
         {
             title: 'Action',
             key: 'action',
@@ -190,15 +163,16 @@ export function EntityPage() {
                     console.log(data.deadline)
                 }
                 for (let i = 0; i < sublinks.length; i++) {
+                    console.log(sublinks)
                     tmp.push({
-                        key: data[i]['id'],
-                        title: data[i]['title'],
-                        description: data[i]['description'],
-                        entityType: data[i]['entitiType'],
-                        isDone: data[i]['isDone'],
-                        period: data[i]['period'],
-                        rating: data[i]['rating'],
-                        deadline: data[i]['deadline']
+                        key: sublinks[i]['id'],
+                        title: sublinks[i]['title'],
+                        description: sublinks[i]['description'],
+                        entityType: sublinks[i]['entitiType'],
+                        //isDone: sublinks[i]['isDone'],
+                        //period: sublinks[i]['period'],
+                        //rating: sublinks[i]['rating'],
+                        //deadline: sublinks[i]['deadline']
                     })
                 }
                 // @ts-ignore
@@ -242,12 +216,13 @@ export function EntityPage() {
     }
     return (
         <div>
+            <h2>{entitiType}</h2>
             <h2>Name: {entity['title']}</h2>
             <h2>Description: {entity['description']}</h2>
             {(entitiType.toLowerCase() == "routine" || entitiType.toLowerCase() == "task") && 
-            <h2>Deadline: {deadline}</h2>
+            <h2>Deadline: {deadline.slice(0,10)}</h2>
                         }
-            <h2>Linked Entities</h2>
+            <h2>Linked Entities:</h2>
             <Table columns={columns} dataSource={entities} />
             <br></br>
             <Link to={"/linkEntityfrom/" +goal_id+ "/"+ entity_id}> 
