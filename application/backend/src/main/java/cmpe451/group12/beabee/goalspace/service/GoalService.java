@@ -23,6 +23,7 @@ import cmpe451.group12.beabee.goalspace.model.entities.Task;
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.control.MappingControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -124,12 +125,20 @@ public class GoalService {
      */
     public MessageResponse deleteGoal(Long goal_id) {
         Goal goal_from_db = goalRepository.findById(goal_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Goal not found!"));
-        entitiRepository.deleteAll(goal_from_db.getEntities());
+        goal_from_db.setCreator(null);
+        goalRepository.save(goal_from_db);
+        /*
+        //entitiRepository.deleteAll(goal_from_db.getEntities());
         List<Subgoal> all_subgoals = goal_from_db.getSubgoals().stream()
                 .flatMap(GoalService::flatMapRecursive).collect(Collectors.toList());
         all_subgoals.stream().forEach(x->{x.setChild_subgoals(null);}); //to handle foreign-key constraints
-        subgoalRepository.deleteAll(all_subgoals);
-        goalRepository.deleteAGoal(goal_from_db.getId());
+//        subgoalRepository.deleteAll(all_subgoals);
+   //     goalRepository.deleteAGoal(goal_from_db.getId());
+        Users user = goal_from_db.getCreator();
+        Set<Goal> goals = user.getGoals();
+        goals.remove(goal_from_db);
+        user.setGoals(goals);
+        userRepository.save(user);*/
         return new MessageResponse("Goal deleted.", MessageType.SUCCESS);
     }
 
