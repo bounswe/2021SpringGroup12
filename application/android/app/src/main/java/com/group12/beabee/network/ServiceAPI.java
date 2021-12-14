@@ -101,7 +101,7 @@ public interface ServiceAPI {
     @POST("entities/task")
     Call<BasicResponse> createTask(@Body Task task);
 
-    @PUT("entities/complete/{task_id}/{rating}")
+    @PUT("entities/completetask/{task_id}/{rating}")
     Call<BasicResponse> completeTask(@Path("task_id") int taskId, @Path("rating") int rating);
 
 
@@ -130,7 +130,7 @@ public interface ServiceAPI {
     @POST("entities/routine")
     Call<BasicResponse> createRoutine(@Body Routine routine);
 
-    @PUT("entities/complete/{routine_id}/{rating}")
+    @PUT("entities/completeroutine/{routine_id}/{rating}")
     Call<BasicResponse> completeRoutine(@Path("routine_id") int routineId, @Path("rating") int rating);
 
     @PUT("entities/rate/{routine_id}/{rating}")
