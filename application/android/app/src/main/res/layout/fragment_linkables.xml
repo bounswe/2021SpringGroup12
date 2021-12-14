@@ -24,6 +24,8 @@
         android:layout_height="37dp"
         android:layout_marginStart="10dp"
         android:src="@drawable/ic_action_name"
+        android:background="@drawable/bg_rounded_yellow_outline"
+        android:tint="@color/yellow_third"
         app:layout_constraintBottom_toBottomOf="@id/tv_tasks"
         app:layout_constraintStart_toEndOf="@+id/tv_tasks"
         app:layout_constraintTop_toTopOf="@id/tv_tasks" />
@@ -66,6 +68,8 @@
         android:layout_height="37dp"
         android:layout_marginStart="10dp"
         android:src="@drawable/ic_action_name"
+        android:background="@drawable/bg_rounded_yellow_outline"
+        android:tint="@color/yellow_third"
         app:layout_constraintBottom_toBottomOf="@+id/tv_routines"
         app:layout_constraintStart_toEndOf="@+id/tv_routines"
         app:layout_constraintTop_toTopOf="@+id/tv_routines" />
@@ -107,6 +111,8 @@
         android:layout_height="37dp"
         android:layout_marginStart="10dp"
         android:src="@drawable/ic_action_name"
+        android:background="@drawable/bg_rounded_yellow_outline"
+        android:tint="@color/yellow_third"
         app:layout_constraintBottom_toBottomOf="@+id/tv_questions"
         app:layout_constraintStart_toEndOf="@+id/tv_questions"
         app:layout_constraintTop_toTopOf="@+id/tv_questions" />
@@ -150,6 +156,8 @@
         android:layout_height="37dp"
         android:layout_marginStart="10dp"
         android:src="@drawable/ic_action_name"
+        android:background="@drawable/bg_rounded_yellow_outline"
+        android:tint="@color/yellow_third"
         app:layout_constraintBottom_toBottomOf="@id/tv_reflections"
         app:layout_constraintStart_toEndOf="@+id/tv_reflections"
         app:layout_constraintTop_toTopOf="@id/tv_reflections" />

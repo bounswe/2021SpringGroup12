@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.group12.beabee.BeABeeApplication;
+import com.group12.beabee.InputValidator;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.requests.LoginRequest;
@@ -48,6 +49,11 @@ public class LoginActivity extends AppCompatActivity {
         loginRequest.username = etUsername.getText().toString();
         loginRequest.email = etEmail.getText().toString();
         loginRequest.password = etPassword.getText().toString();
+
+        if (!InputValidator.IsTextNonEmpty(loginRequest.username) && !InputValidator.IsTextEmailFormat(loginRequest.email)) {
+            Utils.ShowErrorToast(this, "Either username or a valid email should be provided!");
+            return;
+        }
 
         Utils.showLoading(getSupportFragmentManager());
         serviceAPI.loginRequest(loginRequest).enqueue(new Callback<LoginResponse>() {
