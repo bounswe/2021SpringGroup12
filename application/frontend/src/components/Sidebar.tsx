@@ -7,7 +7,7 @@ import {
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import { Link } from "react-router-dom";
-import logo from "./logo192.png";
+import logo from "./logo-with-text.png";
 
 export interface ISidebarProps {
   user: string;
