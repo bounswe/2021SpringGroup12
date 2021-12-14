@@ -3,47 +3,111 @@ import {useParams} from "react-router";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {Link} from "react-router-dom";
-import {Button, List, Space, Table} from "antd";
+import {Button, Form, List, Select, Table} from "antd";
 import {GoalTypes} from "../helpers/GoalTypes";
 
 const token = localStorage.getItem("token");
 const user_id = localStorage.getItem("user_id")
 
+const { Option } = Select;
+
+
 export function GoalPage(params :{goalType: any}) {
+
     const goalType = params.goalType
     console.log("goalType", goalType)
     const [goal, setGoal] = useState({
         title: "Loading",
         description: "Loading",
+        deadline: "Loading...",
         token: "Loading",
+        isDone: false,
         assignees: [],
         members: [],
         entities: [],
-        subgoals: []
+        subgoals: [],
+        user_id: -1
     })
+    const [returnLink, setReturnLink] = useState("/goalsPage")
+    const [isDeleted, setDeleted] = useState(false)
+    const [assignables, setAssignabels] = useState([])
+    const [toAssignee, setToAssignee] = useState([])
     // @ts-ignore
     const {goal_id} = useParams();
+    let editLink = ""
+    if (goalType === GoalTypes.Sub) {
+        editLink = "/editSubgoal/"
+    } else if (goalType === GoalTypes.Normal) {
+        editLink = "/editGoal/"
+    } else if (goalType === GoalTypes.Group) {
+        editLink = "/editGroupgoal/"
+    }
+    editLink += goal_id
 
-    let delete_count = 0
-    console.log('Burada 22')
-
-    const deleteEntity = (entity: { key: any, entityType: string}) => {
+    const deleteGoal = () => {
         console.log('Received values of delete: ', goal);
-        axios.delete(`/entities/${entity.entityType.toLowerCase()}/${entity.key}`,
+        axios.delete(`/${goalType}/${goal_id}`,
             {
                 headers: { Authorization: `Bearer ${token}`},
                 data: {}
-            }).then(() => delete_count++)
+            }).then((res) => {
+            if (res && res.status === 200) {
+                console.log(res.data)
+                window.alert("Goal deleted successfully");
+                setDeleted(true)
+            }
+        })
+            .catch((error) => {
+                window.alert(`A problem occurred while trying to delete goal! \n ${error}`);
+            });
     };
-
-    const deleteGoal = (goal: { key: any; }) => {
-        console.log('Received values of delete: ', goal);
-        axios.delete(`/goals/${goal.key}`,
+    const { Option } = Select;
+    const rateAndComplete = (values: any) => {
+        const rating = values.rating
+        console.log(values)
+        axios.put(`/${goalType}/complete/${goal_id}/${rating}`,
             {
                 headers: { Authorization: `Bearer ${token}`},
                 data: {}
-            }).then(() => delete_count++)
+            }).then((res) => {
+            if (res && res.status === 200) {
+                console.log(res.data)
+                window.alert("Subgoal rated and completed successfully");
+                window.location.reload()
+            }
+        })
+            .catch((error) => {
+                window.alert(`A problem occurred while trying to rate subgoal! \n ${error}`);
+            });
     };
+    const complete = () => {
+        axios.put(`/${goalType}/complete/${goal_id}/`,
+            {
+                headers: { Authorization: `Bearer ${token}`},
+                data: {}
+            }).then((res) => {
+            if (res && res.status === 200) {
+                console.log(res.data)
+                window.alert("Goal completed successfully");
+                window.location.reload()
+            }
+        })
+            .catch((error) => {
+                window.alert(`A problem occurred while trying to complete goal! \n ${error}`);
+            });
+    };
+
+    const handleAssigneeChange = (value: any) => {
+        console.log('value', value)
+        setToAssignee(value)
+    }
+    const assign = () => {
+        const user_ids = toAssignee.map((user_id: any) => "user_ids=" + user_id)
+        axios.post(`/subgoals/${goal_id}/assignees?${user_ids}`, {}, {
+            headers: { Authorization: `Bearer ${token}`},
+        }).then(() => window.alert("I Hope added!"))
+
+    }
 
     const subgoal_columns =  [
             {
@@ -64,28 +128,7 @@ export function GoalPage(params :{goalType: any}) {
                 title: 'Deadline',
                 dataIndex: 'deadline',
                 key: 'deadline',
-            },
-        {
-            dataIndex: "description",
-            title: 'Action',
-            key: 'action',
-            render: (text: any,
-                     goal: any) =>
-                (   <div>
-                        <Space size="middle">
-                            <Button type="primary" onClick={() => deleteGoal(goal)}>
-                                Delete
-                            </Button>
-                        </Space>
-                        <Link to={"/editGoal/" + goal.id}>
-                            <button type="button">
-                                Edit
-                            </button>
-                        </Link>
-                    </div>
-
-                )
-        }
+            }
         ];
 
     const columns = [
@@ -112,26 +155,7 @@ export function GoalPage(params :{goalType: any}) {
             title: 'Rating',
             dataIndex: 'rating',
             key: 'rating',
-        },
-        {
-            title: 'Action',
-            key: 'action',
-            render: (text: any,
-                     entity: { key: number, entityType: string}) =>
-                (   <div>
-                        <Space size="middle">
-                            <Button type="primary" onClick={() => deleteEntity(entity)}>
-                                Delete
-                            </Button>
-                        </Space>
-                        <Link to={"/editEntity/" + entity.key}>
-                            <button type="button">
-                                Edit
-                            </button>
-                        </Link>
-                    </div>
-                ),
-        },
+        }
     ];
 
     useEffect(() => {
@@ -155,23 +179,159 @@ export function GoalPage(params :{goalType: any}) {
                 }
                 goal_info['subgoals'].forEach((subgoal: any, i: number) => {
                     subgoal.key = i
+                    if (subgoal.deadline !== null) {
+                        subgoal.deadline = subgoal.deadline.substr(0,10)
+                    }
                 })
                 goal_info['entities'].forEach((entity: any, i: number) => {
                     entity.key = i
+                    if (entity.deadline !== null) {
+                        entity.deadline = entity.deadline.substr(0,10)
+                    }
                 })
+                if (goal_info.deadline !== null) {
+                    goal_info.deadline = goal_info.deadline.substr(0,10)
+                }
+                if (goal_info.main_goal_id != null) {
+                    setReturnLink(`/${GoalTypes.Normal}/${goal_info.main_goal_id}`)
+                } else if (goal_info.main_groupgoal_id != null) {
+                    setReturnLink(`/${GoalTypes.Group}/${goal_info.main_groupgoal_id}`)
+                } else if (goal_info.parent_subgoal_id != null) {
+                    setReturnLink(`/${GoalTypes.Sub}/${goal_info.parent_subgoal_id}`)
+                }
+                console.log("goal", goal)
+                console.log("received", goal_info)
                 setGoal(goal_info)
 
+                if (goal_info.main_groupgoal_id != null) {
+                    axios.get(`/${GoalTypes.Group}/${goal_info.main_groupgoal_id}`,
+                        {
+                            headers: { Authorization: `Bearer ${token}`},
+                            data: {}
+                        })
+                        .then(response => {
+                            // check for error response
+                            if (response.status === 200) {
+                                return response.data
+                            }
+                            throw response
+                        }).then(parent_goal => {
+                            setAssignabels(parent_goal['members'])
+                    }).catch(error => {
+                        console.error('There was an error!', error);
+                    })
+                } else if (goal_info.parent_subgoal_id != null) {
+                    axios.get(`/${GoalTypes.Sub}/${goal_info.parent_subgoal_id}`,
+                        {
+                            headers: { Authorization: `Bearer ${token}`},
+                            data: {}
+                        })
+                        .then(response => {
+                            // check for error response
+                            if (response.status === 200) {
+                                return response.data
+                            }
+                            throw response
+                        }).then(parent_goal => {
+                        setAssignabels(parent_goal['assignees'])
+                    }).catch(error => {
+                        console.error('There was an error!', error);
+                    })
+                }
             })
             .catch(error => {
                 console.error('There was an error!', error);
             });
-    }, [goal_id, goalType]);
+    }, [goal_id]);
 
+    const showManageDiv = goalType !== GoalTypes.Group || goal.user_id === Number(user_id)
     const showAssignees = goal['assignees'] !== undefined && goal['assignees'].length > 0
+    let addSubgoalLink = ""
+    if (goalType === GoalTypes.Sub) {
+        addSubgoalLink = "/addSubToSub/"
+    } else if (goalType === GoalTypes.Normal) {
+        addSubgoalLink = "/addSubToNormal/"
+    } else if (goalType === GoalTypes.Group) {
+        addSubgoalLink = "/addSubToGroup/"
+    }
+    addSubgoalLink += goal_id
+
+    if (isDeleted) {
+        return <Link to={returnLink}>
+            <button type="button">
+                Go Back
+            </button>
+        </Link>
+    }
+
+    console.log(assignables)
     return (
         <div>
+            {showManageDiv &&
+            <div>
+                <Link to={editLink}>
+                    <button type="button">
+                        Edit
+                    </button>
+                </Link>
+                <Button
+                    type="primary"
+                    onClick={deleteGoal}
+                >
+                    Delete
+                </Button>
+                {assignables.length > 0 &&
+                <div>
+                    <Select
+                        mode="multiple"
+                        style={{ width: '100%' }}
+                        placeholder="Please select"
+                        defaultValue={[]}
+                        onChange={handleAssigneeChange}
+                    >
+                        {assignables.map((member: any) => <Option key={member.username} value={member.user_id}>{member.username}</Option>)}
+                    </Select>
+                    <Button
+                        type="primary"
+                        onClick={assign}
+                    >
+                        Assign
+                    </Button>
+                </div>}
+                {(!goal['isDone'] && goalType === GoalTypes.Sub) &&
+                <Form onFinish={rateAndComplete}>
+                    <Form.Item name="rating" label="Rating" rules={[{ required: true }]}>
+                        <Select
+                            placeholder="Select a option and change input text above"
+                        >
+                            <Option value="1" key={1}>&#9734;</Option>
+                            <Option value="2" key={2}>&#9734;&#9734;</Option>
+                            <Option value="3" key={3}>&#9734;&#9734;&#9734;</Option>
+                            <Option value="4" key={4}>&#9734;&#9734;&#9734;&#9734;</Option>
+                            <Option value="5" key={5}>&#9734;&#9734;&#9734;&#9734;&#9734;</Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item >
+                        <Button type="primary" htmlType="submit">
+                            Rate and Complete Subgoal!
+                        </Button>
+                    </Form.Item>
+                </Form>}
+                {(!goal['isDone'] && goalType === GoalTypes.Normal) &&
+                <Button
+                    type="primary"
+                    onClick={complete}
+                >
+                    Complete Goal!
+                </Button>}
+            </div>}
+
+            {goal['isDone'] &&
+            <h2>DONE!</h2>}
+
             <h2>Name: {goal['title']}</h2>
             <h2>Description: {goal['description']}</h2>
+            <h2>Deadline: {goal['deadline']}</h2>
             {goalType === GoalTypes.Group &&
             <div>
                 <h2>Token: {goal['token']}</h2>
@@ -179,7 +339,7 @@ export function GoalPage(params :{goalType: any}) {
                     size="small"
                     header={<div>Members</div>}
                     bordered
-                    dataSource={goal['members']}
+                    dataSource={goal['members'].map((member: any) => member.username)}
                     renderItem={item => <List.Item>{item}</List.Item>}
                 />
             </div>}
@@ -192,7 +352,7 @@ export function GoalPage(params :{goalType: any}) {
                 renderItem={item => <List.Item>{item}</List.Item>}
             />}
             <Table columns={subgoal_columns} dataSource={goal['subgoals']} />
-            <Link to={"/addEntity/" + goal_id}>
+            <Link to={addSubgoalLink}>
                 <button type="button">
                     Add SubGoal
                 </button>

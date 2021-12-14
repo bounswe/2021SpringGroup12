@@ -96,7 +96,19 @@ export default class App extends React.Component<IAppProps, IAppState> {
                   <GoalsPage />
                 </Route>
                 <Route exact path="/addGoal">
-                  <AddGoal />
+                  <AddGoal goalType={GoalTypes.Normal} parentType={undefined} />
+                </Route>
+                <Route exact path="/addGroupGoal">
+                  <AddGoal goalType={GoalTypes.Group} parentType={undefined} />
+                </Route>
+                <Route exact path="/addSubToSub/:parent_id">
+                  <AddGoal goalType={GoalTypes.Sub} parentType={GoalTypes.Sub} />
+                </Route>
+                <Route exact path="/addSubToNormal/:parent_id">
+                  <AddGoal goalType={GoalTypes.Sub} parentType={GoalTypes.Normal} />
+                </Route>
+                <Route exact path="/addSubToGroup/:parent_id">
+                  <AddGoal goalType={GoalTypes.Sub} parentType={GoalTypes.Group} />
                 </Route>
                 <Route exact path="/calendar">
                   <UserCalendar />
@@ -104,7 +116,9 @@ export default class App extends React.Component<IAppProps, IAppState> {
                 <Route exact path="/goals/:goal_id" children={<GoalPage goalType={GoalTypes.Normal}/>} />
                 <Route exact path="/subgoals/:goal_id" children={<GoalPage goalType={GoalTypes.Sub}/>} />
                 <Route exact path="/groupgoals/:goal_id" children={<GoalPage goalType={GoalTypes.Group}/>} />
-                <Route exact path="/editGoal/:goal_id" children={<EditGoal />} />
+                <Route exact path="/editGoal/:goal_id" children={<EditGoal goalType={GoalTypes.Normal}/>} />
+                <Route exact path="/editSubgoal/:goal_id" children={<EditGoal goalType={GoalTypes.Sub}/>} />
+                <Route exact path="/editGroupgoal/:goal_id" children={<EditGoal goalType={GoalTypes.Group}/>} />
                 <Route exact path="/entity/:entity_id" children={<EntityPage />} />
                 <Route exact path="/addEntity/:goal_id" children={<AddEntity /> } />
                 <Route exact path="/editEntity/:entity_id" children={<EditEntity /> } />
