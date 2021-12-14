@@ -27,6 +27,7 @@ jobs:
         run: ./gradlew bootJar
       - name: Build image
         run: docker build ./application/backend -t beabee/beabee_spring:latest
+
       - name: Docker login
         uses: docker/login-action@v1.10.0
         with:
