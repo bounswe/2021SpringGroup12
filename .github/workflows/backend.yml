@@ -1,0 +1,69 @@
+name: CD
+on:
+  push:
+    branches: [ dev/backend ]
+  pull_request:
+    branches: [ dev/backend ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup JDK
+        uses: actions/setup-java@v2.3.1
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: 'gradle'
+      - name: Build project
+        working-directory: ./application/backend
+        run: ./gradlew bootJar
+      - name: Build image
+        run: docker build ./application/backend -t beabee/beabee_spring:latest
+      - name: Docker login
+        uses: docker/login-action@v1.10.0
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push image to the repo
+        run: |
+            docker tag beabee/beabee_spring:latest beabeeapp/beabee
+            docker push beabeeapp/beabee
+  deploy:
+    runs-on: ubuntu-latest
+    needs: publish
+    
+    steps:
+      - name: Create ssh host
+        run: |
+          mkdir -p ~/.ssh/
+                    echo "$SSH_KEY" > ~/.ssh/staging.key
+          chmod 600 ~/.ssh/staging.key
+          cat >>~/.ssh/config <<END
+          Host staging
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/staging.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ec2-3-144-201-198.us-east-2.compute.amazonaws.com
+      - name: Download compose file
+        run: ssh staging 'wget -L https://raw.githubusercontent.com/bounswe/2021SpringGroup12/dev/backend/application/docker-compose.yml' 
+      - name: Pull images from the docker hub
+        run: ssh staging 'docker pull beabeeapp/beabee'
+      - name: Run the images
+        run: ssh staging 'docker-compose up -d'
+      - name: Prune old images
+        run: ssh staging 'docker system prune -f -a'
+
+

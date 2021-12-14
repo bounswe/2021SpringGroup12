@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  db-server:
+    image: "postgres"
+    container_name: "db-server"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: beabee
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 5432
+    networks:
+      - beabeenw
+  beabee-server:
+    image: "beabeeapp/beabee"
+    container_name: "beabee-server"
+    ports:
+      - "8085:8085"
+    environment:
+      spring.datasource.url: jdbc:postgresql://db-server:5432/beabee
+      spring.datasource.password: 5432
+      spring_mail_username: obss.veyis.deneme@gmail.com
+      spring_jwt_secretKey :  zasbHb9qzYStxpmcbQNMfM6TDjd5JFKtntqvrL66
+      spring_mail_password :  rGM>M!ZfHx6CwgyR
+      client.webpage.link: http://localhost:3000
+    networks:
+      - beabeenw
+    depends_on:
+      - db-server
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.30'
+          memory: 300M
+        reservations:
+          cpus: '0.25'
+          memory: 200M
+
+networks:
+  beabeenw:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: '10.111.6.0/24'
