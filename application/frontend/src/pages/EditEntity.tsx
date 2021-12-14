@@ -4,7 +4,6 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {EntityForm} from "../components/EntityForm";
 import {Link} from "react-router-dom";
-
 const token = localStorage.getItem("token")
 
 
@@ -15,7 +14,7 @@ export function EditEntity() {
 
     const onFinish = (values: any) => {
         console.log('Received values of form: ', values);
-        axios.get(`/entities/entiti/${entity_id}`,
+        axios.get(`/entities/${entitiType.toLowerCase()}/${entity_id}`,
         {
             headers: { Authorization: `Bearer ${token}`},
             data: {}
@@ -44,11 +43,11 @@ export function EditEntity() {
     const [isLoaded, setLoaded] = useState(false)
     const [form, setForm] = useState(EntityForm(onFinish))
     // @ts-ignore
-    const {entity_id} = useParams();
-
+    const {entitiType, entity_id} = useParams();
+    const [resources, setResources] = useState("no resource")
 
     useEffect(() => {
-        axios.get(`/goals/${entity_id}`,
+        axios.get(`/entities/${entitiType.toLowerCase()}/${entity_id}`,
             {
                 headers: { Authorization: `Bearer ${token}`},
                 data: {}
@@ -61,9 +60,10 @@ export function EditEntity() {
                 throw response
             })
             .then(entity => {
-                setForm(EntityForm(onFinish, entity, true))
+                setForm(EntityForm(onFinish, entity))
                 setLoaded(true)
-                console.log('Burada!')
+                setResources(entity.resources)
+                console.log(resources)
             })
             .catch(error => {
                 console.error('There was an error!', error);
@@ -80,6 +80,7 @@ export function EditEntity() {
         message = <h2>Goal Edited Successfully!</h2>
     }
     return (
+
         <div>
             {form}
             <Link to="/goals">
