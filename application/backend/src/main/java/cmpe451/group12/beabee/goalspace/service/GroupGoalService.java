@@ -91,7 +91,7 @@ public class GroupGoalService
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group goal not found!")
         );
 
-        groupGoal.setToken(UUIDShortener.randomShortUUID());
+        groupGoal.setToken(UUIDShortener.randomShortUUID().substring(0,6));
         groupGoalRepository.save(groupGoal);
         return new MessageResponse("Group goal token regenerated.", MessageType.SUCCESS);
     }
