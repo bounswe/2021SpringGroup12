@@ -18,6 +18,7 @@ import {LinkEntity} from "./pages/LinkEntity"
 import { Content } from "antd/lib/layout/layout";
 import {Layout} from "antd";
 import Sidebar from "./components/Sidebar";
+import { ResourcePage } from "./pages/ResourcePage";
 import {GoalTypes} from "./helpers/GoalTypes";
 import { CalendarPage } from "./pages/CalendarPage";
 
@@ -97,16 +98,18 @@ export default class App extends React.Component<IAppProps, IAppState> {
                 <Route exact path="/calendar">
                   <CalendarPage />
                 </Route>
+                <Route path="/addEntity/:parentType/:entitiType/:parent_id" children={<AddEntity /> } />
+                <Route path="/editEntity/:entitiType/:entity_id" children={<EditEntity /> } />
+                <Route path="/linkEntityfrom/:goal_id/:entity_id" children={<LinkEntity /> } />
+                <Route path="/entity/:entitiType/:entity_id" children={<EntityPage />} />
+                <Route path="/resources/:resource_id" children={<ResourcePage /> } />
                 <Route exact path="/goals/:goal_id" children={<GoalPage goalType={GoalTypes.Normal}/>} />
                 <Route exact path="/subgoals/:goal_id" children={<GoalPage goalType={GoalTypes.Sub}/>} />
                 <Route exact path="/groupgoals/:goal_id" children={<GoalPage goalType={GoalTypes.Group}/>} />
                 <Route exact path="/editGoal/:goal_id" children={<EditGoal goalType={GoalTypes.Normal}/>} />
                 <Route exact path="/editSubgoal/:goal_id" children={<EditGoal goalType={GoalTypes.Sub}/>} />
                 <Route exact path="/editGroupgoal/:goal_id" children={<EditGoal goalType={GoalTypes.Group}/>} />
-                <Route exact path="/entity/:entity_id" children={<EntityPage />} />
-                <Route exact path="/addEntity/:goal_id" children={<AddEntity /> } />
-                <Route exact path="/editEntity/:entity_id" children={<EditEntity /> } />
-                <Route exact path="/linkEntityfrom/:entity_id" children={<LinkEntity /> } />
+
               </Switch>
             </Content>
           </Layout>

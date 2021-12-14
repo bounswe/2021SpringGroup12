@@ -10,12 +10,15 @@ export const LoginForm = () => {
 
 
   const onFinish = (values: any) => {
+
+    console.log(values)
     axios
       .post("/login", {
-        password: values.password,
-        username: values.username,
+        "password": values.password,
+        "username": values.username,
       })
       .then((res) => {
+        console.log(res)
         if (res && res.status === 200) {
           console.log(res.data)
           localStorage.setItem("token", res.data.jwt);
