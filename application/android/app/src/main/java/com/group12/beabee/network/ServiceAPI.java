@@ -9,6 +9,7 @@ import com.group12.beabee.models.requests.Routine;
 import com.group12.beabee.models.requests.SignUpRequest;
 import com.group12.beabee.models.requests.Subgoal;
 import com.group12.beabee.models.requests.Task;
+import com.group12.beabee.models.responses.Analytics;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.EntityShort;
 import com.group12.beabee.models.responses.GoalDetail;
@@ -167,6 +168,10 @@ public interface ServiceAPI {
 
     @POST("groupgoals/subgoal")
     Call<BasicResponse> createSubgoalInGG(@Body Subgoal subgoal);
+
+    //ANALYTICS
+    @GET("users/analytics/{user_id}")
+    Call<Analytics>getUserAnalytics(@Path("user_id") int user_id);
 
 }
 //7YPxFmM3yTaAzaSi3Q61B
