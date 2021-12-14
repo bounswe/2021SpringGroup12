@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+commit_regex='[a-zA-Z]+(?:\([a-zA-Z_]+\))?:\s[a-zA-Z][-a-zA-Z0-9. ]*\s#[0-9]+'
+error_msg="Aborting commit. Your commit message does not comply with the convention."
+
+if ! LC_ALL=en_US.utf8 grep -iqP "$commit_regex" "$1"; then
+    echo "Aborting commit. Your commit message does not comply with the convention."
+    echo "Please check te sample message and note the spaces and special characters '(', ')', '#' and ':' below: "
+    echo "type(optional scope): short summary #1"
+    exit 1
+fi
