@@ -1,11 +1,15 @@
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button,Upload, message  } from "antd";
 import * as React from "react";
+
+
 
 export const GoalForm = (onFinish: ((values: any) => void) | undefined,
                          defaultValues = {title: "", description: "", deadline: ""}) => {
     const title = defaultValues['title']
     const description = defaultValues['description']
     const deadline = defaultValues['deadline']
+
+
     return (
         <Form
             name="basic"
@@ -37,6 +41,9 @@ export const GoalForm = (onFinish: ((values: any) => void) | undefined,
                     Submit
                 </Button>
             </Form.Item>
+            
         </Form>
     );
 };
+
+

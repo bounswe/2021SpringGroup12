@@ -1,21 +1,33 @@
 import { Form, Input, Button } from "antd";
 import axios from "axios";
+import { useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
+import { getUser } from "../redux/actionCreators";
 
 export const LoginForm = () => {
   const history = useHistory();
+  const dispatch = useDispatch();
+
 
   const onFinish = (values: any) => {
+
+    console.log(values)
     axios
       .post("/login", {
-        password: values.password,
-        username: values.username,
+        "password": values.password,
+        "username": values.username,
       })
       .then((res) => {
+        console.log(res)
         if (res && res.status === 200) {
+          console.log(res.data)
           localStorage.setItem("token", res.data.jwt);
-          localStorage.setItem("username", res.data.userCredentialsDTO.username);
-          localStorage.setItem("user_id", res.data.userCredentialsDTO.user_id);
+          localStorage.setItem("username", res.data.userCredentialsGetDTO.username);
+          localStorage.setItem("user_id", res.data.userCredentialsGetDTO.user_id);
+          
+          //Sets User Field of app root State
+          dispatch(getUser(res.data.userCredentialsGetDTO.username));
+          
           history.push("/");
           window.location.reload();
         }

@@ -24,12 +24,12 @@ export default class NavBar extends React.Component<
     if (this.props.user) {
       return (
         <Header className="site-layout-background" style={{ padding: 0 }}>
-          <Menu theme="dark" mode="horizontal">
+          <Menu theme="light" mode="horizontal">
             <Menu.Item key="1">
               <Link to="/">Home</Link>
             </Menu.Item>
             <Menu.Item key="2">
-              <Link to="/goals">Goals</Link>
+              <Link to="/goalsPage">Goals</Link>
             </Menu.Item>
             <Menu.Item key="4">
               <SignOutButton />
@@ -40,7 +40,7 @@ export default class NavBar extends React.Component<
     } else {
       return (
         <Header className="site-layout-background" style={{ padding: 0 }}>
-          <Menu theme="dark" mode="horizontal">
+          <Menu theme="light" mode="horizontal">
             <Menu.Item key="1">
               <Link to="/">Home</Link>
             </Menu.Item>
