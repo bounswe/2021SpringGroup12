@@ -1,73 +1,95 @@
-import { Badge, Calendar } from "antd";
+import { Calendar, Tooltip } from "antd";
 import { Moment } from "moment";
-import * as React from "react";
+import { Entity, Goal } from "../redux/reducers";
+import { AimOutlined, CarryOutOutlined } from "@ant-design/icons";
 
-export interface IUserCalendatProps {}
+export interface IUserCalendarProps {
+  goalList: Goal[];
+  entityList: Entity[];
+}
 
-type CalendarItemType = {
-  type: "warning" | "success" | "error" | "default" | "processing" | undefined;
-  content: string;
-};
-
-export default function UserCralendat(props: IUserCalendatProps) {
-  const getListData = (value: Moment) => {
-    let listData: CalendarItemType[] = [];
-
-    switch (value.date()) {
-      case 8:
-        listData = [
-          { type: "warning", content: "This is warning event." },
-          { type: "success", content: "This is usual event." },
-        ];
-        break;
-      case 10:
-        listData = [
-          { type: "warning", content: "This is warning event." },
-          { type: "success", content: "This is usual event." },
-          { type: "error", content: "This is error event." },
-        ];
-        break;
-      case 15:
-        listData = [
-          { type: "warning", content: "This is warning event" },
-          { type: "success", content: "This is very long usual event。。...." },
-          { type: "error", content: "This is error event 1." },
-          { type: "error", content: "This is error event 2." },
-          { type: "error", content: "This is error event 3." },
-          { type: "error", content: "This is error event 4." },
-        ];
-        break;
-      default:
-    }
+export default function UserCalendar(props: IUserCalendarProps) {
+  const getGoalListData = (value: Moment) => {
+    let listData = props.goalList.filter((item) => {
+      return (
+        item.deadline.getDay() === value.date() &&
+        item.deadline.getMonth() === value.month()
+      );
+    });
+    return listData;
+  };
+  const getEntityListData = (value: Moment) => {
+    let listData = props.entityList.filter((item) => {
+      return (
+        item.deadline.getDay() === value.date() &&
+        item.deadline.getMonth() === value.month()
+      );
+    });
     return listData;
   };
 
   const dateCellRender = (value: Moment) => {
-    const listData = getListData(value);
+    const goalListData = getGoalListData(value);
+    const entityListData = getEntityListData(value);
+
     return (
-      <ul className="events">
-        {listData.map((item) => (
-          <li key={item.content}>{item.content}</li>
+      <ul>
+        {goalListData.map((item) => (
+          <Tooltip title={item.description}>
+            <li key={item.id}>
+              <AimOutlined /> {item.title}
+            </li>
+          </Tooltip>
+        ))}
+        {entityListData.map((item) => (
+          <Tooltip title={item.description}>
+            <li key={item.id}>
+              <CarryOutOutlined /> {`${item.entitiType} ${item.title}`}
+            </li>
+          </Tooltip>
         ))}
       </ul>
     );
   };
 
-  const getMonthData = (value: Moment) => {
-    if (value.month() === 8) {
-      return 1394;
-    }
+  const getMonthGoalsData = (value: Moment) => {
+    const monthlyGoals = props.goalList.filter(
+      (item) => item.deadline.getMonth() === value.month()
+    );
+    return monthlyGoals;
+  };
+
+  const getMonthEntityData = (value: Moment) => {
+    const monthlyEntities = props.entityList.filter(
+      (item) => item.deadline.getMonth() === value.month()
+    );
+    return monthlyEntities;
   };
 
   const monthCellRender = (value: Moment) => {
     //appears only "Year" display
-    const num = getMonthData(value);
-    return num ? (
-      <div className="notes-month">
-        <section>{num}</section>
-        <span>Backlog number</span>
+    const goalData = getMonthGoalsData(value);
+    const entityData = getMonthEntityData(value);
+    return (
+      <div>
+        <ul>
+          {goalData.map((item) => (
+            <Tooltip title={item.description}>
+              <li key={item.title}>
+                <AimOutlined /> {item.title}
+              </li>
+            </Tooltip>
+          ))}
+          {entityData.map((item) => (
+            <Tooltip title={item.description}>
+              <li key={item.title}>
+                <CarryOutOutlined /> {`${item.entitiType} ${item.title}`}
+              </li>
+            </Tooltip>
+          ))}
+        </ul>
       </div>
-    ) : null;
+    );
   };
   return (
     <div>

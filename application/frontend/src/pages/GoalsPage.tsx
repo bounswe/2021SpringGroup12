@@ -1,7 +1,9 @@
-import {Button, Form, Input, Space, Table, Tag} from 'antd';
+import {Button, Form, Input, Table} from 'antd';
 import * as React from "react";
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import axios from "axios";
+import {GoalTypes} from "../helpers/GoalTypes";
+
 export class GoalsPage extends React.Component {
     state = {
         isGroupsLoaded: false,
@@ -14,7 +16,7 @@ export class GoalsPage extends React.Component {
 
     deleteGoal = (goal: { key: any; }) => {
         console.log('Received values of delete: ', goal);
-        axios.delete(`/goals/${goal.key}`,
+        axios.delete(`/${GoalTypes.Normal}/${goal.key}`,
             {
                 headers: { Authorization: `Bearer ${this.token}`},
                 data: {}
@@ -24,7 +26,7 @@ export class GoalsPage extends React.Component {
     joinGroup = (input: {token: string}) => {
         const token = input.token
         console.log('Token: ', token);
-        axios.post(`/groupgoals/${this.user_id}/join`, {},
+        axios.post(`/${GoalTypes.Group}/${this.user_id}/join`, {},
             {
                 headers: {Authorization: `Bearer ${this.token}`},
                 params: {
@@ -43,7 +45,7 @@ export class GoalsPage extends React.Component {
     getGoals(isGroupGoal: boolean = false) {
         console.log(this.token)
         console.log(axios.defaults.baseURL)
-        const url = isGroupGoal ? `/groupgoals/member_of/${this.user_id}` : `/goals/of_user/${this.user_id}`
+        const url = isGroupGoal ? `/${GoalTypes.Group}/member_of/${this.user_id}` : `/${GoalTypes.Normal}/of_user/${this.user_id}`
         console.log(url)
         axios.get(url,
             {
@@ -96,14 +98,15 @@ export class GoalsPage extends React.Component {
     }
 
     columns = (isGroupGoal: boolean = false) => {
-        const cols =  [
+        return [
             {
                 title: 'Title',
                 dataIndex: 'title',
                 key: 'title',
                 render: (text: any,
                          goal: { key: string | number | boolean | {} | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactNodeArray | React.ReactPortal | null | undefined; }) =>
-                    <Link to={(isGroupGoal ? "/groupgoal/" : "/goal/") + goal.key}> {text} </Link>
+                    <Link
+                        to={(isGroupGoal ? `/${GoalTypes.Group}/` : `/${GoalTypes.Normal}/`) + goal.key}> {text} </Link>
                 ,
             },
             {
@@ -117,48 +120,7 @@ export class GoalsPage extends React.Component {
                 key: 'deadline',
             },
 
-        ];
-        if (isGroupGoal) {
-            cols.push({
-                dataIndex: "description",
-                title: 'Action',
-                key: 'action',
-                render: (text: any,
-                         goal: { key: string | number | boolean | {} | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactNodeArray | React.ReactPortal | null | undefined; }) =>
-                    (   <div>
-                            <Link to={"/editGroupGoal/" + goal.key}>
-                                <button type="button">
-                                    Edit
-                                </button>
-                            </Link>
-                        </div>
-                    )
-            })
-        } else {
-            cols.push({
-                dataIndex: "description",
-                title: 'Action',
-                key: 'action',
-                render: (text: any,
-                         goal: { key: string | number | boolean | {} | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactNodeArray | React.ReactPortal | null | undefined; }) =>
-                    (   <div>
-                            <Space size="middle">
-                                <Button type="primary" onClick={() => this.deleteGoal(goal)}>
-                                    Delete
-                                </Button>
-                            </Space>
-                            <Link to={"/editGoal/" + goal.key}>
-                                <button type="button">
-                                    Edit
-                                </button>
-                            </Link>
-                        </div>
-
-                    )
-            })
-        }
-        return cols
-
+        ]
     }
 
     render() {
@@ -192,7 +154,7 @@ export class GoalsPage extends React.Component {
                 ) : (
                     <div>
                         <Table columns={this.columns(true)} dataSource={groupGoals} />
-                        <Link to="/addGoal">
+                        <Link to="/addGroupGoal">
                             <button type="button">
                                 Add Group Goal
                             </button>

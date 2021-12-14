@@ -13,7 +13,8 @@ export function AddEntity() {
     const [isSubmitted, setSubmitted] = useState(false)
     // @ts-ignore
     const {parentType,entitiType,parent_id} = useParams();
-
+    console.log(parentType);
+    
     const onFinish = (values: any) => {
         console.log('Received values of form: ', parent_id);
         values['parent_id'] = parseInt(parent_id) //for now, it adds entity to a goal
