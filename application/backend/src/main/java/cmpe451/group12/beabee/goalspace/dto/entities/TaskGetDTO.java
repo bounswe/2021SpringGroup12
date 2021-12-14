@@ -27,5 +27,6 @@ public class TaskGetDTO {
     private Boolean isDone;
     private Set<EntitiDTOShort> sublinks;
     private Set<ResourceDTOShort> resources;
+    private Double rating;
 
 }

@@ -29,5 +29,6 @@ public class RoutineGetDTO {
     private Long period;
     private Set<EntitiDTOShort> sublinks;
     private Set<ResourceDTOShort> resources;
+    private Double rating;
 
 }
