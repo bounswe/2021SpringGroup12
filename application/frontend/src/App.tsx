@@ -18,6 +18,8 @@ import {LinkEntity} from "./pages/LinkEntity"
 import { Content } from "antd/lib/layout/layout";
 import {Layout} from "antd";
 import Sidebar from "./components/Sidebar";
+import UserCalendar from "./components/UserCalendar";
+import {GoalTypes} from "./helpers/GoalTypes";
 
 
 
@@ -90,18 +92,37 @@ export default class App extends React.Component<IAppProps, IAppState> {
                 <Route exact path="/">
                   <Home user={this.state.username} />
                 </Route>
-                <Route path="/goals">
+                <Route exact path="/goalsPage">
                   <GoalsPage />
                 </Route>
-                <Route path="/addGoal">
-                  <AddGoal />
+                <Route exact path="/addGoal">
+                  <AddGoal goalType={GoalTypes.Normal} parentType={undefined} />
                 </Route>
-                <Route path="/goal/:goal_id" children={<GoalPage />} />
-                <Route path="/editGoal/:goal_id" children={<EditGoal />} />
-                <Route path="/entity/:entity_id" children={<EntityPage />} />
-                <Route path="/addEntity/:goal_id" children={<AddEntity /> } />
-                <Route path="/editEntity/:entity_id" children={<EditEntity /> } />
-                <Route path="/linkEntityfrom/:entity_id" children={<LinkEntity /> } />
+                <Route exact path="/addGroupGoal">
+                  <AddGoal goalType={GoalTypes.Group} parentType={undefined} />
+                </Route>
+                <Route exact path="/addSubToSub/:parent_id">
+                  <AddGoal goalType={GoalTypes.Sub} parentType={GoalTypes.Sub} />
+                </Route>
+                <Route exact path="/addSubToNormal/:parent_id">
+                  <AddGoal goalType={GoalTypes.Sub} parentType={GoalTypes.Normal} />
+                </Route>
+                <Route exact path="/addSubToGroup/:parent_id">
+                  <AddGoal goalType={GoalTypes.Sub} parentType={GoalTypes.Group} />
+                </Route>
+                <Route exact path="/calendar">
+                  <UserCalendar />
+                </Route>
+                <Route exact path="/goals/:goal_id" children={<GoalPage goalType={GoalTypes.Normal}/>} />
+                <Route exact path="/subgoals/:goal_id" children={<GoalPage goalType={GoalTypes.Sub}/>} />
+                <Route exact path="/groupgoals/:goal_id" children={<GoalPage goalType={GoalTypes.Group}/>} />
+                <Route exact path="/editGoal/:goal_id" children={<EditGoal goalType={GoalTypes.Normal}/>} />
+                <Route exact path="/editSubgoal/:goal_id" children={<EditGoal goalType={GoalTypes.Sub}/>} />
+                <Route exact path="/editGroupgoal/:goal_id" children={<EditGoal goalType={GoalTypes.Group}/>} />
+                <Route exact path="/entity/:entity_id" children={<EntityPage />} />
+                <Route exact path="/addEntity/:goal_id" children={<AddEntity /> } />
+                <Route exact path="/editEntity/:entity_id" children={<EditEntity /> } />
+                <Route exact path="/linkEntityfrom/:entity_id" children={<LinkEntity /> } />
               </Switch>
             </Content>
           </Layout>
