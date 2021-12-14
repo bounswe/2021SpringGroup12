@@ -38,11 +38,13 @@ export function CalendarPage() {
     };
   });
 
-  console.log(convertedEntityList)
   return (
     <>
       <div>
-        <UserCalendar goalList={convertedGoalList} entityList={convertedEntityList} />
+        <UserCalendar
+          goalList={convertedGoalList}
+          entityList={convertedEntityList}
+        />
       </div>
     </>
   );
