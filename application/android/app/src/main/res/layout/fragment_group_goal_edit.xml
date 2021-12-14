@@ -1,49 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="20dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <EditText
+        android:id="@+id/et_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Title"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/et_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Title"
-            android:textSize="30sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/tv_descriptionTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
+        android:text="Description:"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_title" />
 
-        <TextView
-            android:id="@+id/tv_descriptionTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="15dp"
-            android:text="Description:"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_title" />
+    <EditText
+        android:id="@+id/et_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:ellipsize="end"
+        android:hint="Your description"
+        android:inputType="text"
+        android:maxLines="1"
+        android:text=""
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_descriptionTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_descriptionTitle"
+        app:layout_constraintTop_toTopOf="@id/tv_descriptionTitle" />
 
-        <EditText
-            android:id="@+id/et_description"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:hint="Your description"
-            android:text=""
-            android:textSize="20sp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:inputType="text"
-            app:layout_constraintStart_toEndOf="@+id/tv_descriptionTitle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_descriptionTitle"
-            app:layout_constraintBottom_toBottomOf="@id/tv_descriptionTitle"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+
+    <TextView
+        android:id="@+id/tv_dateTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Deadline: "
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_description" />
+
+
+    <TextView
+        android:id="@+id/tv_deadline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="date "
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/tv_dateTitle"
+        app:layout_constraintTop_toBottomOf="@+id/et_description" />
+
+
+    <Button
+        android:id="@+id/btn_pickDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:enabled="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:text="Set a Deadline"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toEndOf="@+id/tv_dateTitle"
+        app:layout_constraintTop_toBottomOf="@+id/tv_deadline" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

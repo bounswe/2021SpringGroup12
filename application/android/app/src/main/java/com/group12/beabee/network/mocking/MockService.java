@@ -2,6 +2,7 @@ package com.group12.beabee.network.mocking;
 
 
 import com.group12.beabee.models.GroupGoalDetail;
+import com.group12.beabee.models.requests.ExtendDeadline;
 import com.group12.beabee.models.requests.Goal;
 import com.group12.beabee.models.requests.LoginRequest;
 import com.group12.beabee.models.requests.Question;
@@ -93,7 +94,7 @@ public class MockService implements ServiceAPI {
         temp.description = "description"+1;
         temp.goalType = "GOAL";
         temp.createdAt = "2021-11-15T18:01:25.047Z";
-        temp.deadLine = "2021-11-15T18:01:25.047Z";
+        temp.deadline = "2021-11-15T18:01:25.047Z";
 
         return new MockCall<GoalDetail>() {
             @Override
@@ -266,6 +267,13 @@ public class MockService implements ServiceAPI {
     }
 
     @Override
+    public Call<BasicResponse> extendEntity(int entity_id, ExtendDeadline newDeadline) {
+        return returnBasicResponse();
+    }
+
+
+
+    @Override
     public Call<BasicResponse> deleteGG(int goalId) {
         return null;
     }
@@ -320,6 +328,16 @@ public class MockService implements ServiceAPI {
         return null;
     }
 
+    @Override
+    public Call<BasicResponse> extendGoal(int goal_id, ExtendDeadline newDeadline) {
+        return returnBasicResponse();
+    }
+
+    @Override
+    public Call<BasicResponse> extendSubgoal(int subgoal_id, ExtendDeadline newDeadline) {
+        return returnBasicResponse();
+    }
+      
     @Override
     public Call<Analytics> getUserAnalytics(int user_id) {
         return null;

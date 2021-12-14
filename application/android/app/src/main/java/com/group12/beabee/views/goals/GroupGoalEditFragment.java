@@ -1,11 +1,17 @@
 package com.group12.beabee.views.goals;
 
+import android.app.DatePickerDialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.group12.beabee.R;
@@ -14,8 +20,12 @@ import com.group12.beabee.models.GroupGoalDetail;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
+import com.group12.beabee.views.entities.DeadlineCalendarFragment;
+
+import java.util.Calendar;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,12 +35,14 @@ import retrofit2.Response;
  * Use the {@link GroupGoalEditFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GroupGoalEditFragment extends BaseInnerFragment {
+public class GroupGoalEditFragment extends BaseInnerFragment implements DatePickerDialog.OnDateSetListener {
 
     @BindView(R.id.et_title)
     EditText etTitle;
     @BindView(R.id.et_description)
     EditText etDescription;
+    @BindView(R.id.tv_deadline)
+    TextView tvDeadline;
 
     private GroupGoalDetail goal;
 
@@ -57,6 +69,7 @@ public class GroupGoalEditFragment extends BaseInnerFragment {
         }
         etTitle.setText(goal.title);
         etDescription.setText(goal.description);
+        tvDeadline.setText(goal.deadline);
     }
 
     @Override
@@ -72,6 +85,7 @@ public class GroupGoalEditFragment extends BaseInnerFragment {
 
         goal.title = etTitle.getText().toString();
         goal.description = etDescription.getText().toString();
+        goal.deadline = tvDeadline.getText().toString();
         Utils.showLoading(getChildFragmentManager());
         service.updateGG(goal).enqueue(new Callback<BasicResponse>() {
             @Override
@@ -107,5 +121,24 @@ public class GroupGoalEditFragment extends BaseInnerFragment {
     @Override
     protected int GetLayoutId() {
         return R.layout.fragment_group_goal_edit;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        String dateString = c.toInstant().toString();
+        tvDeadline.setText(dateString);
+
+    }
+
+    @OnClick(R.id.btn_pickDate)
+    public void onClick(View view) {
+
+        DialogFragment datePicker = new DeadlineCalendarFragment(this);
+        datePicker.show(getActivity().getSupportFragmentManager(), "date picker");
     }
 }

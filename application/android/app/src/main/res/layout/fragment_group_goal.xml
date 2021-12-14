@@ -12,17 +12,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Group Goal title"
-        android:textSize="30sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
     <Button
         android:id="@+id/btn_leave"
-        android:layout_width="120dp"
+        android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:clickable="true"
         android:focusable="true"
         android:text="Leave Group"
-        android:textSize="30px"
+        android:textSize="16sp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/yellow_second"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_joincode"
         app:layout_constraintBottom_toTopOf="@+id/tv_tags_title" />
@@ -49,7 +51,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:text="Description:"
-        android:textSize="20sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
@@ -62,24 +64,57 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:text="Here is some description"
-        android:textSize="20sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/tv_descriptionTitle"
         app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+
+
+    <TextView
+        android:id="@+id/tv_dateTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Deadline: "
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_description" />
+
+
+    <TextView
+        android:id="@+id/tv_dateSelected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="12.12.2021"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/tv_dateTitle"
+        app:layout_constraintTop_toBottomOf="@+id/tv_description" />
+
+    <TextView
+        android:id="@+id/tv_joinTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Group Join Code: "
+        android:textSize="16sp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_dateSelected"/>
 
     <TextView
         android:id="@+id/tv_joincode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginEnd="15dp"
+        android:layout_marginStart="10dp"
         android:background="@color/yellow_first"
         android:ellipsize="end"
         android:maxLines="1"
-        android:padding="2dp"
+        android:padding="4dp"
         android:text="Group join code"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_description" />
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@id/tv_joinTitle"
+        app:layout_constraintTop_toTopOf="@id/tv_joinTitle"
+        app:layout_constraintBottom_toBottomOf="@id/tv_joinTitle"/>
 
     <ImageView
         android:id="@+id/btn_copy"
@@ -96,15 +131,16 @@
 
     <Button
         android:id="@+id/openpopup"
-        android:layout_width="150dp"
+        android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_marginLeft="30dp"
         android:clickable="true"
         android:focusable="true"
         android:text="Show Members"
-        android:textSize="30px"
+        android:textSize="16sp"
+        android:backgroundTint="@color/yellow_second"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_joincode" />
+        app:layout_constraintTop_toTopOf="@id/btn_leave" />
     <TextView
         android:id="@+id/tv_tags_title"
         android:layout_width="wrap_content"
@@ -120,13 +156,13 @@
         android:id="@+id/addTagButton"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="10dp"
         android:background="@drawable/bg_rounded_yellow_outline"
         android:tint="@color/yellow_third"
         android:src="@drawable/ic_action_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/rv_tags"
-        app:layout_constraintTop_toBottomOf="@id/tv_tags_title" />
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@id/tv_tags_title"
+        app:layout_constraintBottom_toBottomOf="@id/tv_tags_title"
+        app:layout_constraintTop_toTopOf="@id/tv_tags_title" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_tags"
@@ -135,10 +171,9 @@
         android:layout_marginEnd="10dp"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="@id/addTagButton"
-        app:layout_constraintEnd_toStartOf="@id/addTagButton"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/addTagButton"
+        app:layout_constraintTop_toBottomOf="@+id/tv_tags_title"
         tools:listitem="@layout/item_tag_cardview" />
 
     <TextView

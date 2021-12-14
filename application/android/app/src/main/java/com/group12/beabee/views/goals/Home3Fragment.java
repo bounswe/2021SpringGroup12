@@ -140,6 +140,7 @@ public class Home3Fragment extends BaseInnerFragment {
             shortgoal_name.setText(analytics.shortestGoal.title);
             shortgoal_des.setText(analytics.shortestGoal.description);
         }
+
     }
 
     @Override

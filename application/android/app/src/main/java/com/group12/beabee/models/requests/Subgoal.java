@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 public class Subgoal {
     public String title;
     public String description;
-    public String deadLine;
+    public String deadline;
     @SerializedName("main_goal_id")
     public int mainGoalId;
     @SerializedName("main_groupgoal_id")

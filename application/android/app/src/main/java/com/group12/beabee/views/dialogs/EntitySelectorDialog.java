@@ -107,7 +107,6 @@ public class EntitySelectorDialog extends DialogFragment {
             return;
         }
         Utils.showLoading(getParentFragmentManager());
-// TODO       degismesi gerekebilir farkli parentlara gore
         BeABeeService.serviceAPI.linkEntities(parentId, data.get(selectedPos).id).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
