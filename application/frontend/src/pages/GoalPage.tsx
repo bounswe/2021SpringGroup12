@@ -459,17 +459,17 @@ const showManageDiv = goalType !== GoalTypes.Group || goal.user_id === Number(us
                     Add Question
                 </button>
             </Link>
-            <Link to={"/addEntity/"+ goalType+ "reflection/" + goal_id}>
+            <Link to={"/addEntity/"+ goalType+ "/reflection/" + goal_id}>
                 <button type="button">
                     Add Reflection
                 </button>
             </Link>
-            <Link to={"/addEntity/"+ goalType+"routine/" + goal_id}>
+            <Link to={"/addEntity/"+ goalType+"/routine/" + goal_id}>
                 <button type="button">
                     Add Routine
                 </button>
             </Link>
-            <Link to={"/addEntity"+ goalType+ " /task/" + goal_id}>
+            <Link to={"/addEntity/"+ goalType+ " /task/" + goal_id}>
                 <button type="button">
                     Add Task
                 </button>
