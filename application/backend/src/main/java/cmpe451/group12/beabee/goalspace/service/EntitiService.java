@@ -548,6 +548,8 @@ public class EntitiService {
             groupGoalRepository.save(main_Groupgoal);
             routine_from_db_opt.get().setGroupgoal(null);
         }
+        routine_from_db_opt.get().setRating(null);
+        routine_from_db_opt.get().setDeadline(null);
         resourceRepository.deleteAll(routine_from_db_opt.get().getResources());
         routineRepository.deleteById(id);
         return new MessageResponse("Routine deleted!", MessageType.SUCCESS);
