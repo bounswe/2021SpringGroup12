@@ -29,6 +29,7 @@ public class TaskGetMapper/*Impl implements TaskGetMapper*/ {
             taskGetDTO.setCreatedAt(task.getCreatedAt());
             taskGetDTO.setDeadline(task.getDeadline());
             taskGetDTO.setIsDone(task.getIsDone());
+            taskGetDTO.setRating(task.getRating());
             return taskGetDTO;
         }
     }
@@ -45,6 +46,7 @@ public class TaskGetMapper/*Impl implements TaskGetMapper*/ {
             task.setIsDone(taskGetDTO.getIsDone());
             task.setCreatedAt(taskGetDTO.getCreatedAt());
             task.setDeadline(taskGetDTO.getDeadline());
+            task.setRating(taskGetDTO.getRating());
             return task;
         }
     }

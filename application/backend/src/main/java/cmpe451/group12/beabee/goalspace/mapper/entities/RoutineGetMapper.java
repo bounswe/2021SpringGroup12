@@ -30,6 +30,8 @@ public class RoutineGetMapper   {
             routineGetDTO.setIsDone(routine.getIsDone());
             routineGetDTO.setDeadline(routine.getDeadline());
             routineGetDTO.setPeriod(routine.getPeriod());
+            routineGetDTO.setRating(routine.getRating().stream().mapToDouble(Double::doubleValue).summaryStatistics().getAverage());
+
             return routineGetDTO;
         }
     }
