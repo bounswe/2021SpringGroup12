@@ -1,5 +1,6 @@
 package com.group12.beabee.network;
 
+import com.group12.beabee.models.requests.ExtendDeadline;
 import com.group12.beabee.models.requests.Goal;
 import com.group12.beabee.models.GroupGoalDetail;
 import com.group12.beabee.models.requests.LoginRequest;
@@ -9,6 +10,7 @@ import com.group12.beabee.models.requests.Routine;
 import com.group12.beabee.models.requests.SignUpRequest;
 import com.group12.beabee.models.requests.Subgoal;
 import com.group12.beabee.models.requests.Task;
+import com.group12.beabee.models.responses.Analytics;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.EntityShort;
 import com.group12.beabee.models.responses.GoalDetail;
@@ -149,6 +151,8 @@ public interface ServiceAPI {
 
 
 
+
+
     //GROUP GOAL LINKS:
     @PUT("groupgoals")
     Call<BasicResponse> updateGG(@Body GroupGoalDetail userDTO);
@@ -183,5 +187,20 @@ public interface ServiceAPI {
     @POST("groupgoals/subgoal")
     Call<BasicResponse> createSubgoalInGG(@Body Subgoal subgoal);
 
+    //extends
+
+    @PUT("goals/extend/{goal_id}")
+    Call<BasicResponse> extendGoal(@Path("goal_id") int goal_id, @Body ExtendDeadline newDeadline);
+
+    @PUT("entities/extend/{entiti_id}")
+    Call<BasicResponse> extendEntity(@Path("entiti_id") int entity_id, @Body ExtendDeadline newDeadline);
+
+    @PUT("subgoals/extend/{subgoal_id}")
+    Call<BasicResponse> extendSubgoal(@Path("subgoal_id") int subgoal_id, @Body ExtendDeadline newDeadline);
+
+    //ANALYTICS
+    @GET("users/analytics/{user_id}")
+    Call<Analytics>getUserAnalytics(@Path("user_id") int user_id);
+
+
 }
-//7YPxFmM3yTaAzaSi3Q61B

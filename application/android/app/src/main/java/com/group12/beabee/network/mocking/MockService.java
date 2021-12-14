@@ -2,6 +2,7 @@ package com.group12.beabee.network.mocking;
 
 
 import com.group12.beabee.models.GroupGoalDetail;
+import com.group12.beabee.models.requests.ExtendDeadline;
 import com.group12.beabee.models.requests.Goal;
 import com.group12.beabee.models.requests.LoginRequest;
 import com.group12.beabee.models.requests.Question;
@@ -10,6 +11,7 @@ import com.group12.beabee.models.requests.Routine;
 import com.group12.beabee.models.requests.SignUpRequest;
 import com.group12.beabee.models.requests.Subgoal;
 import com.group12.beabee.models.requests.Task;
+import com.group12.beabee.models.responses.Analytics;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.EntityShort;
 import com.group12.beabee.models.responses.GoalDetail;
@@ -290,6 +292,13 @@ public class MockService implements ServiceAPI {
     }
 
     @Override
+    public Call<BasicResponse> extendEntity(int entity_id, ExtendDeadline newDeadline) {
+        return returnBasicResponse();
+    }
+
+
+
+    @Override
     public Call<BasicResponse> deleteGG(int goalId) {
         return null;
     }
@@ -341,6 +350,21 @@ public class MockService implements ServiceAPI {
 
     @Override
     public Call<BasicResponse> createSubgoalInGG(Subgoal subgoal) {
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> extendGoal(int goal_id, ExtendDeadline newDeadline) {
+        return returnBasicResponse();
+    }
+
+    @Override
+    public Call<BasicResponse> extendSubgoal(int subgoal_id, ExtendDeadline newDeadline) {
+        return returnBasicResponse();
+    }
+      
+    @Override
+    public Call<Analytics> getUserAnalytics(int user_id) {
         return null;
     }
 

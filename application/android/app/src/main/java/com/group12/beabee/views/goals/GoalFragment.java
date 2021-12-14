@@ -1,26 +1,34 @@
 package com.group12.beabee.views.goals;
 
+import android.app.DatePickerDialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.group12.beabee.OnRateSelectedListener;
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.ParentType;
+import com.group12.beabee.models.requests.ExtendDeadline;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.GoalDetail;
 import com.group12.beabee.models.responses.SubgoalShort;
 import com.group12.beabee.views.MainStructure.BaseEntityLinkableFragment;
 import com.group12.beabee.R;
 import com.group12.beabee.views.MainStructure.PageMode;
+import com.group12.beabee.views.entities.DeadlineCalendarFragment;
 import com.group12.beabee.views.entities.IOnTagClickedListener;
 import com.group12.beabee.views.entities.TagCardViewAdapter;
 
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -35,7 +43,7 @@ import retrofit2.Response;
  * Use the {@link GoalFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgoalClickedListener, IOnTagClickedListener {
+public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgoalClickedListener, IOnTagClickedListener, DatePickerDialog.OnDateSetListener {
     @BindView(R.id.tv_title)
     @Nullable
     TextView tvTitle;
@@ -210,5 +218,48 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
         }
         SetEntityLinks(data.entities);
         SetSubgoals(data.subgoals);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        String dateString = c.toInstant().toString();
+
+        ExtendDeadline extendDeadline = new ExtendDeadline();
+        extendDeadline.newDeadline = dateString;
+        Utils.showLoading(getParentFragmentManager());
+        service.extendGoal(id, extendDeadline).enqueue(new Callback<BasicResponse>() {
+            @Override
+            public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
+                if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
+                    Utils.ShowErrorToast(getContext(), "Deadline extended succesfully!");
+                    tvDateSelected.setText(dateString);
+                } else if(!response.isSuccessful() || response.body() == null){
+                    Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+                } else {
+                    Utils.ShowErrorToast(getContext(), response.body().message);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
+                Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+            }
+        });
+
+    }
+
+    @OnClick(R.id.btn_pickDate)
+    @Optional
+    public void onClick(View view) {
+
+        DialogFragment datePicker = new DeadlineCalendarFragment(this);
+        datePicker.show(getActivity().getSupportFragmentManager(), "date picker");
     }
 }
