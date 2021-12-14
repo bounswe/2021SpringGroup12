@@ -41,7 +41,7 @@ export default function Sidebar(props: ISidebarProps) {
             <Link to="/dashboard">Dashboard</Link>
           </Menu.Item>
           <Menu.Item key="2" icon={<AimOutlined />}>
-            <Link to="/goals">Goals</Link>
+            <Link to="/goalsPage">Goals</Link>
           </Menu.Item>
           <Menu.Item key="3" icon={<CalendarOutlined />}>
             <Link to="/calendar">Calendar</Link>

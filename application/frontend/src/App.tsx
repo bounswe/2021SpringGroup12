@@ -18,8 +18,8 @@ import {LinkEntity} from "./pages/LinkEntity"
 import { Content } from "antd/lib/layout/layout";
 import {Layout} from "antd";
 import Sidebar from "./components/Sidebar";
-import UserCalendar from "./components/UserCalendar";
 import {GoalTypes} from "./helpers/GoalTypes";
+import { CalendarPage } from "./pages/CalendarPage";
 
 
 
@@ -40,22 +40,6 @@ export default class App extends React.Component<IAppProps, IAppState> {
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
     const user_id = localStorage.getItem("user_id");
-    // TODO add jwt authorization
-
-    // const config = {
-    //   Headers: {
-    //     Authorization: `Bearer${token}`,
-    //   },
-    // };
-    // axios
-    //   .get("/users", {
-    //     params: {
-    //       username,
-    //       config,
-    //     },
-    //   })
-    //   .then((res) => console.log(res))
-    //   .catch((err) => console.log(err));
     if (token && username) {
       this.setState({
         username: username,
@@ -111,7 +95,7 @@ export default class App extends React.Component<IAppProps, IAppState> {
                   <AddGoal goalType={GoalTypes.Sub} parentType={GoalTypes.Group} />
                 </Route>
                 <Route exact path="/calendar">
-                  <UserCalendar />
+                  <CalendarPage />
                 </Route>
                 <Route exact path="/goals/:goal_id" children={<GoalPage goalType={GoalTypes.Normal}/>} />
                 <Route exact path="/subgoals/:goal_id" children={<GoalPage goalType={GoalTypes.Sub}/>} />

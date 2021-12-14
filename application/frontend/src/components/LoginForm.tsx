@@ -1,9 +1,13 @@
 import { Form, Input, Button } from "antd";
 import axios from "axios";
+import { useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
+import { getUser } from "../redux/actionCreators";
 
 export const LoginForm = () => {
   const history = useHistory();
+  const dispatch = useDispatch();
+
 
   const onFinish = (values: any) => {
     axios
@@ -17,6 +21,10 @@ export const LoginForm = () => {
           localStorage.setItem("token", res.data.jwt);
           localStorage.setItem("username", res.data.userCredentialsGetDTO.username);
           localStorage.setItem("user_id", res.data.userCredentialsGetDTO.user_id);
+          
+          //Sets User Field of app root State
+          dispatch(getUser(res.data.userCredentialsGetDTO.username));
+          
           history.push("/");
           window.location.reload();
         }
