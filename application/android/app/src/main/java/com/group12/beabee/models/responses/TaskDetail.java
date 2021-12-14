@@ -15,6 +15,7 @@ public class TaskDetail implements Serializable {
     public int groupGoalId;
     public String title;
     public String description;
+    public double rating;
     public String entitiType;
     public boolean isDone;
     public String createdAt;

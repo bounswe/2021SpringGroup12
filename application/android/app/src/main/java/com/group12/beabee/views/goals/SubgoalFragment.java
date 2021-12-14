@@ -9,9 +9,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.group12.beabee.OnRateSelectedListener;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.ParentType;
+import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.SubgoalDetail;
 import com.group12.beabee.models.responses.SubgoalShort;
 import com.group12.beabee.views.MainStructure.BaseEntityLinkableFragment;
@@ -50,6 +52,15 @@ public class SubgoalFragment extends BaseEntityLinkableFragment  implements IOnS
     @BindView(R.id.rv_tags)
     @Nullable
     RecyclerView rvTag;
+    @BindView(R.id.rating)
+    @Nullable
+    View ratingView;
+    @BindView(R.id.tv_rating)
+    @Nullable
+    TextView tvRating;
+    @BindView(R.id.btn_complete)
+    @Nullable
+    View btnComplete;
 
     private SubgoalDetail subgoalDetail;
 
@@ -94,6 +105,10 @@ public class SubgoalFragment extends BaseEntityLinkableFragment  implements IOnS
     @Override
     public void onResume() {
         super.onResume();
+        RefreshPage();
+    }
+
+    private void RefreshPage(){
         Utils.showLoading(getChildFragmentManager());
         service.getSubgoal(id).enqueue(new Callback<SubgoalDetail>() {
             @Override
@@ -114,7 +129,6 @@ public class SubgoalFragment extends BaseEntityLinkableFragment  implements IOnS
                 GoBack();
             }
         });
-        Utils.showLoading(getChildFragmentManager());
     }
 
     private void OnSubgoalReceived(SubgoalDetail data) {
@@ -122,8 +136,43 @@ public class SubgoalFragment extends BaseEntityLinkableFragment  implements IOnS
         tvTitle.setText(data.title);
         tvDescription.setText(data.description);
         tvDateSelected.setText(data.deadline);
+        if (data.isDone) {
+            btnComplete.setVisibility(View.GONE);
+            ratingView.setVisibility(View.VISIBLE);
+            tvRating.setText(String.valueOf(data.rating));
+        }else{
+            btnComplete.setVisibility(View.VISIBLE);
+            ratingView.setVisibility(View.GONE);
+        }
         SetEntityLinks(data.entities);
         SetSubgoals(data.sublinks);
+    }
+
+    @OnClick(R.id.btn_complete)
+    @Optional
+    public void OnCompleteClicked(){
+        Utils.OpenRateDialog(getContext(), rate -> {
+            Utils.showLoading(getParentFragmentManager());
+            service.completeSubgoal(id, rate).enqueue(new Callback<BasicResponse>() {
+                @Override
+                public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                    Utils.dismissLoading();
+                    if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
+                        Utils.ShowErrorToast(getContext(), "You have successfully completed!");
+                        RefreshPage();
+                    } else if(!response.isSuccessful() || response.body() == null){
+                        Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+                    } else {
+                        Utils.ShowErrorToast(getContext(), response.body().message);
+                    }
+                }
+                @Override
+                public void onFailure(Call<BasicResponse> call, Throwable t) {
+                    Utils.dismissLoading();
+                    Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+                }
+            });
+        });
     }
 
     @Override

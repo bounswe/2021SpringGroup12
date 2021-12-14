@@ -17,6 +17,7 @@ public class RoutineDetail implements Serializable {
     public String description;
     public String entitiType;
     public boolean isDone;
+    public double rating;
     public String createdAt;
     public List <String> deadline;
     public int period;

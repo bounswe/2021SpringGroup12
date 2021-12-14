@@ -51,6 +51,9 @@ public interface ServiceAPI {
     @POST("goals/{user_id}")
     Call<BasicResponse> createGoalOfUser(@Path("user_id") int userId, @Body Goal goal);
 
+    @PUT("goals/complete/{goal_id}")
+    Call<BasicResponse> completeGoal(@Path("goal_id") int subgoalId);
+
     @PUT("goals")
     Call<BasicResponse> updateGoalOfUser(@Body GoalDetail goalDetail);
 
@@ -70,6 +73,9 @@ public interface ServiceAPI {
 
     @PUT("subgoals")
     Call<BasicResponse> updateSubgoal(@Body SubgoalDetail subgoalDetail);
+
+    @PUT("subgoals/complete/{subgoal_id}/{rating}")
+    Call<BasicResponse> completeSubgoal(@Path("subgoal_id") int subgoalId, @Path("rating") int rating);
 
     @DELETE("subgoals/{id}")
     Call<BasicResponse> deleteSubgoal(@Path("id") int id);
@@ -92,6 +98,9 @@ public interface ServiceAPI {
 
     @POST("entities/task")
     Call<BasicResponse> createTask(@Body Task task);
+
+    @PUT("entities/complete/{task_id}/{rating}")
+    Call<BasicResponse> completeTask(@Path("task_id") int taskId, @Path("rating") int rating);
 
 
     @GET("entities/reflection/{id}")
@@ -118,6 +127,12 @@ public interface ServiceAPI {
 
     @POST("entities/routine")
     Call<BasicResponse> createRoutine(@Body Routine routine);
+
+    @PUT("entities/complete/{routine_id}/{rating}")
+    Call<BasicResponse> completeRoutine(@Path("routine_id") int routineId, @Path("rating") int rating);
+
+    @PUT("entities/rate/{routine_id}/{rating}")
+    Call<BasicResponse> rateRoutine(@Path("routine_id") int routineId, @Path("rating") int rating);
 
 
     @GET("entities/question/{id}")

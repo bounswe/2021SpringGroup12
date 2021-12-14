@@ -59,10 +59,5 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@+id/tv_statusTitle"
             app:layout_constraintTop_toBottomOf="@+id/et_description" />
-
-
-
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

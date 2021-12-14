@@ -13,7 +13,7 @@ public class SubgoalDetail implements Serializable {
     public int parentSubgoalId;
     @SerializedName("main_groupgoal_id")
     public int mainGroupGoalId;
-    public int rating;
+    public double rating;
     public String title;
     public String description;
     public boolean isDone;

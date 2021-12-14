@@ -108,6 +108,11 @@ public class MockService implements ServiceAPI {
     }
 
     @Override
+    public Call<BasicResponse> completeGoal(int subgoalId) {
+        return returnBasicResponse();
+    }
+
+    @Override
     public Call<BasicResponse> updateGoalOfUser(GoalDetail goalDetail) {
         return returnBasicResponse();
     }
@@ -170,6 +175,11 @@ public class MockService implements ServiceAPI {
     }
 
     @Override
+    public Call<BasicResponse> completeSubgoal(int subgoalId, int rating) {
+        return returnBasicResponse();
+    }
+
+    @Override
     public Call<BasicResponse> deleteSubgoal(int id) {
         return returnBasicResponse();
     }
@@ -201,6 +211,11 @@ public class MockService implements ServiceAPI {
 
     @Override
     public Call<BasicResponse> createTask(Task task) {
+        return returnBasicResponse();
+    }
+
+    @Override
+    public Call<BasicResponse> completeTask(int taskId, int rating) {
         return returnBasicResponse();
     }
 
@@ -241,6 +256,16 @@ public class MockService implements ServiceAPI {
 
     @Override
     public Call<BasicResponse> createRoutine(Routine routine) {
+        return returnBasicResponse();
+    }
+
+    @Override
+    public Call<BasicResponse> completeRoutine(int routineId, int rating) {
+        return returnBasicResponse();
+    }
+
+    @Override
+    public Call<BasicResponse> rateRoutine(int routineId, int rating) {
         return returnBasicResponse();
     }
 

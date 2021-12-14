@@ -5,17 +5,21 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.ParentType;
+import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.RoutineDetail;
 import com.group12.beabee.views.MainStructure.BaseEntityLinkableFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
 
 import butterknife.BindView;
+import butterknife.OnClick;
+import butterknife.Optional;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,6 +46,19 @@ public class RoutineFragment extends BaseEntityLinkableFragment {
     @BindView(R.id.tv_periodSelected)
     @Nullable
     TextView tvPeriodSelected;
+    @BindView(R.id.rating)
+    @Nullable
+    View ratingView;
+    @BindView(R.id.tv_rating)
+    @Nullable
+    TextView tvRating;
+    @BindView(R.id.btn_complete)
+    @Nullable
+    View btnComplete;
+    @BindView(R.id.btn_rate)
+    @Nullable
+    View btnRate;
+
     private RoutineDetail routineDetail;
 
 
@@ -67,6 +84,10 @@ public class RoutineFragment extends BaseEntityLinkableFragment {
     @Override
     public void onResume() {
         super.onResume();
+        RefreshPage();
+    }
+
+    private void RefreshPage(){
         Utils.showLoading(getParentFragmentManager());
         service.getRoutine(id).enqueue(new Callback<RoutineDetail>() {
             @Override
@@ -97,6 +118,70 @@ public class RoutineFragment extends BaseEntityLinkableFragment {
         SetEntityLinks(data.entities);
         tvDateSelected.setText(data.deadline.get(data.deadline.size()-1));
         tvPeriodSelected.setText(String.valueOf(data.period));
+        if (data.isDone) {
+            btnComplete.setVisibility(View.GONE);
+            btnRate.setVisibility(View.GONE);
+            ratingView.setVisibility(View.VISIBLE);
+            tvRating.setText(String.valueOf(data.rating));
+        }else{
+            btnComplete.setVisibility(View.VISIBLE);
+            btnRate.setVisibility(View.VISIBLE);
+            ratingView.setVisibility(View.GONE);
+        }
+    }
+
+    @OnClick(R.id.btn_complete)
+    @Optional
+    public void OnCompleteClicked(){
+        Utils.OpenRateDialog(getContext(), rate -> {
+            Utils.showLoading(getParentFragmentManager());
+            service.completeRoutine(id, rate).enqueue(new Callback<BasicResponse>() {
+                @Override
+                public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                    Utils.dismissLoading();
+                    if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
+                        Utils.ShowErrorToast(getContext(), "You have successfully completed!");
+                        RefreshPage();
+                    } else if(!response.isSuccessful() || response.body() == null){
+                        Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+                    } else {
+                        Utils.ShowErrorToast(getContext(), response.body().message);
+                    }
+                }
+                @Override
+                public void onFailure(Call<BasicResponse> call, Throwable t) {
+                    Utils.dismissLoading();
+                    Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+                }
+            });
+        });
+    }
+
+    @OnClick(R.id.btn_rate)
+    @Optional
+    public void OnRateClicked(){
+        Utils.OpenRateDialog(getContext(), rate -> {
+            Utils.showLoading(getParentFragmentManager());
+            service.rateRoutine(id, rate).enqueue(new Callback<BasicResponse>() {
+                @Override
+                public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                    Utils.dismissLoading();
+                    if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
+                        Utils.ShowErrorToast(getContext(), "You have successfully completed last routine occurance!");
+                        RefreshPage();
+                    } else if(!response.isSuccessful() || response.body() == null){
+                        Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+                    } else {
+                        Utils.ShowErrorToast(getContext(), response.body().message);
+                    }
+                }
+                @Override
+                public void onFailure(Call<BasicResponse> call, Throwable t) {
+                    Utils.dismissLoading();
+                    Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+                }
+            });
+        });
     }
 
     @Override
