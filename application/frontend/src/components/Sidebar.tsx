@@ -7,7 +7,7 @@ import {
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import { Link } from "react-router-dom";
-import logo from "./logo192.png";
+import logo from "./logo-with-text.png";
 
 export interface ISidebarProps {
   user: string;
@@ -25,6 +25,7 @@ export default function Sidebar(props: ISidebarProps) {
           position: "fixed",
           left: 0,
         }}
+        theme='light'
       >
         <div
           style={{
@@ -36,7 +37,7 @@ export default function Sidebar(props: ISidebarProps) {
         >
           <img src={logo} alt="Logo" width={img_size} height={img_size} />
         </div>
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={["4"]}>
+        <Menu theme="light" mode="inline" defaultSelectedKeys={["4"]}>
           <Menu.Item key="1" icon={<UserOutlined />}>
             <Link to="/dashboard">Dashboard</Link>
           </Menu.Item>
@@ -58,6 +59,7 @@ export default function Sidebar(props: ISidebarProps) {
           position: "fixed",
           left: 0,
         }}
+        theme="light"
       >
         <div
           style={{
