@@ -158,7 +158,7 @@ export function EntityPage() {
                 let tmp = []
                 let sublinks=data.sublinks
                 console.log("data:" + JSON.stringify(data))
-                if(entitiType.toLowerCase() =="task"){
+                if(entitiType.toLowerCase() =="task" || entitiType.toLowerCase() =="routine"  ){
                     setDeadline(data.deadline)
                     console.log(data.deadline)
                 }

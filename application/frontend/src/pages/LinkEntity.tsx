@@ -69,7 +69,7 @@ export function LinkEntity() {
     useEffect(() => {
         //to get the user id
         console.log("user-id: "+user_id)
-        user_id && axios.get(`/entities/user/${user_id}`,
+        user_id && axios.get(`/entities/goal/${goal_id}`,
             {
                 headers: { Authorization: `Bearer ${token}`},
                 data: {}

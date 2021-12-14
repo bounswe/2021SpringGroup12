@@ -22,7 +22,7 @@ export const EntityForm = (onFinish: ((values: any) => void) | undefined,
     let entity_id= urlElements[3]
     console.log(urlElements)
 
-
+    
     function handleChange(value:any) {
         console.log(`selected ${value}`);
       }
@@ -59,6 +59,16 @@ export const EntityForm = (onFinish: ((values: any) => void) | undefined,
                 rules={[{ required: true, message: 'Please input your Entity Description!' }]}
             >
                 <DatePicker defaultValue={moment()} format={dateFormat} />
+            </Form.Item>
+          </div>)}
+          { (entitiType == "routine") && 
+          (<div>
+            <h2>{capitalize(entitiType)} Period</h2>
+            <Form.Item
+                name="period"
+                rules={[{ required: true, message: 'Please input your Period!' }]}
+            >
+             <Input placeholder="Period" defaultValue={description}/>
             </Form.Item>
           </div>)}
             <Form.Item>

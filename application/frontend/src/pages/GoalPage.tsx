@@ -139,6 +139,7 @@ const columns = [
         title: 'Rating',
         dataIndex: 'rating',
         key: 'rating',
+    
     },
     {
         title: 'Action',
