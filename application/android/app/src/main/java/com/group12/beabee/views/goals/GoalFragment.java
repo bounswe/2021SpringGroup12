@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.group12.beabee.OnRateSelectedListener;
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.ParentType;
 import com.group12.beabee.models.requests.ExtendDeadline;
@@ -58,6 +59,9 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
     @BindView(R.id.rv_tags)
     @Nullable
     RecyclerView rvTag;
+    @BindView(R.id.btn_complete)
+    @Nullable
+    View btnComplete;
 
     private GoalDetail goalDetail;
 
@@ -128,6 +132,10 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
     @Override
     public void onResume() {
         super.onResume();
+        RefreshPage();
+    }
+
+    private void RefreshPage(){
         Utils.showLoading(getChildFragmentManager());
         service.getGoalDetail(id).enqueue(new Callback<GoalDetail>() {
             @Override
@@ -169,6 +177,31 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
 
     }
 
+    @OnClick(R.id.btn_complete)
+    @Optional
+    public void OnCompleteClicked(){
+        Utils.showLoading(getParentFragmentManager());
+        service.completeGoal(id).enqueue(new Callback<BasicResponse>() {
+            @Override
+            public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
+                if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
+                    Utils.ShowErrorToast(getContext(), "You have successfully completed!");
+                    RefreshPage();
+                } else if(!response.isSuccessful() || response.body() == null){
+                    Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+                } else {
+                    Utils.ShowErrorToast(getContext(), response.body().message);
+                }
+            }
+            @Override
+            public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
+                Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+            }
+        });
+    }
+
     private void SetSubgoals(List<SubgoalShort> subgoals) {
         subgoalAdapter.setData(subgoals);
     }
@@ -178,6 +211,11 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
         tvTitle.setText(data.title);
         tvDescription.setText(data.description);
         tvDateSelected.setText(data.deadline);
+        if (data.isDone) {
+            btnComplete.setVisibility(View.GONE);
+        }else{
+            btnComplete.setVisibility(View.VISIBLE);
+        }
         SetEntityLinks(data.entities);
         SetSubgoals(data.subgoals);
     }
