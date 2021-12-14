@@ -5,3 +5,4 @@ __pycache__/
 **/dist/
 **/myenv2/
 yarn.lock
+.DS_Store
