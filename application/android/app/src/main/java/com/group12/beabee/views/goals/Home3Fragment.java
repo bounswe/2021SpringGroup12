@@ -124,10 +124,23 @@ public class Home3Fragment extends BaseInnerFragment {
             worstgoal_name.setText(analytics.worstGoal.title);
             worstgoal_des.setText(analytics.worstGoal.description);
         }
-        longgoal_name.setText(analytics.longestGoal.title);
-        longgoal_des.setText(analytics.longestGoal.description);
-        shortgoal_name.setText(analytics.shortestGoal.title);
-        shortgoal_des.setText(analytics.shortestGoal.description);
+        if(analytics.longestGoal==null){
+            longgoal_name.setText("");
+            longgoal_des.setText("No such evaluated goal");
+        }
+        else{
+            longgoal_name.setText(analytics.longestGoal.title);
+            longgoal_des.setText(analytics.longestGoal.description);
+        }
+        if(analytics.shortestGoal==null){
+            shortgoal_name.setText("");
+            shortgoal_des.setText("No such evaluated goal");
+        }
+        else{
+            shortgoal_name.setText(analytics.shortestGoal.title);
+            shortgoal_des.setText(analytics.shortestGoal.description);
+        }
+
     }
 
     @Override

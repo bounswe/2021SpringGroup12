@@ -172,7 +172,6 @@ public interface ServiceAPI {
     @POST("groupgoals/subgoal")
     Call<BasicResponse> createSubgoalInGG(@Body Subgoal subgoal);
 
-    //extends
 
     @PUT("goals/extend/{goal_id}")
     Call<BasicResponse> extendGoal(@Path("goal_id") int goal_id, @Body ExtendDeadline newDeadline);
@@ -187,5 +186,6 @@ public interface ServiceAPI {
     @GET("users/analytics/{user_id}")
     Call<Analytics>getUserAnalytics(@Path("user_id") int user_id);
 
-
 }
+//7YPxFmM3yTaAzaSi3Q61B
+
