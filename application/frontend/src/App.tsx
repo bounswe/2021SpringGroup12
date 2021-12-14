@@ -109,7 +109,6 @@ export default class App extends React.Component<IAppProps, IAppState> {
                 <Route exact path="/editGoal/:goal_id" children={<EditGoal goalType={GoalTypes.Normal}/>} />
                 <Route exact path="/editSubgoal/:goal_id" children={<EditGoal goalType={GoalTypes.Sub}/>} />
                 <Route exact path="/editGroupgoal/:goal_id" children={<EditGoal goalType={GoalTypes.Group}/>} />
-
               </Switch>
             </Content>
           </Layout>

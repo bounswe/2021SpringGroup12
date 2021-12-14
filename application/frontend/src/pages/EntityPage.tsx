@@ -162,6 +162,7 @@ export function EntityPage() {
                     setDeadline(data.deadline)
                     console.log(data.deadline)
                 }
+                
                 for (let i = 0; i < sublinks.length; i++) {
                     console.log(sublinks)
                     tmp.push({

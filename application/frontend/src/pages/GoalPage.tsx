@@ -126,62 +126,7 @@ export function GoalPage(params :{goalType: any}) {
         }
     
 
-    useEffect(() => {
-        axios.get(`/${goalType}/${goal_id}`,
-            {
-                headers: { Authorization: `Bearer ${token}`},
-                data: {}
-            })
-            .then(response => {
-                // check for error response
-                console.log("response: " , response)
-                if (response.status === 200) {
-                    return response.data
-                }
-                throw response
-            })
-            .then(goal_info => {
-                console.log(typeof goal_info["entities"])
-                console.log(goal_info)
-                if (goalType === GoalTypes.Sub) {
-                    goal_info['subgoals'] = goal_info['sublinks']
-                }
-                goal_info['subgoals'].forEach((subgoal: any, i: number) => {
-                    subgoal.key = i
-                    if (subgoal.deadline !== null) {
-                        subgoal.deadline = subgoal.deadline.substr(0,10)
-                    }
-                })
-                goal_info['entities'].forEach((entity: any, i: number) => {
-                    entity.key = i
-                    if (entity.deadline !== null) {
-                        entity.deadline = entity.deadline.substr(0,10)
-                    }
-                })
-                if (goal_info.deadline !== null) {
-                    goal_info.deadline = goal_info.deadline.substr(0,10)
-                }
-                if (goal_info.main_goal_id != null) {
-                    setReturnLink(`/${GoalTypes.Normal}/${goal_info.main_goal_id}`)
-                } else if (goal_info.main_groupgoal_id != null) {
-                    setReturnLink(`/${GoalTypes.Group}/${goal_info.main_groupgoal_id}`)
-                } else if (goal_info.parent_subgoal_id != null) {
-                    setReturnLink(`/${GoalTypes.Sub}/${goal_info.parent_subgoal_id}`)
-                }
-                console.log("goal", goal)
-                console.log("received", goal_info)
-                setGoal(goal_info)
-                setEntities(goal_info["entities"])
-                for (let i = 0; i < entities.length; i++) {
-                    
-                }
-                setSubgoals(goal_info["subgoals"])
-                setLoaded(true)
-            })
-            .catch(error => {
-                console.error('There was an error!', error);
-            });
-    }, [delete_count]);
+    
 
     const subgoal_columns =  [
         {
@@ -255,7 +200,7 @@ const columns = [
     },
 ];
 
-    useEffect(() => {
+useEffect(() => {
     axios.get(`/${goalType}/${goal_id}`,
         {
             headers: { Authorization: `Bearer ${token}`},
@@ -299,6 +244,7 @@ const columns = [
             console.log("goal", goal)
             console.log("received", goal_info)
             setGoal(goal_info)
+
             if (goal_info.main_groupgoal_id != null) {
                 axios.get(`/${GoalTypes.Group}/${goal_info.main_groupgoal_id}`,
                     {
@@ -453,23 +399,23 @@ const showManageDiv = goalType !== GoalTypes.Group || goal.user_id === Number(us
                     Add SubGoal
                 </button>
             </Link>
-            <Table columns={columns} dataSource={entities} />
-            <Link to={"/addEntity/"+goalType +"/question/" + goal_id}>
+            <Table columns={columns} dataSource={goal.entities} />
+            <Link to={"/addEntity/"+goalType.slice(0, -1) +"/question/" + goal_id}>
                 <button type="button">
                     Add Question
                 </button>
             </Link>
-            <Link to={"/addEntity/"+ goalType+ "/reflection/" + goal_id}>
+            <Link to={"/addEntity/"+ goalType.slice(0, -1)+ "/reflection/" + goal_id}>
                 <button type="button">
                     Add Reflection
                 </button>
             </Link>
-            <Link to={"/addEntity/"+ goalType+"/routine/" + goal_id}>
+            <Link to={"/addEntity/"+ goalType.slice(0, -1)+"/routine/" + goal_id}>
                 <button type="button">
                     Add Routine
                 </button>
             </Link>
-            <Link to={"/addEntity/"+ goalType+ " /task/" + goal_id}>
+            <Link to={"/addEntity/"+ goalType.slice(0, -1)+ " /task/" + goal_id}>
                 <button type="button">
                     Add Task
                 </button>
