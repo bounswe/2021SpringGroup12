@@ -131,7 +131,7 @@ public class GroupGoalService
         new_groupgoal.setGoalType(GoalType.GROUPGOAL);
 
         //Use UUID converted to URL62 Base to guarantee uniqueness and improve readability
-        new_groupgoal.setToken(UUIDShortener.randomShortUUID());
+        new_groupgoal.setToken(UUIDShortener.randomShortUUID().substring(0,6));
 
         //Add creator to the member list
         HashSet<Users> members = new HashSet<>();
