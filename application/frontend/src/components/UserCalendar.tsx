@@ -12,7 +12,7 @@ export default function UserCalendar(props: IUserCalendarProps) {
   const getGoalListData = (value: Moment) => {
     let listData = props.goalList.filter((item) => {
       return (
-        item.deadline.getDay() === value.date() &&
+        item.deadline.getDate() === value.date() &&
         item.deadline.getMonth() === value.month()
       );
     });
@@ -21,7 +21,7 @@ export default function UserCalendar(props: IUserCalendarProps) {
   const getEntityListData = (value: Moment) => {
     let listData = props.entityList.filter((item) => {
       return (
-        item.deadline.getDay() === value.date() &&
+        item.deadline.getDate() === value.date() &&
         item.deadline.getMonth() === value.month()
       );
     });
@@ -31,7 +31,6 @@ export default function UserCalendar(props: IUserCalendarProps) {
   const dateCellRender = (value: Moment) => {
     const goalListData = getGoalListData(value);
     const entityListData = getEntityListData(value);
-
     return (
       <ul>
         {goalListData.map((item) => (
