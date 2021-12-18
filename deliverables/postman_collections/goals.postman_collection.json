@@ -1,0 +1,343 @@
+{
+	"info": {
+		"_postman_id": "940a17fb-c492-4adb-a663-302460540ca9",
+		"name": "goals",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create a goal",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2ZXlpc3QiLCJleHAiOjE2NDAyNzg2MzYsImlhdCI6MTYzOTg0NjYzNn0.x0HZGHXbFQXVTnCyGkm9r7tbp3o1Qzrko-qb59FCCis",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"deadline\": \"2021-11-19T12:07:21.736Z\",\n  \"description\": \"writing individual report of the m2 report.\",\n  \"title\": \"cmpe 451 milestone 2 - individual report\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/goals/15",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"goals",
+						"15"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get a goal",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/goals/803",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"goals",
+						"803"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update a goal-1",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"createdAt\": \"2021-11-27T12:16:42.506Z\",\n  \"deadline\": \"2021-11-27T12:16:42.506Z\",\n  \"description\": \"string\",\n  \"id\": 2,\n  \"isDone\": true,\n  \"title\": \"updated 2\",\n  \"user_id\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8085/v2/goals",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"goals"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update a goal-2",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"deadline\": \"2021-12-29T12:16:47.506Z\",\n  \"description\": \"desc updated\",\n  \"id\": 803,\n  \"isDone\": true,\n  \"title\": \"cmpe 451 milestone 2 report updated\",\n  \"user_id\": 15\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/goals",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"goals"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update a goal-3",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"deadline\": \"2022-01-14T12:16:42.506Z\",\n  \"id\": 803,\n  \"title\": \"only update title\",\n  \"user_id\": 15\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/goals",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"goals"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all goals of a user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/goals/of_user/15",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"goals",
+						"of_user",
+						"15"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete a goal",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/goals/804",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"goals",
+						"804"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create a subgoal under a goal",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"deadline\": \"2021-12-18T23:59:31.732Z\",\n  \"description\": \"this subgoal will handle only login endpoints\",\n  \"main_goal_id\": 803,\n  \"title\": \"writing postman collection for login endpoints\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/goals/subgoal",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"goals",
+						"subgoal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "extend a goal",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"newDeadline\": \"2021-12-19T15:16:42.506000\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/goals/extend/803",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"goals",
+						"extend",
+						"803"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "complete a goal",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"newDeadline\": \"2021-12-27 15:16:42.506000\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/goals/complete/804",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"goals",
+						"complete",
+						"804"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "goal analytics",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/goals/analytics/803",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"goals",
+						"analytics",
+						"803"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

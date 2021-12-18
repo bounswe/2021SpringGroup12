@@ -1,0 +1,115 @@
+{
+	"info": {
+		"_postman_id": "f5f16386-1dda-4b4c-b6e2-e0c81498e9b9",
+		"name": "resources",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "add resource",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "resource",
+							"type": "file",
+							"src": "/home/veyis/Pictures/KDWb1E.jfif"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/resources/711",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"resources",
+						"711"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all resources",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/resources/",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"resources",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete a resource",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/resources/6",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"resources",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get a resource",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/resources/5",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"resources",
+						"5"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

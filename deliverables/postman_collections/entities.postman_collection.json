@@ -1,0 +1,644 @@
+{
+	"info": {
+		"_postman_id": "49c21dbc-cefb-43d5-93d3-72398e2257c6",
+		"name": "entities",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create reflection",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"description\": \"login collections had been great\",\n  \"parentType\": \"SUBGOAL\",\n  \"parent_id\": 203,\n  \"title\": \"eflection under a subgoal\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/entities/reflection",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"entities",
+						"reflection"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create question",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"description\": \"when will this semester end?\",\n  \"parentType\": \"GOAL\",\n  \"parent_id\": 803,\n  \"title\": \"question under a goal\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/entities/question",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"entities",
+						"question"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create task",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"deadline\": \"2021-12-26T20:19:01.795Z\",\n  \"description\": \"wow, I can create entities under entities\",\n  \"parentType\": \"ENTITY\",\n  \"parent_id\": 707,\n  \"title\": \"task under entity\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/entities/task",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"entities",
+						"task"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create routine",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"deadline\": \"2022-02-11T20:19:01.795Z\",\n  \"description\": \"I can even create standalone entities.\",\n  \"parentType\": \"NONE\",\n  \"parent_id\": -1,\n  \"title\": \"standalone entity\",\n  \"period\": 7\n  //You need to make sure that jwt is valid, otherwise this will not work.\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/entities/routine",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"entities",
+						"routine"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get reflection",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/entities/reflection/705",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"entities",
+						"reflection",
+						"705"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get question",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/entities/question/707",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"entities",
+						"question",
+						"707"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get task",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/entities/task/708",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"entities",
+						"task",
+						"708"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get routine",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/entities/routine/711",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"entities",
+						"routine",
+						"711"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update routine",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": 711,\n  \"period\": 10,\n  \"title\": \"standalone entity -- updated period\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/entities/routine/",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"entities",
+						"routine",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update reflection",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"description\": \"updated reflection\",\n  \"id\": 705,\n  \"title\": \"reflection under a subgoal\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/entities/reflection/",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"entities",
+						"reflection",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update question",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"description\": \"sdfsdf\",\n  \"id\": 255,\n  \"isDone\": true,\n  \"title\": \"asdsads\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/entities/question/",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"entities",
+						"question",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update task",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"description\": \"wow, I can create entities under entities --updated\",\n  \"id\": 708,\n  \"title\": \"task under entity\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/entities/task/",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"entities",
+						"task",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete task",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/entities/task/710",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"entities",
+						"task",
+						"710"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete routine",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/entities/routine/711",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"entities",
+						"routine",
+						"711"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete question",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/entities/question/706",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"entities",
+						"question",
+						"706"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete reflection",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/entities/reflection/709",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"entities",
+						"reflection",
+						"709"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get entities of a user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/entities/user/15",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"entities",
+						"user",
+						"15"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "extend entiti",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"newDeadline\": \"2022-01-27T13:42:34.732Z\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/entities/extend/708",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"entities",
+						"extend",
+						"708"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "rate routine",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/entities/rate/711/3",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"entities",
+						"rate",
+						"711",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "link entities",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/entities/705/link/711",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"entities",
+						"705",
+						"link",
+						"711"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete link",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/entities/705/delete_link/711",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"entities",
+						"705",
+						"delete_link",
+						"711"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2ZXlpc3QiLCJleHAiOjE2NDAyODA1MDEsImlhdCI6MTYzOTg0ODUwMX0.WVvAkUitgDkk_kBrM8hdDaVgY80uOIHscQEl7fgILD4",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

@@ -1,0 +1,203 @@
+{
+	"info": {
+		"_postman_id": "06957948-c25a-4b73-904a-350bcac57cce",
+		"name": "subgoals",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "add subgoal under another subgoal",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"deadline\": \"2021-11-27T13:56:12.750Z\",\n  \"description\": \"this is the signup part of the login collection\",\n  \"parent_subgoal_id\": 203,\n  \"title\": \"writing signup endpoint of login collection\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8085/v2/subgoals",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"subgoals"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get a subgoal",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/subgoals/203",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"subgoals",
+						"203"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get subgoals of a user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/subgoals/of_user/15",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"subgoals",
+						"of_user",
+						"15"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete subgoal",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/subgoals/205",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"subgoals",
+						"205"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update a subgoal",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": 205,\n  \"isDone\": true,\n  \"rating\": 4\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/subgoals/",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"subgoals",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "extend subgoal",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"newDeadline\": \"2021-12-29T13:42:34.732Z\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/subgoals/extend/204",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"subgoals",
+						"extend",
+						"204"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "complete subgoal",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/subgoals/complete/205/3",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"subgoals",
+						"complete",
+						"205",
+						"3"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
