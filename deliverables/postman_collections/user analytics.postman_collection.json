@@ -28,7 +28,95 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "analytics of user",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://3.144.201.198:8085/v2/users/analytics/15",
+							"protocol": "http",
+							"host": [
+								"3",
+								"144",
+								"201",
+								"198"
+							],
+							"port": "8085",
+							"path": [
+								"v2",
+								"users",
+								"analytics",
+								"15"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 18 Dec 2021 17:54:16 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"averageExtensionCount\": 0,\n    \"averageRating\": 0,\n    \"averageCompletionTimeOfGoalsInMiliseconds\": 7668,\n    \"longestGoal\": {\n        \"id\": 803,\n        \"title\": \"cmpe 451 milestone 2 - postman\",\n        \"description\": \"writing postman collections for milestone 2 report\",\n        \"deadline\": \"2021-12-27T12:16:42.506+00:00\"\n    },\n    \"shortestGoal\": {\n        \"id\": 804,\n        \"title\": \"cmpe 451 milestone 2 - individual report\",\n        \"description\": \"writing individual report of the m2 report.\",\n        \"deadline\": \"2021-11-19T12:07:21.736+00:00\"\n    },\n    \"bestGoal\": {\n        \"id\": 804,\n        \"title\": \"cmpe 451 milestone 2 - individual report\",\n        \"description\": \"writing individual report of the m2 report.\",\n        \"deadline\": \"2021-11-19T12:07:21.736+00:00\"\n    },\n    \"worstGoal\": {\n        \"id\": 804,\n        \"title\": \"cmpe 451 milestone 2 - individual report\",\n        \"description\": \"writing individual report of the m2 report.\",\n        \"deadline\": \"2021-11-19T12:07:21.736+00:00\"\n    },\n    \"completedGoalCount\": 1,\n    \"activeGoalCount\": 1\n}"
+				}
+			]
 		}
 	]
 }

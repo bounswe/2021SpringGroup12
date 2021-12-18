@@ -35,7 +35,102 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "login",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \n    \"email\": \"veyis@mail.tr\",\n  \"password\": \"very_strong_password\",\n    \"username\": \"veyist\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://3.144.201.198:8085/v2/login",
+							"protocol": "http",
+							"host": [
+								"3",
+								"144",
+								"201",
+								"198"
+							],
+							"port": "8085",
+							"path": [
+								"v2",
+								"login"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 18 Dec 2021 17:28:21 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"userCredentialsGetDTO\": {\n        \"user_id\": 15,\n        \"username\": \"veyist\",\n        \"password\": \"***\",\n        \"email\": \"veyis@mail.tr\"\n    },\n    \"jwt\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2ZXlpc3QiLCJleHAiOjE2NDAyODA1MDEsImlhdCI6MTYzOTg0ODUwMX0.WVvAkUitgDkk_kBrM8hdDaVgY80uOIHscQEl7fgILD4\",\n    \"message\": \"Login successful!\",\n    \"messageType\": \"SUCCESS\"\n}"
+				}
+			]
 		},
 		{
 			"name": "signup",
@@ -67,7 +162,102 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "signup",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"veyis@mail.tr\",\n  \"password\": \"very_strong_password\",\n  \"username\": \"veyist\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://3.144.201.198:8085/v2/signup",
+							"protocol": "http",
+							"host": [
+								"3",
+								"144",
+								"201",
+								"198"
+							],
+							"port": "8085",
+							"path": [
+								"v2",
+								"signup"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 18 Dec 2021 18:47:56 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"Username is already in use. Try veyist_702 instead?\",\n    \"messageType\": \"ERROR\"\n}"
+				}
+			]
 		}
 	]
 }

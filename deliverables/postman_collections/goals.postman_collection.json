@@ -46,7 +46,103 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "create a goal",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"deadline\": \"2022-06-19T12:07:21.736Z\",\n  \"description\": \"ner, drug name extraction from tweets\",\n  \"title\": \"cmpe 492 term project\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://3.144.201.198:8085/v2/goals/15",
+							"protocol": "http",
+							"host": [
+								"3",
+								"144",
+								"201",
+								"198"
+							],
+							"port": "8085",
+							"path": [
+								"v2",
+								"goals",
+								"15"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 18 Dec 2021 18:58:23 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"Goal added successfully.\",\n    \"messageType\": \"SUCCESS\"\n}"
+				}
+			]
 		},
 		{
 			"name": "get a goal",
@@ -70,38 +166,97 @@
 					]
 				}
 			},
-			"response": []
-		},
-		{
-			"name": "update a goal-1",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"createdAt\": \"2021-11-27T12:16:42.506Z\",\n  \"deadline\": \"2021-11-27T12:16:42.506Z\",\n  \"description\": \"string\",\n  \"id\": 2,\n  \"isDone\": true,\n  \"title\": \"updated 2\",\n  \"user_id\": 1\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"response": [
+				{
+					"name": "get a goal",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://3.144.201.198:8085/v2/goals/805",
+							"protocol": "http",
+							"host": [
+								"3",
+								"144",
+								"201",
+								"198"
+							],
+							"port": "8085",
+							"path": [
+								"v2",
+								"goals",
+								"805"
+							]
 						}
-					}
-				},
-				"url": {
-					"raw": "localhost:8085/v2/goals",
-					"host": [
-						"localhost"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 18 Dec 2021 17:13:02 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
 					],
-					"port": "8085",
-					"path": [
-						"v2",
-						"goals"
-					]
+					"cookie": [],
+					"body": "{\n    \"id\": 803,\n    \"user_id\": 15,\n    \"goalType\": \"GOAL\",\n    \"completedAt\": null,\n    \"title\": \"cmpe 451 milestone 2 - postman\",\n    \"isDone\": false,\n    \"description\": \"writing postman collections for milestone 2 report\",\n    \"deadline\": \"2021-12-27T12:16:42.506+00:00\",\n    \"createdAt\": \"2021-12-18T17:01:20.488+00:00\",\n    \"subgoals\": [\n        {\n            \"id\": 203,\n            \"title\": \"writing postman collection for login endpoints\",\n            \"description\": \"this subgoal will handle only login endpoints\",\n            \"deadline\": \"2021-12-18T23:59:31.732+00:00\"\n        }\n    ],\n    \"entities\": []\n}"
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "update a goal-2",
+			"name": "update a goal",
 			"request": {
 				"method": "PUT",
 				"header": [],
@@ -130,39 +285,196 @@
 					]
 				}
 			},
-			"response": []
-		},
-		{
-			"name": "update a goal-3",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"deadline\": \"2022-01-14T12:16:42.506Z\",\n  \"id\": 803,\n  \"title\": \"only update title\",\n  \"user_id\": 15\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"response": [
+				{
+					"name": "update a goal-1",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"deadline\": \"2021-12-29T12:16:47.506Z\",\n  \"description\": \"desc updated\",\n  \"id\": 803,\n  \"isDone\": true,\n  \"title\": \"cmpe 451 milestone 2 report updated\",\n  \"user_id\": 15\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://3.144.201.198:8085/v2/goals",
+							"protocol": "http",
+							"host": [
+								"3",
+								"144",
+								"201",
+								"198"
+							],
+							"port": "8085",
+							"path": [
+								"v2",
+								"goals"
+							]
 						}
-					}
-				},
-				"url": {
-					"raw": "http://3.144.201.198:8085/v2/goals",
-					"protocol": "http",
-					"host": [
-						"3",
-						"144",
-						"201",
-						"198"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 18 Dec 2021 18:59:00 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
 					],
-					"port": "8085",
-					"path": [
-						"v2",
-						"goals"
-					]
+					"cookie": [],
+					"body": "{\n    \"message\": \"Goal updated!\",\n    \"messageType\": \"SUCCESS\"\n}"
+				},
+				{
+					"name": "update a goal-2",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"deadline\": \"2022-01-14T12:16:42.506Z\",\n  \"id\": 803,\n  \"title\": \"only update title\",\n  \"user_id\": 15\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://3.144.201.198:8085/v2/goals",
+							"protocol": "http",
+							"host": [
+								"3",
+								"144",
+								"201",
+								"198"
+							],
+							"port": "8085",
+							"path": [
+								"v2",
+								"goals"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 18 Dec 2021 18:59:07 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"Goal updated!\",\n    \"messageType\": \"SUCCESS\"\n}"
 				}
-			},
-			"response": []
+			]
 		},
 		{
 			"name": "get all goals of a user",
@@ -187,7 +499,95 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "get all goals of a user",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://3.144.201.198:8085/v2/goals/of_user/15",
+							"protocol": "http",
+							"host": [
+								"3",
+								"144",
+								"201",
+								"198"
+							],
+							"port": "8085",
+							"path": [
+								"v2",
+								"goals",
+								"of_user",
+								"15"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 18 Dec 2021 19:14:12 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 804,\n        \"title\": \"cmpe 451 milestone 2 - individual report\",\n        \"description\": \"writing individual report of the m2 report.\",\n        \"deadline\": \"2021-11-19T12:07:21.736+00:00\"\n    },\n    {\n        \"id\": 805,\n        \"title\": \"cmpe 492 term project\",\n        \"description\": \"ner, drug name extraction from tweets\",\n        \"deadline\": \"2022-06-19T12:07:21.736+00:00\"\n    },\n    {\n        \"id\": 803,\n        \"title\": \"only update title\",\n        \"description\": \"desc updated\",\n        \"deadline\": \"2022-01-14T12:16:42.506+00:00\"\n    }\n]"
+				}
+			]
 		},
 		{
 			"name": "delete a goal",
@@ -211,7 +611,94 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "delete a goal",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://3.144.201.198:8085/v2/goals/805",
+							"protocol": "http",
+							"host": [
+								"3",
+								"144",
+								"201",
+								"198"
+							],
+							"port": "8085",
+							"path": [
+								"v2",
+								"goals",
+								"805"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 18 Dec 2021 19:14:35 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"Goal deleted.\",\n    \"messageType\": \"SUCCESS\"\n}"
+				}
+			]
 		},
 		{
 			"name": "create a subgoal under a goal",
@@ -244,7 +731,103 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "create a subgoal under a goal",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"deadline\": \"2021-12-18T23:59:31.732Z\",\n  \"description\": \"this subgoal will handle only login endpoints\",\n  \"main_goal_id\": 803,\n  \"title\": \"writing postman collection for login endpoints\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://3.144.201.198:8085/v2/goals/subgoal",
+							"protocol": "http",
+							"host": [
+								"3",
+								"144",
+								"201",
+								"198"
+							],
+							"port": "8085",
+							"path": [
+								"v2",
+								"goals",
+								"subgoal"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 18 Dec 2021 19:14:49 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"Subgoal added.\",\n    \"messageType\": \"SUCCESS\"\n}"
+				}
+			]
 		},
 		{
 			"name": "extend a goal",
@@ -278,7 +861,200 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "extend a goal",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"newDeadline\": \"2021-12-19T15:16:42.506000\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://3.144.201.198:8085/v2/goals/extend/803",
+							"protocol": "http",
+							"host": [
+								"3",
+								"144",
+								"201",
+								"198"
+							],
+							"port": "8085",
+							"path": [
+								"v2",
+								"goals",
+								"extend",
+								"803"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 18 Dec 2021 19:14:56 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"New deadline must be later than current deadline!\",\n    \"messageType\": \"ERROR\"\n}"
+				},
+				{
+					"name": "extend a goal",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"newDeadline\": \"2022-12-20T15:16:42.506000\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://3.144.201.198:8085/v2/goals/extend/803",
+							"protocol": "http",
+							"host": [
+								"3",
+								"144",
+								"201",
+								"198"
+							],
+							"port": "8085",
+							"path": [
+								"v2",
+								"goals",
+								"extend",
+								"803"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 18 Dec 2021 19:15:14 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"Goal extended successfully!\",\n    \"messageType\": \"SUCCESS\"\n}"
+				}
+			]
 		},
 		{
 			"name": "complete a goal",
@@ -312,7 +1088,104 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "complete a goal",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"newDeadline\": \"2021-12-27 15:16:42.506000\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://3.144.201.198:8085/v2/goals/complete/804",
+							"protocol": "http",
+							"host": [
+								"3",
+								"144",
+								"201",
+								"198"
+							],
+							"port": "8085",
+							"path": [
+								"v2",
+								"goals",
+								"complete",
+								"804"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 18 Dec 2021 19:15:21 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"Already completed!\",\n    \"messageType\": \"ERROR\"\n}"
+				}
+			]
 		},
 		{
 			"name": "goal analytics",
@@ -337,7 +1210,95 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "goal analytics",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://3.144.201.198:8085/v2/goals/analytics/804",
+							"protocol": "http",
+							"host": [
+								"3",
+								"144",
+								"201",
+								"198"
+							],
+							"port": "8085",
+							"path": [
+								"v2",
+								"goals",
+								"analytics",
+								"804"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 18 Dec 2021 19:15:38 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"goal_id\": 804,\n    \"status\": \"COMPLETED\",\n    \"extensionCount\": 0,\n    \"rating\": 0,\n    \"startTime\": \"2021-12-18T17:09:49.327+00:00\",\n    \"finishTime\": \"2021-12-18T17:09:56.995+00:00\",\n    \"completionTimeInMiliseconds\": 7668,\n    \"longestSubgoal\": null,\n    \"bestSubgoal\": null,\n    \"worstSubgoal\": null,\n    \"shortestSubgoal\": null,\n    \"averageCompletionTimeOfSubgoals\": null,\n    \"goalsWithCommonLifetime\": [],\n    \"activeSubgoalCount\": 0,\n    \"completedSubgoalCount\": 0\n}"
+				}
+			]
 		}
 	]
 }
