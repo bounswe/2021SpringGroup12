@@ -95,7 +95,7 @@ public class GroupGoalController {
     @PostMapping("/{user_id}/join")
     public GroupGoalDTOShort joinWithToken(
             @PathVariable @ApiParam(value = "Id of the user", example = "5") Long user_id,
-            @RequestParam(value = "token") @ApiParam(value = "Token of the group", example = "5wbwf6yUxVBcr48AMbz9cb") String token){
+            @RequestParam(value = "token") @ApiParam(value = "Token of the group", example = "5wbwf6") String token){
         return groupGoalService.joinWithToken(user_id, token);
     }
 

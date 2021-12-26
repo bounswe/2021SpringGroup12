@@ -1,12 +1,13 @@
-package cmpe451.group12.beabee.goalspace.model.goals;
+package cmpe451.group12.beabee.goalspace.model.prototypes;
 
 import cmpe451.group12.beabee.common.model.Users;
 import cmpe451.group12.beabee.goalspace.model.entities.Entiti;
+import cmpe451.group12.beabee.goalspace.model.goals.AllGoal;
+import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
+import cmpe451.group12.beabee.goalspace.model.goals.Tag;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -14,37 +15,41 @@ import java.util.Set;
 @Data
 @Entity
 @NoArgsConstructor
-public class Goal extends AllGoal{
+public class GoalPrototype {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idgen")
     @Column(name = "ID")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    private Users creator;
-    
-    @JsonIgnoreProperties({"goal", "groupgoal"})
-    @OneToMany(mappedBy = "goal", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY,orphanRemoval=true)
-    private Set<Entiti> entities;
+    @Column(name = "reference_id")
+    private Long reference_goal_id;
 
-    private Double rating;
+
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "description")
+    private String description;
+
+
+    @JsonIgnoreProperties({"mainGoal", "mainGroupgoal"})
+    @OneToMany(mappedBy = "mainGoal", fetch = FetchType.LAZY,orphanRemoval=true)
+    private Set<EntitiPrototype> entities;
 
     @JsonIgnoreProperties({"mainGroupgoal, mainGoal"})
     @OneToMany(mappedBy = "mainGoal",  fetch = FetchType.LAZY,orphanRemoval=true)
-    private Set<Subgoal> subgoals;
+    private Set<SubgoalPrototype> subgoals;
 
 
     @ManyToMany
     @JoinTable(
-            name = "goal_tag",
-            joinColumns = { @JoinColumn(name = "goal_id") },
-            inverseJoinColumns = { @JoinColumn(name = "tag_id") }
+            name = "goal_prototype_tag",
+            joinColumns = { @JoinColumn(name = "tag_id") },
+            inverseJoinColumns = { @JoinColumn(name = "goal_prototype_id") }
     )
     private Set<Tag> tags;
 
-    private Long downloadCount;
     @Override
     public boolean equals(Object obj)
     {
@@ -62,7 +67,7 @@ public class Goal extends AllGoal{
             return false;
 
         // type casting of the argument.
-        Goal geek = (Goal) obj;
+        GoalPrototype geek = (GoalPrototype) obj;
 
         // comparing the state of argument with
         // the state of 'this' Object.
@@ -70,6 +75,7 @@ public class Goal extends AllGoal{
     }
     @Override
     public String toString() {
-        return  "Goal_id: " + this.id;
+        return  "Proto_id: " + this.id;
     }
+
 }

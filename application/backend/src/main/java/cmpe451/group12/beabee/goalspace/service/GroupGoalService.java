@@ -107,9 +107,6 @@ public class GroupGoalService
         if (groupGoalGetDto.getDescription() != null){
             groupGoal.setDescription(groupGoalGetDto.getDescription());
         }
-        if (groupGoalGetDto.getDeadline() != null){
-            groupGoal.setDeadline(groupGoalGetDto.getDeadline());
-        }
         if (groupGoalGetDto.getIsDone() != null){
             groupGoal.setIsDone(groupGoalGetDto.getIsDone());
         }

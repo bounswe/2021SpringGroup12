@@ -30,4 +30,6 @@ public class GoalGetDTO {
     private Set<SubgoalDTOShort> subgoals;
 
     private Set<EntitiDTOShort> entities;
+    private Set<String> tags;
+
 }

@@ -1,50 +1,52 @@
-package cmpe451.group12.beabee.goalspace.model.goals;
+package cmpe451.group12.beabee.goalspace.model.prototypes;
 
 import cmpe451.group12.beabee.common.model.Users;
+import cmpe451.group12.beabee.goalspace.enums.EntitiType;
 import cmpe451.group12.beabee.goalspace.model.entities.Entiti;
+import cmpe451.group12.beabee.goalspace.model.goals.Goal;
+import cmpe451.group12.beabee.goalspace.model.goals.GroupGoal;
+import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
+import cmpe451.group12.beabee.goalspace.model.resources.Resource;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Set;
 
 @Data
 @Entity
 @NoArgsConstructor
-public class Goal extends AllGoal{
+public class EntitiPrototype {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idgen")
     @Column(name = "ID")
     private Long id;
 
+
+    @Column(name = "reference_id")
+    private Long reference_entiti_id;
+
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    private Users creator;
-    
-    @JsonIgnoreProperties({"goal", "groupgoal"})
-    @OneToMany(mappedBy = "goal", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY,orphanRemoval=true)
-    private Set<Entiti> entities;
+    @JoinColumn(name = "main_goal_id")
+    private GoalPrototype mainGoal;
 
-    private Double rating;
+    @Column(name = "entityType")
+    private EntitiType entitiType;
+    @Column(name = "title")
+    private String title;
+    @Column(name = "description")
+    private String description;
 
-    @JsonIgnoreProperties({"mainGroupgoal, mainGoal"})
-    @OneToMany(mappedBy = "mainGoal",  fetch = FetchType.LAZY,orphanRemoval=true)
-    private Set<Subgoal> subgoals;
+    @JsonIgnoreProperties({"id"})
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "EntitiPrototypeParentship")
+    @Column(name = "child_entiti_id")
+    private Set<EntitiPrototype> childEntities;
 
-
-    @ManyToMany
-    @JoinTable(
-            name = "goal_tag",
-            joinColumns = { @JoinColumn(name = "goal_id") },
-            inverseJoinColumns = { @JoinColumn(name = "tag_id") }
-    )
-    private Set<Tag> tags;
-
-    private Long downloadCount;
     @Override
     public boolean equals(Object obj)
     {
@@ -62,7 +64,7 @@ public class Goal extends AllGoal{
             return false;
 
         // type casting of the argument.
-        Goal geek = (Goal) obj;
+        EntitiPrototype geek = (EntitiPrototype) obj;
 
         // comparing the state of argument with
         // the state of 'this' Object.
@@ -70,6 +72,6 @@ public class Goal extends AllGoal{
     }
     @Override
     public String toString() {
-        return  "Goal_id: " + this.id;
+        return  "Proto_id: " + this.id;
     }
 }
