@@ -36,12 +36,12 @@ public class PrototypeController {
         return prototypeService.publishAGoal(id);
     }
 
-    @ApiOperation(value = "Get an entiti prototypes with the given id.")
+    @ApiOperation(value = "Get an entiti prototype with the given id.")
     @GetMapping("/entiti/{id}")
     public EntitiPrototypeDTO getAnEntitiPrototype(@PathVariable @ApiParam(value = "Id of the entity prototype.", example = "5") Long id) {
         return prototypeService.getAnEntitiPrototype(id);
     }
-    @ApiOperation(value = "Get a goal prototypes with the given id.")
+    @ApiOperation(value = "Get a subgoal prototype with the given id.")
     @GetMapping("/subgoal/{id}")
     public SubgoalPrototypeDTO getASubgoalPrototype(@PathVariable @ApiParam(value = "Id of the subgoal prototype.", example = "5") Long id) {
         return prototypeService.getASubgoalPrototype(id);
