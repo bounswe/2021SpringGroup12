@@ -7,6 +7,8 @@ import cmpe451.group12.beabee.common.repository.UserRepository;
 import cmpe451.group12.beabee.goalspace.Repository.entities.*;
 import cmpe451.group12.beabee.goalspace.Repository.goals.GoalRepository;
 import cmpe451.group12.beabee.goalspace.Repository.goals.SubgoalRepository;
+import cmpe451.group12.beabee.goalspace.Repository.goals.TagRepository;
+import cmpe451.group12.beabee.goalspace.Repository.prototypes.GoalPrototypeRespository;
 import cmpe451.group12.beabee.goalspace.dto.analytics.GoalAnalyticsDTO;
 import cmpe451.group12.beabee.goalspace.dto.goals.GoalDTOShort;
 import cmpe451.group12.beabee.goalspace.dto.goals.GoalGetDTO;
@@ -40,12 +42,12 @@ public class GoalServiceTest {
     private UserRepository userRepository;
     private EntitiShortMapper entitiShortMapper;
     private EntitiRepository entitiRepository;
-    private SubgoalService subgoalService;
     private RoutineRepository routineRepository;
     private ReflectionRepository reflectionRepository;
     private TaskRepository taskRepository;
     private QuestionRepository questionRepository;
-
+    private TagRepository tagRepository;
+    private  GoalPrototypeRespository goalPrototypeRespository;
 
     @Before
     public void setUp() {
@@ -59,18 +61,18 @@ public class GoalServiceTest {
         userRepository = Mockito.mock(UserRepository.class);
         entitiShortMapper = Mockito.mock(EntitiShortMapper.class);
         entitiRepository = Mockito.mock(EntitiRepository.class);
-        subgoalService = Mockito.mock(SubgoalService.class);
         routineRepository = Mockito.mock(RoutineRepository.class);
         reflectionRepository = Mockito.mock(ReflectionRepository.class);
         taskRepository = Mockito.mock(TaskRepository.class);
         questionRepository = Mockito.mock(QuestionRepository.class);
-
+        tagRepository = Mockito.mock(TagRepository.class);
+         goalPrototypeRespository = Mockito.mock(GoalPrototypeRespository.class);
         goalService = new GoalService(goalRepository, subgoalRepository, goalPostMapper,
                 subgoalPostMapper, subgoalShortMapper, goalGetMapper, goalShortMapper,
-                userRepository, entitiShortMapper, entitiRepository, subgoalService, routineRepository,
-                reflectionRepository, taskRepository, questionRepository);
+                userRepository, entitiShortMapper, entitiRepository, routineRepository,
+                reflectionRepository, taskRepository, questionRepository,tagRepository,goalPrototypeRespository);
     }
-
+/************** NO LONGER NEEDED SINCE WE REMOVE DEADLINES ***
     @Test
     public void whenExtendGoalCalledWithValidRequest_ItShouldReturnSuccess() {
         //parameters
@@ -85,7 +87,6 @@ public class GoalServiceTest {
         goal1.setId(goal_id);
         goal1.setIsDone(Boolean.FALSE);
         goal1.setExtension_count(prevExtensionCount);
-        goal1.setDeadline(one_day_later); // 1 days later than today
 
         Goal goal1_updated = new Goal();
         goal1_updated.setTitle("goal 1");
@@ -93,7 +94,6 @@ public class GoalServiceTest {
         goal1_updated.setId(goal_id);
         goal1_updated.setIsDone(Boolean.FALSE);
         goal1_updated.setExtension_count(prevExtensionCount + 1);
-        goal1_updated.setDeadline(five_days_later); // 5 days later than today
 
         // mock other classes
         Mockito.when(goalRepository.findById(goal_id)).thenReturn(java.util.Optional.of(goal1));
@@ -138,7 +138,7 @@ public class GoalServiceTest {
         Assert.assertEquals(new MessageResponse("New deadline must be later than current deadline!", MessageType.ERROR), result);
         Mockito.verify(goalRepository).findById(goal_id);
     }
-
+ */
     @Test
     public void whenCompleteGoalCalledWithUncompletedGoals_ItShouldReturnError() {
         Long goal_id = 1L;
