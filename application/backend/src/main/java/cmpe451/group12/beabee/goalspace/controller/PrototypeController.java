@@ -15,12 +15,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 @CrossOrigin(origins = "http://localhost:8085")
 @RestController
@@ -60,7 +56,7 @@ public class PrototypeController {
         return prototypeService.getASubgoalPrototype(id);
     }
 
-    @ApiOperation(value = "SSearch goal prototypes with exact match in title description and tag fields.")
+    @ApiOperation(value = "Search goal prototypes with exact match in title description and tag fields.")
     @GetMapping("/search/")
     public List<GoalPrototypeDTO> searchGoalPrototypesExact(@RequestParam(value = "query") @ApiParam(value = "Search query", example = "word1") String query) {
         return prototypeService.searchGoalPrototypesExact(query);

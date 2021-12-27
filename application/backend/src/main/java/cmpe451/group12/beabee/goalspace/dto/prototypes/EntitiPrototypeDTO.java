@@ -16,4 +16,5 @@ public class EntitiPrototypeDTO {
     private Set<EntitiPrototypeDTO> child_entities;
     private String title;
     private String description;
+    private Long period;
 }

@@ -8,6 +8,7 @@ import cmpe451.group12.beabee.goalspace.Repository.entities.*;
 import cmpe451.group12.beabee.goalspace.Repository.goals.GoalRepository;
 import cmpe451.group12.beabee.goalspace.Repository.goals.SubgoalRepository;
 import cmpe451.group12.beabee.goalspace.Repository.goals.TagRepository;
+import cmpe451.group12.beabee.goalspace.Repository.prototypes.GoalPrototypeRespository;
 import cmpe451.group12.beabee.goalspace.dto.analytics.GoalAnalyticsDTO;
 import cmpe451.group12.beabee.goalspace.dto.entities.EntitiDTOShort;
 import cmpe451.group12.beabee.goalspace.dto.goals.*;
@@ -19,7 +20,9 @@ import cmpe451.group12.beabee.goalspace.model.entities.*;
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
 import cmpe451.group12.beabee.goalspace.model.goals.Tag;
+import cmpe451.group12.beabee.goalspace.model.prototypes.EntitiPrototype;
 import cmpe451.group12.beabee.goalspace.model.prototypes.GoalPrototype;
+import cmpe451.group12.beabee.goalspace.model.prototypes.SubgoalPrototype;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
@@ -36,6 +39,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -58,6 +62,7 @@ public class GoalService {
     private final TaskRepository taskRepository;
     private final QuestionRepository questionRepository;
     private final TagRepository tagRepository;
+    private final GoalPrototypeRespository goalPrototypeRespository;
 
 
     private Set<EntitiDTOShort> extractEntities(Goal goal) {
@@ -405,7 +410,7 @@ public class GoalService {
             goalAnalyticsDTO.setCompletionTimeInMiliseconds(goal_from_db.getCompletedAt().getTime() - goal_from_db.getCreatedAt().getTime());
 
             List<Goal> common_goals = goalRepository.findAllByCreatedAtIsBetweenOrCompletedAtBetween(goal_from_db.getCreatedAt(), goal_from_db.getCompletedAt(), goal_from_db.getCreatedAt(), goal_from_db.getCompletedAt())
-                    .stream().filter(x -> x.getCreator().getUser_id()==goal_from_db.getCreator().getUser_id()).collect(Collectors.toList());
+                    .stream().filter(x -> x.getCreator().getUser_id() == goal_from_db.getCreator().getUser_id()).collect(Collectors.toList());
             common_goals.remove(goal_from_db);
             goalAnalyticsDTO.setGoalsWithCommonLifetime(goalShortMapper.mapToDto(common_goals).stream().collect(Collectors.toSet()));
 
@@ -414,7 +419,7 @@ public class GoalService {
                     x.getRating()).mapToDouble(Double::doubleValue).summaryStatistics().getAverage());
             goalAnalyticsDTO.setStatus(GoalAnalyticsDTO.Status.ACTIVE);
             List<Goal> common_goals = goalRepository.findAllByCreatedAtIsBetweenOrCompletedAtBetween(goal_from_db.getCreatedAt(), new Date(System.currentTimeMillis()), goal_from_db.getCreatedAt(), new Date(System.currentTimeMillis()))
-                    .stream().filter(x -> x.getCreator().getUser_id() ==goal_from_db.getCreator().getUser_id()).collect(Collectors.toList());
+                    .stream().filter(x -> x.getCreator().getUser_id() == goal_from_db.getCreator().getUser_id()).collect(Collectors.toList());
             common_goals.remove(goal_from_db);
             goalAnalyticsDTO.setGoalsWithCommonLifetime(goalShortMapper.mapToDto(common_goals).stream().collect(Collectors.toSet()));
         }
@@ -436,5 +441,188 @@ public class GoalService {
         goalAnalyticsDTO.setCompletedSubgoalCount(goal_from_db.getSubgoals().stream().filter(x -> x.getIsDone()).count());
 
         return goalAnalyticsDTO;
+    }
+
+    /**** COPY A PROTOTYPE ******/
+
+    private Set<Subgoal> handleSecondLevelSubgoals(Set<SubgoalPrototype> children, Subgoal parent_subgoal) {
+        Set<Subgoal> subgoals = new HashSet<>();
+        children.stream().forEach(subgoalPrototype -> {
+            Subgoal new_subgoal = new Subgoal();
+            new_subgoal.setDescription(subgoalPrototype.getDescription());
+            new_subgoal.setTitle(subgoalPrototype.getTitle());
+            new_subgoal.setCreator(parent_subgoal.getCreator());
+            new_subgoal.setRating(0D);
+            new_subgoal.setEntities(new HashSet<>());
+            new_subgoal.setIsDone(Boolean.FALSE);
+            subgoalRepository.save(new_subgoal);
+            new_subgoal.setChild_subgoals(handleSecondLevelSubgoals(subgoalPrototype.getChild_subgoals(), new_subgoal));
+            subgoalRepository.save(new_subgoal);
+            subgoals.add(new_subgoal);
+        });
+        return subgoals;
+    }
+    private Set<Entiti> handleSecondLevelEntities(Set<EntitiPrototype> children, Entiti parent_entiti) {
+        Set<Entiti> entities = new HashSet<>();
+        children.stream().forEach(entitiPrototype -> {
+            if (entitiPrototype.getEntitiType().equals(EntitiType.ROUTINE)) {
+                Routine new_entiti = new Routine();
+                //entitiRepository.save(new_entiti);
+                new_entiti.setDescription(entitiPrototype.getDescription());
+                new_entiti.setTitle(entitiPrototype.getTitle());
+                new_entiti.setCreator(parent_entiti.getCreator());
+                new_entiti.setRating(new ArrayList<>());
+                new_entiti.setPeriod(entitiPrototype.getPeriod());
+                new_entiti.setDeadline(Stream.of(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(new_entiti.getPeriod()))).collect(Collectors.toList()));
+                new_entiti.setSublinks(handleSecondLevelEntities(entitiPrototype.getChildEntities(),new_entiti));
+                new_entiti.setIsDone(Boolean.FALSE);
+                //entitiRepository.save(new_entiti);
+                entities.add(new_entiti);
+            }else if (entitiPrototype.getEntitiType().equals(EntitiType.REFLECTION)) {
+                Reflection new_entiti = new Reflection();
+                //entitiRepository.save(new_entiti);
+                new_entiti.setDescription(entitiPrototype.getDescription());
+                new_entiti.setTitle(entitiPrototype.getTitle());
+                new_entiti.setCreator(parent_entiti.getCreator());
+                new_entiti.setSublinks(handleSecondLevelEntities(entitiPrototype.getChildEntities(),new_entiti));
+                new_entiti.setIsDone(Boolean.FALSE);
+                //entitiRepository.save(new_entiti);
+                entities.add(new_entiti);
+            }else if (entitiPrototype.getEntitiType().equals(EntitiType.QUESTION)) {
+                Question new_entiti = new Question();
+                //entitiRepository.save(new_entiti);
+                new_entiti.setDescription(entitiPrototype.getDescription());
+                new_entiti.setTitle(entitiPrototype.getTitle());
+                new_entiti.setCreator(parent_entiti.getCreator());
+                new_entiti.setSublinks(handleSecondLevelEntities(entitiPrototype.getChildEntities(),new_entiti));
+                new_entiti.setIsDone(Boolean.FALSE);
+                //entitiRepository.save(new_entiti);
+                entities.add(new_entiti);
+            }else if (entitiPrototype.getEntitiType().equals(EntitiType.TASK)) {
+                Task new_entiti = new Task();
+                //entitiRepository.save(new_entiti);
+                new_entiti.setDescription(entitiPrototype.getDescription());
+                new_entiti.setTitle(entitiPrototype.getTitle());
+                new_entiti.setCreator(parent_entiti.getCreator());
+                new_entiti.setRating(0D);
+                new_entiti.setDeadline(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(7)));
+                new_entiti.setSublinks(handleSecondLevelEntities(entitiPrototype.getChildEntities(),new_entiti));
+                new_entiti.setIsDone(Boolean.FALSE);
+                //entitiRepository.save(new_entiti);
+                entities.add(new_entiti);
+            }
+        });
+        return entities;
+    }
+    private Set<Tag> clearTags(Set<Tag> tags, Goal goal, GoalPrototype prototype) {
+        Set<Tag> new_tags = new HashSet<>();
+        new_tags.addAll(tags);
+        new_tags.stream().forEach(x -> {
+            x.getGoals().add(goal);
+            x.getGoal_prototypes().remove(prototype);
+        });
+        return new_tags;
+    }
+
+    public MessageResponse copyGoalPrototype(Long user_id, Long prototype_id) {
+        GoalPrototype prototype = goalPrototypeRespository.findById(prototype_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Goal prototype not found!"));
+        Optional<Goal> referenced_goal = goalRepository.findById(prototype.getReference_goal_id());
+        if (referenced_goal.isPresent()) {
+            referenced_goal.get().setDownloadCount(referenced_goal.get().getDownloadCount() + 1);
+            goalRepository.save(referenced_goal.get());
+        }
+        Users user = userRepository.findById(user_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!"));
+        Goal new_goal = new Goal();
+        goalRepository.save(new_goal);
+        new_goal.setCreator(user);
+        new_goal.setTitle(prototype.getTitle());
+        new_goal.setDescription(prototype.getDescription());
+        new_goal.setTags(clearTags(prototype.getTags(), new_goal, prototype));
+        new_goal.setHiddentags(clearTags(prototype.getHiddentags(), new_goal, prototype));
+        new_goal.setIsDone(Boolean.FALSE);
+        new_goal.setExtension_count(0L);
+        new_goal.setGoalType(GoalType.GOAL);
+        new_goal.setRating(0D);
+        new_goal.setDownloadCount(0L);
+        Set<EntitiPrototype> entitiPrototypes = prototype.getEntities();
+        Set<Entiti> entities = new HashSet<>();
+        entitiPrototypes.stream().forEach(entitiPrototype -> {
+            if (entitiPrototype.getEntitiType().equals(EntitiType.ROUTINE)) {
+                Routine new_entiti = new Routine();
+                new_entiti.setEntitiType(EntitiType.ROUTINE);
+                new_entiti.setPeriod(entitiPrototype.getPeriod());
+                //entitiRepository.save(new_entiti);
+                new_entiti.setDescription(entitiPrototype.getDescription());
+                new_entiti.setTitle(entitiPrototype.getTitle());
+                new_entiti.setCreator(user);
+                new_entiti.setRating(new ArrayList<>());
+                new_entiti.setDeadline(Stream.of(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(new_entiti.getPeriod()))).collect(Collectors.toList()));
+                new_entiti.setExtension_count(0L);
+                new_entiti.setGoal(new_goal);
+                new_entiti.setSublinks(handleSecondLevelEntities(entitiPrototypes,new_entiti));
+                new_entiti.setIsDone(Boolean.FALSE);
+                //entitiRepository.save(new_entiti);
+                entities.add(new_entiti);
+            } else if (entitiPrototype.getEntitiType().equals(EntitiType.REFLECTION)) {
+                Reflection new_entiti = new Reflection();
+                new_entiti.setEntitiType(EntitiType.REFLECTION);
+                //entitiRepository.save(new_entiti);
+                new_entiti.setDescription(entitiPrototype.getDescription());
+                new_entiti.setTitle(entitiPrototype.getTitle());
+                new_entiti.setCreator(user);
+                new_entiti.setGoal(new_goal);
+                new_entiti.setSublinks(handleSecondLevelEntities(entitiPrototypes,new_entiti));
+                new_entiti.setIsDone(Boolean.FALSE);
+                //entitiRepository.save(new_entiti);
+                entities.add(new_entiti);
+            } else if (entitiPrototype.getEntitiType().equals(EntitiType.TASK)) {
+                Task new_entiti = new Task();
+                new_entiti.setEntitiType(EntitiType.TASK);
+                //entitiRepository.save(new_entiti);
+                new_entiti.setDescription(entitiPrototype.getDescription());
+                new_entiti.setTitle(entitiPrototype.getTitle());
+                new_entiti.setCreator(user);
+                new_entiti.setRating(0D);
+                new_entiti.setDeadline(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(7L)));
+                new_entiti.setExtension_count(0L);
+                new_entiti.setGoal(new_goal);
+                new_entiti.setSublinks(handleSecondLevelEntities(entitiPrototypes,new_entiti));
+                new_entiti.setIsDone(Boolean.FALSE);
+                //entitiRepository.save(new_entiti);
+                entities.add(new_entiti);
+            } else if (entitiPrototype.getEntitiType().equals(EntitiType.QUESTION)) {
+                Question new_entiti = new Question();
+                new_entiti.setEntitiType(EntitiType.QUESTION);
+                //entitiRepository.save(new_entiti);
+                new_entiti.setDescription(entitiPrototype.getDescription());
+                new_entiti.setTitle(entitiPrototype.getTitle());
+                new_entiti.setCreator(user);
+                new_entiti.setGoal(new_goal);
+                new_entiti.setSublinks(handleSecondLevelEntities(entitiPrototype.getChildEntities(),new_entiti));
+                new_entiti.setIsDone(Boolean.FALSE);
+                //entitiRepository.save(new_entiti);
+                entities.add(new_entiti);
+            }
+        });
+        //entitiRepository.saveAll(entities);
+        Set<SubgoalPrototype> prototypeSubgoals = prototype.getSubgoals();
+        Set<Subgoal> subgoals = new HashSet<>();
+        prototypeSubgoals.stream().forEach(subgoalPrototype -> {
+            Subgoal new_subgoal = new Subgoal();
+            subgoalRepository.save(new_subgoal);
+            new_subgoal.setDescription(subgoalPrototype.getDescription());
+            new_subgoal.setTitle(subgoalPrototype.getTitle());
+            new_subgoal.setCreator(user);
+            new_subgoal.setRating(0D);
+            new_subgoal.setEntities(new HashSet<>());
+            new_subgoal.setIsDone(Boolean.FALSE);
+            new_subgoal.setMainGoal(new_goal);
+            new_subgoal.setChild_subgoals(handleSecondLevelSubgoals(subgoalPrototype.getChild_subgoals(), new_subgoal));
+            subgoalRepository.save(new_subgoal);
+            subgoals.add(new_subgoal);
+        });
+        entitiRepository.saveAll(entities);
+        goalRepository.save(new_goal);
+        return new MessageResponse("Prototype copied successfully!", MessageType.SUCCESS);
     }
 }

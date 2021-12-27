@@ -64,6 +64,7 @@ public class PrototypeService {
         prototypeDTO.setEntities(entitiPrototypeShortMapper.mapToDto(prototype.getEntities()));
         prototypeDTO.setSubgoals(subgoalPrototypeShortMapper.mapToDto(prototype.getSubgoals()));
         prototypeDTO.setUsername(goalRepository.findById(prototype.getReference_goal_id()).get().getCreator().getUsername());
+        prototypeDTO.setDownload_count(goalRepository.findById(prototype.getReference_goal_id()).get().getDownloadCount());
         return  prototypeDTO;
     }
 
@@ -75,6 +76,8 @@ public class PrototypeService {
             entitiPrototype.setDescription(entiti.getDescription());
             entitiPrototype.setReference_entiti_id(entiti.getId());
             entitiPrototype.setMainGoal(prototype);
+            entitiPrototype.setPeriod(7L);
+            entitiPrototype.setChildEntities(clearEntities(entiti.getSublinks(),null));
             entitiPrototype.setEntitiType(entiti.getEntitiType());
             entitiPrototypeRepository.save(entitiPrototype);
             entitiPrototypes.add(entitiPrototype);
@@ -89,26 +92,27 @@ public class PrototypeService {
             subgoal1.setTitle(subgoal.getTitle());
             subgoal1.setDescription(subgoal.getDescription());
             subgoal1.setReference_subgoal_id(subgoal.getId());
+            subgoal1.setChild_subgoals(clearSubgoals(subgoal.getChild_subgoals(),null));
             subgoal1.setMainGoal(prototype);
             subgoalPrototypeRepository.save(subgoal1);
             subgoals_protos.add(subgoal1);
         });
         return subgoals_protos;
     }
-    private Set<Tag> clearTags(Set<Tag> tags, GoalPrototype prototype) {
+    private Set<Tag> clearTags(Set<Tag> tags,Goal goal, GoalPrototype prototype) {
         Set<Tag> new_tags = new HashSet<>();
         new_tags.addAll(tags);
-        new_tags.stream().forEach(x->{x.getGoals().clear();x.setGoal_prototypes(Stream.of(prototype).collect(Collectors.toSet()));});
+        new_tags.stream().forEach(x->{x.getGoals().remove(goal);x.getGoal_prototypes().add(prototype);});
         return new_tags;
     }
 
     public MessageResponse publishAGoal(Long goal_id) {
         Goal goal_from_db = goalRepository.findById(goal_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Goal not found!"));
-        goal_from_db.getEntities().forEach(System.out::println);
         GoalPrototype prototype = new GoalPrototype();
         goalPrototypeRespository.save(prototype);
         prototype.setReference_goal_id(goal_id);
-        prototype.setTags(clearTags(goal_from_db.getTags(),prototype));
+        prototype.setTags(clearTags(goal_from_db.getTags(),goal_from_db,prototype));
+        prototype.setHiddentags(clearTags(goal_from_db.getHiddentags(),goal_from_db,prototype));
         prototype.setEntities(clearEntities(goal_from_db.getEntities(),prototype));
         prototype.setSubgoals(clearSubgoals(goal_from_db.getSubgoals(),prototype));
         //prototype.setGoalType(goal_from_db.getGoalType());

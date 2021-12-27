@@ -136,6 +136,13 @@ public class GoalController {
     public GoalAnalyticsDTO getAnalytics(@PathVariable @ApiParam(value = "Id of the goal.", example = "5") Long goal_id) {
         return goalService.getAnalytics(goal_id);
     }
+
+    /****** COPY PROTOTYPE ********/
+    @ApiOperation(value = "Copy a goal prototype to themselves.")
+    @PostMapping("/copy_prototype/{user_id}/{prototype_id}")
+    public MessageResponse copyGoalPrototype(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id, @PathVariable @ApiParam(value = "Id of the prototype.", example = "5") Long prototype_id) {
+        return goalService.copyGoalPrototype(user_id,prototype_id);
+    }
 }
 
 

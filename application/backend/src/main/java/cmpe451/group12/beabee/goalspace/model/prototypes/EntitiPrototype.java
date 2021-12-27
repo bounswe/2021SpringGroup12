@@ -40,7 +40,8 @@ public class EntitiPrototype {
     private String title;
     @Column(name = "description")
     private String description;
-
+    @Column(name = "period")
+    private Long period;
     @JsonIgnoreProperties({"id"})
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "EntitiPrototypeParentship")
