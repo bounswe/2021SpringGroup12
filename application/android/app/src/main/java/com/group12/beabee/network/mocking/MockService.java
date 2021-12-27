@@ -374,17 +374,17 @@ public class MockService implements ServiceAPI {
     }
 
     @Override
-    public Call<List<GoalDetail>> getProGoal(int public_goal_id) {
+    public Call<GoalDetail> getProGoal(int public_goal_id) {
         return null;
     }
 
     @Override
-    public Call<List<GoalDetail>> getProEntity(int public_entity_id) {
+    public Call<List<EntityShort>> getProEntity(int public_entity_id) {
         return null;
     }
 
     @Override
-    public Call<List<GoalDetail>> getProSubgoal(int public_subgoal_id) {
+    public Call<SubgoalDetail> getProSubgoal(int public_subgoal_id) {
         return null;
     }
 

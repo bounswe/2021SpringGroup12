@@ -81,8 +81,7 @@ public class Home4Fragment extends BaseInnerFragment implements IOnGoalClickedLi
     @Override
     public void OnGoalClicked(int id) {
         BeABeeApplication.currentPrototypeGoal = id;
-        //OpenNewFragment(GoalFragment.newInstance(id));//MarketPlaceGoalFragment
-        
+        OpenNewFragment(PrototypeGoalFragment.newInstance(id));
     }
 
     @Override
