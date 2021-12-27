@@ -29,12 +29,12 @@ public class Home4Fragment extends BaseInnerFragment implements IOnGoalClickedLi
 
     @BindView(R.id.rv_goals)
     RecyclerView rvGoals;
-    private GoalsAdapter goalsAdapter;
+    private GoalsPrototypeAdapter goalsAdapter;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        goalsAdapter = new GoalsAdapter();
+        goalsAdapter = new GoalsPrototypeAdapter();
         rvGoals.setAdapter(goalsAdapter);
         goalsAdapter.setItemClickListener(this);
 
@@ -67,6 +67,7 @@ public class Home4Fragment extends BaseInnerFragment implements IOnGoalClickedLi
             goal.id=goals.get(i).id;
             goal.description=goals.get(i).description;
             goal.title=goals.get(i).title;
+            goal.username=goals.get(i).username;
             newGoals.add(goal);
         }
         return newGoals;
