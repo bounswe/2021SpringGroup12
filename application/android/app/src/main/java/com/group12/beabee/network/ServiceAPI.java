@@ -201,6 +201,25 @@ public interface ServiceAPI {
     @GET("users/analytics/{user_id}")
     Call<Analytics>getUserAnalytics(@Path("user_id") int user_id);
 
+
+    //PROTOTYPE-MARKET PLACE
+
+    @GET("/v2/prototypes/")
+    Call<List<GoalDetail>> getMarketPlaceData();
+
+    @GET("/v2/prototypes/{id}")
+    Call<List<GoalDetail>>getProGoal(@Path("id") int public_goal_id);
+
+    @GET("/v2/prototypes/entiti/{id}")
+    Call<List<GoalDetail>>getProEntity(@Path("id") int public_entity_id);
+
+    @GET("/v2/prototypes/subgoal/{id}")
+    Call<List<GoalDetail>>getProSubgoal(@Path("id") int public_subgoal_id);
+
+    @POST("/v2/prototypes/publish/{id}")
+    Call<BasicResponse> publishGoal(@Path("id") int public_goal_id);
+
+
 }
 //7YPxFmM3yTaAzaSi3Q61B
 

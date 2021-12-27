@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.OnRateSelectedListener;
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.ParentType;
@@ -261,5 +262,29 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
 
         DialogFragment datePicker = new DeadlineCalendarFragment(this);
         datePicker.show(getActivity().getSupportFragmentManager(), "date picker");
+    }
+    @OnClick(R.id.btn_publish)
+    @Optional
+    public void publishGoal(View view) {
+        Utils.showLoading(getParentFragmentManager());
+        service.publishGoal(id).enqueue(new Callback<BasicResponse>() {
+            @Override
+            public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
+                if (response.isSuccessful() && response.body() != null) {
+                    Utils.ShowErrorToast(getActivity(), "You published your goal!");
+                } else {
+                    Utils.ShowErrorToast(getActivity(), "Something went wrong!");
+                }
+                GoBack();
+            }
+
+            @Override
+            public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
+                Utils.ShowErrorToast(getActivity(), "Something went wrong!");
+                GoBack();
+            }
+        });
     }
 }
