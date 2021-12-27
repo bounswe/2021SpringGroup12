@@ -63,6 +63,7 @@ public class PrototypeService {
         GoalPrototypeDTO prototypeDTO = goalPrototypeMapper.mapToDto(prototype);
         prototypeDTO.setEntities(entitiPrototypeShortMapper.mapToDto(prototype.getEntities()));
         prototypeDTO.setSubgoals(subgoalPrototypeShortMapper.mapToDto(prototype.getSubgoals()));
+        prototypeDTO.setUsername(goalRepository.findById(prototype.getReference_goal_id()).get().getCreator().getUsername());
         return  prototypeDTO;
     }
 
@@ -135,14 +136,17 @@ public class PrototypeService {
     /************* SEARCH **********/
     public List<GoalPrototypeDTO> searchGoalPrototypesExact(String query){
         Set<Tag> matched_tags = tagRepository.findAllByNameContains(query);
-        Set<GoalPrototype> all_goals = new HashSet<>();
+        Set<GoalPrototype> all_prototypes = new HashSet<>();
         matched_tags.stream().forEach(x -> {
-            all_goals.addAll(goalPrototypeRespository.findAllByTagsIsContaining(x));
+            all_prototypes.addAll(goalPrototypeRespository.findAllByTagsIsContaining(x));
         });
-        all_goals.addAll(goalPrototypeRespository.findAllByDescriptionContainsOrTitleContains(query, query));
+        all_prototypes.addAll(goalPrototypeRespository.findAllByDescriptionContainsOrTitleContains(query, query));
 
-        return goalPrototypeMapper.mapToDto(all_goals.stream().collect(Collectors.toList()));
-    }
+        List<GoalPrototypeDTO> prototypeDTOS = goalPrototypeMapper.mapToDto(all_prototypes.stream().collect(Collectors.toList()));
+        prototypeDTOS.stream().forEach(prototype ->{
+            prototype.setUsername(goalRepository.findById(prototype.getReference_goal_id()).get().getCreator().getUsername());
+        });
+        return prototypeDTOS;    }
 
     public List<GoalPrototypeDTO> searchGoalPrototypesUsingTag(String tag) throws IOException, ParseException {
         Set<String> related_ids = goalService.findRelatedTagIds(Stream.of(tag).collect(Collectors.toSet()));
@@ -155,13 +159,15 @@ public class PrototypeService {
             }
         }
 
-        System.out.println(related_tags.stream().map(x -> x.getName()).collect(Collectors.toList()));
         Set<GoalPrototype> all_prototypes = new HashSet<>();
         related_tags.stream().forEach(x -> {
             all_prototypes.addAll(goalPrototypeRespository.findAllByHiddentagsIsContaining(x));
             all_prototypes.addAll(goalPrototypeRespository.findAllByTagsIsContaining(x));
         });
         List<GoalPrototypeDTO> prototypeDTOS = goalPrototypeMapper.mapToDto(all_prototypes.stream().collect(Collectors.toList()));
+        prototypeDTOS.stream().forEach(prototype ->{
+            prototype.setUsername(goalRepository.findById(prototype.getReference_goal_id()).get().getCreator().getUsername());
+        });
         return prototypeDTOS;
     }
 

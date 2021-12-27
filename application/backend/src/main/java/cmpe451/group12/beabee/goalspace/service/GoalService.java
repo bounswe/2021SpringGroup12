@@ -395,7 +395,6 @@ public class GoalService {
     public GoalAnalyticsDTO getAnalytics(Long goal_id) {
         Goal goal_from_db = goalRepository.findById(goal_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Goal not found!"));
         GoalAnalyticsDTO goalAnalyticsDTO = new GoalAnalyticsDTO();
-
         goalAnalyticsDTO.setGoal_id(goal_id);
         goalAnalyticsDTO.setExtensionCount(goal_from_db.getExtension_count());
         goalAnalyticsDTO.setStartTime(goal_from_db.getCreatedAt());
@@ -438,5 +437,4 @@ public class GoalService {
 
         return goalAnalyticsDTO;
     }
-
 }

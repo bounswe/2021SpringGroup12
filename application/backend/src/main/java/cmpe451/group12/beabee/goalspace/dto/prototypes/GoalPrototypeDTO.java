@@ -15,4 +15,5 @@ public class GoalPrototypeDTO {
     private Set<SubgoalPrototypeDTOShort> subgoals;
     private Set<String> tags;
     private Long download_count;
+    private String username;
 }
