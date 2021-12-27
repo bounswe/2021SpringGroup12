@@ -48,9 +48,6 @@ public class Subgoal {
     @Column(name = "createdAt",updatable = false)
     private Date createdAt;
 
-    @Column(name = "extension_count")
-    private Long extension_count;
-
     @Column(name = "completedAt")
     private Date completedAt;
     @JsonIgnoreProperties({"subgoal"})

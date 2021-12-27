@@ -26,8 +26,6 @@ public class GroupGoalGetDto
 
     private String description;
 
-    private Date deadline;
-
     private Date createdAt;
 
     private Set<SubgoalDTOShort> subgoals;

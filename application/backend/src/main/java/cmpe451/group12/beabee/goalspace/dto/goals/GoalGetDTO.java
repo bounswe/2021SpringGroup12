@@ -23,7 +23,6 @@ public class GoalGetDTO {
 
     private String description;
 
-    private Date deadline;
 
     private Date createdAt;
 

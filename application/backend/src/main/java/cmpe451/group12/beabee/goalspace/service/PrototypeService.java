@@ -3,9 +3,11 @@ package cmpe451.group12.beabee.goalspace.service;
 import cmpe451.group12.beabee.common.dto.MessageResponse;
 import cmpe451.group12.beabee.common.enums.MessageType;
 import cmpe451.group12.beabee.goalspace.Repository.goals.GoalRepository;
+import cmpe451.group12.beabee.goalspace.Repository.goals.TagRepository;
 import cmpe451.group12.beabee.goalspace.Repository.prototypes.EntitiPrototypeRepository;
 import cmpe451.group12.beabee.goalspace.Repository.prototypes.GoalPrototypeRespository;
 import cmpe451.group12.beabee.goalspace.Repository.prototypes.SubgoalPrototypeRepository;
+import cmpe451.group12.beabee.goalspace.dto.goals.GoalDTOShort;
 import cmpe451.group12.beabee.goalspace.dto.prototypes.EntitiPrototypeDTO;
 import cmpe451.group12.beabee.goalspace.dto.prototypes.GoalPrototypeDTO;
 import cmpe451.group12.beabee.goalspace.dto.prototypes.SubgoalPrototypeDTO;
@@ -18,14 +20,16 @@ import cmpe451.group12.beabee.goalspace.model.prototypes.EntitiPrototype;
 import cmpe451.group12.beabee.goalspace.model.prototypes.GoalPrototype;
 import cmpe451.group12.beabee.goalspace.model.prototypes.SubgoalPrototype;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -41,6 +45,9 @@ public class PrototypeService {
     private final SubgoalPrototypeShortMapper subgoalPrototypeShortMapper;
     private final EntitiPrototypeShortMapper entitiPrototypeShortMapper;
     private final GoalRepository goalRepository;
+    private final GoalService goalService;
+    private final TagRepository tagRepository;
+
 
     /***************************** PROTOTYPES *********************/
     public List<GoalPrototypeDTO> getPrototypes() {
@@ -124,4 +131,38 @@ public class PrototypeService {
         prototypeDTO.setChild_subgoals(subgoalPrototypeMapper.mapToDto(prototype.getChild_subgoals()));
         return  prototypeDTO;
     }
+
+    /************* SEARCH **********/
+    public List<GoalPrototypeDTO> searchGoalPrototypesExact(String query){
+        Set<Tag> matched_tags = tagRepository.findAllByNameContains(query);
+        Set<GoalPrototype> all_goals = new HashSet<>();
+        matched_tags.stream().forEach(x -> {
+            all_goals.addAll(goalPrototypeRespository.findAllByTagsIsContaining(x));
+        });
+        all_goals.addAll(goalPrototypeRespository.findAllByDescriptionContainsOrTitleContains(query, query));
+
+        return goalPrototypeMapper.mapToDto(all_goals.stream().collect(Collectors.toList()));
+    }
+
+    public List<GoalPrototypeDTO> searchGoalPrototypesUsingTag(String tag) throws IOException, ParseException {
+        Set<String> related_ids = goalService.findRelatedTagIds(Stream.of(tag).collect(Collectors.toSet()));
+        Set<Tag> related_tags = new HashSet<>();
+        for (String id : related_ids) {
+            if (id == null) continue;
+            Optional<Tag> tag_x = goalService.getTagById(id);
+            if (tag_x.isPresent()) {
+                related_tags.add(tag_x.get());
+            }
+        }
+
+        System.out.println(related_tags.stream().map(x -> x.getName()).collect(Collectors.toList()));
+        Set<GoalPrototype> all_prototypes = new HashSet<>();
+        related_tags.stream().forEach(x -> {
+            all_prototypes.addAll(goalPrototypeRespository.findAllByHiddentagsIsContaining(x));
+            all_prototypes.addAll(goalPrototypeRespository.findAllByTagsIsContaining(x));
+        });
+        List<GoalPrototypeDTO> prototypeDTOS = goalPrototypeMapper.mapToDto(all_prototypes.stream().collect(Collectors.toList()));
+        return prototypeDTOS;
+    }
+
 }

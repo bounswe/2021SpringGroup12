@@ -23,6 +23,11 @@ public class Tag {
     @ManyToMany(mappedBy = "tags")
     private Set<Goal> goals;
 
+    @JsonIgnoreProperties({"hiddentags"})
+    @ManyToMany(mappedBy = "hiddentags")
+    private Set<Goal> goals_of_hidden;
+
+
     @JsonIgnoreProperties({"tags"})
     @ManyToMany(mappedBy = "tags")
     private Set<GoalPrototype> goal_prototypes;

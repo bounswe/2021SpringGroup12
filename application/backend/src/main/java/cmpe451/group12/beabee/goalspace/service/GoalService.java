@@ -19,6 +19,7 @@ import cmpe451.group12.beabee.goalspace.model.entities.*;
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
 import cmpe451.group12.beabee.goalspace.model.goals.Tag;
+import cmpe451.group12.beabee.goalspace.model.prototypes.GoalPrototype;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
@@ -79,16 +80,17 @@ public class GoalService {
     }
 
     /********************** SEARCH BEGINS *********************************/
-    public List<GoalDTOShort> searchGoalUsingTitleAndDescription(String query) {
-        List<Goal> all_goals = goalRepository.findAllByDescriptionContainsOrTitleContains(query, query);
-        List<GoalDTOShort> goalDTOShorts = goalShortMapper.mapToDto(all_goals);
-        return goalDTOShorts;
+    public List<GoalDTOShort> searchGoalsExact(String query) {
+        Set<Tag> matched_tags = tagRepository.findAllByNameContains(query);
+        Set<Goal> all_goals = new HashSet<>();
+        matched_tags.stream().forEach(x -> {
+            all_goals.addAll(goalRepository.findAllByTagsIsContaining(x));
+        });
+        all_goals.addAll(goalRepository.findAllByDescriptionContainsOrTitleContains(query, query));
+        return goalShortMapper.mapToDto(all_goals.stream().collect(Collectors.toList()));
     }
 
-    //private Set<Tag> searchTagsById(String id){
-
-    //}
-    private Set<String> findRelatedTagIds(Set<String> tags) throws IOException, ParseException {
+    protected Set<String> findRelatedTagIds(Set<String> tags) throws IOException, ParseException {
         Set<String> related_ids = new HashSet<>();
         for (String name : tags) {
             Optional<Tag> tag_entiti = getTagByName(name);
@@ -140,12 +142,12 @@ public class GoalService {
             }
         }
 
-        System.out.println(related_tags.stream().map(x -> x.getName()).collect(Collectors.toList()));
-        List<Goal> all_goals = new ArrayList<>();
+        Set<Goal> all_goals = new HashSet<>();
         related_tags.stream().forEach(x -> {
+            all_goals.addAll(goalRepository.findAllByHiddentagsIsContaining(x));
             all_goals.addAll(goalRepository.findAllByTagsIsContaining(x));
         });
-        List<GoalDTOShort> goalDTOShorts = goalShortMapper.mapToDto(all_goals);
+        List<GoalDTOShort> goalDTOShorts = goalShortMapper.mapToDto(all_goals.stream().collect(Collectors.toList()));
         return goalDTOShorts;
     }
 
@@ -186,7 +188,7 @@ public class GoalService {
     }
 
     /***********TAGS BEGIN**********/
-    private Optional<Tag> getTagByName(String name) throws IOException, ParseException {
+    protected Optional<Tag> getTagByName(String name) throws IOException, ParseException {
         Optional<Tag> tag_from_db = tagRepository.findByName(name);
         if (tag_from_db.isPresent()) {
             return tag_from_db;
@@ -223,7 +225,7 @@ public class GoalService {
         return Optional.of(new_tag);
     }
 
-    private Optional<Tag> getTagById(String id) throws IOException {
+    protected Optional<Tag> getTagById(String id) throws IOException {
         Optional<Tag> tagOptional = tagRepository.findById(id);
         if (tagOptional.isPresent()) {
             return tagOptional;
@@ -273,6 +275,17 @@ public class GoalService {
             tagEntiti.get().getGoals().add(goal);
             topic_ids.add(tagEntiti.get());
         }
+        Set<String> related_ids = findRelatedTagIds(tags);
+        Set<Tag> related_tags = new HashSet<>();
+        for (String id : related_ids) {
+            if (id == null) continue;
+            Optional<Tag> tag_x = getTagById(id);
+            if (tag_x.isPresent() && !tags.contains(tag_x.get().getName())) {
+                related_tags.add(tag_x.get());
+            }
+        }
+        tagRepository.saveAll(related_tags);
+        goal.getHiddentags().addAll(related_tags);
         tagRepository.saveAll(topic_ids);
         goal.getTags().addAll(topic_ids);
         goalRepository.save(goal);
@@ -294,6 +307,7 @@ public class GoalService {
         new_goal.setExtension_count(0L);
         new_goal.setGoalType(GoalType.GOAL);
         new_goal.setRating(0D);
+        new_goal.setDownloadCount(0L);
 //        getTopicIds(new_goal.getTags());
         goalRepository.save(new_goal);
         return new MessageResponse("Goal added successfully.", MessageType.SUCCESS);
@@ -344,7 +358,6 @@ public class GoalService {
         Subgoal new_subgoal = subgoalPostMapper.mapToEntity(subgoalPostDTO);
         new_subgoal.setMainGoal(goal_opt.get());
         new_subgoal.setIsDone(Boolean.FALSE);
-        new_subgoal.setExtension_count(0L);
         new_subgoal.setCreator(goal_opt.get().getCreator());
         new_subgoal.setRating(0D);
         subgoalRepository.save(new_subgoal);
@@ -392,7 +405,8 @@ public class GoalService {
             goalAnalyticsDTO.setFinishTime(goal_from_db.getCompletedAt());
             goalAnalyticsDTO.setCompletionTimeInMiliseconds(goal_from_db.getCompletedAt().getTime() - goal_from_db.getCreatedAt().getTime());
 
-            List<Goal> common_goals = goalRepository.findAllByCreatedAtIsBetweenOrCompletedAtBetween(goal_from_db.getCreatedAt(), goal_from_db.getCompletedAt(), goal_from_db.getCreatedAt(), goal_from_db.getCompletedAt()).stream().filter(x -> x.getCreator().equals(goal_from_db.getCreator())).collect(Collectors.toList());
+            List<Goal> common_goals = goalRepository.findAllByCreatedAtIsBetweenOrCompletedAtBetween(goal_from_db.getCreatedAt(), goal_from_db.getCompletedAt(), goal_from_db.getCreatedAt(), goal_from_db.getCompletedAt())
+                    .stream().filter(x -> x.getCreator().getUser_id()==goal_from_db.getCreator().getUser_id()).collect(Collectors.toList());
             common_goals.remove(goal_from_db);
             goalAnalyticsDTO.setGoalsWithCommonLifetime(goalShortMapper.mapToDto(common_goals).stream().collect(Collectors.toSet()));
 
@@ -400,7 +414,8 @@ public class GoalService {
             goalAnalyticsDTO.setRating(goal_from_db.getSubgoals().stream().filter(z -> z.getIsDone()).map(x ->
                     x.getRating()).mapToDouble(Double::doubleValue).summaryStatistics().getAverage());
             goalAnalyticsDTO.setStatus(GoalAnalyticsDTO.Status.ACTIVE);
-            List<Goal> common_goals = goalRepository.findAllByCreatedAtIsBetweenOrCompletedAtBetween(goal_from_db.getCreatedAt(), new Date(System.currentTimeMillis()), goal_from_db.getCreatedAt(), new Date(System.currentTimeMillis())).stream().filter(x -> x.getCreator().equals(goal_from_db.getCreator())).collect(Collectors.toList());
+            List<Goal> common_goals = goalRepository.findAllByCreatedAtIsBetweenOrCompletedAtBetween(goal_from_db.getCreatedAt(), new Date(System.currentTimeMillis()), goal_from_db.getCreatedAt(), new Date(System.currentTimeMillis()))
+                    .stream().filter(x -> x.getCreator().getUser_id() ==goal_from_db.getCreator().getUser_id()).collect(Collectors.toList());
             common_goals.remove(goal_from_db);
             goalAnalyticsDTO.setGoalsWithCommonLifetime(goalShortMapper.mapToDto(common_goals).stream().collect(Collectors.toSet()));
         }

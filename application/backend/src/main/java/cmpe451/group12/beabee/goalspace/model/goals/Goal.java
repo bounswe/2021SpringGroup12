@@ -44,6 +44,14 @@ public class Goal extends AllGoal{
     )
     private Set<Tag> tags;
 
+    @ManyToMany
+    @JoinTable(
+            name = "goal_hidden_tag",
+            joinColumns = { @JoinColumn(name = "goal_id") },
+            inverseJoinColumns = { @JoinColumn(name = "tag_id") }
+    )
+    private Set<Tag> hiddentags;
+
     private Long downloadCount;
     @Override
     public boolean equals(Object obj)

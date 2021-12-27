@@ -57,7 +57,6 @@ public class SubgoalService {
         // initialize fields of new subgoal
         new_subgoal.setIsDone(Boolean.FALSE);
         new_subgoal.setRating(0D);
-        new_subgoal.setExtension_count(0L);
         // Add this subgoal to parent subgoal
         Set<Subgoal> subgoals_of_parent = parent_subgoal_opt.get().getChild_subgoals();
         subgoals_of_parent.add(new_subgoal);
@@ -303,7 +302,6 @@ public class SubgoalService {
         SubgoalAnalyticsDTO subgoalAnalyticsDTO = new SubgoalAnalyticsDTO();
 
         subgoalAnalyticsDTO.setSubgoal_id(subgoal_id);
-        subgoalAnalyticsDTO.setExtensionCount(subgoal_from_db.getExtension_count());
         subgoalAnalyticsDTO.setStartTime(subgoal_from_db.getCreatedAt());
         if (subgoal_from_db.getIsDone()) {
             subgoalAnalyticsDTO.setStatus(SubgoalAnalyticsDTO.Status.COMPLETED);

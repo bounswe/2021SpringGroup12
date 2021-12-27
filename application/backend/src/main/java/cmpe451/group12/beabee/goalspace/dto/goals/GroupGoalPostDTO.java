@@ -15,6 +15,4 @@ public class GroupGoalPostDTO
 
     @NotBlank
     private String description;
-
-    private Date deadline;
 }

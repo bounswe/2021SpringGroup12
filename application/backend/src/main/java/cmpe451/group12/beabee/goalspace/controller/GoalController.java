@@ -31,10 +31,10 @@ public class GoalController {
     /************************************** GOALS*******/
 
     /*******************SEARCH BEGINS***********/
-    @ApiOperation(value = "Search in goals using title and description")
+    @ApiOperation(value = "Search goals with exact match in title description and tag fields.")
     @GetMapping("/search")
-    public List<GoalDTOShort> searchGoalUsingTitleAndDescription(@RequestParam(value = "query") @ApiParam(value = "Search query", example = "word1") String query) {
-        return goalService.searchGoalUsingTitleAndDescription(query);
+    public List<GoalDTOShort> searchGoalsExact(@RequestParam(value = "query") @ApiParam(value = "Search query", example = "word1") String query) {
+        return goalService.searchGoalsExact(query);
     }
 
     @ApiOperation(value = "Search in goals using tags")
@@ -75,7 +75,7 @@ public class GoalController {
         return goalService.updateAGoal(goalGetDTO);
     }
 
-    @ApiOperation(value = "Create a goal.")
+    @ApiOperation(value = "Add tags to a goal.")
     @PutMapping("/{goal_id}/tag")
     public MessageResponse addTags(@PathVariable @ApiParam(value = "Id of the goal.", example = "5") Long goal_id,
                                    @RequestBody @ApiParam(value = "Set of tags as list.", example = "['tag1','tag2']") Set<String> tags) throws IOException, ParseException {

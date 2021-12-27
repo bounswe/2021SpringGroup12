@@ -50,6 +50,14 @@ public class GoalPrototype {
     )
     private Set<Tag> tags;
 
+    @ManyToMany
+    @JoinTable(
+            name = "goal_prototype_hidden_tag",
+            joinColumns = { @JoinColumn(name = "goal_id") },
+            inverseJoinColumns = { @JoinColumn(name = "tag_id") }
+    )
+    private Set<Tag> hiddentags;
+
     @Override
     public boolean equals(Object obj)
     {

@@ -25,6 +25,7 @@ public interface GoalRepository extends JpaRepository<Goal, Long> {
     List<Goal> findAllByDescriptionContainsOrTitleContains(String query, String query2);
 
     List<Goal> findAllByTagsIsContaining(Tag tag1);
+    Set<Goal> findAllByHiddentagsIsContaining(Tag tag1);
 
     @Modifying
     @Transactional

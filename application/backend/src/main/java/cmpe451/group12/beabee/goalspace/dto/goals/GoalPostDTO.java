@@ -20,6 +20,5 @@ public class GoalPostDTO {
     @NotBlank
     private String description;
 
-    private Date deadline;
 
 }
