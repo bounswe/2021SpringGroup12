@@ -27,7 +27,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/no_goal_view"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:visibility="invisible"
         app:layout_constraintTop_toBottomOf="@id/search_icon"
         android:layout_marginTop="20dp">
@@ -36,8 +36,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="No such goal"
-            android:textSize="30sp"
+            android:text="No goal with given criteria can be found"
+            android:padding="30dp"
+            android:textSize="22sp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
             />
@@ -46,6 +47,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_goals"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
