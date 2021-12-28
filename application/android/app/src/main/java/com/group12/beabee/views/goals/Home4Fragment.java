@@ -11,6 +11,7 @@ import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.requests.Goal;
+import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.GoalDetail;
 import com.group12.beabee.models.responses.GoalShort;
 import com.group12.beabee.views.BaseInnerFragment;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
+import butterknife.Optional;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -29,12 +32,12 @@ public class Home4Fragment extends BaseInnerFragment implements IOnGoalClickedLi
 
     @BindView(R.id.rv_goals)
     RecyclerView rvGoals;
-    private GoalsPrototypeAdapter goalsAdapter;
+    private GoalsPrototypeAdapter1 goalsAdapter;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        goalsAdapter = new GoalsPrototypeAdapter();
+        goalsAdapter = new GoalsPrototypeAdapter1();
         rvGoals.setAdapter(goalsAdapter);
         goalsAdapter.setItemClickListener(this);
 
@@ -97,6 +100,37 @@ public class Home4Fragment extends BaseInnerFragment implements IOnGoalClickedLi
 
     @Override
     protected int GetLayoutId() {
-        return R.layout.fragment_home4_marketplace;
+        return R.layout.fragment_home4_marketplace2;
+    }
+
+    @OnClick(R.id.search_icon)
+    @Optional
+    public void OnSearch(){
+        Utils.showLoading(getParentFragmentManager());
+        OpenNewFragment((new Home4_2Fragment()));
+    }
+    @OnClick(R.id.search_bar)
+    @Optional
+    public void OnAttemptToSearch(){
+        Utils.showLoading(getParentFragmentManager());
+        /*service.deleteGG(id).enqueue(new Callback<BasicResponse>() {
+            @Override
+            public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
+                if (response.isSuccessful() && response.body() != null) {
+                    Utils.ShowErrorToast(getActivity(), "Group Goal Deleted successfully");
+                } else {
+                    Utils.ShowErrorToast(getActivity(), "Something went wrong!");
+                }
+                GoBack();
+            }
+
+            @Override
+            public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
+                Utils.ShowErrorToast(getActivity(), "Something went wrong!");
+                GoBack();
+            }
+        });*/
     }
 }

@@ -1,0 +1,111 @@
+package com.group12.beabee.views.goals;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.group12.beabee.R;
+import com.group12.beabee.models.responses.GoalShort;
+
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class GoalsPrototypeAdapter1 extends RecyclerView.Adapter<GoalsPrototypeAdapter1.ViewHolder> {
+
+    private List<GoalShort> goalShortList;
+    private IOnGoalClickedListener onItemClickedListener;
+
+    public void setData(List<GoalShort> goalShorts){
+        goalShortList = goalShorts;
+        notifyDataSetChanged();
+    }
+
+    public void setItemClickListener(IOnGoalClickedListener listener){
+        onItemClickedListener = listener;
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        if(viewType==0){
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_goal_list_marketplace, parent, false);
+            return new ViewHolder(view);
+        }
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_goal_list_marketplace, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.BindData(goalShortList.get(position));
+        //holder.getItemViewType()
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        // Just as an example, return 0 or 2 depending on position
+        // Note that unlike in ListView adapters, types don't have to be contiguous
+        return position % 2 * 2;
+    }
+
+    @Override
+    public int getItemCount() {
+        return goalShortList!=null ? goalShortList.size():0;
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.tv_goal_title)
+        TextView tvTitle;
+        @BindView(R.id.tv_description)
+        TextView tvDescription;
+        @BindView(R.id.item_parent)
+        View itemParent;
+        @BindView(R.id.tv_username)
+        TextView tvUsername;
+
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+
+        public void BindData(GoalShort goalShort) {
+            tvTitle.setText(goalShort.title);
+            tvDescription.setText(goalShort.description);
+            itemParent.setOnClickListener(v -> onItemClickedListener.OnGoalClicked(goalShort.id));
+            tvUsername.setText(goalShort.username);
+        }
+    }
+    class ViewHolder2 extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.tv_goal_title)
+        TextView tvTitle;
+        @BindView(R.id.tv_description)
+        TextView tvDescription;
+        @BindView(R.id.item_parent)
+        View itemParent;
+        @BindView(R.id.tv_username)
+        TextView tvUsername;
+
+
+        public ViewHolder2(@NonNull View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+
+        public void BindData(GoalShort goalShort) {
+            tvTitle.setText(goalShort.title);
+            tvDescription.setText(goalShort.description);
+            itemParent.setOnClickListener(v -> onItemClickedListener.OnGoalClicked(goalShort.id));
+            tvUsername.setText(goalShort.username);
+        }
+    }
+}

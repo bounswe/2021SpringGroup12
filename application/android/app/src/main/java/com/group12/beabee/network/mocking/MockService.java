@@ -393,6 +393,16 @@ public class MockService implements ServiceAPI {
         return null;
     }
 
+    @Override
+    public Call<List<GoalDetail>> getProGoalSearch(String query) {
+        return null;
+    }
+
+    @Override
+    public Call<List<GoalDetail>> getProGoalTagSearch(String tag) {
+        return null;
+    }
+
     private Call<BasicResponse> returnBasicResponse(){
         return new MockCall<BasicResponse>() {
             @Override

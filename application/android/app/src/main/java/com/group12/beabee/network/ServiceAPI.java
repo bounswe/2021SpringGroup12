@@ -219,6 +219,13 @@ public interface ServiceAPI {
     @POST("/v2/prototypes/publish/{id}")
     Call<BasicResponse> publishGoal(@Path("id") int public_goal_id);
 
+    //SEARCH IN MARKET PLACE
+    @GET("/v2/prototypes/search/")
+    Call<List<GoalDetail>>getProGoalSearch(@Query("query") String query);
+
+    @GET("/v2/prototypes/search/{tag}")
+    Call<List<GoalDetail>>getProGoalTagSearch(@Path("tag") String tag);
+
 
 }
 //7YPxFmM3yTaAzaSi3Q61B
