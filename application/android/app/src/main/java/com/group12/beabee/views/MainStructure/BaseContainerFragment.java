@@ -81,6 +81,10 @@ public class BaseContainerFragment extends Fragment {
         btnAdd.setOnClickListener(listener);
     }
 
+    public void SetSearchBtnListener(View.OnClickListener listener) {
+        btnSearch.setOnClickListener(listener);
+    }
+
     public void AddNewFragment(BaseInnerFragment fragment) {
         fragmentManager = getChildFragmentManager();
         fragmentManager.beginTransaction()
