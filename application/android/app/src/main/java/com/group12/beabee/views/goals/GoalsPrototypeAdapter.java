@@ -22,8 +22,11 @@ public class GoalsPrototypeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private List<GoalShort> goalShortList2;
     private IOnGoalClickedListener onItemClickedListener;
 
-    public void setData(List<GoalShort> goalShorts1, List<GoalShort> goalShorts2 ){
+    public void setData1(List<GoalShort> goalShorts1 ){
         goalShortList1 = goalShorts1;
+        notifyDataSetChanged();
+    }
+    public void setData2(List<GoalShort> goalShorts2 ){
         goalShortList2 = goalShorts2;
         notifyDataSetChanged();
     }
