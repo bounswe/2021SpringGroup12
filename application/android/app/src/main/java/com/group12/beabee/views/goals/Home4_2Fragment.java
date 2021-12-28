@@ -37,6 +37,8 @@ public class Home4_2Fragment extends BaseInnerFragment implements IOnGoalClicked
     EditText searchedWord;
     List<GoalShort> goals;
     List<GoalShort> goals1;
+    @BindView(R.id.no_goal_view)
+    View noGoalView;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -45,53 +47,6 @@ public class Home4_2Fragment extends BaseInnerFragment implements IOnGoalClicked
         rvGoals.setAdapter(goalsAdapter);
         goalsAdapter.setItemClickListener(this);
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Utils.showLoading(getParentFragmentManager());
-        String word=searchedWord.getText().toString();
-        service.getProGoalSearch(word).enqueue(new Callback<List<GoalDetail>>() {
-            @Override
-            public void onResponse(Call<List<GoalDetail>> call, Response<List<GoalDetail>> response) {
-                Utils.dismissLoading();
-                if (response.isSuccessful() && response.body() != null) {
-                    goals=detailToShort(response.body());
-                }
-                else {
-                    Utils.ShowErrorToast(getActivity(), "Something went wrong!");
-                }
-                //GoBack();
-            }
-
-            @Override
-            public void onFailure(Call<List<GoalDetail>> call, Throwable t) {
-                Utils.dismissLoading();
-                Utils.ShowErrorToast(getActivity(), "Something went wrong!");
-                GoBack();
-            }
-        });
-        /*service.getProGoalTagSearch(word).enqueue(new Callback<List<GoalDetail>>() {
-            @Override
-            public void onResponse(Call<List<GoalDetail>> call, Response<List<GoalDetail>> response) {
-                Utils.dismissLoading();
-                if (response.isSuccessful() && response.body() != null) {
-                    goals1=detailToShort(response.body());
-                } else {
-                    Utils.ShowErrorToast(getActivity(), "Something went wrong!");
-                }
-                GoBack();
-            }
-
-            @Override
-            public void onFailure(Call<List<GoalDetail>> call, Throwable t) {
-                Utils.dismissLoading();
-                Utils.ShowErrorToast(getActivity(), "Something went wrong!");
-                GoBack();
-            }
-        });*/
-        OnGoalsReceived(goals,goals1);
     }
 
     private List<GoalShort> detailToShort(List<GoalDetail> goals){
@@ -107,8 +62,30 @@ public class Home4_2Fragment extends BaseInnerFragment implements IOnGoalClicked
         return newGoals;
     }
 
-    private void OnGoalsReceived(List<GoalShort> goals, List<GoalShort> goals1){
-        goalsAdapter.setData(goals,goals1);
+    private void OnGoalsReceived1(List<GoalShort> goals){
+        goalsAdapter.setData1(goals);
+        /*if (goals==null || goals.size()==0)
+        {
+            rvGoals.setVisibility(View.GONE);
+            noGoalView.setVisibility(View.VISIBLE);
+        }else{
+            rvGoals.setVisibility(View.VISIBLE);
+            noGoalView.setVisibility(View.GONE);
+            goalsAdapter.setData1(goals);
+        }*/
+
+    }
+    private void OnGoalsReceived2(List<GoalShort> goals1){
+        /*if (goals1==null || goals1.size()==0)
+        {
+            rvGoals.setVisibility(View.GONE);
+            noGoalView.setVisibility(View.VISIBLE);
+        }else{
+            rvGoals.setVisibility(View.VISIBLE);
+            noGoalView.setVisibility(View.GONE);
+            goalsAdapter.setData2(goals1);
+        }*/
+        goalsAdapter.setData2(goals1);
     }
 
     @Override
@@ -143,17 +120,18 @@ public class Home4_2Fragment extends BaseInnerFragment implements IOnGoalClicked
                 Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null) {
                     goals=detailToShort(response.body());
+                    OnGoalsReceived1(goals);
                 } else {
                     Utils.ShowErrorToast(getActivity(), "Something went wrong!");
                 }
-                GoBack();
+
             }
 
             @Override
             public void onFailure(Call<List<GoalDetail>> call, Throwable t) {
                 Utils.dismissLoading();
                 Utils.ShowErrorToast(getActivity(), "Something went wrong!");
-                GoBack();
+
             }
         });
         service.getProGoalTagSearch(word).enqueue(new Callback<List<GoalDetail>>() {
@@ -162,19 +140,20 @@ public class Home4_2Fragment extends BaseInnerFragment implements IOnGoalClicked
                 Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null) {
                     goals1=detailToShort(response.body());
+                    OnGoalsReceived2(goals1);
                 } else {
                     Utils.ShowErrorToast(getActivity(), "Something went wrong!");
                 }
-                GoBack();
+
             }
 
             @Override
             public void onFailure(Call<List<GoalDetail>> call, Throwable t) {
                 Utils.dismissLoading();
                 Utils.ShowErrorToast(getActivity(), "Something went wrong!");
-                GoBack();
+
             }
         });
-        OnGoalsReceived(goals,goals1);
+
     }
 }
