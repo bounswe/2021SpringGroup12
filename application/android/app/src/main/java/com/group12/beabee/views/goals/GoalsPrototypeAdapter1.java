@@ -70,6 +70,8 @@ public class GoalsPrototypeAdapter1 extends RecyclerView.Adapter<GoalsPrototypeA
         View itemParent;
         @BindView(R.id.tv_username)
         TextView tvUsername;
+        @BindView(R.id.download_number)
+        TextView downloadnum;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -82,6 +84,7 @@ public class GoalsPrototypeAdapter1 extends RecyclerView.Adapter<GoalsPrototypeA
             tvDescription.setText(goalShort.description);
             itemParent.setOnClickListener(v -> onItemClickedListener.OnGoalClicked(goalShort.id));
             tvUsername.setText(goalShort.username);
+            downloadnum.setText(goalShort.download_count);
         }
     }
     class ViewHolder2 extends RecyclerView.ViewHolder {
@@ -94,6 +97,8 @@ public class GoalsPrototypeAdapter1 extends RecyclerView.Adapter<GoalsPrototypeA
         View itemParent;
         @BindView(R.id.tv_username)
         TextView tvUsername;
+        @BindView(R.id.download_number)
+        TextView downloadnum;
 
 
         public ViewHolder2(@NonNull View itemView) {
@@ -106,6 +111,8 @@ public class GoalsPrototypeAdapter1 extends RecyclerView.Adapter<GoalsPrototypeA
             tvDescription.setText(goalShort.description);
             itemParent.setOnClickListener(v -> onItemClickedListener.OnGoalClicked(goalShort.id));
             tvUsername.setText(goalShort.username);
+            downloadnum.setText(goalShort.download_count);
+
         }
     }
 }
