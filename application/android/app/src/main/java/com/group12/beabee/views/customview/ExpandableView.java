@@ -17,7 +17,9 @@ import java.util.List;
 public class ExpandableView extends FrameLayout {
     private RecyclerView recyclerView;
     private TextView tvTitle;
+    private View noContent;
     private View expandableTitle;
+    private View expandablePart;
     private ImageView ivExpandIcon;
 
     private boolean isExpanded = false;
@@ -44,8 +46,11 @@ public class ExpandableView extends FrameLayout {
         rvAdapter = new ExpandableListAdapter();
         recyclerView.setAdapter(rvAdapter);
         tvTitle = findViewById(R.id.tv_title);
+        noContent = findViewById(R.id.tv_no_content);
         ivExpandIcon = findViewById(R.id.iv_expandable_icon);
         expandableTitle = findViewById(R.id.titlePart);
+        expandablePart = findViewById(R.id.expandable_part);
+
         expandableTitle.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,17 +60,19 @@ public class ExpandableView extends FrameLayout {
                     Expand();
             }
         });
+        SetDataList(null);
+        Collapse();
     }
 
     public void Collapse(){
-        recyclerView.setVisibility(GONE);
+        expandablePart.setVisibility(GONE);
         ivExpandIcon.setImageResource(R.drawable.ic_drop_down);
         isExpanded = false;
     }
 
     public void Expand(){
         isExpanded = true;
-        recyclerView.setVisibility(VISIBLE);
+        expandablePart.setVisibility(VISIBLE);
         ivExpandIcon.setImageResource(R.drawable.ic_drop_up);
     }
 
@@ -74,6 +81,14 @@ public class ExpandableView extends FrameLayout {
     }
 
     public void SetDataList(List<ExpandableListItem> dataList){
-        rvAdapter.setData(dataList);
+        if (dataList==null || dataList.size()==0){
+            noContent.setVisibility(VISIBLE);
+            recyclerView.setVisibility(GONE);
+        }else{
+            rvAdapter.setData(dataList);
+            noContent.setVisibility(GONE);
+            recyclerView.setVisibility(VISIBLE);
+        }
+
     }
 }
