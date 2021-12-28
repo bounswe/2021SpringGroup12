@@ -107,8 +107,10 @@ public class Home4Fragment extends BaseInnerFragment implements IOnGoalClickedLi
     @Optional
     public void OnSearch(){
         Utils.showLoading(getParentFragmentManager());
-        //OpenNewFragment((new Home4_2Fragment()));
+        OpenNewFragment((new Home4_2Fragment()));
     }
+
+
     @OnClick(R.id.search_bar)
     @Optional
     public void OnAttemptToSearch(){

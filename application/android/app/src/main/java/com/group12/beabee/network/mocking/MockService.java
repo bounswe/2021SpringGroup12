@@ -394,6 +394,11 @@ public class MockService implements ServiceAPI {
     }
 
     @Override
+    public Call<BasicResponse> copyGoal(int user_id, int prototype_id) {
+        return null;
+    }
+
+    @Override
     public Call<List<GoalDetail>> getProGoalSearch(String query) {
         return null;
     }
