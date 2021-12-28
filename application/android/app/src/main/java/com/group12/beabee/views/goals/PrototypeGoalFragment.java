@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
+import com.group12.beabee.models.ExpandableListItem;
 import com.group12.beabee.models.ParentType;
 import com.group12.beabee.models.requests.ExtendDeadline;
 import com.group12.beabee.models.responses.BasicResponse;
@@ -23,12 +25,16 @@ import com.group12.beabee.models.responses.GoalDetail;
 import com.group12.beabee.models.responses.SubgoalShort;
 import com.group12.beabee.views.MainStructure.BaseEntityLinkableFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
+import com.group12.beabee.views.customview.ExpandableView;
 import com.group12.beabee.views.entities.DeadlineCalendarFragment;
 import com.group12.beabee.views.entities.IOnTagClickedListener;
 import com.group12.beabee.views.entities.TagCardViewAdapter;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -43,30 +49,23 @@ import retrofit2.Response;
  * create an instance of this fragment.
  */
 public class PrototypeGoalFragment extends BaseEntityLinkableFragment implements IOnSubgoalClickedListener, IOnTagClickedListener, DatePickerDialog.OnDateSetListener {
+
     @BindView(R.id.tv_title)
     @Nullable
     TextView tvTitle;
     @BindView(R.id.tv_description)
     @Nullable
     TextView tvDescription;
-    @BindView(R.id.tv_dateSelected)
-    @Nullable
-    TextView tvDateSelected;
-    @BindView(R.id.rv_subgoals)
-    @Nullable
-    RecyclerView rvSubgoal;
     @BindView(R.id.rv_tags)
     @Nullable
     RecyclerView rvTag;
-    @BindView(R.id.btn_complete)
+    @BindView(R.id.ex_subgoal_list)
     @Nullable
-    View btnComplete;
+    ExpandableView subgoalList;
 
     private GoalDetail goalDetail;
 
     private TagCardViewAdapter tagAdapter;
-    private SubgoalCardViewAdapter subgoalAdapter;
-
 
     public PrototypeGoalFragment() {
         // Required empty public constructor
@@ -111,16 +110,12 @@ public class PrototypeGoalFragment extends BaseEntityLinkableFragment implements
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        subgoalAdapter = new SubgoalCardViewAdapter();
         tagAdapter = new TagCardViewAdapter();
         tagAdapter.setItemClickListener(this);
-        subgoalAdapter.setItemClickListener(this);
     }
 
     @Override
     public void onReady() {
-        rvTag.setAdapter(tagAdapter);
-        rvSubgoal.setAdapter(subgoalAdapter);
     }
 
     @Override
@@ -129,7 +124,7 @@ public class PrototypeGoalFragment extends BaseEntityLinkableFragment implements
         RefreshPage();
     }
 
-    private void RefreshPage(){
+    private void RefreshPage() {
         Utils.showLoading(getChildFragmentManager());
         service.getProGoal(id).enqueue(new Callback<GoalDetail>() {
             @Override
@@ -164,14 +159,18 @@ public class PrototypeGoalFragment extends BaseEntityLinkableFragment implements
     }
 
     private void SetSubgoals(List<SubgoalShort> subgoals) {
-        subgoalAdapter.setData(subgoals);
+        List<ExpandableListItem> dataList = new ArrayList<>();
+        for (SubgoalShort subgoal :
+                subgoals) {
+            dataList.add(new ExpandableListItem(subgoal.title, subgoal.description));
+        }
+        subgoalList.SetDataList(dataList);
     }
 
     private void OnGoalDTOReceived(GoalDetail data) {
         goalDetail = data;
         tvTitle.setText(data.title);
         tvDescription.setText(data.description);
-        //SetProEntityLinks(data.entities);
         SetSubgoals(data.subgoals);
     }
 
