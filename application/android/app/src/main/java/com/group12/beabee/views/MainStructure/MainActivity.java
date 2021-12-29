@@ -19,6 +19,7 @@ import com.group12.beabee.views.goals.Home2Fragment;
 import com.group12.beabee.views.goals.Home3Fragment;
 import com.group12.beabee.views.goals.HomeFragment;
 import com.group12.beabee.views.goals.SubgoalFragment;
+import com.group12.beabee.views.userprofile.UserSearchFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                     baseContainerFragment = fragmentActivity.containers[3];
                     break;
                 case 4:
-                    fragmentActivity.containers[4] = new BaseContainerFragment(new HomeFragment());
+                    fragmentActivity.containers[4] = new BaseContainerFragment(new UserSearchFragment());
                     baseContainerFragment = fragmentActivity.containers[4];
                     break;
                 default:

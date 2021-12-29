@@ -25,6 +25,7 @@ import com.group12.beabee.models.responses.LoginResponse;
 import com.group12.beabee.models.responses.TaskDetail;
 import com.group12.beabee.models.responses.SignUpResponse;
 import com.group12.beabee.models.responses.UserDTO;
+import com.group12.beabee.models.responses.UserSearchData;
 import com.group12.beabee.network.ServiceAPI;
 
 import java.util.ArrayList;
@@ -362,9 +363,17 @@ public class MockService implements ServiceAPI {
     public Call<BasicResponse> extendSubgoal(int subgoal_id, ExtendDeadline newDeadline) {
         return returnBasicResponse();
     }
+
+
       
     @Override
     public Call<Analytics> getUserAnalytics(int user_id) {
+        return null;
+    }
+
+    @Override
+    public Call<List<UserSearchData>> getUserSearch(String query) {
+
         return null;
     }
 

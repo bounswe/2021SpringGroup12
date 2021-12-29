@@ -24,6 +24,7 @@ import com.group12.beabee.models.responses.LoginResponse;
 import com.group12.beabee.models.responses.TaskDetail;
 import com.group12.beabee.models.responses.SignUpResponse;
 import com.group12.beabee.models.responses.UserDTO;
+import com.group12.beabee.models.responses.UserSearchData;
 
 import java.util.List;
 
@@ -200,6 +201,11 @@ public interface ServiceAPI {
     //ANALYTICS
     @GET("users/analytics/{user_id}")
     Call<Analytics>getUserAnalytics(@Path("user_id") int user_id);
+
+    //SEARCH USER
+
+    @GET("/v2/users/search/{query}")
+    Call<List<UserSearchData>>getUserSearch(@Path("query") String query);
 
 }
 //7YPxFmM3yTaAzaSi3Q61B
