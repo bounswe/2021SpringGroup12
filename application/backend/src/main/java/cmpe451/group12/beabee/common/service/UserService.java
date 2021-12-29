@@ -1,5 +1,6 @@
 package cmpe451.group12.beabee.common.service;
 
+import cmpe451.group12.beabee.common.model.Users;
 import cmpe451.group12.beabee.common.repository.UserRepository;
 import cmpe451.group12.beabee.goalspace.Repository.goals.GoalRepository;
 import cmpe451.group12.beabee.common.dto.UserGetDTO;
@@ -7,6 +8,7 @@ import cmpe451.group12.beabee.goalspace.mapper.goals.GoalPostMapper;
 import cmpe451.group12.beabee.common.mapper.UserMapper;
 import cmpe451.group12.beabee.goalspace.mapper.goals.GoalShortMapper;
 import cmpe451.group12.beabee.goalspace.service.GoalService;
+import cmpe451.group12.beabee.login.dto.UserCredentialsGetDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import cmpe451.group12.beabee.goalspace.dto.analytics.GoalAnalyticsDTO;
 import cmpe451.group12.beabee.goalspace.dto.analytics.UserAnalyticsDTO;
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -29,7 +32,6 @@ public class UserService {
     private final UserMapper userMapper;
     private final GoalPostMapper goalPostMapper;
     private final GoalShortMapper goalShortMapper;
-
     private final GoalService goalService;
 
     public UserGetDTO getUserById(Long id) {
@@ -94,4 +96,20 @@ public class UserService {
     }
 
 
+    public List<UserGetDTO> searchUser(String query) {
+        List<UserGetDTO> ret = new ArrayList<>();
+        List<Users> all_users = userRepository.findAllByUsernameIsContaining(query);
+        all_users.stream().forEach(x ->{
+            UserGetDTO userGetDTO = new UserGetDTO();
+            UserCredentialsGetDTO userCredentialsGetDTO = new UserCredentialsGetDTO();
+            userCredentialsGetDTO.setUsername(x.getUsername());
+            userCredentialsGetDTO.setEmail(x.getEmail());
+            userCredentialsGetDTO.setPassword(x.getPassword());
+            userGetDTO.setUserCredentials(userCredentialsGetDTO);
+            userGetDTO.setId(x.getUser_id());
+            ret.add(userGetDTO);
+        });
+        return ret;
+
+    }
 }

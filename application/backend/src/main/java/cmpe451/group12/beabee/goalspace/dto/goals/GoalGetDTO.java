@@ -23,11 +23,12 @@ public class GoalGetDTO {
 
     private String description;
 
-    private Date deadline;
 
     private Date createdAt;
 
     private Set<SubgoalDTOShort> subgoals;
 
     private Set<EntitiDTOShort> entities;
+    private Set<String> tags;
+
 }

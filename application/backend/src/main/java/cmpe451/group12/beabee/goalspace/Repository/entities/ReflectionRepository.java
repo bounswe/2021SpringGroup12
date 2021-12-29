@@ -19,6 +19,6 @@ public interface ReflectionRepository extends JpaRepository<Reflection, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "DELETE FROM reflection WHERE id = ?1",nativeQuery = true)
+    @Query(value = "DELETE FROM Reflection WHERE id = ?1",nativeQuery = true)
     void deleteById(@Param("id") Long id);
 }

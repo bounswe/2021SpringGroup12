@@ -50,7 +50,7 @@ public class LoginController {
                             "  \"username*\": \"string\"\n" +
                             "}"
             )
-            ) ) UserCredentialsPostDTO userCredentialsPostDTO) {
+                ) ) UserCredentialsPostDTO userCredentialsPostDTO) {
         return service.signup(userCredentialsPostDTO);
     }
 }

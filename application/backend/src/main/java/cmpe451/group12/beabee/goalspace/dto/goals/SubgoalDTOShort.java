@@ -13,6 +13,4 @@ public class SubgoalDTOShort {
     private String title;
 
     private String description;
-
-    private Date deadline;
 }

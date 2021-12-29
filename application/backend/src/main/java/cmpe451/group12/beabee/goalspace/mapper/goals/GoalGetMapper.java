@@ -31,7 +31,6 @@ public class GoalGetMapper {
             goalGetDTO.setTitle(goal.getTitle());
             goalGetDTO.setIsDone(goal.getIsDone());
             goalGetDTO.setDescription(goal.getDescription());
-            goalGetDTO.setDeadline(goal.getDeadline());
             goalGetDTO.setCreatedAt(goal.getCreatedAt());
             goalGetDTO.setSubgoals(this.subgoalSetToSubgoalDTOShortSet(goal.getSubgoals()));
             return goalGetDTO;
@@ -48,7 +47,6 @@ public class GoalGetMapper {
             goal.setIsDone(goalGetDTO.getIsDone());
             goal.setDescription(goalGetDTO.getDescription());
             goal.setCreatedAt(goalGetDTO.getCreatedAt());
-            goal.setDeadline(goalGetDTO.getDeadline());
             goal.setId(goalGetDTO.getId());
             goal.setSubgoals(this.subgoalDTOShortSetToSubgoalSet(goalGetDTO.getSubgoals()));
             return goal;
@@ -95,7 +93,6 @@ public class GoalGetMapper {
             subgoalDTOShort.setId(subgoal.getId());
             subgoalDTOShort.setTitle(subgoal.getTitle());
             subgoalDTOShort.setDescription(subgoal.getDescription());
-            subgoalDTOShort.setDeadline(subgoal.getDeadline());
             return subgoalDTOShort;
         }
     }
@@ -124,7 +121,6 @@ public class GoalGetMapper {
             subgoal.setId(subgoalDTOShort.getId());
             subgoal.setTitle(subgoalDTOShort.getTitle());
             subgoal.setDescription(subgoalDTOShort.getDescription());
-            subgoal.setDeadline(subgoalDTOShort.getDeadline());
             return subgoal;
         }
     }

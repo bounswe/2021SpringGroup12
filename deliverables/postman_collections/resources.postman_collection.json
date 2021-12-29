@@ -1,0 +1,477 @@
+{
+	"info": {
+		"_postman_id": "f5f16386-1dda-4b4c-b6e2-e0c81498e9b9",
+		"name": "resources",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "add resource",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "resource",
+							"type": "file",
+							"src": "/home/veyis/Pictures/KDWb1E.jfif"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/resources/711",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"resources",
+						"711"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "add resource",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "resource",
+									"type": "file",
+									"src": "/home/veyis/Pictures/KDWb1E.jfif"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://3.144.201.198:8085/v2/resources/711",
+							"protocol": "http",
+							"host": [
+								"3",
+								"144",
+								"201",
+								"198"
+							],
+							"port": "8085",
+							"path": [
+								"v2",
+								"resources",
+								"711"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain;charset=UTF-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "43"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 18 Dec 2021 17:50:53 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "Resource uploaded successfully: KDWb1E.jfif"
+				}
+			]
+		},
+		{
+			"name": "get all resources",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/resources/",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"resources",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "get all resources",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://3.144.201.198:8085/v2/resources/",
+							"protocol": "http",
+							"host": [
+								"3",
+								"144",
+								"201",
+								"198"
+							],
+							"port": "8085",
+							"path": [
+								"v2",
+								"resources",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 18 Dec 2021 17:53:21 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 3,\n        \"entiti\": null,\n        \"name\": \"example resource.png\",\n        \"contentType\": \"image/png\",\n        \"size\": 71292,\n        \"data\": null,\n        \"url\": \"http://3.144.201.198:8085/v2/resources/3\",\n        \"createdAt\": \"2021-12-18T12:29:35.439+00:00\"\n    },\n    {\n        \"id\": 4,\n        \"entiti\": null,\n        \"name\": \"example resource.png\",\n        \"contentType\": \"image/png\",\n        \"size\": 71292,\n        \"data\": null,\n        \"url\": \"http://3.144.201.198:8085/v2/resources/4\",\n        \"createdAt\": \"2021-12-18T15:37:00.865+00:00\"\n    },\n    {\n        \"id\": 5,\n        \"entiti\": null,\n        \"name\": \"goals.postman_collection.json\",\n        \"contentType\": \"application/json\",\n        \"size\": 6507,\n        \"data\": null,\n        \"url\": \"http://3.144.201.198:8085/v2/resources/5\",\n        \"createdAt\": \"2021-12-18T17:49:33.433+00:00\"\n    },\n    {\n        \"id\": 6,\n        \"entiti\": null,\n        \"name\": \"mydata_tree.png\",\n        \"contentType\": \"image/png\",\n        \"size\": 41213,\n        \"data\": null,\n        \"url\": \"http://3.144.201.198:8085/v2/resources/6\",\n        \"createdAt\": \"2021-12-18T17:49:51.966+00:00\"\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "delete a resource",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/resources/6",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"resources",
+						"6"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "delete a resource",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://3.144.201.198:8085/v2/resources/6",
+							"protocol": "http",
+							"host": [
+								"3",
+								"144",
+								"201",
+								"198"
+							],
+							"port": "8085",
+							"path": [
+								"v2",
+								"resources",
+								"6"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain;charset=UTF-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "46"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 18 Dec 2021 17:53:31 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "Resource deleted successfully: mydata_tree.png"
+				}
+			]
+		},
+		{
+			"name": "get a resource",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://3.144.201.198:8085/v2/resources/5",
+					"protocol": "http",
+					"host": [
+						"3",
+						"144",
+						"201",
+						"198"
+					],
+					"port": "8085",
+					"path": [
+						"v2",
+						"resources",
+						"5"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "get a resource",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://3.144.201.198:8085/v2/resources/5",
+							"protocol": "http",
+							"host": [
+								"3",
+								"144",
+								"201",
+								"198"
+							],
+							"port": "8085",
+							"path": [
+								"v2",
+								"resources",
+								"5"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "Content-Disposition",
+							"value": "attachment; filename=\"goals.postman_collection.json\""
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "6507"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 18 Dec 2021 17:53:40 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"info\": {\n        \"_postman_id\": \"940a17fb-c492-4adb-a663-302460540ca9\",\n        \"name\": \"goals\",\n        \"schema\": \"https://schema.getpostman.com/json/collection/v2.1.0/collection.json\"\n    },\n    \"item\": [\n        {\n            \"name\": \"create a goal\",\n            \"request\": {\n                \"auth\": {\n                    \"type\": \"bearer\",\n                    \"bearer\": [\n                        {\n                            \"key\": \"token\",\n                            \"value\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2ZXlpc3QiLCJleHAiOjE2NDAyNzg2MzYsImlhdCI6MTYzOTg0NjYzNn0.x0HZGHXbFQXVTnCyGkm9r7tbp3o1Qzrko-qb59FCCis\",\n                            \"type\": \"string\"\n                        }\n                    ]\n                },\n                \"method\": \"POST\",\n                \"header\": [],\n                \"body\": {\n                    \"mode\": \"raw\",\n                    \"raw\": \"{\\n  \\\"deadline\\\": \\\"2021-11-19T12:07:21.736Z\\\",\\n  \\\"description\\\": \\\"writing individual report of the m2 report.\\\",\\n  \\\"title\\\": \\\"cmpe 451 milestone 2 - individual report\\\"\\n}\",\n                    \"options\": {\n                        \"raw\": {\n                            \"language\": \"json\"\n                        }\n                    }\n                },\n                \"url\": {\n                    \"raw\": \"http://3.144.201.198:8085/v2/goals/15\",\n                    \"protocol\": \"http\",\n                    \"host\": [\n                        \"3\",\n                        \"144\",\n                        \"201\",\n                        \"198\"\n                    ],\n                    \"port\": \"8085\",\n                    \"path\": [\n                        \"v2\",\n                        \"goals\",\n                        \"15\"\n                    ]\n                }\n            },\n            \"response\": []\n        },\n        {\n            \"name\": \"get a goal\",\n            \"request\": {\n                \"method\": \"GET\",\n                \"header\": [],\n                \"url\": {\n                    \"raw\": \"http://3.144.201.198:8085/v2/goals/803\",\n                    \"protocol\": \"http\",\n                    \"host\": [\n                        \"3\",\n                        \"144\",\n                        \"201\",\n                        \"198\"\n                    ],\n                    \"port\": \"8085\",\n                    \"path\": [\n                        \"v2\",\n                        \"goals\",\n                        \"803\"\n                    ]\n                }\n            },\n            \"response\": []\n        },\n        {\n            \"name\": \"update a goal-1\",\n            \"request\": {\n                \"method\": \"PUT\",\n                \"header\": [],\n                \"body\": {\n                    \"mode\": \"raw\",\n                    \"raw\": \"{\\n  \\\"createdAt\\\": \\\"2021-11-27T12:16:42.506Z\\\",\\n  \\\"deadline\\\": \\\"2021-11-27T12:16:42.506Z\\\",\\n  \\\"description\\\": \\\"string\\\",\\n  \\\"id\\\": 2,\\n  \\\"isDone\\\": true,\\n  \\\"title\\\": \\\"updated 2\\\",\\n  \\\"user_id\\\": 1\\n}\",\n                    \"options\": {\n                        \"raw\": {\n                            \"language\": \"json\"\n                        }\n                    }\n                },\n                \"url\": {\n                    \"raw\": \"localhost:8085/v2/goals\",\n                    \"host\": [\n                        \"localhost\"\n                    ],\n                    \"port\": \"8085\",\n                    \"path\": [\n                        \"v2\",\n                        \"goals\"\n                    ]\n                }\n            },\n            \"response\": []\n        },\n        {\n            \"name\": \"update a goal-2\",\n            \"request\": {\n                \"method\": \"PUT\",\n                \"header\": [],\n                \"body\": {\n                    \"mode\": \"raw\",\n                    \"raw\": \"{\\n  \\\"deadline\\\": \\\"2021-12-29T12:16:47.506Z\\\",\\n  \\\"description\\\": \\\"desc updated\\\",\\n  \\\"id\\\": 803,\\n  \\\"isDone\\\": true,\\n  \\\"title\\\": \\\"cmpe 451 milestone 2 report updated\\\",\\n  \\\"user_id\\\": 15\\n}\",\n                    \"options\": {\n                        \"raw\": {\n                            \"language\": \"json\"\n                        }\n                    }\n                },\n                \"url\": {\n                    \"raw\": \"http://3.144.201.198:8085/v2/goals\",\n                    \"protocol\": \"http\",\n                    \"host\": [\n                        \"3\",\n                        \"144\",\n                        \"201\",\n                        \"198\"\n                    ],\n                    \"port\": \"8085\",\n                    \"path\": [\n                        \"v2\",\n                        \"goals\"\n                    ]\n                }\n            },\n            \"response\": []\n        },\n        {\n            \"name\": \"update a goal-3\",\n            \"request\": {\n                \"method\": \"PUT\",\n                \"header\": [],\n                \"body\": {\n                    \"mode\": \"raw\",\n                    \"raw\": \"{\\n  \\\"deadline\\\": \\\"2022-01-14T12:16:42.506Z\\\",\\n  \\\"id\\\": 803,\\n  \\\"title\\\": \\\"only update title\\\",\\n  \\\"user_id\\\": 15\\n}\",\n                    \"options\": {\n                        \"raw\": {\n                            \"language\": \"json\"\n                        }\n                    }\n                },\n                \"url\": {\n                    \"raw\": \"http://3.144.201.198:8085/v2/goals\",\n                    \"protocol\": \"http\",\n                    \"host\": [\n                        \"3\",\n                        \"144\",\n                        \"201\",\n                        \"198\"\n                    ],\n                    \"port\": \"8085\",\n                    \"path\": [\n                        \"v2\",\n                        \"goals\"\n                    ]\n                }\n            },\n            \"response\": []\n        },\n        {\n            \"name\": \"get all goals of a user\",\n            \"request\": {\n                \"method\": \"GET\",\n                \"header\": [],\n                \"url\": {\n                    \"raw\": \"http://3.144.201.198:8085/v2/goals/of_user/15\",\n                    \"protocol\": \"http\",\n                    \"host\": [\n                        \"3\",\n                        \"144\",\n                        \"201\",\n                        \"198\"\n                    ],\n                    \"port\": \"8085\",\n                    \"path\": [\n                        \"v2\",\n                        \"goals\",\n                        \"of_user\",\n                        \"15\"\n                    ]\n                }\n            },\n            \"response\": []\n        },\n        {\n            \"name\": \"delete a goal\",\n            \"request\": {\n                \"method\": \"DELETE\",\n                \"header\": [],\n                \"url\": {\n                    \"raw\": \"http://3.144.201.198:8085/v2/goals/804\",\n                    \"protocol\": \"http\",\n                    \"host\": [\n                        \"3\",\n                        \"144\",\n                        \"201\",\n                        \"198\"\n                    ],\n                    \"port\": \"8085\",\n                    \"path\": [\n                        \"v2\",\n                        \"goals\",\n                        \"804\"\n                    ]\n                }\n            },\n            \"response\": []\n        },\n        {\n            \"name\": \"create a subgoal under a goal\",\n            \"request\": {\n                \"method\": \"POST\",\n                \"header\": [],\n                \"body\": {\n                    \"mode\": \"raw\",\n                    \"raw\": \"{\\n  \\\"deadline\\\": \\\"2021-12-18T23:59:31.732Z\\\",\\n  \\\"description\\\": \\\"this subgoal will handle only login endpoints\\\",\\n  \\\"main_goal_id\\\": 803,\\n  \\\"title\\\": \\\"writing postman collection for login endpoints\\\"\\n}\",\n                    \"options\": {\n                        \"raw\": {\n                            \"language\": \"json\"\n                        }\n                    }\n                },\n                \"url\": {\n                    \"raw\": \"http://3.144.201.198:8085/v2/goals/subgoal\",\n                    \"protocol\": \"http\",\n                    \"host\": [\n                        \"3\",\n                        \"144\",\n                        \"201\",\n                        \"198\"\n                    ],\n                    \"port\": \"8085\",\n                    \"path\": [\n                        \"v2\",\n                        \"goals\",\n                        \"subgoal\"\n                    ]\n                }\n            },\n            \"response\": []\n        },\n        {\n            \"name\": \"extend a goal\",\n            \"request\": {\n                \"method\": \"PUT\",\n                \"header\": [],\n                \"body\": {\n                    \"mode\": \"raw\",\n                    \"raw\": \"{\\n    \\\"newDeadline\\\": \\\"2021-12-19T15:16:42.506000\\\"\\n}\",\n                    \"options\": {\n                        \"raw\": {\n                            \"language\": \"json\"\n                        }\n                    }\n                },\n                \"url\": {\n                    \"raw\": \"http://3.144.201.198:8085/v2/goals/extend/803\",\n                    \"protocol\": \"http\",\n                    \"host\": [\n                        \"3\",\n                        \"144\",\n                        \"201\",\n                        \"198\"\n                    ],\n                    \"port\": \"8085\",\n                    \"path\": [\n                        \"v2\",\n                        \"goals\",\n                        \"extend\",\n                        \"803\"\n                    ]\n                }\n            },\n            \"response\": []\n        },\n        {\n            \"name\": \"complete a goal\",\n            \"request\": {\n                \"method\": \"PUT\",\n                \"header\": [],\n                \"body\": {\n                    \"mode\": \"raw\",\n                    \"raw\": \"{\\n    \\\"newDeadline\\\": \\\"2021-12-27 15:16:42.506000\\\"\\n}\",\n                    \"options\": {\n                        \"raw\": {\n                            \"language\": \"json\"\n                        }\n                    }\n                },\n                \"url\": {\n                    \"raw\": \"http://3.144.201.198:8085/v2/goals/complete/804\",\n                    \"protocol\": \"http\",\n                    \"host\": [\n                        \"3\",\n                        \"144\",\n                        \"201\",\n                        \"198\"\n                    ],\n                    \"port\": \"8085\",\n                    \"path\": [\n                        \"v2\",\n                        \"goals\",\n                        \"complete\",\n                        \"804\"\n                    ]\n                }\n            },\n            \"response\": []\n        },\n        {\n            \"name\": \"goal analytics\",\n            \"request\": {\n                \"method\": \"GET\",\n                \"header\": [],\n                \"url\": {\n                    \"raw\": \"http://3.144.201.198:8085/v2/goals/analytics/803\",\n                    \"protocol\": \"http\",\n                    \"host\": [\n                        \"3\",\n                        \"144\",\n                        \"201\",\n                        \"198\"\n                    ],\n                    \"port\": \"8085\",\n                    \"path\": [\n                        \"v2\",\n                        \"goals\",\n                        \"analytics\",\n                        \"803\"\n                    ]\n                }\n            },\n            \"response\": []\n        }\n    ]\n}"
+				}
+			]
+		}
+	]
+}

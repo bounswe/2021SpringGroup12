@@ -13,5 +13,4 @@ public class GoalDTOShort {
 
     private String description;
 
-    private Date deadline;
 }

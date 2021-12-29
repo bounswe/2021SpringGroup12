@@ -48,16 +48,10 @@ public class Subgoal {
     @Column(name = "createdAt",updatable = false)
     private Date createdAt;
 
-    @Column(name = "deadline")
-    private Date deadline;
-
-    @Column(name = "extension_count")
-    private Long extension_count;
-
     @Column(name = "completedAt")
     private Date completedAt;
     @JsonIgnoreProperties({"subgoal"})
-    @OneToMany(mappedBy = "subgoal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "subgoal", cascade = CascadeType.ALL, fetch = FetchType.LAZY,orphanRemoval=true)
     private Set<Entiti> entities;
 
     @JsonIgnoreProperties({"id"})

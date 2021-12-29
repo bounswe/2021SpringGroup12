@@ -107,9 +107,6 @@ public class GroupGoalService
         if (groupGoalGetDto.getDescription() != null){
             groupGoal.setDescription(groupGoalGetDto.getDescription());
         }
-        if (groupGoalGetDto.getDeadline() != null){
-            groupGoal.setDeadline(groupGoalGetDto.getDeadline());
-        }
         if (groupGoalGetDto.getIsDone() != null){
             groupGoal.setIsDone(groupGoalGetDto.getIsDone());
         }
@@ -165,7 +162,6 @@ public class GroupGoalService
         new_subgoal.setMainGroupgoal(groupGoal);
         new_subgoal.setIsDone(Boolean.FALSE);
         new_subgoal.setCreator(groupGoal.getCreator());
-        new_subgoal.setExtension_count(0L);
         new_subgoal.setRating(0D);
         subgoalRepository.save(new_subgoal);
 
