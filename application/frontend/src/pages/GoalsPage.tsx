@@ -88,15 +88,10 @@ export class GoalsPage extends React.Component {
       .then((data) => {
         let tmp = [];
         for (let i = 0; i < data.length; i++) {
-          let deadline = data[i]["deadline"];
-          if (deadline !== null) {
-            deadline = deadline.substr(0, 10);
-          }
           tmp.push({
             key: data[i]["id"],
             title: data[i]["title"],
             description: data[i]["description"],
-            deadline: deadline,
           });
         }
         console.log("tmp", tmp);
@@ -161,11 +156,6 @@ export class GoalsPage extends React.Component {
         title: "Description",
         dataIndex: "description",
         key: "description",
-      },
-      {
-        title: "Deadline",
-        dataIndex: "deadline",
-        key: "deadline",
       },
     ];
   };
