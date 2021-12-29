@@ -42,7 +42,7 @@ export function LinkEntity() {
             key: 'entityType',
         },
         {
-            title: 'Delete',
+            title: 'Link',
             key: 'id',
             render: (text: any,
                      entity: { key:any}) =>

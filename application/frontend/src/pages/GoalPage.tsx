@@ -19,7 +19,6 @@ export function GoalPage(params :{goalType: any}) {
     const [goal, setGoal] = useState({
         title: "Loading",
         description: "Loading",
-        deadline: "Loading...",
         token: "Loading",
         isDone: false,
         assignees: [],
@@ -143,11 +142,6 @@ export function GoalPage(params :{goalType: any}) {
             dataIndex: 'description',
             key: 'description',
         },
-        {
-            title: 'Deadline',
-            dataIndex: 'deadline',
-            key: 'deadline',
-        }
     ];
 
 
@@ -219,21 +213,12 @@ useEffect(() => {
             if (goalType === GoalTypes.Sub) {
                 goal_info['subgoals'] = goal_info['sublinks']
             }
-            goal_info['subgoals'].forEach((subgoal: any, i: number) => {
-                subgoal.key = i
-                if (subgoal.deadline !== null) {
-                    subgoal.deadline = subgoal.deadline.substr(0,10)
-                }
-            })
             goal_info['entities'].forEach((entity: any, i: number) => {
                 entity.key = i
                 if (entity.deadline !== null) {
                     entity.deadline = entity.deadline.substr(0,10)
                 }
             })
-            if (goal_info.deadline !== null) {
-                goal_info.deadline = goal_info.deadline.substr(0,10)
-            }
             if (goal_info.main_goal_id != null) {
                 setReturnLink(`/${GoalTypes.Normal}/${goal_info.main_goal_id}`)
             } else if (goal_info.main_groupgoal_id != null) {
@@ -373,7 +358,6 @@ const showManageDiv = goalType !== GoalTypes.Group || goal.user_id === Number(us
 
             <h2>Name: {goal['title']}</h2>
             <h2>Description: {goal['description']}</h2>
-            <h2>Deadline: {goal['deadline']}</h2>
             {goalType === GoalTypes.Group &&
             <div>
                 <h2>Token: {goal['token']}</h2>

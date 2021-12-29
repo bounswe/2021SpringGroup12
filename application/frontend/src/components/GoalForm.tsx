@@ -2,11 +2,10 @@ import { Form, Input, Button } from "antd";
 import * as React from "react";
 
 export const GoalForm = (onFinish: ((values: any) => void) | undefined,
-                         defaultValues = {title: "", description: "", deadline: ""}) => {
+                         defaultValues = {title: "", description: ""}) => {
     const title = defaultValues['title']
     const description = defaultValues['description']
-    const deadline = defaultValues['deadline']
-    console.log('deadline before:', deadline)
+
     return (
         <Form
             name="basic"
@@ -24,11 +23,6 @@ export const GoalForm = (onFinish: ((values: any) => void) | undefined,
                 name="description"
             >
                 <Input placeholder="Goal Description" defaultValue={description}/>
-            </Form.Item>
-            <Form.Item
-                name="deadline"
-            >
-                <Input type="date" placeholder="Goal Deadline" defaultValue={deadline}/>
             </Form.Item>
             <Form.Item>
                 <Button type="primary" htmlType="submit">
