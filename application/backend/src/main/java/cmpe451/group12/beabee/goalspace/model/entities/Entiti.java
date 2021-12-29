@@ -44,11 +44,6 @@ public abstract class Entiti {
     @JoinColumn(name = "groupgoal_id")
     private GroupGoal groupgoal;
 
-    @JsonIgnoreProperties({"entities"})
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "subgoal_id")
-    private Subgoal subgoal;
-
     @Column(name = "completedAt")
     private Date completedAt;
 
@@ -67,9 +62,15 @@ public abstract class Entiti {
 
     @JsonIgnoreProperties({"id"})
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "Sublinks")
+    @JoinTable(name = "Entity_Sublinks")
     @Column(name = "sublink_id")
-    private Set<Entiti> sublinks;
+    private Set<Entiti> sublinked_entities;
+
+    @JsonIgnoreProperties({"sublinked_entities"})
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "Subgoal_Sublinks")
+    @Column(name = "sublink_id")
+    private Set<Subgoal> sublinked_subgoals;
 
     @JsonIgnoreProperties({"entiti"})
     @OneToMany(mappedBy = "entiti", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)

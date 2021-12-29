@@ -73,7 +73,7 @@ public class PrototypeService {
             entitiPrototype.setReference_entiti_id(entiti.getId());
             entitiPrototype.setMainGoal(prototype);
             entitiPrototype.setPeriod(7L);
-            entitiPrototype.setChildEntities(clearEntities(entiti.getSublinks(),null));
+            entitiPrototype.setChildEntities(clearEntities(entiti.getSublinked_entities(),null));
             entitiPrototype.setEntitiType(entiti.getEntitiType());
             entitiPrototypeRepository.save(entitiPrototype);
             entitiPrototypes.add(entitiPrototype);

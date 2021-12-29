@@ -1,6 +1,7 @@
 package cmpe451.group12.beabee.goalspace.dto.entities;
 
 
+import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalDTOShort;
 import cmpe451.group12.beabee.goalspace.dto.resources.ResourceDTOShort;
 import cmpe451.group12.beabee.goalspace.enums.EntitiType;
 import cmpe451.group12.beabee.goalspace.model.resources.Resource;
@@ -19,7 +20,6 @@ public class RoutineGetDTO {
 
     private Long goal_id;
     private Long groupgoal_id;
-    private Long subgoal_id;
     private EntitiType entitiType;
     private String title;
     private String description;
@@ -27,7 +27,8 @@ public class RoutineGetDTO {
     private Boolean isDone;
     private List<Date> deadline;
     private Long period;
-    private Set<EntitiDTOShort> sublinks;
+    private Set<EntitiDTOShort> sublinked_entities;
+    private Set<SubgoalDTOShort> sublinked_subgoals;
     private Set<ResourceDTOShort> resources;
     private Double rating;
 
