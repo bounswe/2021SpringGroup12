@@ -14,6 +14,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -33,6 +35,7 @@ public class GoalGetMapper {
             goalGetDTO.setDescription(goal.getDescription());
             goalGetDTO.setCreatedAt(goal.getCreatedAt());
             goalGetDTO.setSubgoals(this.subgoalSetToSubgoalDTOShortSet(goal.getSubgoals()));
+            goalGetDTO.setTags(goal.getTags().stream().map(x->x.getName()).collect(Collectors.toSet()));
             goalGetDTO.setIsPublished(goal.getIsPublished());
             return goalGetDTO;
         }

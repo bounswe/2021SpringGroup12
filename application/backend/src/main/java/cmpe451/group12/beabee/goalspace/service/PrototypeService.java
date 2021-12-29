@@ -54,11 +54,29 @@ public class PrototypeService {
         return result;
     }
 
+    private static Stream<SubgoalPrototype> flatMapRecursiveSubgoal(SubgoalPrototype item) {
+        return Stream.concat(Stream.of(item), Optional.ofNullable(item.getChild_subgoals())
+                .orElseGet(Collections::emptySet)
+                .stream()
+                .flatMap(PrototypeService::flatMapRecursiveSubgoal));
+    }
+
+    private static Stream<EntitiPrototype> flatMapRecursiveEntiti(EntitiPrototype item) {
+        return Stream.concat(Stream.of(item), Optional.ofNullable(item.getChildEntities())
+                .orElseGet(Collections::emptySet)
+                .stream()
+                .flatMap(PrototypeService::flatMapRecursiveEntiti));
+    }
+
     public GoalPrototypeDTO getAPrototype(Long id) {
         GoalPrototype prototype = goalPrototypeRespository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Prototype not found!"));
         GoalPrototypeDTO prototypeDTO = goalPrototypeMapper.mapToDto(prototype);
-        prototypeDTO.setEntities(entitiPrototypeShortMapper.mapToDto(prototype.getEntities()));
-        prototypeDTO.setSubgoals(subgoalPrototypeShortMapper.mapToDto(prototype.getSubgoals()));
+        Set<EntitiPrototype> entities = prototype.getEntities().stream()
+                .flatMap(PrototypeService::flatMapRecursiveEntiti).collect(Collectors.toSet());
+        Set<SubgoalPrototype> subgoals = prototype.getSubgoals().stream()
+                .flatMap(PrototypeService::flatMapRecursiveSubgoal).collect(Collectors.toSet());
+        prototypeDTO.setEntities(entitiPrototypeShortMapper.mapToDto(entities));
+        prototypeDTO.setSubgoals(subgoalPrototypeShortMapper.mapToDto(subgoals));
         prototypeDTO.setUsername(goalRepository.findById(prototype.getReference_goal_id()).get().getCreator().getUsername());
         prototypeDTO.setDownload_count(goalRepository.findById(prototype.getReference_goal_id()).get().getDownloadCount());
         return prototypeDTO;
@@ -137,12 +155,12 @@ public class PrototypeService {
         if (!goal_from_db.getIsPublished()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Goal is not published yet!");
         }
-        GoalPrototype prototype = goalPrototypeRespository.findByReference_goal_id(goal_id).orElseThrow( () ->
+        GoalPrototype prototype = goalPrototypeRespository.findByReference_goal_id(goal_id).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Goal prototype not found!"));
         goalPrototypeRespository.delete(prototype);
         goal_from_db.setIsPublished(Boolean.FALSE);
         goalRepository.save(goal_from_db);
-        return new MessageResponse("Prototype unpublished successfully.",MessageType.SUCCESS);
+        return new MessageResponse("Prototype unpublished successfully.", MessageType.SUCCESS);
     }
 
     public EntitiPrototypeDTO getAnEntitiPrototype(Long id) {
