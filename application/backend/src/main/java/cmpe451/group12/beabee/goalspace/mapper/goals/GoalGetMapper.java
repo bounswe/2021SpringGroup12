@@ -33,6 +33,7 @@ public class GoalGetMapper {
             goalGetDTO.setDescription(goal.getDescription());
             goalGetDTO.setCreatedAt(goal.getCreatedAt());
             goalGetDTO.setSubgoals(this.subgoalSetToSubgoalDTOShortSet(goal.getSubgoals()));
+            goalGetDTO.setIsPublished(goal.getIsPublished());
             return goalGetDTO;
         }
     }
@@ -49,6 +50,7 @@ public class GoalGetMapper {
             goal.setCreatedAt(goalGetDTO.getCreatedAt());
             goal.setId(goalGetDTO.getId());
             goal.setSubgoals(this.subgoalDTOShortSetToSubgoalSet(goalGetDTO.getSubgoals()));
+            goal.setIsPublished(goalGetDTO.getIsPublished());
             return goal;
         }
     }

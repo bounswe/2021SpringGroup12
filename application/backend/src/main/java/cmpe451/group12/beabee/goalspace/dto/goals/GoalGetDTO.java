@@ -22,6 +22,7 @@ public class GoalGetDTO {
     private Boolean isDone;
 
     private String description;
+    private Boolean isPublished;
 
 
     private Date createdAt;
