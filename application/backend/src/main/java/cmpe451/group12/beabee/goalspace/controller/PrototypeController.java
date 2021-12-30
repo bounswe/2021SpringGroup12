@@ -44,6 +44,16 @@ public class PrototypeController {
         return prototypeService.publishAGoal(id);
     }
 
+    @ApiOperation(value = "Republish a goal with the given id in the marketplace.")
+    @PostMapping("/republish/{id}")
+    public MessageResponse republishAGoal(@PathVariable @ApiParam(value = "Id of the goal.", example = "5") Long id) {
+        return prototypeService.publishAGoal(id);
+    }
+    @ApiOperation(value = "Unpublish a goal with the given id in the marketplace.")
+    @PostMapping("/unpublish/{id}")
+    public MessageResponse unpublishAGoal(@PathVariable @ApiParam(value = "Id of the goal.", example = "5") Long id) {
+        return prototypeService.unpublishAGoal(id);
+    }
     @ApiOperation(value = "Get an entiti prototype with the given id.")
     @GetMapping("/entiti/{id}")
     public EntitiPrototypeDTO getAnEntitiPrototype(@PathVariable @ApiParam(value = "Id of the entity prototype.", example = "5") Long id) {
