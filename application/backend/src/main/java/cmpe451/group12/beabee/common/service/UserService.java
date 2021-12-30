@@ -1,25 +1,26 @@
 package cmpe451.group12.beabee.common.service;
 
+import cmpe451.group12.beabee.common.dto.MessageResponse;
+import cmpe451.group12.beabee.common.dto.UserGetDTO;
+import cmpe451.group12.beabee.common.enums.MessageType;
+import cmpe451.group12.beabee.common.mapper.UserMapper;
 import cmpe451.group12.beabee.common.model.Users;
 import cmpe451.group12.beabee.common.repository.UserRepository;
 import cmpe451.group12.beabee.goalspace.Repository.goals.GoalRepository;
-import cmpe451.group12.beabee.common.dto.UserGetDTO;
+import cmpe451.group12.beabee.goalspace.dto.analytics.GoalAnalyticsDTO;
+import cmpe451.group12.beabee.goalspace.dto.analytics.UserAnalyticsDTO;
 import cmpe451.group12.beabee.goalspace.mapper.goals.GoalPostMapper;
-import cmpe451.group12.beabee.common.mapper.UserMapper;
 import cmpe451.group12.beabee.goalspace.mapper.goals.GoalShortMapper;
+import cmpe451.group12.beabee.goalspace.model.goals.Goal;
+import cmpe451.group12.beabee.goalspace.service.ActivityStreamService;
 import cmpe451.group12.beabee.goalspace.service.GoalService;
 import cmpe451.group12.beabee.login.dto.UserCredentialsGetDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import javax.persistence.EntityNotFoundException;
-
-import cmpe451.group12.beabee.goalspace.dto.analytics.GoalAnalyticsDTO;
-import cmpe451.group12.beabee.goalspace.dto.analytics.UserAnalyticsDTO;
-import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -35,6 +36,7 @@ public class UserService {
     private final GoalPostMapper goalPostMapper;
     private final GoalShortMapper goalShortMapper;
     private final GoalService goalService;
+    private final ActivityStreamService activityStreamService;
 
     public UserGetDTO getUserById(Long id) {
         return userMapper.mapToDto(userRepository.findById(id).orElseThrow(EntityNotFoundException::new));
@@ -117,5 +119,67 @@ public class UserService {
 
     public UserGetDTO getUser(Long id) {
         return userMapper.mapToDto(userRepository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found!")));
+    }
+
+    public MessageResponse followUser(Long userId, Long targetUserId) {
+        Users user = userRepository.findById(userId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        Users targetUser = userRepository.findById(targetUserId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        if (user.getFollowing().stream().anyMatch(following -> following.getUser_id().equals(targetUser.getUser_id()))) {
+            return new MessageResponse("Already following!", MessageType.ERROR);
+        }
+
+        user.getFollowing().add(targetUser);
+        targetUser.getFollowers().add(user);
+
+        userRepository.save(user);
+        userRepository.save(targetUser);
+
+        activityStreamService.followUserSchema(user, targetUser);
+
+        return new MessageResponse("User followed successfully!", MessageType.SUCCESS);
+    }
+
+    public MessageResponse unfollowUser(Long userId, Long targetUserId) {
+        Users user = userRepository.findById(userId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        Users targetUser = userRepository.findById(targetUserId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        if (user.getFollowing().stream().noneMatch(following -> following.getUser_id().equals(targetUser.getUser_id()))) {
+            return new MessageResponse("Not following!", MessageType.ERROR);
+        }
+
+        user.getFollowing().remove(targetUser);
+        targetUser.getFollowers().remove(user);
+
+        userRepository.save(user);
+        userRepository.save(targetUser);
+
+        activityStreamService.unfollowUserSchema(user, targetUser);
+
+        return new MessageResponse("User unfollowed successfully!", MessageType.SUCCESS);
+    }
+
+    public List<UserGetDTO> getFollowers(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(EntityNotFoundException::new)
+                .getFollowers()
+                .stream()
+                .map(userMapper::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<UserGetDTO> getFollowings(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(EntityNotFoundException::new)
+                .getFollowing()
+                .stream()
+                .map(userMapper::mapToDto)
+                .collect(Collectors.toList());
     }
 }

@@ -1,5 +1,6 @@
 package cmpe451.group12.beabee.goalspace.controller;
 
+import cmpe451.group12.beabee.common.dto.MessageResponse;
 import cmpe451.group12.beabee.common.dto.UserGetDTO;
 import cmpe451.group12.beabee.common.service.UserService;
 import cmpe451.group12.beabee.goalspace.dto.analytics.UserAnalyticsDTO;
@@ -40,4 +41,32 @@ public class UserController {
         return userService.getUser(id);
     }
 
+    @ApiOperation(value = "Follow a user with given id.")
+    @PostMapping("/{userId}/follow/{targetId}")
+    public MessageResponse followUser(@PathVariable @ApiParam(value = "Id of the user who follows the other user.", example = "5") Long userId,
+                                      @PathVariable @ApiParam(value = "Id of the user that gets followed.", example = "5") Long targetId) {
+        return userService.followUser(userId, targetId);
+    }
+
+
+    @ApiOperation(value = "Follow a user with given id.")
+    @PostMapping("/{userId}/unfollow/{targetId}")
+    public MessageResponse unfollowUser(@PathVariable @ApiParam(value = "Id of the user who unfollows the other user.", example = "5") Long userId,
+                                      @PathVariable @ApiParam(value = "Id of the user that gets unfollowed.", example = "5") Long targetId) {
+        return userService.unfollowUser(userId, targetId);
+    }
+
+
+    @ApiOperation(value = "Get followers of a user.")
+    @GetMapping("/{userId}/followers")
+    public List<UserGetDTO> getFollowers(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long userId) {
+        return userService.getFollowers(userId);
+    }
+
+
+    @ApiOperation(value = "Get followers of a user.")
+    @GetMapping("/{userId}/followings")
+    public List<UserGetDTO> getFollowings(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long userId) {
+        return userService.getFollowings(userId);
+    }
 }
