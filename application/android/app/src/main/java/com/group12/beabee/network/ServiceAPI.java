@@ -219,6 +219,12 @@ public interface ServiceAPI {
     @POST("/v2/prototypes/publish/{id}")
     Call<BasicResponse> publishGoal(@Path("id") int public_goal_id);
 
+    @POST("/v2/prototypes/republish/{id}")
+    Call<BasicResponse> republishGoal(@Path("id") int public_goal_id);
+
+    @POST("/v2/prototypes/unpublish/{id}")
+    Call<BasicResponse> unpublishGoal(@Path("id") int public_goal_id);
+
     @POST("/v2/goals/copy_prototype/{user_id}/{prototype_id}")
     Call<BasicResponse> copyGoal(@Path("user_id") int user_id,@Path("prototype_id") int prototype_id);
 
