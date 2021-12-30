@@ -185,12 +185,22 @@ public class PrototypeService {
             all_prototypes.addAll(goalPrototypeRespository.findAllByTagsIsContaining(x));
         });
         all_prototypes.addAll(goalPrototypeRespository.findAllByDescriptionContainsOrTitleContains(query, query));
-
-        List<GoalPrototypeDTO> prototypeDTOS = goalPrototypeMapper.mapToDto(all_prototypes.stream().collect(Collectors.toList()));
-        prototypeDTOS.stream().forEach(prototype -> {
-            prototype.setUsername(goalRepository.findById(prototype.getReference_goal_id()).get().getCreator().getUsername());
+        List<GoalPrototypeDTO> result = new ArrayList<>();
+        all_prototypes.stream().forEach(prototype -> {
+            GoalPrototypeDTO goalPrototypeDTO= new GoalPrototypeDTO();
+            goalPrototypeDTO.setDownload_count(goalRepository.getById(prototype.getReference_goal_id()).getDownloadCount());
+            goalPrototypeDTO.setId(prototype.getId());
+            goalPrototypeDTO.setReference_goal_id(prototype.getReference_goal_id());
+            goalPrototypeDTO.setTitle(prototype.getTitle());
+            goalPrototypeDTO.setDescription(prototype.getDescription());
+            Set<Tag> set2 = prototype.getTags();
+            if (set2 != null) {
+                goalPrototypeDTO.setTags(set2.stream().map(x->x.getName()).collect(Collectors.toSet()));
+            }
+            goalPrototypeDTO.setUsername(goalRepository.findById(prototype.getReference_goal_id()).get().getCreator().getUsername());
+            result.add(goalPrototypeDTO);
         });
-        return prototypeDTOS;
+        return result;
     }
 
     public List<GoalPrototypeDTO> searchGoalPrototypesUsingTag(String tag) throws IOException, ParseException {
