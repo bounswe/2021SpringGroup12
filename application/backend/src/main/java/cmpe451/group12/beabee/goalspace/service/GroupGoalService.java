@@ -42,7 +42,7 @@ public class GroupGoalService
     private final UserRepository userRepository;
     private final EntitiShortMapper entitiShortMapper;
     private final UserCredentialsGetMapper userCredentialsGetMapper;
-
+    private final ActivityStreamService activityStreamService;
 
     private Set<EntitiDTOShort> extractEntities(GroupGoal groupGoal){
 
@@ -134,8 +134,8 @@ public class GroupGoalService
         HashSet<Users> members = new HashSet<>();
         members.add(user);
         new_groupgoal.setMembers(members);
-
         groupGoalRepository.save(new_groupgoal);
+        activityStreamService.createGroupGoalSchema(user.getUsername(),new_groupgoal);
         return new MessageResponse("Group Goal added successfully.", MessageType.SUCCESS);
     }
 

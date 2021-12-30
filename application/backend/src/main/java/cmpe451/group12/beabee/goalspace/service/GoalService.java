@@ -63,7 +63,7 @@ public class GoalService {
     private final QuestionRepository questionRepository;
     private final TagRepository tagRepository;
     private final GoalPrototypeRespository goalPrototypeRespository;
-
+private final ActivityStreamService activityStreamService;
 
     private Set<EntitiDTOShort> extractEntities(Goal goal) {
 
@@ -320,8 +320,10 @@ public class GoalService {
         new_goal.setGoalType(GoalType.GOAL);
         new_goal.setRating(0D);
         new_goal.setDownloadCount(0L);
+        new_goal.setIsPublished(Boolean.FALSE);
 //        getTopicIds(new_goal.getTags());
         goalRepository.save(new_goal);
+        activityStreamService.createGoalSchema(user.get().getUsername(),new_goal);
         return new MessageResponse("Goal added successfully.", MessageType.SUCCESS);
     }
 
