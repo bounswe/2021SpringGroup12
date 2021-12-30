@@ -43,7 +43,7 @@ public class PrototypeService {
     private final GoalRepository goalRepository;
     private final GoalService goalService;
     private final TagRepository tagRepository;
-
+    private final ActivityStreamService activityStreamService;
 
     /***************************** PROTOTYPES *********************/
     public List<GoalPrototypeDTO> getPrototypes() {
@@ -81,7 +81,7 @@ public class PrototypeService {
         prototypeDTO.setDownload_count(goalRepository.findById(prototype.getReference_goal_id()).get().getDownloadCount());
         return prototypeDTO;
     }
-
+/***** PUBLISH A GOAL******/
     private Set<EntitiPrototype> clearEntities(Set<Entiti> entities, GoalPrototype prototype) {
         Set<EntitiPrototype> entitiPrototypes = new HashSet<>();
         entities.stream().forEach(entiti -> {
@@ -127,10 +127,12 @@ public class PrototypeService {
     public MessageResponse publishAGoal(Long goal_id) {
         Goal goal_from_db = goalRepository.findById(goal_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Goal not found!"));
         GoalPrototype prototype;
+        Boolean is_republish = Boolean.FALSE;
         if (goal_from_db.getIsPublished()) {
             prototype = goalPrototypeRespository.findByReference_goal_id(goal_from_db.getId()).orElseThrow(
                     () -> new ResponseStatusException(HttpStatus.CONFLICT, "Goal is published but prototype does not exist! Data is conflicted!"));
             goalPrototypeRespository.delete(prototype);
+            is_republish = Boolean.TRUE;
         }
         prototype = new GoalPrototype();
         goalPrototypeRespository.save(prototype);
@@ -146,6 +148,11 @@ public class PrototypeService {
         goalPrototypeRespository.save(prototype);
         goal_from_db.setIsPublished(Boolean.TRUE);
         goalRepository.save(goal_from_db);
+        if(is_republish){
+            activityStreamService.republishGoalSchema(goal_from_db.getCreator(),prototype);
+        }else{
+            activityStreamService.publishGoalSchema(goal_from_db.getCreator(),prototype);
+        }
         return new MessageResponse("Goal published successfully!", MessageType.SUCCESS);
     }
 

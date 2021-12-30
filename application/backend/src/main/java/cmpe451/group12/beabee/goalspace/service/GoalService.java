@@ -63,7 +63,7 @@ public class GoalService {
     private final QuestionRepository questionRepository;
     private final TagRepository tagRepository;
     private final GoalPrototypeRespository goalPrototypeRespository;
-private final ActivityStreamService activityStreamService;
+    private final ActivityStreamService activityStreamService;
 
     private Set<EntitiDTOShort> extractEntities(Goal goal) {
 
@@ -323,7 +323,7 @@ private final ActivityStreamService activityStreamService;
         new_goal.setIsPublished(Boolean.FALSE);
 //        getTopicIds(new_goal.getTags());
         goalRepository.save(new_goal);
-        activityStreamService.createGoalSchema(user.get().getUsername(),new_goal);
+        activityStreamService.createGoalSchema(user.get(),new_goal);
         return new MessageResponse("Goal added successfully.", MessageType.SUCCESS);
     }
 
@@ -359,6 +359,7 @@ private final ActivityStreamService activityStreamService;
         subgoalRepository.saveAll(all_subgoals);
         goal_from_db.getSubgoals().clear();
         goal_from_db.setCreator(null);
+        activityStreamService.deleteGoalSchema(goal_from_db.getCreator(),goal_from_db);
         goalRepository.delete(goal_from_db);
         return new MessageResponse("Goal deleted.", MessageType.SUCCESS);
     }
@@ -394,6 +395,7 @@ private final ActivityStreamService activityStreamService;
         goal_from_db.setCompletedAt(new Date(System.currentTimeMillis()));
         goal_from_db.setRating(subgoals.stream().map(x -> x.getRating()).mapToDouble(Double::doubleValue).summaryStatistics().getAverage());
         goalRepository.save(goal_from_db);
+        activityStreamService.completeGoalSchema(goal_from_db.getCreator(),goal_from_db);
         return new MessageResponse("Goal completed successfully!", MessageType.SUCCESS);
     }
 
@@ -578,7 +580,8 @@ private final ActivityStreamService activityStreamService;
                 new_entiti.setIsDone(Boolean.FALSE);
                 //entitiRepository.save(new_entiti);
                 entities.add(new_entiti);
-            } else if (entitiPrototype.getEntitiType().equals(EntitiType.REFLECTION)) {
+            }
+            else if (entitiPrototype.getEntitiType().equals(EntitiType.REFLECTION)) {
                 Reflection new_entiti = new Reflection();
                 new_entiti.setEntitiType(EntitiType.REFLECTION);
                 //entitiRepository.save(new_entiti);
@@ -590,7 +593,8 @@ private final ActivityStreamService activityStreamService;
                 new_entiti.setIsDone(Boolean.FALSE);
                 //entitiRepository.save(new_entiti);
                 entities.add(new_entiti);
-            } else if (entitiPrototype.getEntitiType().equals(EntitiType.TASK)) {
+            }
+            else if (entitiPrototype.getEntitiType().equals(EntitiType.TASK)) {
                 Task new_entiti = new Task();
                 new_entiti.setEntitiType(EntitiType.TASK);
                 //entitiRepository.save(new_entiti);
@@ -605,7 +609,8 @@ private final ActivityStreamService activityStreamService;
                 new_entiti.setIsDone(Boolean.FALSE);
                 //entitiRepository.save(new_entiti);
                 entities.add(new_entiti);
-            } else if (entitiPrototype.getEntitiType().equals(EntitiType.QUESTION)) {
+            }
+            else if (entitiPrototype.getEntitiType().equals(EntitiType.QUESTION)) {
                 Question new_entiti = new Question();
                 new_entiti.setEntitiType(EntitiType.QUESTION);
                 //entitiRepository.save(new_entiti);
@@ -638,6 +643,7 @@ private final ActivityStreamService activityStreamService;
         });
         entitiRepository.saveAll(entities);
         goalRepository.save(new_goal);
+        activityStreamService.copyAGoal(user,prototype);
         return new MessageResponse("Prototype copied successfully!", MessageType.SUCCESS);
     }
 }

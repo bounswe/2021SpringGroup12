@@ -10,6 +10,7 @@ import cmpe451.group12.beabee.goalspace.mapper.goals.GoalShortMapper;
 import cmpe451.group12.beabee.goalspace.service.GoalService;
 import cmpe451.group12.beabee.login.dto.UserCredentialsGetDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -17,6 +18,7 @@ import javax.persistence.EntityNotFoundException;
 import cmpe451.group12.beabee.goalspace.dto.analytics.GoalAnalyticsDTO;
 import cmpe451.group12.beabee.goalspace.dto.analytics.UserAnalyticsDTO;
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -111,5 +113,9 @@ public class UserService {
         });
         return ret;
 
+    }
+
+    public UserGetDTO getUser(Long id) {
+        return userMapper.mapToDto(userRepository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found!")));
     }
 }

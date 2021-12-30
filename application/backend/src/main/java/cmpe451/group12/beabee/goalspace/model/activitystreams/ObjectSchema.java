@@ -14,7 +14,10 @@ public class ObjectSchema {
         GOAL,
         GROUPGOAL,
         COPY,
+        UPDATE,
+        ADD,
         PUBLISH,
+        REPUBLISH,
         PERSON;
     }
     private Type type;
@@ -23,5 +26,5 @@ public class ObjectSchema {
     private Long id;
     private String name;//title
     private String content; //description
-    private String link; // on deletion
+    private String url; // on deletion
 }

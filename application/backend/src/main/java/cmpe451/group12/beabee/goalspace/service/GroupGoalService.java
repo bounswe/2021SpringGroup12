@@ -150,6 +150,7 @@ public class GroupGoalService
             }
             userRepository.save(user);
         }
+        activityStreamService.deleteGroupGoalSchema(groupGoal.getCreator(),groupGoal);
         groupGoalRepository.deleteById(groupGoal.getId());
         return new MessageResponse("Group goal deleted.", MessageType.SUCCESS);
     }
@@ -181,7 +182,7 @@ public class GroupGoalService
         groupGoal.getMembers().add(user);
 
         groupGoalRepository.save(groupGoal);
-
+        activityStreamService.joinGroupGoal(user,groupGoal);
         return groupGoalShortMapper.mapToDto(groupGoal);
     }
 
@@ -194,9 +195,7 @@ public class GroupGoalService
         );
 
         groupGoal.getMembers().add(user);
-
         groupGoalRepository.save(groupGoal);
-
         return new MessageResponse("User added to group successfully!", MessageType.SUCCESS);
     }
 
@@ -207,14 +206,12 @@ public class GroupGoalService
         Users user = userRepository.findById(user_id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist")
         );
-
         if(Objects.equals(groupGoal.getCreator().getUser_id(), user.getUser_id())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User cannot leave a group goal they created!");
         }
-
         groupGoal.getMembers().remove(user);
-
         groupGoalRepository.save(groupGoal);
+        activityStreamService.leaveGroupGoal(user,groupGoal);
         return new MessageResponse("User left group goal successfully!", MessageType.SUCCESS);
     }
 }
