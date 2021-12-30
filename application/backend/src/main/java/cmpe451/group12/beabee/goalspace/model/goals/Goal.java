@@ -53,6 +53,8 @@ public class Goal extends AllGoal{
     private Set<Tag> hiddentags;
 
     private Long downloadCount;
+
+    private Boolean isPublished;
     @Override
     public boolean equals(Object obj)
     {
