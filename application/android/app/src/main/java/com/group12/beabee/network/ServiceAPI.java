@@ -44,12 +44,6 @@ public interface ServiceAPI {
     @POST("login")
     Call<LoginResponse> loginRequest(@Body() LoginRequest loginRequest);
 
-    @POST("users/reset/{token}")
-    Call<BasicResponse> postMailToken(@Path("token") String token,@Body() LoginRequest loginRequest);
-
-    @GET("users/forgot/{email_or_username}")
-    Call<BasicResponse> getForgotpassword(@Path("email_or_username") String username_mail);
-
     @GET("goals/of_user/{user_id}")
     Call<List<GoalShort>> getGoalsOfUser(@Path("user_id") int userId);
 

@@ -22,13 +22,6 @@
         <activity
             android:name=".views.SignUpActivity"
             android:exported="false" />
-        <activity
-            android:name=".views.LoginActivityForgotPage"
-            android:exported="false" />
-
-        <activity
-            android:name=".views.LoginActivityTokenPage"
-            android:exported="false" />
 
         <activity
             android:name=".views.LoginActivity"
