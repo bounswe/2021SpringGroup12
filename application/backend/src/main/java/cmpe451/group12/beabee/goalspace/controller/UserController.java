@@ -64,7 +64,7 @@ public class UserController {
     }
 
 
-    @ApiOperation(value = "Get followers of a user.")
+    @ApiOperation(value = "Get followings of a user.")
     @GetMapping("/{userId}/followings")
     public List<UserGetDTO> getFollowings(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long userId) {
         return userService.getFollowings(userId);
