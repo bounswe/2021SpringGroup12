@@ -29,7 +29,7 @@ public class SubgoalGetDTO {
     private Double rating;
 
     private Set<SubgoalDTOShort> sublinks;
-    private Set<EntitiDTOShort> entities;
+    private Set<EntitiDTOShort> sublinked_entities;
     private Set<Long> assignees;
 
 }

@@ -2,6 +2,7 @@ package cmpe451.group12.beabee.goalspace.service;
 
 import cmpe451.group12.beabee.common.model.Users;
 import cmpe451.group12.beabee.common.repository.UserRepository;
+
 import cmpe451.group12.beabee.goalspace.Repository.activitistreams.*;
 import cmpe451.group12.beabee.goalspace.enums.ActivityType;
 import cmpe451.group12.beabee.goalspace.model.activitystreams.*;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -309,5 +311,6 @@ public class ActivityStreamService {
                 .filter(activitySchema -> activitySchema.getActor().getName().equals(username))
                 .sorted((i1, i2) -> i2.getCreatedAt().compareTo(i1.getCreatedAt()))
                 .collect(Collectors.toList());
+
     }
 }

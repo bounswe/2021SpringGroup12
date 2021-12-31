@@ -2,22 +2,17 @@ package cmpe451.group12.beabee.goalspace.controller;
 
 
 import cmpe451.group12.beabee.common.dto.MessageResponse;
-import cmpe451.group12.beabee.common.enums.MessageType;
 import cmpe451.group12.beabee.goalspace.dto.DateDTO;
 import cmpe451.group12.beabee.goalspace.dto.entities.*;
-import cmpe451.group12.beabee.goalspace.model.entities.Task;
 import cmpe451.group12.beabee.goalspace.service.EntitiService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Example;
 import io.swagger.annotations.ExampleProperty;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:8085")
@@ -47,15 +42,37 @@ public class EntitiController {
     /****************************** LINKING ENTITIES ********************************/
 
     @ApiOperation(value = "Link two entities.")
-    @PostMapping("/{id}/link/{child_id}")
-    public MessageResponse linkEntities(@PathVariable @ApiParam(value = "Id of the parent entity.", example = "5") Long id, @PathVariable @ApiParam(value = "Id of the child entity.", example = "5") Long child_id) {
-        return entitiService.linkEntities(id, child_id);
+    @PostMapping("/{id}/link")
+    public MessageResponse entitiLink(@PathVariable @ApiParam(value = "Id of the parent entity.", example = "5") Long id,
+                                      @RequestBody @ApiParam(
+                                                value = "JSON object representing the link.",
+                                                examples = @Example(
+                                                        value = @ExampleProperty(
+                                                                value = "{\n" +
+                                                                        "\t\"childId\": 1,\n" +
+                                                                        "\t\"childType\": \"ENTITI\"\n" +
+                                                                        "}"
+                                                        )
+                                                )
+                                        ) EntitiLinkDTO entitiLinkDTO) {
+        return entitiService.entitiLink(id, entitiLinkDTO);
     }
 
     @ApiOperation(value = "Delete a link between entities.")
-    @DeleteMapping("/{id}/delete_link/{child_id}")
-    public MessageResponse deleteSublinkOfAnEntity(@PathVariable @ApiParam(value = "Id of the parent entity.", example = "5") Long id, @PathVariable @ApiParam(value = "Id of the child entity.", example = "5") Long child_id) {
-        return entitiService.deleteSublinkOfAnEntity(id, child_id);
+    @DeleteMapping("/{id}/link")
+    public MessageResponse entitiDeleteLink(@PathVariable @ApiParam(value = "Id of the parent entity.", example = "5") Long id,
+                                            @RequestBody @ApiParam(
+                                                    value = "JSON object representing the link.",
+                                                    examples = @Example(
+                                                            value = @ExampleProperty(
+                                                                    value = "{\n" +
+                                                                            "\t\"childId\": 1,\n" +
+                                                                            "\t\"childType\": \"ENTITI\"\n" +
+                                                                            "}"
+                                                            )
+                                                    )
+                                            ) EntitiLinkDTO entitiLinkDTO) {
+        return entitiService.entitiDeleteLink(id, entitiLinkDTO);
     }
 
     /****************************** POSTS ********************************/
@@ -68,13 +85,14 @@ public class EntitiController {
             examples = @Example(value =
             @ExampleProperty(
                     value = "{\n" +
-                            "    \"deadline\": \"2021-11-20T09:44:23.994Z\",\n" +
-                            "    \"description\": \"string\",\n" +
-                            "    \"entitiType\": \"TASK\",\n" +
-                            "    \"mainGoal_id*\": 0,\n" +
-                            "    \"mainGroupgoal_id*\": 0,\n" +
-                            "    \"title*\": \"string\"\n" +
-                            "  }"
+                            "    \"goalType\": \"GROUPGOAL\",\n" +
+                            "    \"goalId\": 1,\n" +
+                            "    \"initialLinkType\": \"ENTITI\",\n" +
+                            "    \"initialParentId\": 1,\n" +
+                            "    \"title\": \"Title\",\n" +
+                            "    \"description\": \"Description\",\n" +
+                            "    \"deadline\": \"2021-11-20T09:44:23.994Z\"\n" +
+                            "}"
             )
             )) TaskPostDTO task_dto) {
         return entitiService.createTask(task_dto);
@@ -87,14 +105,15 @@ public class EntitiController {
             examples = @Example(value =
             @ExampleProperty(
                     value = "{\n" +
+                            "    \"goalType\": \"GROUPGOAL\",\n" +
+                            "    \"goalId\": 1,\n" +
+                            "    \"initialLinkType\": \"ENTITI\",\n" +
+                            "    \"initialParentId\": 1,\n" +
+                            "    \"title\": \"Title\",\n" +
+                            "    \"description\": \"Description\",\n" +
                             "    \"deadline\": \"2021-11-20T09:44:23.994Z\",\n" +
-                            "    \"description\": \"string\",\n" +
-                            "    \"entitiType\": \"ROUTINE\",\n" +
-                            "    \"mainGoal_id*\": 0,\n" +
-                            "    \"mainGroupgoal_id*\": 0,\n" +
-                            "    \"title*\": \"string\"\n" +
-                            "    \"period*\": \"5\"\n" +
-                            "  }"
+                            "    \"period\": 1\n" +
+                            "}"
             )
             )) RoutinePostDTO routine_dto) {
         return entitiService.createRoutine(routine_dto);
@@ -107,11 +126,13 @@ public class EntitiController {
             examples = @Example(value =
             @ExampleProperty(
                     value = "{\n" +
-                            "    \"description\": \"string\",\n" +
-                            "    \"mainGoal_id*\": 0,\n" +
-                            "    \"mainGroupgoal_id*\": 0,\n" +
-                            "    \"title*\": \"string\"\n" +
-                            "  }"
+                            "    \"goalType\": \"GROUPGOAL\",\n" +
+                            "    \"goalId\": 1,\n" +
+                            "    \"initialLinkType\": \"ENTITI\",\n" +
+                            "    \"initialParentId\": 1,\n" +
+                            "    \"title\": \"Title\",\n" +
+                            "    \"description\": \"Description\",\n" +
+                            "}"
             )
             )) ReflectionPostDTO reflection_post_dto) {
         return entitiService.createReflection(reflection_post_dto);
@@ -124,13 +145,14 @@ public class EntitiController {
             examples = @Example(value =
             @ExampleProperty(
                     value = "{\n" +
+                            "    \"goalType\": \"GROUPGOAL\",\n" +
+                            "    \"goalId\": 1,\n" +
+                            "    \"initialLinkType\": \"ENTITI\",\n" +
+                            "    \"initialParentId\": 1,\n" +
+                            "    \"title\": \"Title\",\n" +
+                            "    \"description\": \"Description\",\n" +
                             "    \"deadline\": \"2021-11-20T09:44:23.994Z\",\n" +
-                            "    \"description\": \"string\",\n" +
-                            "    \"entitiType\": \"QUESTION\",\n" +
-                            "    \"mainGoal_id*\": 0,\n" +
-                            "    \"mainGroupgoal_id*\": 0,\n" +
-                            "    \"title*\": \"string\"\n" +
-                            "  }"
+                            "}"
             )
             )) QuestionPostDTO question_dto) {
         return entitiService.createQuestion(question_dto);

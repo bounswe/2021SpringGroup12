@@ -9,10 +9,10 @@ import java.util.Date;
 @Getter
 @Setter
 public class TaskPostDTO {
-
-
-    private ParentType parentType;
-    private Long parent_id;
+    private ParentGoalType goalType;
+    private Long goalId;
+    private LinkType initialLinkType;
+    private Long initialParentId;
     private String title;
     private String description;
     private Date deadline;
