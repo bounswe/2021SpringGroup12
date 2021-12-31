@@ -92,6 +92,7 @@ public class PrototypeService {
             entitiPrototype.setMainGoal(prototype);
             entitiPrototype.setPeriod(7L);
             entitiPrototype.setChildEntities(clearEntities(entiti.getSublinked_entities(),null));
+
             entitiPrototype.setEntitiType(entiti.getEntitiType());
             entitiPrototypeRepository.save(entitiPrototype);
             entitiPrototypes.add(entitiPrototype);

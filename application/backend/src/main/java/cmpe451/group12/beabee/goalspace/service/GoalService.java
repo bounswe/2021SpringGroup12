@@ -487,6 +487,7 @@ public class GoalService {
                 new_entiti.setPeriod(entitiPrototype.getPeriod());
                 new_entiti.setDeadline(Stream.of(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(new_entiti.getPeriod()))).collect(Collectors.toList()));
                 new_entiti.setSublinked_entities(handleSecondLevelEntities(entitiPrototype.getChildEntities(),new_entiti));
+
                 new_entiti.setIsDone(Boolean.FALSE);
                 new_entiti.setEntitiType(EntitiType.ROUTINE);
                 //entitiRepository.save(new_entiti);
@@ -498,6 +499,7 @@ public class GoalService {
                 new_entiti.setTitle(entitiPrototype.getTitle());
                 new_entiti.setCreator(parent_entiti.getCreator());
                 new_entiti.setSublinked_entities(handleSecondLevelEntities(entitiPrototype.getChildEntities(),new_entiti));
+
                 new_entiti.setIsDone(Boolean.FALSE);
                 new_entiti.setEntitiType(EntitiType.REFLECTION);
 //entitiRepository.save(new_entiti);
@@ -509,6 +511,7 @@ public class GoalService {
                 new_entiti.setTitle(entitiPrototype.getTitle());
                 new_entiti.setCreator(parent_entiti.getCreator());
                 new_entiti.setSublinked_entities(handleSecondLevelEntities(entitiPrototype.getChildEntities(),new_entiti));
+
                 new_entiti.setEntitiType(EntitiType.QUESTION);
                 new_entiti.setIsDone(Boolean.FALSE);
                 //entitiRepository.save(new_entiti);
@@ -523,6 +526,7 @@ public class GoalService {
                 new_entiti.setEntitiType(EntitiType.TASK);
                 new_entiti.setDeadline(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(7)));
                 new_entiti.setSublinked_entities(handleSecondLevelEntities(entitiPrototype.getChildEntities(),new_entiti));
+
                 new_entiti.setIsDone(Boolean.FALSE);
                 //entitiRepository.save(new_entiti);
                 entities.add(new_entiti);
@@ -577,6 +581,7 @@ public class GoalService {
                 new_entiti.setExtension_count(0L);
                 new_entiti.setGoal(new_goal);
                 new_entiti.setSublinked_entities(handleSecondLevelEntities(entitiPrototypes,new_entiti));
+
                 new_entiti.setIsDone(Boolean.FALSE);
                 //entitiRepository.save(new_entiti);
                 entities.add(new_entiti);
@@ -590,6 +595,7 @@ public class GoalService {
                 new_entiti.setCreator(user);
                 new_entiti.setGoal(new_goal);
                 new_entiti.setSublinked_entities(handleSecondLevelEntities(entitiPrototypes,new_entiti));
+
                 new_entiti.setIsDone(Boolean.FALSE);
                 //entitiRepository.save(new_entiti);
                 entities.add(new_entiti);
@@ -606,6 +612,7 @@ public class GoalService {
                 new_entiti.setExtension_count(0L);
                 new_entiti.setGoal(new_goal);
                 new_entiti.setSublinked_entities(handleSecondLevelEntities(entitiPrototypes,new_entiti));
+
                 new_entiti.setIsDone(Boolean.FALSE);
                 //entitiRepository.save(new_entiti);
                 entities.add(new_entiti);
@@ -619,6 +626,7 @@ public class GoalService {
                 new_entiti.setCreator(user);
                 new_entiti.setGoal(new_goal);
                 new_entiti.setSublinked_entities(handleSecondLevelEntities(entitiPrototype.getChildEntities(),new_entiti));
+
                 new_entiti.setIsDone(Boolean.FALSE);
                 //entitiRepository.save(new_entiti);
                 entities.add(new_entiti);
