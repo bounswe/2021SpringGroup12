@@ -24,7 +24,6 @@ import java.util.Set;
 @RestController
 @RequiredArgsConstructor
 @Validated
-//@RequestMapping(value = "/goals", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 @RequestMapping(value = "/v2/goals")
 public class GoalController {
     private final GoalService goalService;

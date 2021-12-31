@@ -50,9 +50,10 @@ public class Subgoal {
 
     @Column(name = "completedAt")
     private Date completedAt;
-    @JsonIgnoreProperties({"subgoal"})
-    @OneToMany(mappedBy = "subgoal", cascade = CascadeType.ALL, fetch = FetchType.LAZY,orphanRemoval=true)
-    private Set<Entiti> entities;
+
+    @JsonIgnoreProperties({"sublinked_subgoals"})
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "sublinked_subgoals")
+    private Set<Entiti> sublinked_entities;
 
     @JsonIgnoreProperties({"id"})
     @ManyToMany(cascade = CascadeType.ALL)
