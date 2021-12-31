@@ -10,14 +10,18 @@ import cmpe451.group12.beabee.goalspace.Repository.goals.GroupGoalRepository;
 import cmpe451.group12.beabee.goalspace.Repository.goals.SubgoalRepository;
 import cmpe451.group12.beabee.goalspace.Repository.resources.ResourceRepository;
 import cmpe451.group12.beabee.goalspace.dto.entities.*;
+import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalDTOShort;
+import cmpe451.group12.beabee.goalspace.dto.resources.ResourceDTOShort;
 import cmpe451.group12.beabee.goalspace.enums.EntitiType;
 import cmpe451.group12.beabee.goalspace.mapper.entities.*;
 import cmpe451.group12.beabee.goalspace.mapper.goals.SubgoalGetMapper;
+import cmpe451.group12.beabee.goalspace.mapper.goals.SubgoalShortMapper;
 import cmpe451.group12.beabee.goalspace.mapper.resources.ResourceShortMapper;
 import cmpe451.group12.beabee.goalspace.model.entities.*;
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import cmpe451.group12.beabee.goalspace.model.goals.GroupGoal;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
+import cmpe451.group12.beabee.goalspace.model.resources.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,7 +32,6 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +46,7 @@ public class EntitiService {
     private final EntitiRepository entitiRepository;
 
     private final SubgoalGetMapper subgoalGetMapper;
+    private final SubgoalShortMapper subgoalShortMapper;
     private final SubgoalRepository subgoalRepository;
     private final TaskRepository taskRepository;
     private final TaskGetMapper taskGetMapper;
@@ -65,10 +69,8 @@ public class EntitiService {
 
     public List<EntitiDTOShort> getEntitiesOfAGoal(Long goal_id) {
         Goal goal_from_db = goalRepository.findById(goal_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!"));
-        List<Subgoal> subgoals = goal_from_db.getSubgoals().stream()
-                .flatMap(EntitiService::recursiveSubgoals).collect(Collectors.toList());
-        List<Entiti> all_entities = subgoals.stream().map(x -> x.getEntities()).flatMap(Set::stream).collect(Collectors.toList());
-        all_entities.addAll(goal_from_db.getEntities());
+        List<Entiti> all_entities = new ArrayList<>(goal_from_db.getEntities());
+
         List<EntitiDTOShort> result = new ArrayList<>();
         result.addAll(all_entities.stream().filter(x -> x.getClass().getSimpleName().equals("Question")).map(x -> entitiShortMapper.mapToDto((Question) x)).collect(Collectors.toList()));
         result.addAll(all_entities.stream().filter(x -> x.getClass().getSimpleName().equals("Task")).map(x -> entitiShortMapper.mapToDto((Task) x)).collect(Collectors.toList()));
@@ -76,14 +78,6 @@ public class EntitiService {
         result.addAll(all_entities.stream().filter(x -> x.getClass().getSimpleName().equals("Routine")).map(x -> entitiShortMapper.mapToDto((Routine) x)).collect(Collectors.toList()));
         return  result;
     }
-
-    private static Stream<Subgoal> recursiveSubgoals(Subgoal item) {
-        return Stream.concat(Stream.of(item), Optional.ofNullable(item.getChild_subgoals())
-                .orElseGet(Collections::emptySet)
-                .stream()
-                .flatMap(EntitiService::recursiveSubgoals));
-    }
-
 
     public List<EntitiDTOShort> getEntitiesOfAUser(Long user_id) {
         if (!userRepository.existsById(user_id)) {
@@ -101,35 +95,59 @@ public class EntitiService {
 
     /****************************** LINKING ENTITIES ********************************/
 
-    public MessageResponse linkEntities(Long id, Long child_id) {
-        Optional<Entiti> entity_opt = entitiRepository.findById(id);
-        Optional<Entiti> child_entity_opt = entitiRepository.findById(child_id);
-        if (entity_opt.isEmpty() || child_entity_opt.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "One of the entities does not exists!");
+    public MessageResponse entitiLink(Long id, EntitiLinkDTO entitiLinkDTO) {
+        Entiti parentEntiti = entitiRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent entity not found"));
+
+        // Check the type of the object we want to link
+        switch (entitiLinkDTO.getChildType()) {
+            case ENTITI:
+                Entiti childEntiti = entitiRepository.findById(entitiLinkDTO.getChildId())
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Child entity not found"));
+
+                if(parentEntiti.getGoal() != childEntiti.getGoal() || parentEntiti.getGroupgoal() != childEntiti.getGroupgoal())
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Child entity is not in the same group!");
+
+                parentEntiti.getSublinked_entities().add(childEntiti);
+                break;
+
+            case SUBGOAL:
+                Subgoal childSubgoal = subgoalRepository.findById(entitiLinkDTO.getChildId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Child subgoal not found"));
+
+                if(parentEntiti.getGoal() != childSubgoal.getMainGoal() || parentEntiti.getGroupgoal() != childSubgoal.getMainGroupgoal())
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Child subgoal is not in the same group!");
+
+                parentEntiti.getSublinked_subgoals().add(childSubgoal);
+                break;
         }
-        Entiti entity = entity_opt.get();
-        Set<Entiti> sublinks = entity.getSublinks();
-        sublinks.add(child_entity_opt.get());
-        entity.setSublinks(sublinks);
-        entitiRepository.save(entity);
+
+        entitiRepository.save(parentEntiti);
         return new MessageResponse("Linking operation is successful.", MessageType.SUCCESS);
     }
 
-    public MessageResponse deleteSublinkOfAnEntity(Long id, Long child_id) {
-        Optional<Entiti> entity = entitiRepository.findById(id);
-        Optional<Entiti> child_entity = entitiRepository.findById(child_id);
-        if (entity.isEmpty() || child_entity.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "One of the entities does not exists!");
+    public MessageResponse entitiDeleteLink(Long id, EntitiLinkDTO entitiLinkDTO) {
+        Entiti parentEntiti = entitiRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent entity not found"));
+
+        // Check the type of the object we want to link
+        switch (entitiLinkDTO.getChildType()) {
+            case ENTITI:
+                Entiti childEntiti = entitiRepository.findById(entitiLinkDTO.getChildId())
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Child entity not found"));
+                if(!parentEntiti.getSublinked_entities().removeIf(e -> e.equals(childEntiti)))
+                    return new MessageResponse("Link does not exist", MessageType.ERROR);
+                break;
+
+            case SUBGOAL:
+                Subgoal childSubgoal = subgoalRepository.findById(entitiLinkDTO.getChildId())
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Child subgoal not found"));
+                if(!parentEntiti.getSublinked_subgoals().removeIf(e -> e.equals(childSubgoal)))
+                    return new MessageResponse("Link does not exist", MessageType.ERROR);
+                break;
         }
-        Set<Entiti> sublinks = entity.get().getSublinks();
-        if (sublinks.contains(child_entity.get())) {
-            sublinks.remove(child_entity.get());
-            entity.get().setSublinks(sublinks);
-            entitiRepository.save(entity.get());
-            return new MessageResponse("Link deleted.", MessageType.SUCCESS);
-        } else {
-            return new MessageResponse("There were no link at all!", MessageType.ERROR);
-        }
+        entitiRepository.save(parentEntiti);
+        return new MessageResponse("Link deleted is successful.", MessageType.SUCCESS);
     }
 
     /****************************** POSTS ********************************/
@@ -138,41 +156,51 @@ public class EntitiService {
         Reflection new_reflection = reflectionPostMapper.mapToEntity(reflectionPostDTO);
         new_reflection.setEntitiType(EntitiType.REFLECTION);
         new_reflection.setIsDone(Boolean.FALSE);
-        if (reflectionPostDTO.getParentType().equals(ParentType.GOAL)){
-            Goal goal = goalRepository.findById(reflectionPostDTO.getParent_id()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent goal not found!"));
-            new_reflection.setGoal(goal);
-            new_reflection.setCreator(goal.getCreator());
-        }
-        if (reflectionPostDTO.getParentType().equals(ParentType.ENTITY)){
-            Entiti entiti = entitiRepository.findById(reflectionPostDTO.getParent_id()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent entity not found!"));
-            Set<Entiti> sublinks = entiti.getSublinks();
-            sublinks.add(new_reflection);
-            entiti.setSublinks(sublinks);
-            new_reflection.setCreator(entiti.getCreator());
-        }
-        if (reflectionPostDTO.getParentType().equals(ParentType.SUBGOAL)){
-            Subgoal subgoal = subgoalRepository.findById(reflectionPostDTO.getParent_id()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent subgoal not found!"));
-            new_reflection.setSubgoal(subgoal);
-            new_reflection.setCreator(subgoal.getCreator());
-        }
-        if (reflectionPostDTO.getParentType().equals(ParentType.GROUPGOAL)){
-            GroupGoal groupGoal = groupGoalRepository.findById(reflectionPostDTO.getParent_id()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent group goal not found!"));
-            new_reflection.setGroupgoal(groupGoal);
-            new_reflection.setCreator(groupGoal.getCreator());
-        }
-        if (reflectionPostDTO.getParentType().equals(ParentType.NONE)){
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            String username = "";
-            if (principal instanceof UserDetails) {
-                username = ((UserDetails)principal).getUsername();
-            } else {
-                username = principal.toString();
-            }
-            Users user = userRepository.findByUsername(username).orElseThrow(()->new ResponseStatusException(HttpStatus.FORBIDDEN, "User could not authenticated!"));
-            new_reflection.setCreator(user);
+
+        switch (reflectionPostDTO.getGoalType()) {
+            case GOAL:
+                Goal goal = goalRepository.findById(reflectionPostDTO.getGoalId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent goal not found!"));
+                new_reflection.setGoal(goal);
+                new_reflection.setCreator(goal.getCreator());
+                break;
+            case GROUPGOAL:
+                GroupGoal groupGoal = groupGoalRepository.findById(reflectionPostDTO.getGoalId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent group goal not found!"));
+                new_reflection.setGroupgoal(groupGoal);
+                new_reflection.setCreator(groupGoal.getCreator());
+                break;
         }
 
-        reflectionRepository.save(new_reflection);
+        if (reflectionPostDTO.getInitialLinkType() != null) {
+            switch (reflectionPostDTO.getInitialLinkType())
+            {
+                case ENTITI:
+                    Entiti entiti = entitiRepository.findById(reflectionPostDTO.getInitialParentId())
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent entity not found!"));
+
+                    if(new_reflection.getGoal() != entiti.getGoal() || new_reflection.getGroupgoal() != entiti.getGroupgoal())
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parent entity is not in the same group!");
+
+                    new_reflection.setCreator(entiti.getCreator());
+                    Reflection saved_reflection = reflectionRepository.save(new_reflection);
+                    entiti.getSublinked_entities().add(saved_reflection);
+                    entitiRepository.save(entiti);
+                    break;
+                case SUBGOAL:
+                    Subgoal subgoal = subgoalRepository.findById(reflectionPostDTO.getInitialParentId())
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent subgoal not found!"));
+
+                    if(new_reflection.getGoal() != subgoal.getMainGoal() || new_reflection.getGroupgoal() != subgoal.getMainGroupgoal())
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parent subgoal is not in the same group!");
+
+                    new_reflection.setSublinked_subgoals(Set.of(subgoal));
+                    new_reflection.setCreator(subgoal.getCreator());
+                    reflectionRepository.save(new_reflection);
+                    break;
+            }
+        }
+        else
+            reflectionRepository.save(new_reflection);
+
         return new MessageResponse("Reflection added.", MessageType.SUCCESS);
     }
 
@@ -182,41 +210,52 @@ public class EntitiService {
         new_task.setEntitiType(EntitiType.TASK);
         new_task.setIsDone(Boolean.FALSE);
         new_task.setExtension_count(0L);
-        if (taskPostDTO.getParentType().equals(ParentType.GOAL)){
-            Goal goal = goalRepository.findById(taskPostDTO.getParent_id()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent goal not found!"));
-            new_task.setGoal(goal);
-            new_task.setCreator(goal.getCreator());
-        }
-        if (taskPostDTO.getParentType().equals(ParentType.ENTITY)){
-            Entiti entiti = entitiRepository.findById(taskPostDTO.getParent_id()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent entity not found!"));
-            Set<Entiti> sublinks = entiti.getSublinks();
-            sublinks.add(new_task);
-            entiti.setSublinks(sublinks);
-            new_task.setCreator(entiti.getCreator());
-        }
-        if (taskPostDTO.getParentType().equals(ParentType.SUBGOAL)){
-            Subgoal subgoal = subgoalRepository.findById(taskPostDTO.getParent_id()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent subgoal not found!"));
-            new_task.setSubgoal(subgoal);
-            new_task.setCreator(subgoal.getCreator());
-        }
-        if (taskPostDTO.getParentType().equals(ParentType.GROUPGOAL)){
-            GroupGoal groupGoal = groupGoalRepository.findById(taskPostDTO.getParent_id()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent group goal not found!"));
-            new_task.setGroupgoal(groupGoal);
-            new_task.setCreator(groupGoal.getCreator());
-        }
-        if (taskPostDTO.getParentType().equals(ParentType.NONE)){
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            String username = "";
-            if (principal instanceof UserDetails) {
-                username = ((UserDetails)principal).getUsername();
-            } else {
-                username = principal.toString();
-            }
-            Users user = userRepository.findByUsername(username).orElseThrow(()->new ResponseStatusException(HttpStatus.FORBIDDEN, "User could not authenticated!"));
-            new_task.setCreator(user);
+
+        switch (taskPostDTO.getGoalType()) {
+            case GOAL:
+                Goal goal = goalRepository.findById(taskPostDTO.getGoalId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent goal not found!"));
+                new_task.setGoal(goal);
+                new_task.setCreator(goal.getCreator());
+                break;
+            case GROUPGOAL:
+                GroupGoal groupGoal = groupGoalRepository.findById(taskPostDTO.getGoalId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent group goal not found!"));
+                new_task.setGroupgoal(groupGoal);
+                new_task.setCreator(groupGoal.getCreator());
+                break;
         }
 
-        taskRepository.save(new_task);
+        if (taskPostDTO.getInitialLinkType() != null) {
+            switch (taskPostDTO.getInitialLinkType())
+            {
+                case ENTITI:
+                    Entiti entiti = entitiRepository.findById(taskPostDTO.getInitialParentId())
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent entity not found!"));
+
+                    if(new_task.getGoal() != entiti.getGoal() || new_task.getGroupgoal() != entiti.getGroupgoal())
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parent entity is not in the same group!");
+
+                    new_task.setCreator(entiti.getCreator());
+                    Task saved_task = taskRepository.save(new_task);
+                    entiti.getSublinked_entities().add(saved_task);
+                    entitiRepository.save(entiti);
+                    break;
+                case SUBGOAL:
+                    Subgoal subgoal = subgoalRepository.findById(taskPostDTO.getInitialParentId())
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent subgoal not found!"));
+
+                    if(new_task.getGoal() != subgoal.getMainGoal() || new_task.getGroupgoal() != subgoal.getMainGroupgoal())
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parent subgoal is not in the same group!");
+
+                    new_task.setSublinked_subgoals(Set.of(subgoal));
+                    new_task.setCreator(subgoal.getCreator());
+                    taskRepository.save(new_task);
+                    break;
+            }
+        }
+        else
+            taskRepository.save(new_task);
+
+
         return new MessageResponse("Task added.", MessageType.SUCCESS);
     }
 
@@ -224,41 +263,51 @@ public class EntitiService {
         Question new_question = questionPostMapper.mapToEntity(questionPostDTO);
         new_question.setEntitiType(EntitiType.QUESTION);
         new_question.setIsDone(Boolean.FALSE);
-        if (questionPostDTO.getParentType().equals(ParentType.GOAL)){
-            Goal goal = goalRepository.findById(questionPostDTO.getParent_id()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent goal not found!"));
-            new_question.setGoal(goal);
-            new_question.setCreator(goal.getCreator());
-        }
-        if (questionPostDTO.getParentType().equals(ParentType.ENTITY)){
-            Entiti entiti = entitiRepository.findById(questionPostDTO.getParent_id()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent entity not found!"));
-            Set<Entiti> sublinks = entiti.getSublinks();
-            sublinks.add(new_question);
-            entiti.setSublinks(sublinks);
-            new_question.setCreator(entiti.getCreator());
-        }
-        if (questionPostDTO.getParentType().equals(ParentType.SUBGOAL)){
-            Subgoal subgoal = subgoalRepository.findById(questionPostDTO.getParent_id()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent subgoal not found!"));
-            new_question.setSubgoal(subgoal);
-            new_question.setCreator(subgoal.getCreator());
-        }
-        if (questionPostDTO.getParentType().equals(ParentType.GROUPGOAL)){
-            GroupGoal groupGoal = groupGoalRepository.findById(questionPostDTO.getParent_id()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent group goal not found!"));
-            new_question.setGroupgoal(groupGoal);
-            new_question.setCreator(groupGoal.getCreator());
-        }
-        if (questionPostDTO.getParentType().equals(ParentType.NONE)){
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            String username = "";
-            if (principal instanceof UserDetails) {
-                username = ((UserDetails)principal).getUsername();
-            } else {
-                username = principal.toString();
-            }
-            Users user = userRepository.findByUsername(username).orElseThrow(()->new ResponseStatusException(HttpStatus.FORBIDDEN, "User could not authenticated!"));
-            new_question.setCreator(user);
+
+        switch (questionPostDTO.getGoalType()) {
+            case GOAL:
+                Goal goal = goalRepository.findById(questionPostDTO.getGoalId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent goal not found!"));
+                new_question.setGoal(goal);
+                new_question.setCreator(goal.getCreator());
+                break;
+            case GROUPGOAL:
+                GroupGoal groupGoal = groupGoalRepository.findById(questionPostDTO.getGoalId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent group goal not found!"));
+                new_question.setGroupgoal(groupGoal);
+                new_question.setCreator(groupGoal.getCreator());
+                break;
         }
 
-        questionRepository.save(new_question);
+        if (questionPostDTO.getInitialLinkType() != null) {
+            switch (questionPostDTO.getInitialLinkType())
+            {
+                case ENTITI:
+                    Entiti entiti = entitiRepository.findById(questionPostDTO.getInitialParentId())
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent entity not found!"));
+
+                    if(new_question.getGoal() != entiti.getGoal() || new_question.getGroupgoal() != entiti.getGroupgoal())
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parent entity is not in the same group!");
+
+                    new_question.setCreator(entiti.getCreator());
+                    Question saved_question = questionRepository.save(new_question);
+                    entiti.getSublinked_entities().add(saved_question);
+                    entitiRepository.save(saved_question);
+                    break;
+                case SUBGOAL:
+                    Subgoal subgoal = subgoalRepository.findById(questionPostDTO.getInitialParentId())
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent subgoal not found!"));
+
+                    if(new_question.getGoal() != subgoal.getMainGoal() || new_question.getGroupgoal() != subgoal.getMainGroupgoal())
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parent subgoal is not in the same group!");
+
+                    new_question.setSublinked_subgoals(Set.of(subgoal));
+                    new_question.setCreator(subgoal.getCreator());
+                    questionRepository.save(new_question);
+                    break;
+            }
+        }
+        else
+            questionRepository.save(new_question);
+
         return new MessageResponse("Question added.", MessageType.SUCCESS);
     }
 
@@ -267,61 +316,71 @@ public class EntitiService {
         new_routine.setEntitiType(EntitiType.ROUTINE);
         new_routine.setIsDone(Boolean.FALSE);
         new_routine.setExtension_count(0L);
-        if (routinePostDTO.getParentType().equals(ParentType.GOAL)){
-            Goal goal = goalRepository.findById(routinePostDTO.getParent_id()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent goal not found!"));
-            new_routine.setGoal(goal);
-            new_routine.setCreator(goal.getCreator());
-        }
-        if (routinePostDTO.getParentType().equals(ParentType.ENTITY)){
-            Entiti entiti = entitiRepository.findById(routinePostDTO.getParent_id()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent entity not found!"));
-            Set<Entiti> sublinks = entiti.getSublinks();
-            sublinks.add(new_routine);
-            entiti.setSublinks(sublinks);
-            new_routine.setCreator(entiti.getCreator());
-        }
-        if (routinePostDTO.getParentType().equals(ParentType.SUBGOAL)){
-            Subgoal subgoal = subgoalRepository.findById(routinePostDTO.getParent_id()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent subgoal not found!"));
-            new_routine.setSubgoal(subgoal);
-            new_routine.setCreator(subgoal.getCreator());
-        }
-        if (routinePostDTO.getParentType().equals(ParentType.GROUPGOAL)){
-            GroupGoal groupGoal = groupGoalRepository.findById(routinePostDTO.getParent_id()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent group goal not found!"));
-            new_routine.setGroupgoal(groupGoal);
-            new_routine.setCreator(groupGoal.getCreator());
-        }
-        if (routinePostDTO.getParentType().equals(ParentType.NONE)){
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            String username = "";
-            if (principal instanceof UserDetails) {
-                username = ((UserDetails)principal).getUsername();
-            } else {
-                username = principal.toString();
-            }
-            Users user = userRepository.findByUsername(username).orElseThrow(()->new ResponseStatusException(HttpStatus.FORBIDDEN, "User could not authenticated!"));
-            new_routine.setCreator(user);
+
+        switch (routinePostDTO.getGoalType()) {
+            case GOAL:
+                Goal goal = goalRepository.findById(routinePostDTO.getGoalId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent goal not found!"));
+                new_routine.setGoal(goal);
+                new_routine.setCreator(goal.getCreator());
+                break;
+            case GROUPGOAL:
+                GroupGoal groupGoal = groupGoalRepository.findById(routinePostDTO.getGoalId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent group goal not found!"));
+                new_routine.setGroupgoal(groupGoal);
+                new_routine.setCreator(groupGoal.getCreator());
+                break;
         }
 
-        routineRepository.save(new_routine);
+        if (routinePostDTO.getInitialLinkType() != null) {
+            switch (routinePostDTO.getInitialLinkType())
+            {
+                case ENTITI:
+                    Entiti entiti = entitiRepository.findById(routinePostDTO.getInitialParentId())
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent entity not found!"));
+
+                    if(new_routine.getGoal() != entiti.getGoal() || new_routine.getGroupgoal() != entiti.getGroupgoal())
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parent entity is not in the same group!");
+
+                    new_routine.setCreator(entiti.getCreator());
+                    new_routine.setSublinked_entities(Set.of(entiti));
+                    Routine saved_routine = routineRepository.save(new_routine);
+                    entiti.getSublinked_entities().add(saved_routine);
+                    entitiRepository.save(entiti);
+                    break;
+                case SUBGOAL:
+                    Subgoal subgoal = subgoalRepository.findById(routinePostDTO.getInitialParentId())
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent subgoal not found!"));
+
+                    if(new_routine.getGoal() != subgoal.getMainGoal() || new_routine.getGroupgoal() != subgoal.getMainGroupgoal())
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parent subgoal is not in the same group!");
+
+                    new_routine.setSublinked_subgoals(Set.of(subgoal));
+                    new_routine.setCreator(subgoal.getCreator());
+                    routineRepository.save(new_routine);
+                    break;
+            }
+        }
+        else
+            routineRepository.save(new_routine);
+
         return new MessageResponse("Routine added.", MessageType.SUCCESS);
     }
 
     /****************************** GETS ********************************/
 
     private Set<EntitiDTOShort> extractEntities(Entiti entiti){
-
         Set<EntitiDTOShort> sublinks = new HashSet<>();
 
         sublinks.addAll(
-                entiti.getSublinks().stream().filter(x -> x.getClass().getSimpleName().equals("Question"))
+                entiti.getSublinked_entities().stream().filter(x -> x.getClass().getSimpleName().equals("Question"))
                         .map(x -> entitiShortMapper.mapToDto((Question) x)).collect(Collectors.toSet()));
         sublinks.addAll(
-                entiti.getSublinks().stream().filter(x -> x.getClass().getSimpleName().equals("Task"))
+                entiti.getSublinked_entities().stream().filter(x -> x.getClass().getSimpleName().equals("Task"))
                         .map(x -> entitiShortMapper.mapToDto((Task) x)).collect(Collectors.toSet()));
         sublinks.addAll(
-                entiti.getSublinks().stream().filter(x -> x.getClass().getSimpleName().equals("Routine"))
+                entiti.getSublinked_entities().stream().filter(x -> x.getClass().getSimpleName().equals("Routine"))
                         .map(x -> entitiShortMapper.mapToDto((Routine) x)).collect(Collectors.toSet()));
         sublinks.addAll(
-                entiti.getSublinks().stream().filter(x -> x.getClass().getSimpleName().equals("Reflection"))
+                entiti.getSublinked_entities().stream().filter(x -> x.getClass().getSimpleName().equals("Reflection"))
                         .map(x -> entitiShortMapper.mapToDto((Reflection) x)).collect(Collectors.toSet()));
         return sublinks;
     }
@@ -333,16 +392,17 @@ public class EntitiService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found!");
         }
         TaskGetDTO taskGetDTO = taskGetMapper.mapToDto(task_from_db_opt.get());
-        if (task_from_db_opt.get().getSubgoal() != null) {
-            taskGetDTO.setSubgoal_id(task_from_db_opt.get().getSubgoal().getId());
-        } else if (task_from_db_opt.get().getGoal() != null) {
+        if (task_from_db_opt.get().getGoal() != null) {
             taskGetDTO.setGoal_id(task_from_db_opt.get().getGoal().getId());
         } else if (task_from_db_opt.get().getGroupgoal() != null) {
             taskGetDTO.setGoal_id(task_from_db_opt.get().getGroupgoal().getId());
         }
 
-        taskGetDTO.setResources(resourceShortMapper.mapToDto(task_from_db_opt.get().getResources().stream().collect(Collectors.toList())).stream().collect(Collectors.toSet()));
-        taskGetDTO.setSublinks(extractEntities(task_from_db_opt.get()));
+        taskGetDTO.setResources(new HashSet<>(resourceShortMapper.mapToDto(new ArrayList<>(task_from_db_opt.get().getResources()))));
+        taskGetDTO.setSublinked_entities(extractEntities(task_from_db_opt.get()));
+        taskGetDTO.setSublinked_subgoals(new HashSet<>(
+                subgoalShortMapper.mapToDto(new ArrayList<>(task_from_db_opt.get().getSublinked_subgoals())))
+        );
         return taskGetDTO;
     }
 
@@ -353,15 +413,16 @@ public class EntitiService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Routine not found!");
         }
         RoutineGetDTO routineGetDTO = routineGetMapper.mapToDto(routine_from_db_opt.get());
-        if (routine_from_db_opt.get().getSubgoal() != null) {
-            routineGetDTO.setSubgoal_id(routine_from_db_opt.get().getSubgoal().getId());
-        } else if (routine_from_db_opt.get().getGoal() != null) {
+        if (routine_from_db_opt.get().getGoal() != null) {
             routineGetDTO.setGoal_id(routine_from_db_opt.get().getGoal().getId());
         } else if (routine_from_db_opt.get().getGroupgoal() != null) {
             routineGetDTO.setGoal_id(routine_from_db_opt.get().getGroupgoal().getId());
         }
-        routineGetDTO.setResources(resourceShortMapper.mapToDto(routine_from_db_opt.get().getResources().stream().collect(Collectors.toList())).stream().collect(Collectors.toSet()));
-        routineGetDTO.setSublinks(extractEntities(routine_from_db_opt.get()));
+        routineGetDTO.setResources(new HashSet<>(resourceShortMapper.mapToDto(new ArrayList<>(routine_from_db_opt.get().getResources()))));
+        routineGetDTO.setSublinked_entities(extractEntities(routine_from_db_opt.get()));
+        routineGetDTO.setSublinked_subgoals(new HashSet<>(
+                subgoalShortMapper.mapToDto(new ArrayList<>(routine_from_db_opt.get().getSublinked_subgoals())))
+        );
         return routineGetDTO;
     }
 
@@ -372,15 +433,16 @@ public class EntitiService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Reflection not found!");
         }
         ReflectionGetDTO reflectionGetDTO = reflectionGetMapper.mapToDto(reflection_from_db_opt.get());
-        if (reflection_from_db_opt.get().getSubgoal() != null) {
-            reflectionGetDTO.setSubgoal_id(reflection_from_db_opt.get().getSubgoal().getId());
-        } else if (reflection_from_db_opt.get().getGoal() != null) {
+        if (reflection_from_db_opt.get().getGoal() != null) {
             reflectionGetDTO.setGoal_id(reflection_from_db_opt.get().getGoal().getId());
         } else if (reflection_from_db_opt.get().getGroupgoal() != null) {
             reflectionGetDTO.setGoal_id(reflection_from_db_opt.get().getGroupgoal().getId());
         }
-        reflectionGetDTO.setResources(resourceShortMapper.mapToDto(reflection_from_db_opt.get().getResources().stream().collect(Collectors.toList())).stream().collect(Collectors.toSet()));
-        reflectionGetDTO.setSublinks(extractEntities(reflection_from_db_opt.get()));
+        reflectionGetDTO.setResources(new HashSet<>(resourceShortMapper.mapToDto(new ArrayList<>(reflection_from_db_opt.get().getResources()))));
+        reflectionGetDTO.setSublinked_entities(extractEntities(reflection_from_db_opt.get()));
+        reflectionGetDTO.setSublinked_subgoals(new HashSet<>(
+                subgoalShortMapper.mapToDto(new ArrayList<>(reflection_from_db_opt.get().getSublinked_subgoals())))
+        );
         return reflectionGetDTO;
     }
 
@@ -391,15 +453,16 @@ public class EntitiService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Question not found!");
         }
         QuestionGetDTO questionGetDTO = questionGetMapper.mapToDto(question_from_db_opt.get());
-        if (question_from_db_opt.get().getSubgoal() != null) {
-            questionGetDTO.setSubgoal_id(question_from_db_opt.get().getSubgoal().getId());
-        } else if (question_from_db_opt.get().getGoal() != null) {
+        if (question_from_db_opt.get().getGoal() != null) {
             questionGetDTO.setGoal_id(question_from_db_opt.get().getGoal().getId());
         } else if (question_from_db_opt.get().getGroupgoal() != null) {
             questionGetDTO.setGoal_id(question_from_db_opt.get().getGroupgoal().getId());
         }
-        questionGetDTO.setResources(resourceShortMapper.mapToDto(question_from_db_opt.get().getResources().stream().collect(Collectors.toList())).stream().collect(Collectors.toSet()));
-        questionGetDTO.setSublinks(extractEntities(question_from_db_opt.get()));
+        questionGetDTO.setResources(new HashSet<>(resourceShortMapper.mapToDto(new ArrayList<>(question_from_db_opt.get().getResources()))));
+        questionGetDTO.setSublinked_entities(extractEntities(question_from_db_opt.get()));
+        questionGetDTO.setSublinked_subgoals(new HashSet<>(
+                subgoalShortMapper.mapToDto(new ArrayList<>(question_from_db_opt.get().getSublinked_subgoals())))
+        );
         return questionGetDTO;
     }
 
@@ -410,15 +473,7 @@ public class EntitiService {
         if (reflection_from_db_opt.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Reflection not found!");
         }
-        if(reflection_from_db_opt.get().getSubgoal() != null){
-            //this entiti belongs to a subgoal, not a goal
-            Subgoal subgoal = reflection_from_db_opt.get().getSubgoal();
-            Set<Entiti> entities = subgoal.getEntities();
-            entities.remove(reflection_from_db_opt.get());
-            subgoal.setEntities(entities);
-            subgoalRepository.save(subgoal);
-            reflection_from_db_opt.get().setSubgoal(null);
-        }else if(reflection_from_db_opt.get().getGoal() != null){
+        if(reflection_from_db_opt.get().getGoal() != null){
             //this entiti belongs to a goal, not a subgoal
             //remove this from goal's entities
             Goal main_goal = reflection_from_db_opt.get().getGoal();
@@ -447,15 +502,7 @@ public class EntitiService {
         if (question_from_db_opt.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Question not found!");
         }
-        if(question_from_db_opt.get().getSubgoal() != null){
-            //this entiti belongs to a subgoal, not a goal
-            Subgoal subgoal = question_from_db_opt.get().getSubgoal();
-            Set<Entiti> entities = subgoal.getEntities();
-            entities.remove(question_from_db_opt.get());
-            subgoal.setEntities(entities);
-            subgoalRepository.save(subgoal);
-            question_from_db_opt.get().setSubgoal(null);
-        }else if(question_from_db_opt.get().getGoal() != null){
+        if(question_from_db_opt.get().getGoal() != null){
             //this entiti belongs to a goal, not a subgoal
             //remove this from goal's entities
             Goal main_goal = question_from_db_opt.get().getGoal();
@@ -484,15 +531,7 @@ public class EntitiService {
         if (task_from_db_opt.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found!");
         }
-        if(task_from_db_opt.get().getSubgoal() != null){
-            //this entiti belongs to a subgoal, not a goal
-            Subgoal subgoal = task_from_db_opt.get().getSubgoal();
-            Set<Entiti> entities = subgoal.getEntities();
-            entities.remove(task_from_db_opt.get());
-            subgoal.setEntities(entities);
-            subgoalRepository.save(subgoal);
-            task_from_db_opt.get().setSubgoal(null);
-        }else if(task_from_db_opt.get().getGoal() != null){
+        if(task_from_db_opt.get().getGoal() != null){
             //this entiti belongs to a goal, not a subgoal
             //remove this from goal's entities
             Goal main_goal = task_from_db_opt.get().getGoal();
@@ -521,15 +560,7 @@ public class EntitiService {
         if (routine_from_db_opt.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Routine not found!");
         }
-        if(routine_from_db_opt.get().getSubgoal() != null){
-            //this entiti belongs to a subgoal, not a goal
-            Subgoal subgoal = routine_from_db_opt.get().getSubgoal();
-            Set<Entiti> entities = subgoal.getEntities();
-            entities.remove(routine_from_db_opt.get());
-            subgoal.setEntities(entities);
-            subgoalRepository.save(subgoal);
-            routine_from_db_opt.get().setSubgoal(null);
-        }else if(routine_from_db_opt.get().getGoal() != null){
+        if(routine_from_db_opt.get().getGoal() != null){
             //this entiti belongs to a goal, not a subgoal
             //remove this from goal's entities
             Goal main_goal = routine_from_db_opt.get().getGoal();

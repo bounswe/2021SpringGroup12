@@ -63,7 +63,7 @@ public class GoalService {
     private final QuestionRepository questionRepository;
     private final TagRepository tagRepository;
     private final GoalPrototypeRespository goalPrototypeRespository;
-
+    private final ActivityStreamService activityStreamService;
 
     private Set<EntitiDTOShort> extractEntities(Goal goal) {
 
@@ -85,14 +85,21 @@ public class GoalService {
     }
 
     /********************** SEARCH BEGINS *********************************/
-    public List<GoalDTOShort> searchGoalsExact(String query) {
+    public List<GoalDTOShort> searchGoalsExact(String query, Optional<Long> user_id) {
+        if (user_id.isPresent()) {
+            userRepository.findById(user_id.get()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!"));
+        }
         Set<Tag> matched_tags = tagRepository.findAllByNameContains(query);
         Set<Goal> all_goals = new HashSet<>();
         matched_tags.stream().forEach(x -> {
             all_goals.addAll(goalRepository.findAllByTagsIsContaining(x));
         });
         all_goals.addAll(goalRepository.findAllByDescriptionContainsOrTitleContains(query, query));
-        return goalShortMapper.mapToDto(all_goals.stream().collect(Collectors.toList()));
+        if(user_id.isPresent()){
+            return goalShortMapper.mapToDto(all_goals.stream().filter(x -> x.getCreator().getUser_id() == user_id.get()).collect(Collectors.toList()));
+        }else{
+            return goalShortMapper.mapToDto(all_goals.stream().collect(Collectors.toList()));
+        }
     }
 
     protected Set<String> findRelatedTagIds(Set<String> tags) throws IOException, ParseException {
@@ -313,8 +320,10 @@ public class GoalService {
         new_goal.setGoalType(GoalType.GOAL);
         new_goal.setRating(0D);
         new_goal.setDownloadCount(0L);
+        new_goal.setIsPublished(Boolean.FALSE);
 //        getTopicIds(new_goal.getTags());
         goalRepository.save(new_goal);
+        activityStreamService.createGoalSchema(user.get(),new_goal);
         return new MessageResponse("Goal added successfully.", MessageType.SUCCESS);
     }
 
@@ -350,6 +359,7 @@ public class GoalService {
         subgoalRepository.saveAll(all_subgoals);
         goal_from_db.getSubgoals().clear();
         goal_from_db.setCreator(null);
+        activityStreamService.deleteGoalSchema(goal_from_db.getCreator(),goal_from_db);
         goalRepository.delete(goal_from_db);
         return new MessageResponse("Goal deleted.", MessageType.SUCCESS);
     }
@@ -385,6 +395,7 @@ public class GoalService {
         goal_from_db.setCompletedAt(new Date(System.currentTimeMillis()));
         goal_from_db.setRating(subgoals.stream().map(x -> x.getRating()).mapToDouble(Double::doubleValue).summaryStatistics().getAverage());
         goalRepository.save(goal_from_db);
+        activityStreamService.completeGoalSchema(goal_from_db.getCreator(),goal_from_db);
         return new MessageResponse("Goal completed successfully!", MessageType.SUCCESS);
     }
 
@@ -453,7 +464,7 @@ public class GoalService {
             new_subgoal.setTitle(subgoalPrototype.getTitle());
             new_subgoal.setCreator(parent_subgoal.getCreator());
             new_subgoal.setRating(0D);
-            new_subgoal.setEntities(new HashSet<>());
+            new_subgoal.setSublinked_entities(new HashSet<>());
             new_subgoal.setIsDone(Boolean.FALSE);
             subgoalRepository.save(new_subgoal);
             new_subgoal.setChild_subgoals(handleSecondLevelSubgoals(subgoalPrototype.getChild_subgoals(), new_subgoal));
@@ -462,6 +473,7 @@ public class GoalService {
         });
         return subgoals;
     }
+
     private Set<Entiti> handleSecondLevelEntities(Set<EntitiPrototype> children, Entiti parent_entiti) {
         Set<Entiti> entities = new HashSet<>();
         children.stream().forEach(entitiPrototype -> {
@@ -474,39 +486,43 @@ public class GoalService {
                 new_entiti.setRating(new ArrayList<>());
                 new_entiti.setPeriod(entitiPrototype.getPeriod());
                 new_entiti.setDeadline(Stream.of(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(new_entiti.getPeriod()))).collect(Collectors.toList()));
-                new_entiti.setSublinks(handleSecondLevelEntities(entitiPrototype.getChildEntities(),new_entiti));
+                new_entiti.setSublinked_entities(handleSecondLevelEntities(entitiPrototype.getChildEntities(),new_entiti));
                 new_entiti.setIsDone(Boolean.FALSE);
+                new_entiti.setEntitiType(EntitiType.ROUTINE);
                 //entitiRepository.save(new_entiti);
                 entities.add(new_entiti);
-            }else if (entitiPrototype.getEntitiType().equals(EntitiType.REFLECTION)) {
+            } else if (entitiPrototype.getEntitiType().equals(EntitiType.REFLECTION)) {
                 Reflection new_entiti = new Reflection();
                 //entitiRepository.save(new_entiti);
                 new_entiti.setDescription(entitiPrototype.getDescription());
                 new_entiti.setTitle(entitiPrototype.getTitle());
                 new_entiti.setCreator(parent_entiti.getCreator());
-                new_entiti.setSublinks(handleSecondLevelEntities(entitiPrototype.getChildEntities(),new_entiti));
+                new_entiti.setSublinked_entities(handleSecondLevelEntities(entitiPrototype.getChildEntities(),new_entiti));
                 new_entiti.setIsDone(Boolean.FALSE);
-                //entitiRepository.save(new_entiti);
+                new_entiti.setEntitiType(EntitiType.REFLECTION);
+//entitiRepository.save(new_entiti);
                 entities.add(new_entiti);
-            }else if (entitiPrototype.getEntitiType().equals(EntitiType.QUESTION)) {
+            } else if (entitiPrototype.getEntitiType().equals(EntitiType.QUESTION)) {
                 Question new_entiti = new Question();
                 //entitiRepository.save(new_entiti);
                 new_entiti.setDescription(entitiPrototype.getDescription());
                 new_entiti.setTitle(entitiPrototype.getTitle());
                 new_entiti.setCreator(parent_entiti.getCreator());
-                new_entiti.setSublinks(handleSecondLevelEntities(entitiPrototype.getChildEntities(),new_entiti));
+                new_entiti.setSublinked_entities(handleSecondLevelEntities(entitiPrototype.getChildEntities(),new_entiti));
+                new_entiti.setEntitiType(EntitiType.QUESTION);
                 new_entiti.setIsDone(Boolean.FALSE);
                 //entitiRepository.save(new_entiti);
                 entities.add(new_entiti);
-            }else if (entitiPrototype.getEntitiType().equals(EntitiType.TASK)) {
+            } else if (entitiPrototype.getEntitiType().equals(EntitiType.TASK)) {
                 Task new_entiti = new Task();
                 //entitiRepository.save(new_entiti);
                 new_entiti.setDescription(entitiPrototype.getDescription());
                 new_entiti.setTitle(entitiPrototype.getTitle());
                 new_entiti.setCreator(parent_entiti.getCreator());
                 new_entiti.setRating(0D);
+                new_entiti.setEntitiType(EntitiType.TASK);
                 new_entiti.setDeadline(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(7)));
-                new_entiti.setSublinks(handleSecondLevelEntities(entitiPrototype.getChildEntities(),new_entiti));
+                new_entiti.setSublinked_entities(handleSecondLevelEntities(entitiPrototype.getChildEntities(),new_entiti));
                 new_entiti.setIsDone(Boolean.FALSE);
                 //entitiRepository.save(new_entiti);
                 entities.add(new_entiti);
@@ -514,6 +530,7 @@ public class GoalService {
         });
         return entities;
     }
+
     private Set<Tag> clearTags(Set<Tag> tags, Goal goal, GoalPrototype prototype) {
         Set<Tag> new_tags = new HashSet<>();
         new_tags.addAll(tags);
@@ -559,11 +576,12 @@ public class GoalService {
                 new_entiti.setDeadline(Stream.of(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(new_entiti.getPeriod()))).collect(Collectors.toList()));
                 new_entiti.setExtension_count(0L);
                 new_entiti.setGoal(new_goal);
-                new_entiti.setSublinks(handleSecondLevelEntities(entitiPrototypes,new_entiti));
+                new_entiti.setSublinked_entities(handleSecondLevelEntities(entitiPrototypes,new_entiti));
                 new_entiti.setIsDone(Boolean.FALSE);
                 //entitiRepository.save(new_entiti);
                 entities.add(new_entiti);
-            } else if (entitiPrototype.getEntitiType().equals(EntitiType.REFLECTION)) {
+            }
+            else if (entitiPrototype.getEntitiType().equals(EntitiType.REFLECTION)) {
                 Reflection new_entiti = new Reflection();
                 new_entiti.setEntitiType(EntitiType.REFLECTION);
                 //entitiRepository.save(new_entiti);
@@ -571,11 +589,12 @@ public class GoalService {
                 new_entiti.setTitle(entitiPrototype.getTitle());
                 new_entiti.setCreator(user);
                 new_entiti.setGoal(new_goal);
-                new_entiti.setSublinks(handleSecondLevelEntities(entitiPrototypes,new_entiti));
+                new_entiti.setSublinked_entities(handleSecondLevelEntities(entitiPrototypes,new_entiti));
                 new_entiti.setIsDone(Boolean.FALSE);
                 //entitiRepository.save(new_entiti);
                 entities.add(new_entiti);
-            } else if (entitiPrototype.getEntitiType().equals(EntitiType.TASK)) {
+            }
+            else if (entitiPrototype.getEntitiType().equals(EntitiType.TASK)) {
                 Task new_entiti = new Task();
                 new_entiti.setEntitiType(EntitiType.TASK);
                 //entitiRepository.save(new_entiti);
@@ -586,11 +605,12 @@ public class GoalService {
                 new_entiti.setDeadline(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(7L)));
                 new_entiti.setExtension_count(0L);
                 new_entiti.setGoal(new_goal);
-                new_entiti.setSublinks(handleSecondLevelEntities(entitiPrototypes,new_entiti));
+                new_entiti.setSublinked_entities(handleSecondLevelEntities(entitiPrototypes,new_entiti));
                 new_entiti.setIsDone(Boolean.FALSE);
                 //entitiRepository.save(new_entiti);
                 entities.add(new_entiti);
-            } else if (entitiPrototype.getEntitiType().equals(EntitiType.QUESTION)) {
+            }
+            else if (entitiPrototype.getEntitiType().equals(EntitiType.QUESTION)) {
                 Question new_entiti = new Question();
                 new_entiti.setEntitiType(EntitiType.QUESTION);
                 //entitiRepository.save(new_entiti);
@@ -598,7 +618,7 @@ public class GoalService {
                 new_entiti.setTitle(entitiPrototype.getTitle());
                 new_entiti.setCreator(user);
                 new_entiti.setGoal(new_goal);
-                new_entiti.setSublinks(handleSecondLevelEntities(entitiPrototype.getChildEntities(),new_entiti));
+                new_entiti.setSublinked_entities(handleSecondLevelEntities(entitiPrototype.getChildEntities(),new_entiti));
                 new_entiti.setIsDone(Boolean.FALSE);
                 //entitiRepository.save(new_entiti);
                 entities.add(new_entiti);
@@ -614,7 +634,7 @@ public class GoalService {
             new_subgoal.setTitle(subgoalPrototype.getTitle());
             new_subgoal.setCreator(user);
             new_subgoal.setRating(0D);
-            new_subgoal.setEntities(new HashSet<>());
+            new_subgoal.setSublinked_entities(new HashSet<>());
             new_subgoal.setIsDone(Boolean.FALSE);
             new_subgoal.setMainGoal(new_goal);
             new_subgoal.setChild_subgoals(handleSecondLevelSubgoals(subgoalPrototype.getChild_subgoals(), new_subgoal));
@@ -623,6 +643,7 @@ public class GoalService {
         });
         entitiRepository.saveAll(entities);
         goalRepository.save(new_goal);
+        activityStreamService.copyAGoal(user,prototype);
         return new MessageResponse("Prototype copied successfully!", MessageType.SUCCESS);
     }
 }

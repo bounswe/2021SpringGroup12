@@ -73,16 +73,16 @@ public class SubgoalService {
         Set<EntitiDTOShort> sublinks = new HashSet<>();
 
         sublinks.addAll(
-                subgoal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Question"))
+                subgoal.getSublinked_entities().stream().filter(x -> x.getClass().getSimpleName().equals("Question"))
                         .map(x -> entitiShortMapper.mapToDto((Question) x)).collect(Collectors.toSet()));
         sublinks.addAll(
-                subgoal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Task"))
+                subgoal.getSublinked_entities().stream().filter(x -> x.getClass().getSimpleName().equals("Task"))
                         .map(x -> entitiShortMapper.mapToDto((Task) x)).collect(Collectors.toSet()));
         sublinks.addAll(
-                subgoal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Routine"))
+                subgoal.getSublinked_entities().stream().filter(x -> x.getClass().getSimpleName().equals("Routine"))
                         .map(x -> entitiShortMapper.mapToDto((Routine) x)).collect(Collectors.toSet()));
         sublinks.addAll(
-                subgoal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Reflection"))
+                subgoal.getSublinked_entities().stream().filter(x -> x.getClass().getSimpleName().equals("Reflection"))
                         .map(x -> entitiShortMapper.mapToDto((Reflection) x)).collect(Collectors.toSet()));
         return sublinks;
     }
@@ -101,7 +101,7 @@ public class SubgoalService {
             subgoalGetDTO.setParent_subgoal_id(subgoalRepository.findParentById(id).getId());
         }
         subgoalGetDTO.setSublinks(new HashSet<>(subgoalShortMapper.mapToDto(new ArrayList<>(subgoal_from_db_opt.get().getChild_subgoals()))));
-        subgoalGetDTO.setEntities(extractEntities(subgoal_from_db_opt.get()));
+        subgoalGetDTO.setSublinked_entities(extractEntities(subgoal_from_db_opt.get()));
         subgoalGetDTO.setAssignees(subgoal_from_db_opt.get().getAssignees().stream().map(Users::getUser_id).collect(Collectors.toSet()));
         return subgoalGetDTO;
     }
