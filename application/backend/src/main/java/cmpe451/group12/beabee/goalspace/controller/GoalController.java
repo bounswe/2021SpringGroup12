@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @CrossOrigin(origins = "http://localhost:8085")
 @RestController
 @RequiredArgsConstructor
 @Validated
-//@RequestMapping(value = "/goals", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 @RequestMapping(value = "/v2/goals")
 public class GoalController {
     private final GoalService goalService;
@@ -33,8 +33,9 @@ public class GoalController {
     /*******************SEARCH BEGINS***********/
     @ApiOperation(value = "Search goals with exact match in title description and tag fields.")
     @GetMapping("/search")
-    public List<GoalDTOShort> searchGoalsExact(@RequestParam(value = "query") @ApiParam(value = "Search query", example = "word1") String query) {
-        return goalService.searchGoalsExact(query);
+    public List<GoalDTOShort> searchGoalsExact(@RequestParam(value = "query") @ApiParam(value = "Search query", example = "word1") String query,
+                                               @RequestParam(value = "user_id") @ApiParam(value = "User id", example = "5") Optional<Long> user_id) {
+        return goalService.searchGoalsExact(query, user_id);
     }
 
     @ApiOperation(value = "Search in goals using tags")

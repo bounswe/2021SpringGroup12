@@ -8,9 +8,10 @@ import cmpe451.group12.beabee.goalspace.Repository.goals.GoalRepository;
 import cmpe451.group12.beabee.goalspace.Repository.goals.GroupGoalRepository;
 import cmpe451.group12.beabee.goalspace.Repository.goals.SubgoalRepository;
 import cmpe451.group12.beabee.goalspace.Repository.resources.ResourceRepository;
+import cmpe451.group12.beabee.goalspace.dto.entities.EntitiLinkDTO;
+import cmpe451.group12.beabee.goalspace.dto.entities.LinkType;
 import cmpe451.group12.beabee.goalspace.dto.entities.RoutineGetDTO;
 import cmpe451.group12.beabee.goalspace.dto.entities.TaskGetDTO;
-import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalGetDTO;
 import cmpe451.group12.beabee.goalspace.mapper.entities.*;
 import cmpe451.group12.beabee.goalspace.mapper.goals.SubgoalGetMapper;
 import cmpe451.group12.beabee.goalspace.mapper.resources.ResourceShortMapper;
@@ -18,7 +19,6 @@ import cmpe451.group12.beabee.goalspace.model.entities.Entiti;
 import cmpe451.group12.beabee.goalspace.model.entities.Reflection;
 import cmpe451.group12.beabee.goalspace.model.entities.Routine;
 import cmpe451.group12.beabee.goalspace.model.entities.Task;
-import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +27,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -113,7 +112,7 @@ public class EntitiServiceTest {
         //define 2 entities
         Entiti entiti1 = new Task();
         entiti1.setId(1L);
-        entiti1.setSublinks(new HashSet<>());
+        entiti1.setSublinked_entities(new HashSet<>());
         Entiti entiti2 = new Task();
         entiti2.setId(2L);
 
@@ -122,8 +121,12 @@ public class EntitiServiceTest {
         Mockito.when(entitiRepository.findById(2L)).thenReturn(java.util.Optional.of(entiti2));
         Mockito.when(entitiRepository.save(entiti1)).thenReturn(entiti1);
 
+        EntitiLinkDTO entitiLinkDTO = new EntitiLinkDTO();
+        entitiLinkDTO.setChildId(2L);
+        entitiLinkDTO.setChildType(LinkType.ENTITI);
+
         //assertions
-        Assert.assertEquals(entitiService.linkEntities(1L, 2L), new MessageResponse("Linking operation is successful.", MessageType.SUCCESS));
+        Assert.assertEquals(entitiService.entitiLink(1L, entitiLinkDTO), new MessageResponse("Linking operation is successful.", MessageType.SUCCESS));
         Mockito.verify(entitiRepository).findById(1L);
         Mockito.verify(entitiRepository).findById(2L);
         Mockito.verify(entitiRepository).save(entiti1);
@@ -134,13 +137,17 @@ public class EntitiServiceTest {
         //define 2 entities
         Entiti entiti1 = new Reflection();
         entiti1.setId(1L);
-        entiti1.setSublinks(new HashSet<>());
+        entiti1.setSublinked_entities(new HashSet<>());
 
         //mock other class calls
         Mockito.when(entitiRepository.findById(1L)).thenReturn(java.util.Optional.of(entiti1));
 
+        EntitiLinkDTO entitiLinkDTO = new EntitiLinkDTO();
+        entitiLinkDTO.setChildId(2L);
+        entitiLinkDTO.setChildType(LinkType.ENTITI);
+
         //assertions
-        Assert.assertThrows(ResponseStatusException.class, ()-> {entitiService.linkEntities(1L, 2L);});
+        Assert.assertThrows(ResponseStatusException.class, ()-> {entitiService.entitiLink(1L, entitiLinkDTO);});
         Mockito.verify(entitiRepository).findById(1L);
     }
 

@@ -2,9 +2,7 @@ package cmpe451.group12.beabee.goalspace.controller;
 
 import cmpe451.group12.beabee.common.dto.UserGetDTO;
 import cmpe451.group12.beabee.common.service.UserService;
-import cmpe451.group12.beabee.goalspace.dto.analytics.GoalAnalyticsDTO;
 import cmpe451.group12.beabee.goalspace.dto.analytics.UserAnalyticsDTO;
-import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalGetDTO;
 import cmpe451.group12.beabee.goalspace.service.GoalService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -33,7 +31,13 @@ public class UserController {
 
     @ApiOperation(value = "Search for users.")
     @GetMapping("/search/{query}")
-    public List<UserGetDTO> searchUser(@PathVariable @ApiParam(value = "Search query.", example = "5") String query) {
+    public List<UserGetDTO> searchUser(@PathVariable @ApiParam(value = "Search query.", example = "veyis") String query) {
         return userService.searchUser(query);
     }
+    @ApiOperation(value = "Get the user with given id.")
+    @GetMapping("/get/{id}")
+    public UserGetDTO getUser(@PathVariable @ApiParam(value = "Search query.", example = "5") Long  id) {
+        return userService.getUser(id);
+    }
+
 }
