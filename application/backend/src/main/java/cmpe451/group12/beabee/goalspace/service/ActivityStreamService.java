@@ -1,6 +1,7 @@
 package cmpe451.group12.beabee.goalspace.service;
 
 import cmpe451.group12.beabee.common.model.Users;
+import cmpe451.group12.beabee.common.repository.UserRepository;
 import cmpe451.group12.beabee.goalspace.Repository.activitistreams.*;
 import cmpe451.group12.beabee.goalspace.enums.ActivityType;
 import cmpe451.group12.beabee.goalspace.model.activitystreams.*;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +28,9 @@ public class ActivityStreamService {
     //private final DeleteSchemaRepository deleteSchemaRepository;
     private final OriginSchemaRepository originSchemaRepository;
     private final ActivitySchemaRepository activitySchemaRepository;
+
+    // For filtering Activity Schemas by User Id
+    private final UserRepository userRepository;
 
     protected void createGoalSchema(Users user, Goal goal) {
         ObjectSchema objectSchema = new ObjectSchema();
@@ -291,14 +296,18 @@ public class ActivityStreamService {
 
 
     public ActivitySchema getACreateSchema(Long id) {
-        ActivitySchema createFollowSchema = activitySchemaRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Create schema not found!"));
-        return createFollowSchema;
+        return activitySchemaRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Create schema not found!"));
     }
 
-    public List<ActivitySchema> getSchemas() {
-        List<ActivitySchema> createFollowSchemas = activitySchemaRepository.findAll().stream()
-                .sorted((i1, i2) -> i2.getCreatedAt().compareTo(i1.getCreatedAt())).
-                        collect(Collectors.toList());
-        return createFollowSchemas;
+    public List<ActivitySchema> getSchemasOfAUser(Long userId) {
+        String username = userRepository.findById(userId)
+                .orElseThrow(EntityNotFoundException::new)
+                .getUsername();
+
+        return activitySchemaRepository.findAll().stream()
+                .filter(activitySchema -> activitySchema.getActor().getName().equals(username))
+                .sorted((i1, i2) -> i2.getCreatedAt().compareTo(i1.getCreatedAt()))
+                .collect(Collectors.toList());
     }
 }
