@@ -5,9 +5,7 @@ import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import cmpe451.group12.beabee.goalspace.model.goals.GroupGoal;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -16,6 +14,9 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString
 public class Users{
 
@@ -62,7 +63,7 @@ public class Users{
     @OneToMany(mappedBy = "creator",orphanRemoval=true)
     private Set<Entiti> entities;
 
-    /*
+
     @JsonIgnoreProperties({"id"})
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(name="Person_Followers")
@@ -72,7 +73,7 @@ public class Users{
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(name="Person_Followings")
     private Set<Users> following;
-
+/*
     private Analytics analytic_report;
 */
 

@@ -2,10 +2,12 @@ package cmpe451.group12.beabee.goalspace.service;
 
 import cmpe451.group12.beabee.common.model.Users;
 import cmpe451.group12.beabee.common.repository.UserRepository;
-
 import cmpe451.group12.beabee.goalspace.Repository.activitistreams.*;
 import cmpe451.group12.beabee.goalspace.enums.ActivityType;
-import cmpe451.group12.beabee.goalspace.model.activitystreams.*;
+import cmpe451.group12.beabee.goalspace.model.activitystreams.ActivitySchema;
+import cmpe451.group12.beabee.goalspace.model.activitystreams.ActorSchema;
+import cmpe451.group12.beabee.goalspace.model.activitystreams.ObjectSchema;
+import cmpe451.group12.beabee.goalspace.model.activitystreams.OriginSchema;
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import cmpe451.group12.beabee.goalspace.model.goals.GroupGoal;
 import cmpe451.group12.beabee.goalspace.model.prototypes.GoalPrototype;
@@ -95,7 +97,7 @@ public class ActivityStreamService {
 
     }
 
-    protected void followUserSchema(Users user, Users target) {
+    public void followUserSchema(Users user, Users target) {
         ObjectSchema objectSchema = new ObjectSchema();
         objectSchema.setName(target.getUsername());
         objectSchema.setType(ObjectSchema.Type.PERSON);
@@ -113,6 +115,25 @@ public class ActivityStreamService {
         follow_schema.setSummary(user.getUsername() + " followed " + target.getUsername() + ".");
         activitySchemaRepository.save(follow_schema);
     }
+
+    // TODO Activity Stream type unfollow does not exist needs to think about it
+//    public void unfollowUserSchema(Users user, Users targetUser) {
+//        ObjectSchema objectSchema = new ObjectSchema();
+//        objectSchema.setName(targetUser.getUsername());
+//        objectSchema.setType(ObjectSchema.Type.PERSON);
+//        objectSchema.setUrl("/v2/users/get/" + targetUser.getUser_id());
+//        objectSchemaRepository.save(objectSchema);
+//
+//        ActorSchema actorSchema = new ActorSchema();
+//        actorSchema.setName(user.getUsername());
+//        actorSchemaRepository.save(actorSchema);
+//
+//        ActivitySchema unfollow_schema = new ActivitySchema();
+//        unfollow_schema.setType(ActivityType.UNFOLLOW);
+//        unfollow_schema.setActor(actorSchema);
+//        unfollow_schema.setObjectschema(objectSchema);
+//        unfollow_schema.setSummary(user.getUsername() + " unfollowed " + targetUser.getUsername() + ".");
+//    }
 
     protected void publishGoalSchema(Users user, GoalPrototype goalPrototype) {
         ObjectSchema objectSchema = new ObjectSchema();
