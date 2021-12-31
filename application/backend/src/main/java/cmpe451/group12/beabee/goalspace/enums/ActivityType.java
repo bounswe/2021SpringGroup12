@@ -5,7 +5,6 @@ public enum ActivityType {
     CREATE,
     DELETE,
     FOLLOW,
-    UNFOLLOW,
     JOIN,
     LEAVE,
     REMOVE,

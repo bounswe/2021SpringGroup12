@@ -113,23 +113,24 @@ public class ActivityStreamService {
         activitySchemaRepository.save(follow_schema);
     }
 
-    public void unfollowUserSchema(Users user, Users targetUser) {
-        ObjectSchema objectSchema = new ObjectSchema();
-        objectSchema.setName(targetUser.getUsername());
-        objectSchema.setType(ObjectSchema.Type.PERSON);
-        objectSchema.setUrl("/v2/users/get/" + targetUser.getUser_id());
-        objectSchemaRepository.save(objectSchema);
-
-        ActorSchema actorSchema = new ActorSchema();
-        actorSchema.setName(user.getUsername());
-        actorSchemaRepository.save(actorSchema);
-
-        ActivitySchema unfollow_schema = new ActivitySchema();
-        unfollow_schema.setType(ActivityType.UNFOLLOW);
-        unfollow_schema.setActor(actorSchema);
-        unfollow_schema.setObjectschema(objectSchema);
-        unfollow_schema.setSummary(user.getUsername() + " unfollowed " + targetUser.getUsername() + ".");
-    }
+    // TODO Activity Stream type unfollow does not exist needs to think about it
+//    public void unfollowUserSchema(Users user, Users targetUser) {
+//        ObjectSchema objectSchema = new ObjectSchema();
+//        objectSchema.setName(targetUser.getUsername());
+//        objectSchema.setType(ObjectSchema.Type.PERSON);
+//        objectSchema.setUrl("/v2/users/get/" + targetUser.getUser_id());
+//        objectSchemaRepository.save(objectSchema);
+//
+//        ActorSchema actorSchema = new ActorSchema();
+//        actorSchema.setName(user.getUsername());
+//        actorSchemaRepository.save(actorSchema);
+//
+//        ActivitySchema unfollow_schema = new ActivitySchema();
+//        unfollow_schema.setType(ActivityType.UNFOLLOW);
+//        unfollow_schema.setActor(actorSchema);
+//        unfollow_schema.setObjectschema(objectSchema);
+//        unfollow_schema.setSummary(user.getUsername() + " unfollowed " + targetUser.getUsername() + ".");
+//    }
 
     protected void publishGoalSchema(Users user, GoalPrototype goalPrototype) {
         ObjectSchema objectSchema = new ObjectSchema();

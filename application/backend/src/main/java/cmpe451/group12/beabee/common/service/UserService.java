@@ -159,8 +159,8 @@ public class UserService {
 
         userRepository.save(user);
         userRepository.save(targetUser);
-
-        activityStreamService.unfollowUserSchema(user, targetUser);
+// TODO Activity Stream type unfollow does not exist needs to think about it
+//        activityStreamService.unfollowUserSchema(user, targetUser);
 
         return new MessageResponse("User unfollowed successfully!", MessageType.SUCCESS);
     }
