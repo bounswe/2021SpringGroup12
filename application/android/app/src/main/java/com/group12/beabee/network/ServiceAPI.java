@@ -207,6 +207,19 @@ public interface ServiceAPI {
     @GET("/v2/users/search/{query}")
     Call<List<UserSearchData>>getUserSearch(@Path("query") String query);
 
+    @GET("/v2/users/get/{id}")
+    Call<UserSearchData>getUser(@Path("id") int id);
+
+    @POST("/v2/users/{userId}/follow/{targetId}")
+    Call<BasicResponse>followUser(@Path("userId") int userId, @Path("targetId") int targetId);
+
+    @POST("/v2/users/{userId}/unfollow/{targetId}")
+    Call<BasicResponse>unfollowUser(@Path("userId") int userId, @Path("targetId") int targetId);
+
+    @GET("/v2/users/{userId}/followings")
+    Call<List<UserSearchData>>getFollowings(@Path("userId") int userId);
+
+
 }
 //7YPxFmM3yTaAzaSi3Q61B
 

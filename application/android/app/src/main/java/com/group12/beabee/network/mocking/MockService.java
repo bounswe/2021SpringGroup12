@@ -34,6 +34,9 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public class MockService implements ServiceAPI {
 
@@ -376,6 +379,32 @@ public class MockService implements ServiceAPI {
 
         return null;
     }
+
+    @Override
+    public Call<BasicResponse> followUser(int userId, int targetId) {
+
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> unfollowUser(int userId, int targetId) {
+
+        return null;
+    }
+
+    @Override
+    public Call<UserSearchData> getUser(int id) {
+
+        return null;
+    }
+
+    @Override
+    public Call<List<UserSearchData>> getFollowings(int userId) {
+
+        return null;
+    }
+
+
 
     private Call<BasicResponse> returnBasicResponse(){
         return new MockCall<BasicResponse>() {

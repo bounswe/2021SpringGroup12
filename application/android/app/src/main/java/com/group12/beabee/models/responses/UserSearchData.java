@@ -6,5 +6,7 @@ import java.io.Serializable;
 
 public class UserSearchData implements Serializable {
     public int id;
+    public int followerCount;
+    public int followingCount;
     public User userCredentials;
 }
