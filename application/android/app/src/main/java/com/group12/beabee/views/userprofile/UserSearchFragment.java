@@ -67,7 +67,7 @@ public class UserSearchFragment extends BaseInnerFragment implements IOnMemberLi
 
     }
 
-    
+
     @Override
     protected PageMode GetPageMode() {
         return PageMode.ListWithBack;
@@ -85,16 +85,17 @@ public class UserSearchFragment extends BaseInnerFragment implements IOnMemberLi
 
     @Override
     public void OnMemberListClicked(int id) {
-        //todo fill here with other users' page
+        OpenNewFragment(UserProfileFragment.newInstance(id));
     }
 
     //searchview
 
     private void SetupSearchView(){
-        Utils.showLoading(getParentFragmentManager());
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                Utils.showLoading(getParentFragmentManager());
                 service.getUserSearch(query).enqueue(new Callback<List<UserSearchData>>() {
                     @Override
                     public void onResponse(Call<List<UserSearchData>> call, Response<List<UserSearchData>> response) {
