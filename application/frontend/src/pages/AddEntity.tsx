@@ -43,6 +43,13 @@ export function AddEntity() {
                 </button>
             </Link>
             }
+            {parentType == "groupgoal" &&
+            <Link to={"/groupgoals/" + parent_id} >
+                <button type="button">
+                    Return to Group-Goal
+                </button>
+            </Link>
+            }
             {parentType == "subgoal" &&
             <Link to={"/subgoal/" + parent_id} >
                 <button type="button">
@@ -54,7 +61,7 @@ export function AddEntity() {
              || parentType == "task" || parentType == "routine") &&
             <Link to={`/entity/${parentType}/${parent_id}/` + parent_id} >
                 <button type="button">
-                    Return to SubGoal
+                    Return to {parentType}
                 </button>
             </Link>
             }

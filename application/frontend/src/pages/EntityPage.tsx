@@ -156,27 +156,26 @@ export function EntityPage() {
             })
             .then(data => {
                 let tmp = []
-                let sublinks=data.sublinks
+                let sublinked_entities=data.sublinked_entities
                 console.log("data:" + JSON.stringify(data))
                 if(entitiType.toLowerCase() =="task" || entitiType.toLowerCase() =="routine"  ){
                     setDeadline(data.deadline)
                     console.log(data.deadline)
                 }
-                if(sublinks!==null){
-                for (let i = 0; i < sublinks.length; i++) {
-                    console.log(sublinks)
+                
+                for (let i = 0; i < sublinked_entities.length; i++) {
+                    console.log(sublinked_entities)
                     tmp.push({
-                        key: sublinks[i]['id'],
-                        title: sublinks[i]['title'],
-                        description: sublinks[i]['description'],
-                        entityType: sublinks[i]['entitiType'],
+                        key: sublinked_entities[i]['id'],
+                        title: sublinked_entities[i]['title'],
+                        description: sublinked_entities[i]['description'],
+                        entityType: sublinked_entities[i]['entitiType'],
                         //isDone: sublinks[i]['isDone'],
                         //period: sublinks[i]['period'],
                         //rating: sublinks[i]['rating'],
                         //deadline: sublinks[i]['deadline']
                     })
                 }
-            }
                 // @ts-ignore
                 setEntities(tmp)
                 setLoaded(true)
