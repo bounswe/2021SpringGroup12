@@ -99,8 +99,8 @@ export default class App extends React.Component<IAppProps, IAppState> {
                   <CalendarPage />
                 </Route>
                 <Route path="/addEntity/:parentType/:entitiType/:parent_id" children={<AddEntity /> } />
-                <Route path="/editEntity/:entitiType/:entity_id" children={<EditEntity /> } />
-                <Route path="/linkEntityfrom/:goal_id/:entity_id" children={<LinkEntity /> } />
+                <Route path="/editEntity/:parentType/:entitiType/:parent_id/:entity_id" children={<EditEntity /> } />
+                <Route path="/linkEntityfrom/:entitiType/:entity_id" children={<LinkEntity /> } />
                 <Route path="/entity/:entitiType/:entity_id" children={<EntityPage />} />
                 <Route path="/resources/:resource_id" children={<ResourcePage /> } />
                 <Route exact path="/goals/:goal_id" children={<GoalPage goalType={GoalTypes.Normal}/>} />

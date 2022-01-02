@@ -10,6 +10,13 @@ const token = localStorage.getItem("token")
 
 export function EditEntity() {
 
+    let urlElements = window.location.href.split('/')
+    
+    let page = urlElements[3];
+    let parentType = urlElements[4];
+    let entitiType2 = urlElements[5].toLowerCase();
+    let parent_id = urlElements[6]; //it is entity_id if edit entity will used
+    let entity_id2= urlElements[7]
 
 
     const onFinish = (values: any) => {
@@ -36,8 +43,8 @@ export function EditEntity() {
                 .then(() => setAdded(true)) 
         })
   //id lazım
-
     };
+
 
     const [isAdded, setAdded] = useState(false)
     const [isLoaded, setLoaded] = useState(false)
@@ -80,14 +87,37 @@ export function EditEntity() {
         message = <h2>Goal Edited Successfully!</h2>
     }
     return (
-
         <div>
             {form}
-            <Link to="/goals">
+            {parentType == "goal" &&
+            <Link to={"/goals/" + parent_id} >
                 <button type="button">
-                    Return to Goals
+                    Return to Goal
                 </button>
             </Link>
+            }
+            {parentType == "groupgoal" &&
+            <Link to={"/groupgoals/" + parent_id} >
+                <button type="button">
+                    Return to Group-Goal
+                </button>
+            </Link>
+            }
+            {parentType == "subgoal" &&
+            <Link to={"/subgoal/" + parent_id} >
+                <button type="button">
+                    Return to SubGoal
+                </button>
+            </Link>
+            }
+            {(parentType == "question" || parentType == "reflection"
+             || parentType == "task" || parentType == "routine") &&
+            <Link to={`/entity/${parentType}/${parent_id}/` + parent_id} >
+                <button type="button">
+                    Return to {parentType}
+                </button>
+            </Link>
+            }
             {message}
         </div>
 

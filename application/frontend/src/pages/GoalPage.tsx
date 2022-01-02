@@ -183,7 +183,7 @@ const columns = [
                             Delete
                         </Button>
                     </Space>
-                    <Link to={"/editEntity/" + entity.entitiType + "/" + entity.id}>
+                    <Link to={"/editEntity/" + goalType.substring(0, goalType.length - 1) +"/" +entity.entitiType + "/" +goal_id+ "/"+ entity.id}>
                         <button type="button">
                             Edit
                         </button>

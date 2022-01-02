@@ -226,7 +226,7 @@ export function EntityPage() {
             <h2>Linked Entities:</h2>
             <Table columns={columns} dataSource={entities} />
             <br></br>
-            <Link to={"/linkEntityfrom/" +goal_id+ "/"+ entity_id}> 
+            <Link to={"/linkEntityfrom/" +entitiType.toLowerCase()+ "/"+ entity_id}> 
                 <button type="button">
                     Link Entity
                 </button>

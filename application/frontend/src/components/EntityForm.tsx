@@ -15,11 +15,13 @@ export const EntityForm = (onFinish: ((values: any) => void) | undefined,
     const dateFormat = 'YYYY/MM/DD';
 
     let urlElements = window.location.href.split('/')
+    
     let page = urlElements[3];
     let parentType = urlElements[4];
-    let entitiType = urlElements[5];
+    let entitiType = urlElements[5].toLowerCase();
     let parent_id = urlElements[6]; //it is entity_id if edit entity will used
-    let entity_id= urlElements[3]
+    let entity_id= urlElements[7]
+
     console.log(urlElements)
 
     
@@ -37,14 +39,14 @@ export const EntityForm = (onFinish: ((values: any) => void) | undefined,
             initialValues={{ remember: true }}
             onFinish={onFinish}
         >
-            <h2>{capitalize(entitiType)} Title</h2>
+            <h2>{capitalize(entitiType.toLowerCase())} Title</h2>
             <Form.Item
                 name="title"
                 rules={[{ required: true, message: 'Please input Entity Title!' }]}
             >
                 <Input placeholder="Entity Name" defaultValue={title}/>
             </Form.Item>
-            <h2>{capitalize(entitiType)} Description</h2>
+            <h2>{capitalize(entitiType.toLowerCase())} Description</h2>
             <Form.Item
                 name="description"
                 rules={[{ required: true, message: 'Please input your Entity Description!' }]}
@@ -53,7 +55,7 @@ export const EntityForm = (onFinish: ((values: any) => void) | undefined,
             </Form.Item>
           { (entitiType == "task" || entitiType == "routine") && 
           (<div>
-            <h2>{capitalize(entitiType)} Deadline</h2>
+            <h2>{capitalize(entitiType.toLowerCase())} Deadline</h2>
             <Form.Item
                 name="deadline"
                 rules={[{ required: true, message: 'Please input your Entity Description!' }]}
