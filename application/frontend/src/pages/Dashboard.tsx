@@ -98,7 +98,16 @@ export function Dashboard(props: IDashboardProps) {
             <Meta
               avatar={<AimOutlined />}
               title="Longest Goal"
-              description="This is the description"
+              description={
+                analyticsData.longestGoal ? (
+                  <div>
+                    <h3>{analyticsData.longestGoal.title}</h3>
+                    <p>{analyticsData.longestGoal.description}</p>
+                  </div>
+                ) : (
+                  "N/A"
+                )
+              }
             />
           </Card>
         </Col>
@@ -107,7 +116,16 @@ export function Dashboard(props: IDashboardProps) {
             <Meta
               avatar={<AimOutlined />}
               title="Shortest Goal"
-              description="This is the description"
+              description={
+                analyticsData.shortestGoal ? (
+                  <div>
+                    <h3>{analyticsData.shortestGoal.title}</h3>
+                    <p>{analyticsData.shortestGoal.description}</p>
+                  </div>
+                ) : (
+                  "N/A"
+                )
+              }
             />
           </Card>
         </Col>
@@ -116,7 +134,16 @@ export function Dashboard(props: IDashboardProps) {
             <Meta
               avatar={<AimOutlined />}
               title="Worst Goal"
-              description="This is the description"
+              description={
+                analyticsData.worstGoal ? (
+                  <div>
+                    <h3>{analyticsData.worstGoal.title}</h3>
+                    <p>{analyticsData.worstGoal.description}</p>
+                  </div>
+                ) : (
+                  "N/A"
+                )
+              }
             />
           </Card>
         </Col>
@@ -125,7 +152,7 @@ export function Dashboard(props: IDashboardProps) {
             <Meta
               avatar={<StockOutlined />}
               title="Average Completion Time"
-              description="This is the description"
+              description={analyticsData.averageCompletionTimeOfGoals ? analyticsData.averageCompletionTimeOfGoals : 'N/A'}
             />
           </Card>
         </Col>
@@ -134,7 +161,7 @@ export function Dashboard(props: IDashboardProps) {
             <Meta
               avatar={<StockOutlined />}
               title="Active Goals"
-              description={analyticsData.activeGoalCount}
+              description={analyticsData.activeGoalCount ? analyticsData.activeGoalCount : 'N/A'}
             />
           </Card>
         </Col>
@@ -143,7 +170,7 @@ export function Dashboard(props: IDashboardProps) {
             <Meta
               avatar={<StockOutlined />}
               title="Average Rating"
-              description="This is the description"
+              description={analyticsData.averageRating ? analyticsData.averageRating : 'N/A'}
             />
           </Card>
         </Col>
@@ -152,7 +179,7 @@ export function Dashboard(props: IDashboardProps) {
             <Meta
               avatar={<StockOutlined />}
               title="Average Extension Count"
-              description="This is the description"
+              description={analyticsData.averageExtensionCount ? analyticsData.averageExtensionCount : 'N/A'}
             />
           </Card>
         </Col>
