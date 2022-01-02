@@ -162,7 +162,7 @@ export function EntityPage() {
                     setDeadline(data.deadline)
                     console.log(data.deadline)
                 }
-                
+                if(sublinks!==null){
                 for (let i = 0; i < sublinks.length; i++) {
                     console.log(sublinks)
                     tmp.push({
@@ -176,6 +176,7 @@ export function EntityPage() {
                         //deadline: sublinks[i]['deadline']
                     })
                 }
+            }
                 // @ts-ignore
                 setEntities(tmp)
                 setLoaded(true)

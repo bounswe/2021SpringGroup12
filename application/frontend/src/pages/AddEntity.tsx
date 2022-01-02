@@ -16,9 +16,8 @@ export function AddEntity() {
     console.log(parentType);
     
     const onFinish = (values: any) => {
-        console.log('Received values of form: ', parent_id);
-        values['parent_id'] = parseInt(parent_id) //for now, it adds entity to a goal
-        values['parentType'] = parentType.toUpperCase()
+        values['goalId'] = parseInt(parent_id) //for now, it adds entity to a goal
+        values['goalType'] = parentType.toUpperCase()
         if(entitiType=="QUESTION" || entitiType=="TASK"){
         values["deadline"]=values["deadline"].toDate()
         }
@@ -38,7 +37,7 @@ export function AddEntity() {
         <div>
             {form}
             {parentType == "goal" &&
-            <Link to={"/goal/" + parent_id} >
+            <Link to={"/goals/" + parent_id} >
                 <button type="button">
                     Return to Goal
                 </button>
