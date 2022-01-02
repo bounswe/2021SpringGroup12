@@ -9,5 +9,4 @@ public enum ActivityType {
     LEAVE,
     REMOVE,
     UPDATE,
-    PUBLISH;
 }

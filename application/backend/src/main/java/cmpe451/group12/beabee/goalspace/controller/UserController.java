@@ -49,7 +49,7 @@ public class UserController {
     }
 
 
-    @ApiOperation(value = "Follow a user with given id.")
+    @ApiOperation(value = "Unfollow a user with given id.")
     @PostMapping("/{userId}/unfollow/{targetId}")
     public MessageResponse unfollowUser(@PathVariable @ApiParam(value = "Id of the user who unfollows the other user.", example = "5") Long userId,
                                       @PathVariable @ApiParam(value = "Id of the user that gets unfollowed.", example = "5") Long targetId) {
