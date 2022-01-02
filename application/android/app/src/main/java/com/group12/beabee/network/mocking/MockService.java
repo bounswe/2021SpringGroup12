@@ -11,6 +11,7 @@ import com.group12.beabee.models.requests.Routine;
 import com.group12.beabee.models.requests.SignUpRequest;
 import com.group12.beabee.models.requests.Subgoal;
 import com.group12.beabee.models.requests.Task;
+import com.group12.beabee.models.responses.ActivityStream;
 import com.group12.beabee.models.responses.Analytics;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.EntityShort;
@@ -415,6 +416,11 @@ public class MockService implements ServiceAPI {
 
     @Override
     public Call<List<GoalDetail>> getProGoalTagSearch(String tag) {
+        return null;
+    }
+
+    @Override
+    public Call<List<ActivityStream>> getActivityStream(int userId) {
         return null;
     }
 

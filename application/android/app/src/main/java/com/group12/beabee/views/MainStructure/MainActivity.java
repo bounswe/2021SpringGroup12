@@ -14,6 +14,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.group12.beabee.R;
 import com.group12.beabee.network.BeABeeService;
 import com.group12.beabee.network.ServiceAPI;
+import com.group12.beabee.views.feed.FeedFragment;
 import com.group12.beabee.views.goals.GoalFragment;
 import com.group12.beabee.views.goals.Home2Fragment;
 import com.group12.beabee.views.goals.Home3Fragment;
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                     baseContainerFragment = fragmentActivity.containers[3];
                     break;
                 case 4:
-                    fragmentActivity.containers[4] = new BaseContainerFragment(new HomeFragment());
+                    fragmentActivity.containers[4] = new BaseContainerFragment(new FeedFragment());
                     baseContainerFragment = fragmentActivity.containers[4];
                     break;
                 default:
