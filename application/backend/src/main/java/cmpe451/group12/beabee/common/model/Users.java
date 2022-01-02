@@ -65,13 +65,15 @@ public class Users{
 
 
     @JsonIgnoreProperties({"id"})
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name="Person_Followers")
+    @Column(name = "follower_id")
     private Set<Users> followers;
 
     @JsonIgnoreProperties({"id"})
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name="Person_Followings")
+    @Column(name = "following_id")
     private Set<Users> following;
 /*
     private Analytics analytic_report;
