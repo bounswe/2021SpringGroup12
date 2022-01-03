@@ -83,7 +83,7 @@ public class GoalController {
         return goalService.addTags(goal_id, tags);
     }
 
-    @ApiOperation(value = "Add tags to a goal.")
+    @ApiOperation(value = "Remove tags from a goal.")
     @PutMapping("/{goal_id}/removetag/{tag}")
     public MessageResponse removeTags(@PathVariable @ApiParam(value = "Id of the goal.", example = "5") Long goal_id,
                                       @PathVariable @ApiParam(value = "Name of the tag.", example = "5") String tag) throws IOException, ParseException {
