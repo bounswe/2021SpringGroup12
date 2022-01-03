@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.group12.beabee.BeABeeApplication;
+import com.group12.beabee.InputValidator_ref;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.GroupGoalDetail;
@@ -108,7 +109,7 @@ public class Home3Fragment extends BaseInnerFragment {
         avgtime.setText(String.format("%d",(int)minutes));
         numofCompleted.setText(String.format("%d",analytics.completedGoalCount));
         numofGoals.setText(String.format("%d",analytics.activeGoalCount));
-        if(analytics.bestGoal==null){
+        if(!InputValidator_ref.IsNonEmptyGoalShort(analytics.bestGoal)){
             bestgoal_name.setText("");
             bestgoal_des.setText("No such evaluated goal");
         }
@@ -116,7 +117,7 @@ public class Home3Fragment extends BaseInnerFragment {
             bestgoal_name.setText(analytics.bestGoal.title);
             bestgoal_des.setText(analytics.bestGoal.description);
         }
-        if(analytics.worstGoal==null){
+        if(!InputValidator_ref.IsNonEmptyGoalShort(analytics.worstGoal)){
             worstgoal_name.setText("");
             worstgoal_des.setText("No such evaluated goal");
         }
@@ -124,7 +125,7 @@ public class Home3Fragment extends BaseInnerFragment {
             worstgoal_name.setText(analytics.worstGoal.title);
             worstgoal_des.setText(analytics.worstGoal.description);
         }
-        if(analytics.longestGoal==null){
+        if(!InputValidator_ref.IsNonEmptyGoalShort(analytics.longestGoal)){
             longgoal_name.setText("");
             longgoal_des.setText("No such evaluated goal");
         }
@@ -132,7 +133,7 @@ public class Home3Fragment extends BaseInnerFragment {
             longgoal_name.setText(analytics.longestGoal.title);
             longgoal_des.setText(analytics.longestGoal.description);
         }
-        if(analytics.shortestGoal==null){
+        if(!InputValidator_ref.IsNonEmptyGoalShort(analytics.shortestGoal)){
             shortgoal_name.setText("");
             shortgoal_des.setText("No such evaluated goal");
         }

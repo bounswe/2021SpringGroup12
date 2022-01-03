@@ -1,5 +1,6 @@
 package com.group12.beabee;
 
+import com.group12.beabee.models.responses.Analytics;
 import com.group12.beabee.models.responses.GoalDetail;
 import com.group12.beabee.models.responses.GoalShort;
 
@@ -8,49 +9,39 @@ import java.util.List;
 public class InputValidator_ref {
 
 
-    public static boolean IsNonEmptyGoalDetail(List<GoalDetail> input){
+    public static boolean IsNonEmptyGoalDetailList(List<GoalDetail> input){
         if (input==null)
             return false;
         return input.size() > 0;
     }
-    public static boolean IsNonEmptyGoalShort(List<GoalShort> input){
+    public static boolean IsNonEmptyAnalytics(Analytics input){
         if (input==null)
             return false;
-        return input.size() > 0;
-    }
-
-    public static boolean IsTextMinimumLength(String input, int minimumLength){
-        if (input==null)
-            return false;
-
-        return input.length() >= minimumLength;
-    }
-
-    public static boolean IsTextEmailFormat(String input){
-        if (input==null)
-            return false;
-
-        boolean at = input.contains("@");
-        if (!at)
-            return false;
-
-        int idxAt = input.indexOf('@');
-
-        if (idxAt<1 || idxAt >= input.length()-1)
-            return false;
-
-        String first = input.substring(0,idxAt);
-        String domain = input.substring(idxAt+1);
-
-        if (!domain.contains("."))
-            return false;
-
-        if (domain.charAt(domain.length()-1) == '.')
-            return false;
-
-        if (domain.charAt(0) == '.')
-            return false;
-
         return true;
+    }
+    public static boolean IsNonEmptyGoalShortList(List<GoalShort> input){//can be used in analytics
+        if (input==null)
+            return false;
+        return input.size() > 0;
+    }
+    public static boolean IsNonEmptyGoalShort(GoalShort input){//can be used in analytics
+        if (input==null)
+            return false;
+        return true;
+    }
+    public static boolean IsNonEmptyGoalDetail(GoalDetail input){//can be used in analytics
+        if (input==null)
+            return false;
+        return true;
+    }
+    public static boolean IsInteger(String x){
+        try
+        {
+            Integer.parseInt(x);
+            return true;
+        } catch (NumberFormatException ex)
+        {
+            return false;
+        }
     }
 }

@@ -88,6 +88,8 @@ public class GoalsPrototypeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         View itemParent;
         @BindView(R.id.tv_username)
         TextView tvUsername;
+        @BindView(R.id.download_number)
+        TextView downloadnum;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -100,6 +102,7 @@ public class GoalsPrototypeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             tvDescription.setText(goalShort.description);
             itemParent.setOnClickListener(v -> onItemClickedListener.OnGoalClicked(goalShort.id));
             tvUsername.setText(goalShort.username);
+            downloadnum.setText(String.valueOf(goalShort.download_count));
         }
     }
 
