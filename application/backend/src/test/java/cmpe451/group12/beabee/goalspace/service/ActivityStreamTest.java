@@ -8,6 +8,7 @@ import cmpe451.group12.beabee.goalspace.Repository.activitistreams.ObjectSchemaR
 import cmpe451.group12.beabee.goalspace.Repository.activitistreams.OriginSchemaRepository;
 import cmpe451.group12.beabee.goalspace.model.activitystreams.ActivitySchema;
 import cmpe451.group12.beabee.goalspace.model.activitystreams.ActorSchema;
+import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,13 +24,11 @@ import java.util.stream.Stream;
 public class ActivityStreamTest {
 
     private ActivityStreamService activityStreamService;
-
     private ObjectSchemaRepository objectSchemaRepository;
     private ActorSchemaRepository actorSchemaRepository;
     private OriginSchemaRepository originSchemaRepository;
     private ActivitySchemaRepository activitySchemaRepository;
     private UserRepository userRepository;
-
 
     @Before
     public void setUp() {
@@ -43,6 +42,11 @@ public class ActivityStreamTest {
 
     @Test
     public void whenGetSchemasOfAUserCalledWithValidId_ItShouldReturnSuccess() {
+        /**
+         * Scenario: users only get feed about themselves and the suers they follow.
+         * User1 follows, user2 and 3. So this endpoint should return schema1,2, and 3.
+         * but since it sorts with respect to the time. Order of the result should be schema3,2,1.
+         */
         Users user = new Users();
         user.setUser_id(1L);
         user.setUsername("user1");
@@ -55,7 +59,7 @@ public class ActivityStreamTest {
         Users user4 = new Users();
         user4.setUser_id(4L);
         user4.setUsername("user4");
-        user.setFollowing(Stream.of(user2,user3).collect(Collectors.toSet()));
+        user.setFollowing(Stream.of(user2, user3).collect(Collectors.toSet()));
 
         ActorSchema actorSchema = new ActorSchema();
         actorSchema.setName("user1");
@@ -83,13 +87,14 @@ public class ActivityStreamTest {
         schema4.setCreatedAt(new Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(2)));
 
         Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        Mockito.when(activitySchemaRepository.findAll()).thenReturn(Stream.of(schema1,schema2,schema3,schema4).collect(Collectors.toList()));
+        Mockito.when(activitySchemaRepository.findAll()).thenReturn(Stream.of(schema1, schema2, schema3, schema4).collect(Collectors.toList()));
 
-        List<ActivitySchema> expected = Stream.of(schema3,schema2,schema1).collect(Collectors.toList());
+        List<ActivitySchema> expected = Stream.of(schema3, schema2, schema1).collect(Collectors.toList());
         List<ActivitySchema> actual = activityStreamService.getSchemasOfAUser(1L);
-        Assert.assertEquals(expected,actual);
+        Assert.assertEquals(expected, actual);
 
     }
+
 
 
 }
