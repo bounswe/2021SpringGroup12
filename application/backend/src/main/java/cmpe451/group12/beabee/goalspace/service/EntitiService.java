@@ -197,6 +197,8 @@ public class EntitiService {
         new_reflection.setEntitiType(EntitiType.REFLECTION);
         new_reflection.setIsDone(Boolean.FALSE);
         new_reflection.setIsLinkedToGoal(Boolean.TRUE);
+        new_reflection.setSublinked_entities(new HashSet<>());
+        new_reflection.setSublinked_subgoals(new HashSet<>());
 
         switch (reflectionPostDTO.getGoalType()) {
             case GOAL:
@@ -235,7 +237,7 @@ public class EntitiService {
                             !new_reflection.getGroupgoal().getId().equals(parentOfSubgoal(subgoal)))
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parent subgoal is not in the same group!");
 
-                    new_reflection.setSublinked_subgoals(Set.of(subgoal));
+                    new_reflection.setSublinked_subgoals(new HashSet<>(Set.of(subgoal)));
                     new_reflection.setCreator(subgoal.getCreator());
                     new_reflection.setIsLinkedToGoal(Boolean.FALSE);
                     reflectionRepository.save(new_reflection);
@@ -259,6 +261,8 @@ public class EntitiService {
         new_task.setIsDone(Boolean.FALSE);
         new_task.setExtension_count(0L);
         new_task.setIsLinkedToGoal(Boolean.TRUE);
+        new_task.setSublinked_entities(new HashSet<>());
+        new_task.setSublinked_subgoals(new HashSet<>());
 
         switch (taskPostDTO.getGoalType()) {
             case GOAL:
@@ -297,7 +301,7 @@ public class EntitiService {
                             !new_task.getGroupgoal().getId().equals(parentOfSubgoal(subgoal)))
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parent subgoal is not in the same group!");
 
-                    new_task.setSublinked_subgoals(Set.of(subgoal));
+                    new_task.setSublinked_subgoals(new HashSet<>(Set.of(subgoal)));
                     new_task.setCreator(subgoal.getCreator());
                     new_task.setIsLinkedToGoal(Boolean.FALSE);
                     taskRepository.save(new_task);
@@ -320,7 +324,8 @@ public class EntitiService {
         new_question.setEntitiType(EntitiType.QUESTION);
         new_question.setIsDone(Boolean.FALSE);
         new_question.setIsLinkedToGoal(Boolean.TRUE);
-
+        new_question.setSublinked_entities(new HashSet<>());
+        new_question.setSublinked_subgoals(new HashSet<>());
 
         switch (questionPostDTO.getGoalType()) {
             case GOAL:
@@ -359,7 +364,7 @@ public class EntitiService {
                             !new_question.getGroupgoal().getId().equals(parentOfSubgoal(subgoal)))
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parent subgoal is not in the same group!");
 
-                    new_question.setSublinked_subgoals(Set.of(subgoal));
+                    new_question.setSublinked_subgoals(new HashSet<>(Set.of(subgoal)));
                     new_question.setCreator(subgoal.getCreator());
                     new_question.setIsLinkedToGoal(Boolean.FALSE);
                     questionRepository.save(new_question);
@@ -382,6 +387,8 @@ public class EntitiService {
         new_routine.setIsDone(Boolean.FALSE);
         new_routine.setExtension_count(0L);
         new_routine.setIsLinkedToGoal(Boolean.TRUE);
+        new_routine.setSublinked_entities(new HashSet<>());
+        new_routine.setSublinked_subgoals(new HashSet<>());
 
         switch (routinePostDTO.getGoalType()) {
             case GOAL:
@@ -407,7 +414,6 @@ public class EntitiService {
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parent entity is not in the same group!");
 
                     new_routine.setCreator(entiti.getCreator());
-                    new_routine.setSublinked_entities(Set.of(entiti));
                     new_routine.setIsLinkedToGoal(Boolean.FALSE);
                     Routine saved_routine = routineRepository.save(new_routine);
                     entiti.getSublinked_entities().add(saved_routine);
@@ -421,7 +427,7 @@ public class EntitiService {
                             !new_routine.getGroupgoal().getId().equals(parentOfSubgoal(subgoal)))
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parent subgoal is not in the same group!");
 
-                    new_routine.setSublinked_subgoals(Set.of(subgoal));
+                    new_routine.setSublinked_subgoals(new HashSet<>(Set.of(subgoal)));
                     new_routine.setCreator(subgoal.getCreator());
                     new_routine.setIsLinkedToGoal(Boolean.FALSE);
                     routineRepository.save(new_routine);
