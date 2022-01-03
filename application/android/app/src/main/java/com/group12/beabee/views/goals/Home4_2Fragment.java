@@ -39,6 +39,8 @@ public class Home4_2Fragment extends BaseInnerFragment implements IOnGoalClicked
     List<GoalShort> goals1;
     @BindView(R.id.no_goal_view)
     View noGoalView;
+    private boolean searchOneDone;
+    private boolean searchTwoDone;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -46,7 +48,6 @@ public class Home4_2Fragment extends BaseInnerFragment implements IOnGoalClicked
         goalsAdapter = new GoalsPrototypeAdapter();
         rvGoals.setAdapter(goalsAdapter);
         goalsAdapter.setItemClickListener(this);
-
     }
 
     private List<GoalShort> detailToShort(List<GoalDetail> goals){
@@ -63,20 +64,20 @@ public class Home4_2Fragment extends BaseInnerFragment implements IOnGoalClicked
     }
 
     private void OnGoalsReceived1(List<GoalShort> goals){
-        goalsAdapter.setData1(goals);
-        /*if (goals==null || goals.size()==0)
-        {
-            rvGoals.setVisibility(View.GONE);
-            noGoalView.setVisibility(View.VISIBLE);
-        }else{
-            rvGoals.setVisibility(View.VISIBLE);
-            noGoalView.setVisibility(View.GONE);
-            goalsAdapter.setData1(goals);
-        }*/
-
+        searchOneDone=true;
+        updateDataStatus();
     }
     private void OnGoalsReceived2(List<GoalShort> goals1){
-        /*if (goals1==null || goals1.size()==0)
+        searchTwoDone=true;
+        updateDataStatus();
+    }
+    private void updateDataStatus(){
+        if(!searchTwoDone||!searchOneDone){
+            rvGoals.setVisibility(View.GONE);
+            noGoalView.setVisibility(View.VISIBLE);
+            return;
+        }
+        if ((goals1==null || goals1.size()==0)&&(goals==null || goals.size()==0))
         {
             rvGoals.setVisibility(View.GONE);
             noGoalView.setVisibility(View.VISIBLE);
@@ -84,8 +85,8 @@ public class Home4_2Fragment extends BaseInnerFragment implements IOnGoalClicked
             rvGoals.setVisibility(View.VISIBLE);
             noGoalView.setVisibility(View.GONE);
             goalsAdapter.setData2(goals1);
-        }*/
-        goalsAdapter.setData2(goals1);
+            goalsAdapter.setData1(goals);
+        }
     }
 
     @Override
@@ -112,6 +113,8 @@ public class Home4_2Fragment extends BaseInnerFragment implements IOnGoalClicked
     @OnClick(R.id.search_icon)
     @Optional
     public void OnSearch(){
+        searchOneDone=false;
+        searchTwoDone=false;
         Utils.showLoading(getParentFragmentManager());
         String word=searchedWord.getText().toString();
         service.getProGoalSearch(word).enqueue(new Callback<List<GoalDetail>>() {
@@ -134,6 +137,7 @@ public class Home4_2Fragment extends BaseInnerFragment implements IOnGoalClicked
 
             }
         });
+        Utils.showLoading(getParentFragmentManager());
         service.getProGoalTagSearch(word).enqueue(new Callback<List<GoalDetail>>() {
             @Override
             public void onResponse(Call<List<GoalDetail>> call, Response<List<GoalDetail>> response) {
