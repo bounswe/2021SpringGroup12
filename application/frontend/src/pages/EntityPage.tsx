@@ -121,11 +121,14 @@ export function EntityPage() {
 
     const deleteLink = (entity: { key: any}) => {
         console.log('Received values of delete: ', entity);
-        axios.delete(`/entities/${entity_id}/delete_link/${entity.key}`,
+        var values = { childId: "", childType: "ENTITI" }
+        values.childId = entity.key
+        axios.delete(`/entities/${entity_id}/link/`,
             {
                 headers: { Authorization: `Bearer ${token}`},
-                data: {}
+                data: values
             }).then(() => getEntities())
+            
     };
 
     const deleteResource = (resource: { key: any,id:number}) => {

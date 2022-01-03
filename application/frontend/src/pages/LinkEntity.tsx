@@ -14,7 +14,13 @@ export function LinkEntity() {
     const [goal_type, setGoalType] = useState("")
     const [goal_id, setGoalId] = useState(null)
     const [groupgoal_id, setGroupGoalId] = useState(null)
+    const [already_linked_entities, setAlreadyLinkedEntities] = useState([""])
+    const [already_linked_subgoals, setAlreadyLinkedSubgoals] = useState([""])
+    const [pressedLink, setPressedLink] = useState(1)
 
+
+    let urlElements = window.location.href.split('/')
+    let entity_id = urlElements[5];
 
 
     const linkEntities = (target_entity: any) => {
@@ -26,10 +32,9 @@ export function LinkEntity() {
         console.log("target:" + target_entity.entityType)
         console.log(urlElements)
         console.log("entity id: " + entity_id)
-        console.log('Received values of delete: ', typeof (JSON.stringify(target_entity)));
         var values = { childId: "", childType: "ENTITI" }
         values.childId = target_entity.id
-        if(target_entity.entityType.toString().toLowerCase()=="sub-goal"){
+        if (target_entity.entityType.toString().toLowerCase() == "sub-goal") {
             values.childType = "SUBGOAL"
         }
         console.log("values: " + JSON.stringify(values))
@@ -37,6 +42,37 @@ export function LinkEntity() {
             {
                 headers: { Authorization: `Bearer ${token}` },
             })
+        setPressedLink(pressedLink + 1)
+        axios.get(`/entities/${entitiType}/${entity_id}`,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+                data: {}
+            })
+            .then(response => {
+                // check for error response
+                if (response.status === 200) {
+                    return response.data
+                }
+                throw response
+            })
+            .then(data => {
+                let tmp = []
+                for (let i = 0; i < data.sublinked_entities.length; i++) {
+                    tmp.push(data.sublinked_entities[i].id)
+                }
+                let tmp2 = []
+                for (let i = 0; i < data.sublinked_entities.length; i++) {
+                    tmp2.push(data.sublinked_entities[i].id)
+                }
+
+                setAlreadyLinkedEntities(tmp)
+                setAlreadyLinkedSubgoals(tmp2)
+
+                console.log(goal_type)
+            })
+            .catch(error => {
+                console.error('There was an error!', error);
+            });
     };
 
     const user_id = localStorage.getItem("user_id")
@@ -113,6 +149,20 @@ export function LinkEntity() {
                     setGoalType("groupgoal")
                     setGroupGoalId(data.groupgoal_id)
                 }
+                let tmp = []
+                for (let i = 0; i < data.sublinked_entities.length; i++) {
+                    tmp.push(data.sublinked_entities[i].id)
+                }
+                let tmp2 = []
+                for (let i = 0; i < data.sublinked_entities.length; i++) {
+                    tmp2.push(data.sublinked_entities[i].id)
+                }
+
+                //setAlreadyLinkedEntities(tmp)
+                console.log("tmp: " + tmp)
+                console.log("")
+                //setAlreadyLinkedSubgoals(tmp2)
+
                 console.log(goal_type)
             })
             .catch(error => {
@@ -131,34 +181,37 @@ export function LinkEntity() {
                     headers: { Authorization: `Bearer ${token}` },
                     data: {}
                 })
-            .then(response => {
-                // check for error response
-                if (response.status === 200) {
-                    return response.data
-                }
-                throw response
-            })
-            .then(data => {
-
-                let tmp = []
-                console.log(data);
-                for (let i = 0; i < data.length; i++) {
-                    if (data[i].id != entity_id) {
-                        tmp.push({
-                            id: data[i]['id'],
-                            title: data[i]['title'],
-                            description: data[i]['description'],
-                            entityType: data[i]['entitiType'],
-                        })
+                .then(response => {
+                    // check for error response
+                    if (response.status === 200) {
+                        return response.data
                     }
-                }
-                // @ts-ignore
-                setEntities(tmp)
+                    throw response
+                })
+                .then(data => {
 
-            })
-            .catch(error => {
-                console.error('There was an error!', error);
-            });
+                    let tmp = []
+                    console.log("already linked: " + already_linked_entities);
+                    for (let i = 0; i < data.length; i++) {
+                        console.log(data[i].id)
+                        if (data[i].id != entity_id) {
+                            if (!already_linked_entities.includes(data[i].id)) {
+                                tmp.push({
+                                    id: data[i]['id'],
+                                    title: data[i]['title'],
+                                    description: data[i]['description'],
+                                    entityType: data[i]['entitiType'],
+                                })
+                            }
+                        }
+                    }
+                    // @ts-ignore
+                    setEntities(tmp)
+                    console.log("possbile entities: "+JSON.stringify(possible_entities))
+                })
+                .catch(error => {
+                    console.error('There was an error!', error);
+                });
         }
         //get all possible subgoals
         axios.get(`/subgoals/of_user/${user_id}`,
@@ -178,7 +231,7 @@ export function LinkEntity() {
                 let tmp = []
                 console.log(data);
                 for (let i = 0; i < data.length; i++) {
-                    if (data[i].id != entity_id) {
+                    if (!already_linked_subgoals.includes(data.id)) {
                         tmp.push({
                             id: data[i]['id'],
                             title: data[i]['title'],
@@ -189,26 +242,44 @@ export function LinkEntity() {
                 }
                 // @ts-ignore
                 setPossibleSubGoals(tmp)
-
             })
             .catch(error => {
                 console.error('There was an error!', error);
             });
+        console.log("pressedLink: " + pressedLink)
 
-    }, [goal_type, goal_id]);
+    }, [goal_type, goal_id, pressedLink,already_linked_entities]);
 
 
     let message;
-    if (isSubmitted) {
-        message = <h2>Entity Added Successfully!</h2>
-    }
+
 
     return (
 
         <div>
             <h1>Link to:</h1>
             <Table columns={columns} dataSource={possible_entities.concat(possible_sugoals)} />
-
+            <h1>Create Entity under this Entity:</h1>
+            <Link to={"/addEntity/" + goal_type + "/question/" + goal_id + "/ENTITI/" + entity_id}>
+                <button type="button">
+                    Add Question
+                </button>
+            </Link>
+            <Link to={"/addEntity/" + goal_type + "/reflection/" + goal_id + "/ENTITI/" + entity_id}>
+                <button type="button">
+                    Add Reflection
+                </button>
+            </Link>
+            <Link to={"/addEntity/" + goal_type + "/routine/" + goal_id + "/ENTITI/" + entity_id}>
+                <button type="button">
+                    Add Routine
+                </button>
+            </Link>
+            <Link to={"/addEntity/" + goal_type + " /task/" + goal_id + "/ENTITI/" + entity_id}>
+                <button type="button">
+                    Add Task
+                </button>
+            </Link>
             {message}
         </div>
 
