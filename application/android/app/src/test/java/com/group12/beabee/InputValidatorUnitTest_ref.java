@@ -68,7 +68,3 @@ public class InputValidatorUnitTest_ref {
         non_empty_null_goals.add(c);
         non_empty_null_goals.add(d);
         assertFalse(InputValidator_ref.IsNonEmptyGoalShort(empty_goals));
-        assertTrue(InputValidator_ref.IsNonEmptyGoalShort(non_empty_goals));
-        assertTrue(InputValidator_ref.IsNonEmptyGoalShort(non_empty_null_goals));
-    }
-}
