@@ -102,7 +102,7 @@ public class GroupGoalFragment extends BaseEntityLinkableFragment implements IOn
 
     @Override
     protected String GetPageTitle() {
-        return "GROUPGOAL";
+        return "GROUP GOAL";
     }
 
     @Override

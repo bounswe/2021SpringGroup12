@@ -8,6 +8,7 @@ import com.group12.beabee.network.BeABeeService;
 public class BeABeeApplication extends Application {
 
     public static int currentGroupGoal;
+    public static int currentPrototypeGoal;
     private static Context context;
 
     public static String AuthToken;

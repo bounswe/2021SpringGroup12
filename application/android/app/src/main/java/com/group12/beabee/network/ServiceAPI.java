@@ -44,6 +44,12 @@ public interface ServiceAPI {
     @POST("login")
     Call<LoginResponse> loginRequest(@Body() LoginRequest loginRequest);
 
+    @POST("users/reset/{token}")
+    Call<BasicResponse> postMailToken(@Path("token") String token,@Body() LoginRequest loginRequest);
+
+    @GET("users/forgot/{email_or_username}")
+    Call<BasicResponse> getForgotpassword(@Path("email_or_username") String username_mail);
+
     @GET("goals/of_user/{user_id}")
     Call<List<GoalShort>> getGoalsOfUser(@Path("user_id") int userId);
 
@@ -200,6 +206,35 @@ public interface ServiceAPI {
     //ANALYTICS
     @GET("users/analytics/{user_id}")
     Call<Analytics>getUserAnalytics(@Path("user_id") int user_id);
+
+
+    //PROTOTYPE-MARKET PLACE
+
+    @GET("/v2/prototypes/")
+    Call<List<GoalDetail>> getMarketPlaceData();
+
+    @GET("/v2/prototypes/{id}")
+    Call<GoalDetail>getProGoal(@Path("id") int public_goal_id);
+
+    @GET("/v2/prototypes/entiti/{id}")
+    Call<List<EntityShort>>getProEntity(@Path("id") int public_entity_id);
+
+    @GET("/v2/prototypes/subgoal/{id}")
+    Call<SubgoalDetail>getProSubgoal(@Path("id") int public_subgoal_id);
+
+    @POST("/v2/prototypes/publish/{id}")
+    Call<BasicResponse> publishGoal(@Path("id") int public_goal_id);
+
+    @POST("/v2/goals/copy_prototype/{user_id}/{prototype_id}")
+    Call<BasicResponse> copyGoal(@Path("user_id") int user_id,@Path("prototype_id") int prototype_id);
+
+    //SEARCH IN MARKET PLACE
+    @GET("/v2/prototypes/search/")
+    Call<List<GoalDetail>>getProGoalSearch(@Query("query") String query);
+
+    @GET("/v2/prototypes/search/{tag}")
+    Call<List<GoalDetail>>getProGoalTagSearch(@Path("tag") String tag);
+
 
 }
 //7YPxFmM3yTaAzaSi3Q61B

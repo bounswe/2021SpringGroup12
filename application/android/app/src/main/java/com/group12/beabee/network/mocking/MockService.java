@@ -68,6 +68,16 @@ public class MockService implements ServiceAPI {
     }
 
     @Override
+    public Call<BasicResponse> postMailToken(String token, LoginRequest loginRequest) {
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> getForgotpassword(String username_mail) {
+        return null;
+    }
+
+    @Override
     public Call<List<GoalShort>> getGoalsOfUser(int userId) {
         List<GoalShort> tempList = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -365,6 +375,46 @@ public class MockService implements ServiceAPI {
       
     @Override
     public Call<Analytics> getUserAnalytics(int user_id) {
+        return null;
+    }
+
+    @Override
+    public Call<List<GoalDetail>> getMarketPlaceData() {
+        return null;
+    }
+
+    @Override
+    public Call<GoalDetail> getProGoal(int public_goal_id) {
+        return null;
+    }
+
+    @Override
+    public Call<List<EntityShort>> getProEntity(int public_entity_id) {
+        return null;
+    }
+
+    @Override
+    public Call<SubgoalDetail> getProSubgoal(int public_subgoal_id) {
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> publishGoal(int public_goal_id) {
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> copyGoal(int user_id, int prototype_id) {
+        return null;
+    }
+
+    @Override
+    public Call<List<GoalDetail>> getProGoalSearch(String query) {
+        return null;
+    }
+
+    @Override
+    public Call<List<GoalDetail>> getProGoalTagSearch(String tag) {
         return null;
     }
 
