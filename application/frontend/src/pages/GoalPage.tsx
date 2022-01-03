@@ -200,6 +200,8 @@ const columns = [
     },
 ];
 
+
+
 useEffect(() => {
     axios.get(`/${goalType}/${goal_id}`,
         {
@@ -278,7 +280,7 @@ useEffect(() => {
         .catch(error => {
             console.error('There was an error!', error);
         });
-}, [goal_id]);
+}, [goal_id ]);
 
 
 
@@ -305,15 +307,17 @@ const showManageDiv = goalType !== GoalTypes.Group || goal.user_id === Number(us
     
     //TAGS
     const removeTagData = (indexToRemove: number) => {
-        setTagData([...tagData.filter((_, index) => index !== indexToRemove)]);
-        axios.put(`/${goalType}/${goal_id}/tag`, tagData, {
+        let tempArr=tagData
+        tempArr.splice(indexToRemove, 1);
+        setTagData(tempArr);
+        console.log("tags: "+tempArr)
+        axios.put(`/${goalType}/${goal_id}/tag`, tempArr, {
             headers: { Authorization: `Bearer ${token}`},
         })
       };
       
       const addTagData = (event:any) => {
         if (event.target.value !== '') {
-            
           let tempArr = tagData
           tempArr.push(event.target.value)
           setTagData(tempArr);
@@ -323,15 +327,12 @@ const showManageDiv = goalType !== GoalTypes.Group || goal.user_id === Number(us
             headers: { Authorization: `Bearer ${token}`},
         }
         )
-          
-          event.target.value = '';
+          event.target.value = '';     
         }
+
       };
 
 
-
-      
-    console.log(assignables)
     return (
         <div>
             {showManageDiv &&
@@ -452,9 +453,8 @@ const showManageDiv = goalType !== GoalTypes.Group || goal.user_id === Number(us
             <span className="tag-title">{tag}</span>
             <span
               className="tag-close-icon"
-              onClick={() => removeTagData(index)} 
+              //onClick={() => removeTagData(index)} 
             >
-            &nbsp; (X)
             </span>
           </li>
         ))}
