@@ -174,7 +174,7 @@ public class EntitiServiceTest {
         //Create parent entiti
         Task task = new Task();
         task.setId(random.nextLong());
-        task.setSublinked_subgoals(new HashSet<>());
+        task.setSublinked_entities(new HashSet<>());
         task.setGoal(goal);
 
         //Create child entiti
@@ -372,5 +372,154 @@ public class EntitiServiceTest {
         Assert.assertEquals("Parent entity not found", exception1.getReason());
         Assert.assertEquals("Child subgoal not found", exception2.getReason());
         Assert.assertEquals("Child subgoal is not in the same group!", exception3.getReason());
+    }
+
+    @Test
+    public void entitiDeleteLinkEntitiTest_fail() {
+        //Random class to generate Ids.
+        Random random = new Random();
+
+        //Create a parent goal for the parent and the child
+        Goal goal = new Goal();
+        goal.setId(random.nextLong());
+
+        //Create parent entiti with no child
+        Task task = new Task();
+        task.setId(random.nextLong());
+        task.setSublinked_entities(new HashSet<>());
+        task.setGoal(goal);
+
+        //Create child entiti
+        Task task2 = new Task();
+        task2.setId(random.nextLong());
+        task2.setGoal(goal);
+
+        //Create entiti link
+        EntitiLinkDTO entitiLinkDTO = new EntitiLinkDTO();
+        entitiLinkDTO.setChildType(LinkType.ENTITI);
+        entitiLinkDTO.setChildId(task2.getId());
+
+        // Mock the repository calls.
+        Mockito.when(entitiRepository.findById(task.getId()))
+                .thenReturn(Optional.empty()) //First return null to emulate parent not found
+                .thenReturn(Optional.of(task)); // Then return the true entiti
+
+        Mockito.when(entitiRepository.findById(entitiLinkDTO.getChildId()))
+                .thenReturn(Optional.empty())// First return null to emulate the child not found
+                .thenReturn(Optional.of(task2)); // Then return true entiti to emulate the link does not exist
+
+        // Make three calls to get three fail situations
+        ResponseStatusException exception1 = Assert.assertThrows(ResponseStatusException.class, () -> {
+            entitiService.entitiDeleteLink(task.getId(), entitiLinkDTO);
+        });
+
+        ResponseStatusException exception2 = Assert.assertThrows(ResponseStatusException.class, () -> {
+            entitiService.entitiDeleteLink(task.getId(), entitiLinkDTO);
+        });
+
+
+        //Check if the exceptions are caused by the reason we expected
+        Assert.assertEquals("Parent entity not found", exception1.getReason());
+        Assert.assertEquals("Child entity not found", exception2.getReason());
+
+        //Case for non-existing link
+        Assert.assertEquals(new MessageResponse("Link does not exist", MessageType.ERROR), entitiService.entitiDeleteLink(task.getId(), entitiLinkDTO));
+    }
+
+    @Test
+    public void entitiDeleteLinkEntitiTest_success() {
+        //Random class to generate Ids.
+        Random random = new Random();
+
+        //Create a parent goal for both of the entities
+        Goal goal = new Goal();
+        goal.setId(random.nextLong());
+
+        //Create the parent entity
+        Task task = new Task();
+        task.setId(random.nextLong());
+        task.setSublinked_entities(new HashSet<>());
+        task.setGoal(goal);
+
+        //Create the child entity
+        Task task2 = new Task();
+        task2.setId(random.nextLong());
+        task2.setGoal(goal);
+
+        // Add child to sublinks list
+        task.getSublinked_entities().add(task2);
+
+        //Create the EntitiLinkDTO
+        EntitiLinkDTO entitiLinkDTO = new EntitiLinkDTO();
+        entitiLinkDTO.setChildType(LinkType.ENTITI);
+        entitiLinkDTO.setChildId(task2.getId());
+
+        //Mock repository calls to return the entities we created
+        Mockito.when(entitiRepository.findById(task.getId())).thenReturn(Optional.of(task));
+        Mockito.when(entitiRepository.findById(task2.getId())).thenReturn(Optional.of(task2));
+
+        //Get the result of the method call and check it is as expected.
+        MessageResponse actual = entitiService.entitiDeleteLink(task.getId(), entitiLinkDTO);
+        Assert.assertEquals(new MessageResponse("Link deleted is successful.", MessageType.SUCCESS), actual);
+
+        //Remove child entity to parent entiti's sublinks list
+        task.getSublinked_entities().remove(task2);
+
+        //Check if there is as call to entiti repo to save the new parent with deleted child in the sublinks list
+        Mockito.verify(entitiRepository, Mockito.times(1)).save(task);
+
+    }
+
+    @Test
+    public void entitiDeleteLinkSubgoalTest_fail() {
+        //Random class to generate Ids.
+        Random random = new Random();
+
+        //Create a parent goal for the parent and the child
+        Goal goal = new Goal();
+        goal.setId(random.nextLong());
+
+        //Create parent entiti with no child
+        Task task = new Task();
+        task.setId(random.nextLong());
+        task.setSublinked_subgoals(new HashSet<>());
+        task.setGoal(goal);
+
+        //Create child subgoal
+        Subgoal subgoal = new Subgoal();
+        subgoal.setId(random.nextLong());
+        subgoal.setMainGoal(goal);
+
+        //Create entiti link
+        EntitiLinkDTO entitiLinkDTO = new EntitiLinkDTO();
+        entitiLinkDTO.setChildType(LinkType.SUBGOAL);
+        entitiLinkDTO.setChildId(subgoal.getId());
+
+        // Mock the repository calls.
+        Mockito.when(entitiRepository.findById(task.getId()))
+                .thenReturn(Optional.empty()) //First return null to emulate parent not found
+                .thenReturn(Optional.of(task)); // Then return the true entiti
+
+        Mockito.when(subgoalRepository.findById(entitiLinkDTO.getChildId()))
+                .thenReturn(Optional.empty())// First return null to emulate the child not found
+                .thenReturn(Optional.of(subgoal)); // Then return true subgoal to emulate the link does not exist
+
+        // Make three calls to get three fail situations
+        ResponseStatusException exception1 = Assert.assertThrows(ResponseStatusException.class, () -> {
+            entitiService.entitiDeleteLink(task.getId(), entitiLinkDTO);
+        });
+
+        ResponseStatusException exception2 = Assert.assertThrows(ResponseStatusException.class, () -> {
+            entitiService.entitiDeleteLink(task.getId(), entitiLinkDTO);
+        });
+
+
+        //Check if the exceptions are caused by the reason we expected
+        Assert.assertEquals("Parent entity not found", exception1.getReason());
+        Assert.assertEquals("Child subgoal not found", exception2.getReason());
+
+        //Case for non-existing link
+        Assert.assertEquals(new MessageResponse("Link does not exist", MessageType.ERROR), entitiService.entitiDeleteLink(task.getId(), entitiLinkDTO));
+
     }
 }
