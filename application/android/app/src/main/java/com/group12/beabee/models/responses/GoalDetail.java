@@ -18,5 +18,4 @@ public class GoalDetail implements Serializable {
     public String deadline;
     public List<EntityShort> entities;
     public List<SubgoalShort> subgoals;
-    public String username;
 }

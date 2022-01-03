@@ -53,7 +53,6 @@ public abstract class BaseInnerFragment extends Fragment {
         parentFragment.SetApproveBtnListener(view -> OnApproveClicked());
         parentFragment.SetEditBtnListener(view -> OnEditClicked());
         parentFragment.SetAddBtnListener(view -> OnAddClicked());
-        parentFragment.SetSearchBtnListener(view -> OnSearchClicked());
     }
 
     public <T extends BaseInnerFragment> void OpenNewFragment(T fragmentToOpen){
@@ -95,9 +94,6 @@ public abstract class BaseInnerFragment extends Fragment {
     }
 
     protected void OnAddClicked(){
-    }
-
-    protected void OnSearchClicked(){
     }
 
     protected void GoBack(){

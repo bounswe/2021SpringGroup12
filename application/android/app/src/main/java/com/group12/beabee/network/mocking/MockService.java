@@ -368,46 +368,6 @@ public class MockService implements ServiceAPI {
         return null;
     }
 
-    @Override
-    public Call<List<GoalDetail>> getMarketPlaceData() {
-        return null;
-    }
-
-    @Override
-    public Call<GoalDetail> getProGoal(int public_goal_id) {
-        return null;
-    }
-
-    @Override
-    public Call<List<EntityShort>> getProEntity(int public_entity_id) {
-        return null;
-    }
-
-    @Override
-    public Call<SubgoalDetail> getProSubgoal(int public_subgoal_id) {
-        return null;
-    }
-
-    @Override
-    public Call<BasicResponse> publishGoal(int public_goal_id) {
-        return null;
-    }
-
-    @Override
-    public Call<BasicResponse> copyGoal(int user_id, int prototype_id) {
-        return null;
-    }
-
-    @Override
-    public Call<List<GoalDetail>> getProGoalSearch(String query) {
-        return null;
-    }
-
-    @Override
-    public Call<List<GoalDetail>> getProGoalTagSearch(String tag) {
-        return null;
-    }
-
     private Call<BasicResponse> returnBasicResponse(){
         return new MockCall<BasicResponse>() {
             @Override

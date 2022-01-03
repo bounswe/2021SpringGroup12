@@ -7,6 +7,4 @@ public class GoalShort implements Serializable {
     public String title;
     public String description;
     public String deadLine;
-    public String username;
-    public int download_count;
 }
