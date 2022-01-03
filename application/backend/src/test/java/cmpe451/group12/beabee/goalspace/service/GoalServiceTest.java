@@ -17,6 +17,7 @@ import cmpe451.group12.beabee.goalspace.mapper.entities.EntitiShortMapper;
 import cmpe451.group12.beabee.goalspace.mapper.goals.*;
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
+import cmpe451.group12.beabee.goalspace.model.prototypes.GoalPrototype;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -76,7 +77,7 @@ public class GoalServiceTest {
                 reflectionRepository, taskRepository, questionRepository, tagRepository, goalPrototypeRespository, activityStreamService);
     }
 
-    /************** NO LONGER NEEDED SINCE WE REMOVE DEADLINES ***
+    /* NO LONGER NEEDED SINCE WE REMOVED DEADLINES ***
      @Test public void whenExtendGoalCalledWithValidRequest_ItShouldReturnSuccess() {
      //parameters
      Long goal_id = 1L;
@@ -349,4 +350,36 @@ public class GoalServiceTest {
 
     }
 
+    @Test
+    public void whenCopyGoalPrototypeCalledWithValidParameteres_ItShouldReturnSuccess() {
+
+        GoalPrototype prototype = new GoalPrototype();
+        prototype.setId(1L);
+        prototype.setEntities(new HashSet<>());
+        prototype.setTags(new HashSet<>());
+        prototype.setHiddentags(new HashSet<>());
+        prototype.setSubgoals(new HashSet<>());
+        prototype.setReference_goal_id(1L);
+
+        Goal goal = new Goal();
+        goal.setDownloadCount(5L);
+
+        Mockito.when(goalPrototypeRespository.findById(1L)).thenReturn(Optional.of(prototype));
+        Mockito.when(goalRepository.findById(1L)).thenReturn(Optional.of(goal));
+        Mockito.when(goalRepository.save(goal)).thenReturn(goal);
+        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(null));
+
+
+
+
+
+    }
+
+    @Test
+    public void whenCopyGoalPrototypeCalledWithInvalidParameteres_ItShouldReturnError() {
+        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(null));
+        Assert.assertThrows(ResponseStatusException.class, () -> {
+            goalService.copyGoalPrototype(1L,1L);
+        });
+    }
 }

@@ -278,7 +278,28 @@ public class GoalService {
             return Optional.ofNullable(null);
         }
     }
+    public MessageResponse removeTag(Long goal_id, String tag) throws IOException, ParseException {
+        Goal goal = goalRepository.findById(goal_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Goal not found!"));
+        Set<Tag> tags = goal.getTags();
+        if(!goal.getTags().stream().map(x->x.getName()).collect(Collectors.toSet()).contains(tag)){
+            return new MessageResponse("Goal does not contain that tag!",MessageType.ERROR);
+        }
+        List<Tag> tags_from_db = tagRepository.findByName(tag);
 
+        Set<String> related_ids = findRelatedTagIds(Stream.of(tag).collect(Collectors.toSet()));
+        goal.getTags().removeAll(tags_from_db);
+        Set<Tag> related_tags = new HashSet<>();
+        for (String id : related_ids) {
+            if (id == null) continue;
+            Optional<Tag> tag_x = getTagById(id);
+            if (tag_x.isPresent() && !tags.contains(tag_x.get().getName())) {
+                related_tags.add(tag_x.get());
+            }
+        }
+        goal.getHiddentags().removeAll(related_tags);
+        goalRepository.save(goal);
+        return new MessageResponse("Tags removed successfully!", MessageType.SUCCESS);
+    }
     public MessageResponse addTags(Long goal_id, Set<String> tags) throws IOException, ParseException {
         Goal goal = goalRepository.findById(goal_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Goal not found!"));
         Set<Tag> topic_ids = new HashSet<>();
@@ -658,4 +679,6 @@ public class GoalService {
         activityStreamService.copyAGoal(user,prototype);
         return new MessageResponse("Prototype copied successfully!", MessageType.SUCCESS);
     }
+
+
 }

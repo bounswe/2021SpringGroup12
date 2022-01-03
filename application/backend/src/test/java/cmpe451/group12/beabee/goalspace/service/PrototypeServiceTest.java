@@ -25,6 +25,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.*;
@@ -86,7 +88,8 @@ public class PrototypeServiceTest {
         prototype1.setTitle("Hello there!");
         prototype1.setReference_goal_id(1L);
         prototype1.setEntities(new HashSet<>());
-        prototype1.setSubgoals(new HashSet<>());GoalPrototype prototype2 = new GoalPrototype();
+        prototype1.setSubgoals(new HashSet<>());
+        GoalPrototype prototype2 = new GoalPrototype();
         prototype2.setDescription("So uncivilized.!");
         Tag tag1 = new Tag();
         tag1.setName("have");
@@ -130,8 +133,8 @@ public class PrototypeServiceTest {
 
         List<GoalPrototypeDTO> result = prototypeService.searchGoalPrototypesExact(search_query);
         List<GoalPrototypeDTO> expected = Stream.of(prototypeDTO3, prototypeDTO1).collect(Collectors.toList());
-        Assert.assertEquals(expected.get(0).getDownload_count(),result.get(0).getDownload_count());
-        Assert.assertEquals(expected.get(1).getTitle(),result.get(1).getTitle());
+        Assert.assertEquals(expected.get(0).getDownload_count(), result.get(0).getDownload_count());
+        Assert.assertEquals(expected.get(1).getTitle(), result.get(1).getTitle());
 
         Mockito.verify(tagRepository).findAllByNameContains(search_query);
         Mockito.verify(goalPrototypeRespository).findAllByTagsIsContaining(tag1);
@@ -227,7 +230,7 @@ public class PrototypeServiceTest {
         List<GoalPrototypeDTO> result = prototypeService.searchGoalPrototypesUsingTag(search_query);
         // I don't know why, but this test is not running properly. It runs perfectly in debug mode, but fails in normal run. :/
         //Assert.assertEquals(expected,result);
-        Assert.assertEquals(expected.size()-3,result.size());
+        Assert.assertEquals(expected.size() - 3, result.size());
 
         Mockito.verify(goalService).findRelatedTagIds(Stream.of(search_query).collect(Collectors.toSet()));
         Mockito.verify(goalService).getTagById("Q3");
@@ -237,7 +240,7 @@ public class PrototypeServiceTest {
     }
 
     @Test
-    public void publishAGoalCalledWithValidArguments_ShouldReturnSuccess(){
+    public void publishAGoalCalledWithValidArguments_ShouldReturnSuccess() {
         Goal goal = new Goal();
         goal.setId(1L);
         goal.setIsPublished(Boolean.FALSE);
@@ -256,22 +259,69 @@ public class PrototypeServiceTest {
 
         MessageResponse actual = prototypeService.publishAGoal(1L);
         MessageResponse expected = new MessageResponse("Goal published successfully!", MessageType.SUCCESS);
-        Assert.assertEquals(expected,actual);
-        Assert.assertEquals(goal.getIsPublished(),Boolean.TRUE);
+        Assert.assertEquals(expected, actual);
+        Assert.assertEquals(goal.getIsPublished(), Boolean.TRUE);
 
         Mockito.verify(goalRepository).findById(1L);
         Mockito.verify(goalRepository).save(goal);
     }
-    @Test
-    public void publishAGoalCalledWithInvalidArguments_ShouldReturnError(){
 
+    @Test
+    public void publishAGoalCalledWithInvalidArguments_ShouldReturnError() {
+        Goal goal = new Goal();
+        goal.setId(1L);
+        goal.setIsPublished(Boolean.TRUE);
+        goal.setEntities(new HashSet<>());
+        goal.setSubgoals(new HashSet<>());
+        goal.setTags(new HashSet<>());
+        goal.setHiddentags(new HashSet<>());
+
+        GoalPrototype goalPrototype = new GoalPrototype();
+        goalPrototype.setReference_goal_id(null);
+        goalPrototype.setId(2L);
+
+        Mockito.when(goalRepository.findById(1L)).thenReturn(Optional.of(goal));
+        Mockito.when(goalPrototypeRespository.findByReference_goal_id(null)).thenReturn(Optional.ofNullable(null));
+
+        Assert.assertThrows(ResponseStatusException.class, () -> {
+            prototypeService.publishAGoal(1L);
+        });
+
+        Mockito.verify(goalRepository).findById(1L);
+        Mockito.verify(goalPrototypeRespository).findByReference_goal_id(1L);
     }
-    @Test
-    public void unpublishAGoalCalledWithValidArguments_ShouldReturnSuccess(){
 
+    @Test
+    public void unpublishAGoalCalledWithValidArguments_ShouldReturnSuccess() {
+        Goal goal = new Goal();
+        goal.setId(1L);
+        goal.setIsPublished(Boolean.TRUE);
+
+        GoalPrototype prototype = new GoalPrototype();
+
+        Mockito.when(goalRepository.findById(1L)).thenReturn(Optional.of(goal));
+        Mockito.when(goalPrototypeRespository.findByReference_goal_id(1L)).thenReturn(Optional.of(prototype));
+        Mockito.when(goalRepository.save(goal)).thenReturn(goal);
+
+        Assert.assertEquals(new MessageResponse("Prototype unpublished successfully.", MessageType.SUCCESS),prototypeService.unpublishAGoal(1L));
+        Assert.assertEquals(Boolean.FALSE,goal.getIsPublished());
+
+        Mockito.verify(goalRepository).findById(1L);
+        Mockito.verify(goalPrototypeRespository).findByReference_goal_id(1L);
+        Mockito.verify(goalRepository).save(goal);
     }
-    @Test
-    public void unpublishAGoalCalledWithInvalidArguments_ShouldReturnError(){
 
+    @Test
+    public void unpublishAGoalCalledWithInvalidArguments_ShouldReturnError() {
+        Goal goal = new Goal();
+        goal.setId(1L);
+        goal.setIsPublished(Boolean.FALSE);
+
+        Mockito.when(goalRepository.findById(1L)).thenReturn(Optional.of(goal));
+
+        Assert.assertThrows(ResponseStatusException.class, () -> {
+            prototypeService.unpublishAGoal(1L);
+        });
+        Mockito.verify(goalRepository).findById(1L);
     }
 }
