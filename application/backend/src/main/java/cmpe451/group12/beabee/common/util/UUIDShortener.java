@@ -1,13 +1,16 @@
 package cmpe451.group12.beabee.common.util;
 
+import org.springframework.stereotype.Component;
+
 import java.math.BigInteger;
 import java.util.UUID;
 
+@Component
 public class UUIDShortener
 {
     private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-    public static String shortenUUID(UUID uuid) {
+    public String shortenUUID(UUID uuid) {
         BigInteger integer = new BigInteger(uuid.toString().replace("-",""), 16);
         StringBuilder sb = new StringBuilder("");
         while(integer.compareTo(BigInteger.ZERO)==1){
@@ -18,7 +21,7 @@ public class UUIDShortener
         return sb.reverse().toString();
     }
 
-    public static String randomShortUUID() {
+    public String randomShortUUID() {
         return shortenUUID(UUID.randomUUID());
     }
 }

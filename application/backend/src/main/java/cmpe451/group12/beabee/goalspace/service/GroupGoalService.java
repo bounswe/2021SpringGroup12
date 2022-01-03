@@ -43,6 +43,7 @@ public class GroupGoalService
     private final EntitiShortMapper entitiShortMapper;
     private final UserCredentialsGetMapper userCredentialsGetMapper;
     private final ActivityStreamService activityStreamService;
+    private final UUIDShortener uuidShortener;
 
     private Set<EntitiDTOShort> extractEntities(GroupGoal groupGoal){
 
@@ -91,7 +92,7 @@ public class GroupGoalService
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group goal not found!")
         );
 
-        groupGoal.setToken(UUIDShortener.randomShortUUID().substring(0,6));
+        groupGoal.setToken(uuidShortener.randomShortUUID().substring(0,6));
         groupGoalRepository.save(groupGoal);
         return new MessageResponse("Group goal token regenerated.", MessageType.SUCCESS);
     }
@@ -128,7 +129,7 @@ public class GroupGoalService
         new_groupgoal.setGoalType(GoalType.GROUPGOAL);
 
         //Use UUID converted to URL62 Base to guarantee uniqueness and improve readability
-        new_groupgoal.setToken(UUIDShortener.randomShortUUID().substring(0,6));
+        new_groupgoal.setToken(uuidShortener.randomShortUUID().substring(0,6));
 
         //Add creator to the member list
         HashSet<Users> members = new HashSet<>();
