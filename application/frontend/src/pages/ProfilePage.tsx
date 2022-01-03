@@ -38,20 +38,21 @@ export function ProfilePage() {
                     username: result.userCredentials.username
                 })
             })
-
-        axios.get(`/users/${user_id}/followings`,
-            {
-                headers: { Authorization: `Bearer ${token}`},
-                data: {}
-            })
-            .then(response => {
-                if (response.status === 200) {
-                    return response.data
-                }
-                throw response
-            })
-            .then(result => {
-                setFollowing(result.map((user_object: any) => user_object.userCredentials.user_id).includes(user_id))
+            .then(() => {
+                axios.get(`/users/${user_id}/followings`,
+                    {
+                        headers: { Authorization: `Bearer ${token}`},
+                        data: {}
+                    })
+                    .then(response => {
+                        if (response.status === 200) {
+                            return response.data
+                        }
+                        throw response
+                    })
+                    .then(result => {
+                        setFollowing(result.map((user_object: any) => user_object.id).includes(Number(target_id)))
+                    })
             })
     }, [target_id]);
 
