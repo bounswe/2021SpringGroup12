@@ -51,7 +51,7 @@ import retrofit2.Response;
  * Use the {@link PrototypeGoalFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PrototypeGoalFragment extends BaseInnerFragment implements IOnSubgoalClickedListener, IOnTagClickedListener, DatePickerDialog.OnDateSetListener {
+public class PrototypeGoalFragment extends BaseInnerFragment implements IOnTagClickedListener{
 
     @BindView(R.id.tv_title)
     @Nullable
@@ -160,12 +160,6 @@ public class PrototypeGoalFragment extends BaseInnerFragment implements IOnSubgo
     }
 
     @Override
-    public void OnSubgoalClicked(int id) {
-
-        OpenNewFragment(SubgoalPrototypeFragment.newInstance(id));
-    }
-
-    @Override
     public void OnTagClicked(int id) {
 
     }
@@ -239,10 +233,5 @@ public class PrototypeGoalFragment extends BaseInnerFragment implements IOnSubgo
                 Utils.ShowErrorToast(getActivity(), "Something went wrong!");
             }
         });
-    }
-
-    @Override
-    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-
     }
 }
