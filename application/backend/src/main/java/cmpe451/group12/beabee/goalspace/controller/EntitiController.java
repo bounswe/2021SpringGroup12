@@ -33,6 +33,12 @@ public class EntitiController {
         return entitiService.getEntitiesOfAGoal(goal_id);
     }
 
+    @ApiOperation(value = "Get all entities of a Goal including entities of subgoals' and entities of subgoals' of subgoals")
+    @GetMapping("/groupgoal/{groupgoal_id}")
+    public List<EntitiDTOShort> getEntitiesOfAGroupgoal(@PathVariable @ApiParam(value = "Id of the group goal.", example = "5") Long groupgoal_id) {
+        return entitiService.getEntitiesOfAGroupgoal(groupgoal_id);
+    }
+
     @ApiOperation(value = "Get All Entities Of a User")
     @GetMapping("/user/{user_id}")
     public List<EntitiDTOShort> getEntitiesOfAUser(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id) {
