@@ -111,8 +111,8 @@ public class EntitySelectorDialog extends DialogFragment {
         Utils.showLoading(getParentFragmentManager());
         Link link = new Link();
         link.parentType = initialParentType;
-        link.parentId = data.get(selectedPos).id;
-        BeABeeService.serviceAPI.linkEntities(parentId, link).enqueue(new Callback<BasicResponse>() {
+        link.parentId = parentId;
+        BeABeeService.serviceAPI.linkEntities(data.get(selectedPos).id, link).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
                 Utils.dismissLoading();
