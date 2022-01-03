@@ -13,7 +13,7 @@ import cmpe451.group12.beabee.goalspace.dto.entities.LinkType;
 import cmpe451.group12.beabee.goalspace.dto.entities.RoutineGetDTO;
 import cmpe451.group12.beabee.goalspace.dto.entities.TaskGetDTO;
 import cmpe451.group12.beabee.goalspace.mapper.entities.*;
-import cmpe451.group12.beabee.goalspace.mapper.goals.SubgoalGetMapper;
+import cmpe451.group12.beabee.goalspace.mapper.goals.SubgoalShortMapper;
 import cmpe451.group12.beabee.goalspace.mapper.resources.ResourceShortMapper;
 import cmpe451.group12.beabee.goalspace.model.entities.Entiti;
 import cmpe451.group12.beabee.goalspace.model.entities.Reflection;
@@ -39,7 +39,7 @@ public class EntitiServiceTest {
     private EntitiMapper entitiMapper;
     private EntitiShortMapper entitiShortMapper;
     private EntitiRepository entitiRepository;
-    private SubgoalGetMapper subgoalGetMapper;
+    private SubgoalShortMapper subgoalShortMapper;
     private SubgoalRepository subgoalRepository;
     private TaskRepository taskRepository;
     private TaskGetMapper taskGetMapper;
@@ -58,14 +58,13 @@ public class EntitiServiceTest {
     private EntitiService entitiService;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp(){
         goalRepository = Mockito.mock(GoalRepository.class);
         groupGoalRepository = Mockito.mock(GroupGoalRepository.class);
         userRepository = Mockito.mock(UserRepository.class);
-        entitiMapper = Mockito.mock(EntitiMapper.class);
         entitiShortMapper = Mockito.mock(EntitiShortMapper.class);
         entitiRepository = Mockito.mock(EntitiRepository.class);
-        subgoalGetMapper = Mockito.mock(SubgoalGetMapper.class);
+        subgoalShortMapper = Mockito.mock(SubgoalShortMapper.class);
         subgoalRepository = Mockito.mock(SubgoalRepository.class);
         taskGetMapper = Mockito.mock(TaskGetMapper.class);
         taskRepository = Mockito.mock(TaskRepository.class);
@@ -83,28 +82,10 @@ public class EntitiServiceTest {
         resourceShortMapper = Mockito.mock(ResourceShortMapper.class);
 
 
-        entitiService = new EntitiService(goalRepository,
-                groupGoalRepository,
-                userRepository,
-                entitiMapper,
-                entitiShortMapper,
-                entitiRepository,
-                subgoalGetMapper,
-                subgoalRepository,
-                taskRepository,
-                taskGetMapper,
-                reflectionRepository,
-                reflectionGetMapper,
-                reflectionPostMapper,
-                taskPostMapper,
-                questionPostMapper,
-                routinePostMapper,
-                routineRepository,
-                routineGetMapper,
-                questionRepository,
-                questionGetMapper,
-                resourceRepository,
-                resourceShortMapper);
+        entitiService = new EntitiService(goalRepository,groupGoalRepository,userRepository,entitiShortMapper,entitiRepository,
+                subgoalShortMapper,subgoalRepository,taskRepository,taskGetMapper,reflectionRepository,
+                reflectionGetMapper,reflectionPostMapper,taskPostMapper,questionPostMapper,routinePostMapper,
+                routineRepository,routineGetMapper,questionRepository,questionGetMapper,resourceRepository,resourceShortMapper);
     }
 
     @Test
@@ -210,5 +191,6 @@ public class EntitiServiceTest {
         Mockito.verify(routineRepository).findById(routine_id_param);
         Mockito.verify(routineRepository).save(routine);
     }
+
 
 }

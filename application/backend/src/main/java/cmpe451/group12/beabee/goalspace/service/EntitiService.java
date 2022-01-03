@@ -40,12 +40,8 @@ public class EntitiService {
     private final GoalRepository goalRepository;
     private final GroupGoalRepository groupGoalRepository;
     private final UserRepository userRepository;
-
-    private final EntitiMapper entitiMapper;
     private final EntitiShortMapper entitiShortMapper;
     private final EntitiRepository entitiRepository;
-
-    private final SubgoalGetMapper subgoalGetMapper;
     private final SubgoalShortMapper subgoalShortMapper;
     private final SubgoalRepository subgoalRepository;
     private final TaskRepository taskRepository;

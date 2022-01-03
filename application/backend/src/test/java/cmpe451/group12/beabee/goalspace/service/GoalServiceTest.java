@@ -47,7 +47,8 @@ public class GoalServiceTest {
     private TaskRepository taskRepository;
     private QuestionRepository questionRepository;
     private TagRepository tagRepository;
-    private  GoalPrototypeRespository goalPrototypeRespository;
+    private GoalPrototypeRespository goalPrototypeRespository;
+    private ActivityStreamService activityStreamService;
 
     @Before
     public void setUp() {
@@ -66,79 +67,80 @@ public class GoalServiceTest {
         taskRepository = Mockito.mock(TaskRepository.class);
         questionRepository = Mockito.mock(QuestionRepository.class);
         tagRepository = Mockito.mock(TagRepository.class);
-         goalPrototypeRespository = Mockito.mock(GoalPrototypeRespository.class);
+        goalPrototypeRespository = Mockito.mock(GoalPrototypeRespository.class);
+        activityStreamService = Mockito.mock(ActivityStreamService.class);
+
         goalService = new GoalService(goalRepository, subgoalRepository, goalPostMapper,
                 subgoalPostMapper, subgoalShortMapper, goalGetMapper, goalShortMapper,
                 userRepository, entitiShortMapper, entitiRepository, routineRepository,
-                reflectionRepository, taskRepository, questionRepository,tagRepository,goalPrototypeRespository);
-    }
-/************** NO LONGER NEEDED SINCE WE REMOVE DEADLINES ***
-    @Test
-    public void whenExtendGoalCalledWithValidRequest_ItShouldReturnSuccess() {
-        //parameters
-        Long goal_id = 1L;
-        Date five_days_later = new Date(System.currentTimeMillis() + 5 * 24 * 3600 * 1000);//5 days later than today
-        Long prevExtensionCount = 5L;
-        Date one_day_later = new Date(System.currentTimeMillis() + 1 * 24 * 3600 * 1000);
-
-        Goal goal1 = new Goal();
-        goal1.setTitle("goal 1");
-        goal1.setDescription("description 1");
-        goal1.setId(goal_id);
-        goal1.setIsDone(Boolean.FALSE);
-        goal1.setExtension_count(prevExtensionCount);
-
-        Goal goal1_updated = new Goal();
-        goal1_updated.setTitle("goal 1");
-        goal1_updated.setDescription("description 1");
-        goal1_updated.setId(goal_id);
-        goal1_updated.setIsDone(Boolean.FALSE);
-        goal1_updated.setExtension_count(prevExtensionCount + 1);
-
-        // mock other classes
-        Mockito.when(goalRepository.findById(goal_id)).thenReturn(java.util.Optional.of(goal1));
-        Mockito.when(goalRepository.save(goal1)).thenReturn(goal1_updated);
-        //verify actual and expected results
-        MessageResponse result = goalService.extendGoal(goal_id, five_days_later);
-
-        Assert.assertEquals(new MessageResponse("Goal extended successfully!", MessageType.SUCCESS), result);
-        Mockito.verify(goalRepository).findById(goal_id);
-        Mockito.verify(goalRepository).save(goal1);
+                reflectionRepository, taskRepository, questionRepository, tagRepository, goalPrototypeRespository, activityStreamService);
     }
 
-    @Test
-    public void whenExtendGoalCalledWithInvalidRequest_ItShouldReturnError() {
-        //parameters
-        Long goal_id = 1L;
-        Date five_days_later = new Date(System.currentTimeMillis() + 5 * 24 * 3600 * 1000);// 5 days later than today
-        Long prevExtensionCount = 5L;
-        Date one_day_later = new Date(System.currentTimeMillis() + 1 * 24 * 3600 * 1000);// 1 day later than today
+    /************** NO LONGER NEEDED SINCE WE REMOVE DEADLINES ***
+     @Test public void whenExtendGoalCalledWithValidRequest_ItShouldReturnSuccess() {
+     //parameters
+     Long goal_id = 1L;
+     Date five_days_later = new Date(System.currentTimeMillis() + 5 * 24 * 3600 * 1000);//5 days later than today
+     Long prevExtensionCount = 5L;
+     Date one_day_later = new Date(System.currentTimeMillis() + 1 * 24 * 3600 * 1000);
 
-        Goal goal1 = new Goal();
-        goal1.setTitle("goal 1");
-        goal1.setDescription("description 1");
-        goal1.setId(goal_id);
-        goal1.setIsDone(Boolean.FALSE);
-        goal1.setExtension_count(prevExtensionCount);
-        goal1.setDeadline(five_days_later);
+     Goal goal1 = new Goal();
+     goal1.setTitle("goal 1");
+     goal1.setDescription("description 1");
+     goal1.setId(goal_id);
+     goal1.setIsDone(Boolean.FALSE);
+     goal1.setExtension_count(prevExtensionCount);
 
-        Goal goal1_updated = new Goal();
-        goal1_updated.setTitle("goal 1");
-        goal1_updated.setDescription("description 1");
-        goal1_updated.setId(goal_id);
-        goal1_updated.setIsDone(Boolean.FALSE);
-        goal1_updated.setExtension_count(prevExtensionCount + 1);
-        goal1_updated.setDeadline(one_day_later);
+     Goal goal1_updated = new Goal();
+     goal1_updated.setTitle("goal 1");
+     goal1_updated.setDescription("description 1");
+     goal1_updated.setId(goal_id);
+     goal1_updated.setIsDone(Boolean.FALSE);
+     goal1_updated.setExtension_count(prevExtensionCount + 1);
 
-        // mock other classes
-        Mockito.when(goalRepository.findById(goal_id)).thenReturn(java.util.Optional.of(goal1));
-        //verify actual and expected results
-        MessageResponse result = goalService.extendGoal(goal_id, five_days_later);
+     // mock other classes
+     Mockito.when(goalRepository.findById(goal_id)).thenReturn(java.util.Optional.of(goal1));
+     Mockito.when(goalRepository.save(goal1)).thenReturn(goal1_updated);
+     //verify actual and expected results
+     MessageResponse result = goalService.extendGoal(goal_id, five_days_later);
 
-        Assert.assertEquals(new MessageResponse("New deadline must be later than current deadline!", MessageType.ERROR), result);
-        Mockito.verify(goalRepository).findById(goal_id);
-    }
- */
+     Assert.assertEquals(new MessageResponse("Goal extended successfully!", MessageType.SUCCESS), result);
+     Mockito.verify(goalRepository).findById(goal_id);
+     Mockito.verify(goalRepository).save(goal1);
+     }
+
+     @Test public void whenExtendGoalCalledWithInvalidRequest_ItShouldReturnError() {
+     //parameters
+     Long goal_id = 1L;
+     Date five_days_later = new Date(System.currentTimeMillis() + 5 * 24 * 3600 * 1000);// 5 days later than today
+     Long prevExtensionCount = 5L;
+     Date one_day_later = new Date(System.currentTimeMillis() + 1 * 24 * 3600 * 1000);// 1 day later than today
+
+     Goal goal1 = new Goal();
+     goal1.setTitle("goal 1");
+     goal1.setDescription("description 1");
+     goal1.setId(goal_id);
+     goal1.setIsDone(Boolean.FALSE);
+     goal1.setExtension_count(prevExtensionCount);
+     goal1.setDeadline(five_days_later);
+
+     Goal goal1_updated = new Goal();
+     goal1_updated.setTitle("goal 1");
+     goal1_updated.setDescription("description 1");
+     goal1_updated.setId(goal_id);
+     goal1_updated.setIsDone(Boolean.FALSE);
+     goal1_updated.setExtension_count(prevExtensionCount + 1);
+     goal1_updated.setDeadline(one_day_later);
+
+     // mock other classes
+     Mockito.when(goalRepository.findById(goal_id)).thenReturn(java.util.Optional.of(goal1));
+     //verify actual and expected results
+     MessageResponse result = goalService.extendGoal(goal_id, five_days_later);
+
+     Assert.assertEquals(new MessageResponse("New deadline must be later than current deadline!", MessageType.ERROR), result);
+     Mockito.verify(goalRepository).findById(goal_id);
+     }
+     */
     @Test
     public void whenCompleteGoalCalledWithUncompletedGoals_ItShouldReturnError() {
         Long goal_id = 1L;

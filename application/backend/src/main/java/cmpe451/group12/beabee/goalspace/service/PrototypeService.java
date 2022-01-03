@@ -225,7 +225,7 @@ public class PrototypeService {
             if (set2 != null) {
                 goalPrototypeDTO.setTags(set2.stream().map(x->x.getName()).collect(Collectors.toSet()));
             }
-            goalPrototypeDTO.setUsername(goalRepository.findById(prototype.getReference_goal_id()).get().getCreator().getUsername());
+            goalPrototypeDTO.setUsername(goalRepository.getById(prototype.getReference_goal_id()).getCreator().getUsername());
             result.add(goalPrototypeDTO);
         });
         return result.stream().sorted((i1, i2) -> i2.getDownload_count().compareTo(i1.getDownload_count())).collect(Collectors.toList());

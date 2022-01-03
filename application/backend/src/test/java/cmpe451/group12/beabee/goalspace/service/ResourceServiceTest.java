@@ -31,14 +31,14 @@ public class ResourceServiceTest {
 
     private EntitiRepository entitiRepository;
     private ResourceService resourceService;
-
+    private ActivityStreamService activityStreamService;
 
     @Before
     public void setUp() {
         resourceRepository = Mockito.mock(ResourceRepository.class);
         entitiRepository = Mockito.mock(EntitiRepository.class);
-
-        resourceService = new ResourceService(resourceRepository, entitiRepository);
+        activityStreamService = Mockito.mock(ActivityStreamService.class);
+        resourceService = new ResourceService(resourceRepository, entitiRepository, activityStreamService);
     }
 
     @Test
@@ -76,7 +76,7 @@ public class ResourceServiceTest {
         Assert.assertEquals(451, result.getStatusCodeValue());
 
         Mockito.verify(entitiRepository).findById(entiti_id);
-        Mockito.verify(resourceRepository).existsByNameAndEntiti(resource.getOriginalFilename(),entiti);
+        Mockito.verify(resourceRepository).existsByNameAndEntiti(resource.getOriginalFilename(), entiti);
 
     }
 }

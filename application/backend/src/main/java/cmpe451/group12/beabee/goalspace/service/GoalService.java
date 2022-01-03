@@ -210,7 +210,7 @@ public class GoalService {
         con.setRequestMethod("GET");
         int status = con.getResponseCode();
         if (status != 200) {
-            return Optional.of(null);
+            return Optional.ofNullable(null);
         }
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String inputLine;
@@ -222,6 +222,9 @@ public class GoalService {
         JSONParser parser = new JSONParser();
         JSONObject resp = (JSONObject) parser.parse(content.toString());
         JSONArray search = (JSONArray) resp.get("search");
+        if(1 > search.size()){
+            return Optional.ofNullable(null);
+        }
         JSONObject first_res = (JSONObject) search.get(0);
         String id = first_res.get("id").toString();
         con.disconnect();
