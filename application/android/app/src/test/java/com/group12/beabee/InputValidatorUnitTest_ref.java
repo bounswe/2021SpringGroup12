@@ -40,13 +40,15 @@ public class InputValidatorUnitTest_ref {
         assertTrue(InputValidator_ref.IsNonEmptyGoalDetailList(non_empty_goals));
         assertTrue(InputValidator_ref.IsNonEmptyGoalDetailList(non_empty_null_goals));
     }
+    @Test
     public void inputEmptyAnalyticsTest(){
-        Analytics a= new Analytics();
+        Analytics a= null;
         Analytics b= new Analytics();
         b.bestGoal=new GoalShort();
         assertFalse(InputValidator_ref.IsNonEmptyAnalytics(a));
         assertTrue(InputValidator_ref.IsNonEmptyAnalytics(b));
     }
+    @Test
     public void inputNonEmptyGoalShortTest(){
         GoalShort a=null;
         GoalShort b=new GoalShort();
