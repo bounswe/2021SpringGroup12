@@ -33,8 +33,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  implements 
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-       // TODO: change this before final deployment
-
         http.cors().and()
                 .csrf().disable()
                 .authorizeRequests()

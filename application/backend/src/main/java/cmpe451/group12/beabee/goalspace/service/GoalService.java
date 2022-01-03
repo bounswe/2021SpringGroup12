@@ -567,6 +567,7 @@ public class GoalService {
         new_goal.setExtension_count(0L);
         new_goal.setGoalType(GoalType.GOAL);
         new_goal.setRating(0D);
+        new_goal.setIsPublished(Boolean.FALSE);
         new_goal.setDownloadCount(0L);
         Set<EntitiPrototype> entitiPrototypes = prototype.getEntities();
         Set<Entiti> entities = new HashSet<>();
