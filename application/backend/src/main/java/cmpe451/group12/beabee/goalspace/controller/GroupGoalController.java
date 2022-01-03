@@ -134,4 +134,10 @@ public class GroupGoalController {
     ) SubgoalPostDTO subgoal_dto) {
         return groupGoalService.createSubgoal(subgoal_dto);
     }
+
+    @ApiOperation(value = "Get subgoals of a group goal.")
+    @GetMapping("/subgoal/{groupgoal_id}")
+    public List<SubgoalGetDTO> getSubgoalsOfGroupGoal(@PathVariable @ApiParam(value = "Id of the group goal.", example = "5") Long groupgoal_id) {
+        return groupGoalService.getSubgoalsOfGroupGoal(groupgoal_id);
+    }
 }

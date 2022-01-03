@@ -27,6 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +45,7 @@ public class GroupGoalService
     private final UserCredentialsGetMapper userCredentialsGetMapper;
     private final ActivityStreamService activityStreamService;
     private final UUIDShortener uuidShortener;
+    private final SubgoalGetMapper subgoalGetMapper;
 
     private Set<EntitiDTOShort> extractEntities(GroupGoal groupGoal){
 
@@ -214,5 +216,23 @@ public class GroupGoalService
         groupGoalRepository.save(groupGoal);
         activityStreamService.leaveGroupGoal(user,groupGoal);
         return new MessageResponse("User left group goal successfully!", MessageType.SUCCESS);
+    }
+
+    private static Stream<Subgoal> flatMapRecursive(Subgoal item) {
+        return Stream.concat(Stream.of(item), Optional.ofNullable(item.getChild_subgoals())
+                .orElseGet(Collections::emptySet)
+                .stream()
+                .flatMap(GroupGoalService::flatMapRecursive));
+    }
+
+    public List<SubgoalGetDTO> getSubgoalsOfGroupGoal(Long groupgoal_id)
+    {
+        GroupGoal groupGoal = groupGoalRepository.findById(groupgoal_id).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Groupgoal not found!");
+        });
+
+        List<Subgoal> all_subgoals = groupGoal.getSubgoals().stream()
+                .flatMap(GroupGoalService::flatMapRecursive).collect(Collectors.toList());
+        return subgoalGetMapper.mapToDto(all_subgoals);
     }
 }

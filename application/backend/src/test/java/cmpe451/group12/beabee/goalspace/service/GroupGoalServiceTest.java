@@ -44,6 +44,7 @@ public class GroupGoalServiceTest
     EntitiShortMapper entitiShortMapper;
     UserCredentialsGetMapper userCredentialsGetMapper;
     UUIDShortener uuidShortener;
+    SubgoalGetMapper subgoalGetMapper;
 
     @Before
     public void setup()
@@ -60,9 +61,10 @@ public class GroupGoalServiceTest
         userCredentialsGetMapper = Mockito.mock(UserCredentialsGetMapper.class);
         activityStreamService = Mockito.mock(ActivityStreamService.class);
         uuidShortener = Mockito.mock(UUIDShortener.class);
+        subgoalGetMapper = Mockito.mock(SubgoalGetMapper.class);
         groupGoalService = new GroupGoalService(groupGoalRepository, subgoalRepository, groupGoalPostMapper,
                 subgoalPostMapper, subgoalShortMapper, groupGoalGetMapper, groupGoalShortMapper, userRepository, entitiShortMapper,
-                userCredentialsGetMapper, activityStreamService, uuidShortener);
+                userCredentialsGetMapper, activityStreamService, uuidShortener, subgoalGetMapper);
     }
 
     private Users getRandomUser()
