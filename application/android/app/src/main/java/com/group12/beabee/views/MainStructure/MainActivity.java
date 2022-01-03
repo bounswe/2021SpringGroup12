@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean onSelectLoop = false;
     private int currentPage;
-    private BaseContainerFragment[] containers = new BaseContainerFragment[5];
+    private BaseContainerFragment[] containers = new BaseContainerFragment[6];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         serviceAPI = BeABeeService.serviceAPI;
 
         viewPagerMain.setAdapter(new MainPagerAdapter(this));
-        viewPagerMain.setOffscreenPageLimit(5);
+        viewPagerMain.setOffscreenPageLimit(6);
         viewPagerMain.setUserInputEnabled(false);
         viewPagerMain.registerOnPageChangeCallback(new PagerPageChangeListener());
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationListener());
@@ -92,9 +92,14 @@ public class MainActivity extends AppCompatActivity {
                     baseContainerFragment = fragmentActivity.containers[3];
                     break;
                 case 4:
-                    fragmentActivity.containers[4] = new BaseContainerFragment(new FeedFragment());
+                    fragmentActivity.containers[4] = new BaseContainerFragment(new HomeFragment());
                     baseContainerFragment = fragmentActivity.containers[4];
                     break;
+                case 5:
+                    fragmentActivity.containers[5] = new BaseContainerFragment(new FeedFragment());
+                    baseContainerFragment = fragmentActivity.containers[5];
+                    break;
+
                 default:
                     baseContainerFragment = new BaseContainerFragment(new HomeFragment());
             }
@@ -103,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return 5;
+            return 6;
         }
     }
 
@@ -133,6 +138,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case 4:
                     itemId = R.id.page_5;
+                    break;
+                case 5:
+                    itemId = R.id.page_6;
                     break;
                 default:
                     itemId = R.id.home;
@@ -172,6 +180,9 @@ public class MainActivity extends AppCompatActivity {
                     viewPagerMain.setCurrentItem(4);
                     currentPage = 4;
                     break;
+                case R.id.page_6:
+                    viewPagerMain.setCurrentItem(5);
+                    currentPage = 5;
                 default:
                     return false;
             }
