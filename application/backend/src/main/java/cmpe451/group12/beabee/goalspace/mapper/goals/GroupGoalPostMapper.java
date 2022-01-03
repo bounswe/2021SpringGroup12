@@ -6,16 +6,39 @@ import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import cmpe451.group12.beabee.goalspace.model.goals.GroupGoal;
 import org.mapstruct.Mapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@Mapper(componentModel = "spring")
-public interface GroupGoalPostMapper {
-    GroupGoalPostDTO mapToDto(GroupGoal groupGoal);
+public class GroupGoalPostMapper {
+    //GroupGoalPostDTO mapToDto(GroupGoal groupGoal);
 
-    GroupGoal mapToEntity(GroupGoalPostDTO groupGoalPostDTO);
+    public GroupGoal mapToEntity(GroupGoalPostDTO groupGoalPostDTO)
+    {
+        if ( groupGoalPostDTO == null ) {
+            return null;
+        }
 
-    List<GroupGoalPostDTO> mapToDto(List<GroupGoal> groupGoalList);
+        GroupGoal groupGoal = new GroupGoal();
+        groupGoal.setTitle(groupGoalPostDTO.getTitle());
+        groupGoal.setDescription(groupGoalPostDTO.getDescription());
 
-    List<GroupGoal> mapToEntity(List<GroupGoalPostDTO> goalPostDTOList);
+        return groupGoal;
+    }
+
+    //List<GroupGoalPostDTO> mapToDto(List<GroupGoal> groupGoalList);
+
+    public List<GroupGoal> mapToEntity(List<GroupGoalPostDTO> goalPostDTOList)
+    {
+        if ( goalPostDTOList == null ) {
+            return null;
+        }
+
+        List<GroupGoal> list = new ArrayList<GroupGoal>( goalPostDTOList.size() );
+        for ( GroupGoalPostDTO groupGoalPostDTO : goalPostDTOList ) {
+            list.add( mapToEntity( groupGoalPostDTO ) );
+        }
+
+        return list;
+    }
 
 }
