@@ -121,11 +121,14 @@ export function EntityPage() {
 
     const deleteLink = (entity: { key: any}) => {
         console.log('Received values of delete: ', entity);
-        axios.delete(`/entities/${entity_id}/delete_link/${entity.key}`,
+        var values = { childId: "", childType: "ENTITI" }
+        values.childId = entity.key
+        axios.delete(`/entities/${entity_id}/link/`,
             {
                 headers: { Authorization: `Bearer ${token}`},
-                data: {}
+                data: values
             }).then(() => getEntities())
+            
     };
 
     const deleteResource = (resource: { key: any,id:number}) => {
@@ -156,20 +159,20 @@ export function EntityPage() {
             })
             .then(data => {
                 let tmp = []
-                let sublinks=data.sublinks
+                let sublinked_entities=data.sublinked_entities
                 console.log("data:" + JSON.stringify(data))
                 if(entitiType.toLowerCase() =="task" || entitiType.toLowerCase() =="routine"  ){
                     setDeadline(data.deadline)
                     console.log(data.deadline)
                 }
                 
-                for (let i = 0; i < sublinks.length; i++) {
-                    console.log(sublinks)
+                for (let i = 0; i < sublinked_entities.length; i++) {
+                    console.log(sublinked_entities)
                     tmp.push({
-                        key: sublinks[i]['id'],
-                        title: sublinks[i]['title'],
-                        description: sublinks[i]['description'],
-                        entityType: sublinks[i]['entitiType'],
+                        key: sublinked_entities[i]['id'],
+                        title: sublinked_entities[i]['title'],
+                        description: sublinked_entities[i]['description'],
+                        entityType: sublinked_entities[i]['entitiType'],
                         //isDone: sublinks[i]['isDone'],
                         //period: sublinks[i]['period'],
                         //rating: sublinks[i]['rating'],
@@ -226,7 +229,7 @@ export function EntityPage() {
             <h2>Linked Entities:</h2>
             <Table columns={columns} dataSource={entities} />
             <br></br>
-            <Link to={"/linkEntityfrom/" +goal_id+ "/"+ entity_id}> 
+            <Link to={"/linkEntityfrom/" +entitiType.toLowerCase()+ "/"+ entity_id}> 
                 <button type="button">
                     Link Entity
                 </button>
