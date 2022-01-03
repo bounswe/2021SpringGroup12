@@ -8,6 +8,7 @@ import {GoalTypes} from "../helpers/GoalTypes";
 import { TweenOneGroup } from 'rc-tween-one';
 import { PlusOutlined } from '@ant-design/icons';
 import { WithContext as ReactTags } from 'react-tag-input';
+import { DeleteOutlined } from '@ant-design/icons';
 
 const token = localStorage.getItem("token");
 const user_id = localStorage.getItem("user_id")
@@ -39,6 +40,7 @@ export function GoalPage(params :{goalType: any}) {
     const [assignables, setAssignabels] = useState([])
     const [toAssignee, setToAssignee] = useState([])
     const [tagData, setTagData] =useState([""]);
+    const[tagAdded,setTagAdded] = useState(0)
 
 
     // @ts-ignore
@@ -127,12 +129,8 @@ export function GoalPage(params :{goalType: any}) {
             axios.post(`/subgoals/${goal_id}/assignees?${user_ids}`, {}, {
                 headers: { Authorization: `Bearer ${token}`},
             }).then(() => window.alert("I Hope added!"))
-    
         }
     
-
-    
-
     const subgoal_columns =  [
         {
             title: 'Title',
@@ -280,9 +278,7 @@ useEffect(() => {
         .catch(error => {
             console.error('There was an error!', error);
         });
-}, [goal_id ]);
-
-
+}, [goal_id]);
 
 
 const showManageDiv = goalType !== GoalTypes.Group || goal.user_id === Number(user_id)
@@ -307,11 +303,7 @@ const showManageDiv = goalType !== GoalTypes.Group || goal.user_id === Number(us
     
     //TAGS
     const removeTagData = (indexToRemove: number) => {
-        let tempArr=tagData
-        tempArr.splice(indexToRemove, 1);
-        setTagData(tempArr);
-        console.log("tags: "+tempArr)
-        axios.put(`/${goalType}/${goal_id}/tag`, tempArr, {
+        axios.put(`/${goalType}/${goal_id}/removetag/${tagData[indexToRemove]}`, {
             headers: { Authorization: `Bearer ${token}`},
         })
       };
@@ -327,7 +319,8 @@ const showManageDiv = goalType !== GoalTypes.Group || goal.user_id === Number(us
             headers: { Authorization: `Bearer ${token}`},
         }
         )
-          event.target.value = '';     
+          event.target.value = '';    
+          setTagAdded(tagAdded+1)
         }
 
       };
@@ -450,12 +443,13 @@ const showManageDiv = goalType !== GoalTypes.Group || goal.user_id === Number(us
       <ul className="tags">
         {tagData.map((tag, index) => (
           <li key={index} className="tag">
-            <span className="tag-title">{tag}</span>
+            <Button type="dashed" > {tag} </Button>
             <span
               className="tag-close-icon"
-              //onClick={() => removeTagData(index)} 
+              onClick={() => removeTagData(index)} 
             >
-            </span>
+            </span> &nbsp; &nbsp;
+            <Button type="primary" onClick={() => removeTagData(index)} shape="circle" icon={<DeleteOutlined />} />
           </li>
         ))}
       </ul>
