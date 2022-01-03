@@ -67,6 +67,7 @@ public class Home4Fragment extends BaseInnerFragment implements IOnGoalClickedLi
             goal.description=goals.get(i).description;
             goal.title=goals.get(i).title;
             goal.username=goals.get(i).username;
+            goal.download_count=goals.get(i).download_count;
             newGoals.add(goal);
         }
         return newGoals;

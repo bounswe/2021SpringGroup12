@@ -26,6 +26,10 @@ public class SignUpActivity extends AppCompatActivity {
 
     @BindView(R.id.et_name)
     EditText etUsername;
+    @BindView(R.id.et_just_name)
+    EditText etName;
+    @BindView(R.id.et_surname)
+    EditText etSurname;
     @BindView(R.id.et_password)
     EditText etPassword;
     @BindView(R.id.et_password_repeat)
@@ -56,6 +60,8 @@ public class SignUpActivity extends AppCompatActivity {
         signUpRequest.username = etUsername.getText().toString();
         signUpRequest.email = etEmail.getText().toString();
         signUpRequest.password = password;
+        signUpRequest.name=etName.getText().toString();
+        signUpRequest.surname=etSurname.getText().toString();
 
         if (!InputValidator.IsTextNonEmpty(signUpRequest.username)){
             Utils.ShowErrorToast(this, "Username must not be empty!!");
