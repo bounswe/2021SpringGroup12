@@ -9,6 +9,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.group12.beabee.BeABeeApplication;
+import com.group12.beabee.InputValidator_ihsan;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.User;
@@ -70,7 +71,7 @@ public class UserSearchFragment extends BaseInnerFragment implements IOnMemberLi
 
     @Override
     protected PageMode GetPageMode() {
-        return PageMode.ListWithBack;
+        return PageMode.OnlyBack;
     }
 
     @Override
@@ -95,6 +96,12 @@ public class UserSearchFragment extends BaseInnerFragment implements IOnMemberLi
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+
+                if (!InputValidator_ihsan.IsSearchQueryNonNull(query)  || !InputValidator_ihsan.IsQueryAtLeastOneCharacterLength(query) ) {
+                    Utils.ShowErrorToast(getContext(), "Search query should be at least 1 character long!");
+                    return false;
+                }
+
                 Utils.showLoading(getParentFragmentManager());
                 service.getUserSearch(query).enqueue(new Callback<List<UserSearchData>>() {
                     @Override
