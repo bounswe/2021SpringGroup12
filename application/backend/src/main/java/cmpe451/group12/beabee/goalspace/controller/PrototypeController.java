@@ -32,6 +32,13 @@ public class PrototypeController {
         return prototypeService.getPrototypes();
     }
 
+    @ApiOperation(value = "Get all goal prototypes of a user.")
+    @GetMapping("/user/{user_id}")
+    public List<GoalPrototypeDTO> getPrototypesOfAUser(@PathVariable @ApiParam(value = "Id of the user.", example = "5") Long user_id) {
+        return prototypeService.getPrototypesOfAUser(user_id);
+    }
+
+
     @ApiOperation(value = "Get a goal prototype with the given id.")
     @GetMapping("/{id}")
     public GoalPrototypeDTO getAPrototype(@PathVariable @ApiParam(value = "Id of the goal prototype.", example = "5") Long id) {

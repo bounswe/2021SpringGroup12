@@ -201,9 +201,9 @@ public class GoalService {
 
     /***********TAGS BEGIN**********/
     protected Optional<Tag> getTagByName(String name) throws IOException, ParseException {
-        Optional<Tag> tag_from_db = tagRepository.findByName(name);
-        if (tag_from_db.isPresent()) {
-            return tag_from_db;
+        List<Tag> tag_from_db = tagRepository.findByName(name);
+        if (tag_from_db.size()>0) {
+            return Optional.of(tag_from_db.get(0));
         }
         URL url = new URL("https://www.wikidata.org/w/api.php?action=wbsearchentities&search=" + name + "&format=json&errorformat=plaintext&language=en&uselang=en&type=item");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();

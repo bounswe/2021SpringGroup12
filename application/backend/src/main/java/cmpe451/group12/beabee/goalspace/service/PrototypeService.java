@@ -2,6 +2,8 @@ package cmpe451.group12.beabee.goalspace.service;
 
 import cmpe451.group12.beabee.common.dto.MessageResponse;
 import cmpe451.group12.beabee.common.enums.MessageType;
+import cmpe451.group12.beabee.common.model.Users;
+import cmpe451.group12.beabee.common.repository.UserRepository;
 import cmpe451.group12.beabee.goalspace.Repository.goals.GoalRepository;
 import cmpe451.group12.beabee.goalspace.Repository.goals.TagRepository;
 import cmpe451.group12.beabee.goalspace.Repository.prototypes.EntitiPrototypeRepository;
@@ -44,6 +46,7 @@ public class PrototypeService {
     private final GoalService goalService;
     private final TagRepository tagRepository;
     private final ActivityStreamService activityStreamService;
+    private final UserRepository userRepository;
 
     /***************************** PROTOTYPES *********************/
     public List<GoalPrototypeDTO> getPrototypes() {
@@ -51,7 +54,16 @@ public class PrototypeService {
         goalPrototypeRespository.findAll().stream().map(prototype -> prototype.getId()).forEach(id -> {
             result.add(getAPrototype(id));
         });
-        return result;
+        return result.stream().sorted((i1, i2) -> i2.getDownload_count().compareTo(i1.getDownload_count())).collect(Collectors.toList());
+    }
+
+    public List<GoalPrototypeDTO> getPrototypesOfAUser(Long user_id) {
+        Users users = userRepository.findById(user_id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found"));
+        List<GoalPrototypeDTO> result = new ArrayList<>();
+        goalPrototypeRespository.findAll().stream().map(prototype -> prototype.getId()).forEach(id -> {
+            result.add(getAPrototype(id));
+        });
+        return result.stream().filter(x ->x.getUsername().equals(users.getUsername())).sorted((i1, i2) -> i2.getDownload_count().compareTo(i1.getDownload_count())).collect(Collectors.toList());
     }
 
     private static Stream<SubgoalPrototype> flatMapRecursiveSubgoal(SubgoalPrototype item) {
@@ -251,6 +263,7 @@ public class PrototypeService {
         return prototypeDTOS.stream().sorted((i1, i2) -> i2.getDownload_count().compareTo(i1.getDownload_count())).collect(Collectors.toList());
 
     }
+
 
 
 }
