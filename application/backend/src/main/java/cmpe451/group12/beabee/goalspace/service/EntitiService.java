@@ -41,12 +41,8 @@ public class EntitiService {
     private final GoalRepository goalRepository;
     private final GroupGoalRepository groupGoalRepository;
     private final UserRepository userRepository;
-
-    private final EntitiMapper entitiMapper;
     private final EntitiShortMapper entitiShortMapper;
     private final EntitiRepository entitiRepository;
-
-    private final SubgoalGetMapper subgoalGetMapper;
     private final SubgoalShortMapper subgoalShortMapper;
     private final SubgoalRepository subgoalRepository;
     private final TaskRepository taskRepository;
@@ -734,7 +730,7 @@ public class EntitiService {
         task_from_db.setCompletedAt(new Date(System.currentTimeMillis()));
         task_from_db.setIsDone(Boolean.TRUE);
         taskRepository.save(task_from_db);
-        return new MessageResponse("Task completed !",MessageType.SUCCESS);
+        return new MessageResponse("Task completed!",MessageType.SUCCESS);
     }
     /********************************** ROUTINE COMPLETE *****************/
     public MessageResponse completeRoutine(Long routine_id, Long rating){
@@ -746,7 +742,7 @@ public class EntitiService {
         routine_from_db.setCompletedAt(new Date(System.currentTimeMillis()));
         routineRepository.save(routine_from_db);
 
-        return new MessageResponse("This deadline evaluated successfully, move on to next deadline!",MessageType.SUCCESS);
+        return new MessageResponse("Routine completed!",MessageType.SUCCESS);
     }
 
     public MessageResponse completeQuestion(Long question_id) {
@@ -754,7 +750,7 @@ public class EntitiService {
         question_from_db.setCompletedAt(new Date(System.currentTimeMillis()));
         question_from_db.setIsDone(Boolean.TRUE);
         questionRepository.save(question_from_db);
-        return new MessageResponse("Question completed !",MessageType.SUCCESS);
+        return new MessageResponse("Question completed!",MessageType.SUCCESS);
 
     }
 
@@ -763,5 +759,5 @@ public class EntitiService {
         reflection_from_db.setCompletedAt(new Date(System.currentTimeMillis()));
         reflection_from_db.setIsDone(Boolean.TRUE);
         reflectionRepository.save(reflection_from_db);
-        return new MessageResponse("Reflection completed !",MessageType.SUCCESS);}
+        return new MessageResponse("Reflection completed!",MessageType.SUCCESS);}
 }

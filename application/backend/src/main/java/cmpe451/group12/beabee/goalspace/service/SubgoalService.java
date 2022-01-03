@@ -244,7 +244,6 @@ public class SubgoalService {
 
     /****************** EXXTEND - COMPLETE ************/
 
-
     public MessageResponse addAssignees(long subgoal_id, List<Long> user_ids) {
         Subgoal subgoal = subgoalRepository.findById(subgoal_id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Subgoal not found!")
