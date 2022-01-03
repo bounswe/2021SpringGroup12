@@ -28,11 +28,5 @@
         android:id="@+id/page_5"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_home_24"
-        android:title="User Search"/>
-
-    <item
-        android:id="@+id/page_6"
-        android:enabled="true"
-        android:icon="@drawable/ic_baseline_dynamic_feed_24"
-        android:title="Feed"/>
+        android:title="settings"/>
 </menu>
