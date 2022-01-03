@@ -137,6 +137,12 @@ public class GoalController {
         return goalService.createSubgoal(subgoal_dto);
     }
 
+    @ApiOperation(value = "Get subgoals of a goal.")
+    @GetMapping("/subgoal/{goal_id}")
+    public List<SubgoalGetDTO> getSubgoalsOfGoal(@PathVariable @ApiParam(value = "Id of the goal.", example = "5") Long goal_id) {
+        return goalService.getSubgoalsOfGoal(goal_id);
+    }
+
 
     /********************* ANALYTICS **************/
     @ApiOperation(value = "Get analytics of a goal.")

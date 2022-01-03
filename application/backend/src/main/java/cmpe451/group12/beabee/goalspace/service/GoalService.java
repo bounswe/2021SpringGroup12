@@ -18,6 +18,7 @@ import cmpe451.group12.beabee.goalspace.mapper.entities.EntitiShortMapper;
 import cmpe451.group12.beabee.goalspace.mapper.goals.*;
 import cmpe451.group12.beabee.goalspace.model.entities.*;
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
+import cmpe451.group12.beabee.goalspace.model.goals.GroupGoal;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
 import cmpe451.group12.beabee.goalspace.model.goals.Tag;
 import cmpe451.group12.beabee.goalspace.model.prototypes.EntitiPrototype;
@@ -64,6 +65,7 @@ public class GoalService {
     private final TagRepository tagRepository;
     private final GoalPrototypeRespository goalPrototypeRespository;
     private final ActivityStreamService activityStreamService;
+    private final SubgoalGetMapper subgoalGetMapper;
 
     private Set<EntitiDTOShort> extractEntities(Goal goal) {
 
@@ -403,6 +405,16 @@ public class GoalService {
         return new MessageResponse("Subgoal added.", MessageType.SUCCESS);
     }
 
+    public List<SubgoalGetDTO> getSubgoalsOfGoal(Long goal_id)
+    {
+        Goal groupGoal = goalRepository.findById(goal_id).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Goal not found!");
+        });
+
+        List<Subgoal> all_subgoals = groupGoal.getSubgoals().stream()
+                .flatMap(GoalService::flatMapRecursive).collect(Collectors.toList());
+        return subgoalGetMapper.mapToDto(all_subgoals);
+    }
 
     /********************* EXTEND AND COMPLETE start *************/
 

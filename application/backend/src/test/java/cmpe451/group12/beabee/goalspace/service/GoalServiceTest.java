@@ -50,6 +50,7 @@ public class GoalServiceTest {
     private TagRepository tagRepository;
     private GoalPrototypeRespository goalPrototypeRespository;
     private ActivityStreamService activityStreamService;
+    private SubgoalGetMapper subgoalGetMapper;
 
     @Before
     public void setUp() {
@@ -70,11 +71,13 @@ public class GoalServiceTest {
         tagRepository = Mockito.mock(TagRepository.class);
         goalPrototypeRespository = Mockito.mock(GoalPrototypeRespository.class);
         activityStreamService = Mockito.mock(ActivityStreamService.class);
+        subgoalGetMapper = Mockito.mock(SubgoalGetMapper.class);
 
         goalService = new GoalService(goalRepository, subgoalRepository, goalPostMapper,
                 subgoalPostMapper, subgoalShortMapper, goalGetMapper, goalShortMapper,
                 userRepository, entitiShortMapper, entitiRepository, routineRepository,
-                reflectionRepository, taskRepository, questionRepository, tagRepository, goalPrototypeRespository, activityStreamService);
+                reflectionRepository, taskRepository, questionRepository, tagRepository, goalPrototypeRespository,
+                activityStreamService, subgoalGetMapper);
     }
 
     /* NO LONGER NEEDED SINCE WE REMOVED DEADLINES ***
