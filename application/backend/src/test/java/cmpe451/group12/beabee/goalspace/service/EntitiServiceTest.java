@@ -14,49 +14,58 @@ import cmpe451.group12.beabee.goalspace.dto.entities.RoutineGetDTO;
 import cmpe451.group12.beabee.goalspace.dto.entities.TaskGetDTO;
 import cmpe451.group12.beabee.goalspace.mapper.entities.*;
 import cmpe451.group12.beabee.goalspace.mapper.goals.SubgoalGetMapper;
+import cmpe451.group12.beabee.goalspace.mapper.goals.SubgoalShortMapper;
 import cmpe451.group12.beabee.goalspace.mapper.resources.ResourceShortMapper;
 import cmpe451.group12.beabee.goalspace.model.entities.Entiti;
 import cmpe451.group12.beabee.goalspace.model.entities.Reflection;
 import cmpe451.group12.beabee.goalspace.model.entities.Routine;
 import cmpe451.group12.beabee.goalspace.model.entities.Task;
+import cmpe451.group12.beabee.goalspace.model.goals.Goal;
+import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class EntitiServiceTest {
 
-    private GoalRepository goalRepository;
-    private GroupGoalRepository groupGoalRepository;
-    private UserRepository userRepository;
-    private EntitiMapper entitiMapper;
-    private EntitiShortMapper entitiShortMapper;
-    private EntitiRepository entitiRepository;
-    private SubgoalGetMapper subgoalGetMapper;
-    private SubgoalRepository subgoalRepository;
-    private TaskRepository taskRepository;
-    private TaskGetMapper taskGetMapper;
-    private ReflectionRepository reflectionRepository;
-    private ReflectionGetMapper reflectionGetMapper;
-    private ReflectionPostMapper reflectionPostMapper;
-    private TaskPostMapper taskPostMapper;
-    private QuestionPostMapper questionPostMapper;
-    private RoutinePostMapper routinePostMapper;
-    private RoutineRepository routineRepository;
-    private RoutineGetMapper routineGetMapper;
-    private QuestionRepository questionRepository;
-    private QuestionGetMapper questionGetMapper;
-    private ResourceRepository resourceRepository;
-    private ResourceShortMapper resourceShortMapper;
-    private EntitiService entitiService;
+    GoalRepository goalRepository;
+    GroupGoalRepository groupGoalRepository;
+    UserRepository userRepository;
 
+    EntitiMapper entitiMapper;
+    EntitiShortMapper entitiShortMapper;
+    EntitiRepository entitiRepository;
+
+    SubgoalGetMapper subgoalGetMapper;
+    SubgoalShortMapper subgoalShortMapper;
+    SubgoalRepository subgoalRepository;
+    TaskRepository taskRepository;
+    TaskGetMapper taskGetMapper;
+    ReflectionRepository reflectionRepository;
+    ReflectionGetMapper reflectionGetMapper;
+    ReflectionPostMapper reflectionPostMapper;
+    TaskPostMapper taskPostMapper;
+    QuestionPostMapper questionPostMapper;
+    RoutinePostMapper routinePostMapper;
+    RoutineRepository routineRepository;
+    RoutineGetMapper routineGetMapper;
+    QuestionRepository questionRepository;
+    QuestionGetMapper questionGetMapper;
+
+    ResourceRepository resourceRepository;
+    ResourceShortMapper resourceShortMapper;
+
+    EntitiService entitiService;
     @Before
     public void setUp() throws Exception {
         goalRepository = Mockito.mock(GoalRepository.class);
@@ -66,9 +75,10 @@ public class EntitiServiceTest {
         entitiShortMapper = Mockito.mock(EntitiShortMapper.class);
         entitiRepository = Mockito.mock(EntitiRepository.class);
         subgoalGetMapper = Mockito.mock(SubgoalGetMapper.class);
+        subgoalShortMapper = Mockito.mock(SubgoalShortMapper.class);
         subgoalRepository = Mockito.mock(SubgoalRepository.class);
-        taskGetMapper = Mockito.mock(TaskGetMapper.class);
         taskRepository = Mockito.mock(TaskRepository.class);
+        taskGetMapper = Mockito.mock(TaskGetMapper.class);
         reflectionRepository = Mockito.mock(ReflectionRepository.class);
         reflectionGetMapper = Mockito.mock(ReflectionGetMapper.class);
         reflectionPostMapper = Mockito.mock(ReflectionPostMapper.class);
@@ -90,6 +100,7 @@ public class EntitiServiceTest {
                 entitiShortMapper,
                 entitiRepository,
                 subgoalGetMapper,
+                subgoalShortMapper,
                 subgoalRepository,
                 taskRepository,
                 taskGetMapper,
@@ -109,46 +120,100 @@ public class EntitiServiceTest {
 
     @Test
     public void whenLinkEntitiesCalledWithValidRequest_ItShouldReturnSuccess() {
-        //define 2 entities
-        Entiti entiti1 = new Task();
-        entiti1.setId(1L);
-        entiti1.setSublinked_entities(new HashSet<>());
-        Entiti entiti2 = new Task();
-        entiti2.setId(2L);
+        //Random class to generate Ids.
+        Random random = new Random();
 
-        //mock other class calls
-        Mockito.when(entitiRepository.findById(1L)).thenReturn(java.util.Optional.of(entiti1));
-        Mockito.when(entitiRepository.findById(2L)).thenReturn(java.util.Optional.of(entiti2));
-        Mockito.when(entitiRepository.save(entiti1)).thenReturn(entiti1);
+        //Create a parent goal for both of the entities
+        Goal goal = new Goal();
+        goal.setId(random.nextLong());
 
+        //Create the parent entity
+        Task task = new Task();
+        task.setId(random.nextLong());
+        task.setSublinked_entities(new HashSet<>());
+        task.setGoal(goal);
+
+        //Create the child entity
+        Task task2 = new Task();
+        task2.setId(random.nextLong());
+        task2.setGoal(goal);
+
+        //Create the EntitiLinkDTO
         EntitiLinkDTO entitiLinkDTO = new EntitiLinkDTO();
-        entitiLinkDTO.setChildId(2L);
         entitiLinkDTO.setChildType(LinkType.ENTITI);
+        entitiLinkDTO.setChildId(task2.getId());
 
-        //assertions
-        Assert.assertEquals(entitiService.entitiLink(1L, entitiLinkDTO), new MessageResponse("Linking operation is successful.", MessageType.SUCCESS));
-        Mockito.verify(entitiRepository).findById(1L);
-        Mockito.verify(entitiRepository).findById(2L);
-        Mockito.verify(entitiRepository).save(entiti1);
+        //Mock repository calls to return the entities we created
+        Mockito.when(entitiRepository.findById(task.getId())).thenReturn(Optional.of(task));
+        Mockito.when(entitiRepository.findById(task2.getId())).thenReturn(Optional.of(task2));
+
+        //Get the result of the method call and check it is as expected.
+        MessageResponse actual = entitiService.entitiLink(task.getId(), entitiLinkDTO);
+        Assert.assertEquals(new MessageResponse("Linking operation is successful.", MessageType.SUCCESS), actual);
+
+        //Add child entity to parent entiti's sublinks list
+        task.getSublinked_entities().add(task2);
+
+        //Check if there is as call to entiti repo to save the new parent with child in the sublinks list
+        Mockito.verify(entitiRepository, Mockito.times(1)).save(task);
     }
 
     @Test
     public void whenLinkEntitiesCalledWithInvalidRequest_ItShouldReturnNotFoundError() {
-        //define 2 entities
-        Entiti entiti1 = new Reflection();
-        entiti1.setId(1L);
-        entiti1.setSublinked_entities(new HashSet<>());
+        //Random class to generate Ids.
+        Random random = new Random();
 
-        //mock other class calls
-        Mockito.when(entitiRepository.findById(1L)).thenReturn(java.util.Optional.of(entiti1));
+        //Create a parent goal for the parent
+        Goal goal = new Goal();
+        goal.setId(random.nextLong());
 
+        //Create a parent goal for the child
+        Goal goal2 = new Goal();
+        goal2.setId(random.nextLong());
+
+        //Create parent entiti
+        Task task = new Task();
+        task.setId(random.nextLong());
+        task.setSublinked_subgoals(new HashSet<>());
+        task.setGoal(goal);
+
+        //Create child entiti
+        Task task2 = new Task();
+        task2.setId(random.nextLong());
+        task2.setGoal(goal2);
+
+        //Create entiti link
         EntitiLinkDTO entitiLinkDTO = new EntitiLinkDTO();
-        entitiLinkDTO.setChildId(2L);
         entitiLinkDTO.setChildType(LinkType.ENTITI);
+        entitiLinkDTO.setChildId(task2.getId());
 
-        //assertions
-        Assert.assertThrows(ResponseStatusException.class, ()-> {entitiService.entitiLink(1L, entitiLinkDTO);});
-        Mockito.verify(entitiRepository).findById(1L);
+        // Mock the repository calls.
+        Mockito.when(entitiRepository.findById(task.getId()))
+                .thenReturn(Optional.empty()) //First return null to emulate parent not found
+                .thenReturn(Optional.of(task)); // Then return the true entiti
+
+        Mockito.when(entitiRepository.findById(entitiLinkDTO.getChildId()))
+                .thenReturn(Optional.empty())// First return null to emulate the child not found
+                .thenReturn(Optional.of(task2)); // Then return true entiti to emulate parent and child is not in the same goal
+
+        // Make three calls to get three fail situations
+        ResponseStatusException exception1 = Assert.assertThrows(ResponseStatusException.class, () -> {
+            entitiService.entitiLink(task.getId(), entitiLinkDTO);
+        });
+
+        ResponseStatusException exception2 = Assert.assertThrows(ResponseStatusException.class, () -> {
+            entitiService.entitiLink(task.getId(), entitiLinkDTO);
+        });
+
+        ResponseStatusException exception3 = Assert.assertThrows(ResponseStatusException.class, () -> {
+            entitiService.entitiLink(task.getId(), entitiLinkDTO);
+        });
+
+        //Check if the exceptions are caused by the reason we expected
+        Assert.assertEquals("Parent entity not found", exception1.getReason());
+        Assert.assertEquals("Child entity not found", exception2.getReason());
+        Assert.assertEquals("Child entity is not in the same group!", exception3.getReason());
+
     }
 
     @Test
@@ -211,4 +276,101 @@ public class EntitiServiceTest {
         Mockito.verify(routineRepository).save(routine);
     }
 
+    @Test
+    public void linkEntitiesWithSubgoalsTest_success() {
+        //Random class to generate Ids.
+        Random random = new Random();
+
+        //Create a parent goal for both entiti and subgoal
+        Goal goal = new Goal();
+        goal.setId(random.nextLong());
+
+        //Create entiti
+        Task task = new Task();
+        task.setId(random.nextLong());
+        task.setSublinked_subgoals(new HashSet<>());
+        task.setGoal(goal);
+
+        //Create subgoal
+        Subgoal subgoal = new Subgoal();
+        subgoal.setId(random.nextLong());
+        subgoal.setMainGoal(goal);
+
+        //Create entiti link
+        EntitiLinkDTO entitiLinkDTO = new EntitiLinkDTO();
+        entitiLinkDTO.setChildType(LinkType.SUBGOAL);
+        entitiLinkDTO.setChildId(subgoal.getId());
+
+        // Mock the calls to the repositories
+        Mockito.when(entitiRepository.findById(task.getId())).thenReturn(Optional.of(task));
+        Mockito.when(subgoalRepository.findById(subgoal.getId())).thenReturn(Optional.of(subgoal));
+
+
+        //Get the actual message response from method call and check if it is as expected
+        MessageResponse actual = entitiService.entitiLink(task.getId(), entitiLinkDTO);
+        Assert.assertEquals(new MessageResponse("Linking operation is successful.", MessageType.SUCCESS), actual);
+
+        // Add the subgoal to the sublinks of parent entiti
+        task.getSublinked_subgoals().add(subgoal);
+
+        // Check if the save call to repository includes the subgoal
+        Mockito.verify(entitiRepository, Mockito.times(1)).save(task);
+    }
+
+    @Test
+    public void linkEntitiesWithSubgoalsTest_fail() {
+        //Random class to generate Ids.
+        Random random = new Random();
+
+        //Creat goal for entiti
+        Goal goal = new Goal();
+        goal.setId(random.nextLong());
+
+        //Create another goal for subgoal
+        Goal goal2 = new Goal();
+        goal2.setId(random.nextLong());
+
+        // Create the entiti
+        Task task = new Task();
+        task.setId(random.nextLong());
+        task.setSublinked_subgoals(new HashSet<>());
+        task.setGoal(goal);
+
+        // Create the subgoal
+        Subgoal subgoal = new Subgoal();
+        subgoal.setId(random.nextLong());
+        subgoal.setMainGoal(goal2);
+
+        //Create the entiti link
+        EntitiLinkDTO entitiLinkDTO = new EntitiLinkDTO();
+        entitiLinkDTO.setChildType(LinkType.SUBGOAL);
+        entitiLinkDTO.setChildId(subgoal.getId());
+
+        // Mock the repo calls
+        Mockito.when(entitiRepository.findById(task.getId()))
+                .thenReturn(Optional.empty())//First return empty to emulate parent not found
+                .thenReturn(Optional.of(task)); // Then return the correct entiti for second and third run.
+
+        Mockito.when(subgoalRepository.findById(entitiLinkDTO.getChildId()))
+                .thenReturn(Optional.empty())//Return empty in the first call(second run) to emulate the child not found.
+                .thenReturn(Optional.of(subgoal));// Then return the correct subgoal(third run) to emulate the not in same goal.
+
+        // Get exceptions from the method calls
+        ResponseStatusException exception1 = Assert.assertThrows(ResponseStatusException.class, () -> {
+            entitiService.entitiLink(task.getId(), entitiLinkDTO);
+        });
+
+        ResponseStatusException exception2 = Assert.assertThrows(ResponseStatusException.class, () -> {
+            entitiService.entitiLink(task.getId(), entitiLinkDTO);
+        });
+
+        ResponseStatusException exception3 = Assert.assertThrows(ResponseStatusException.class, () -> {
+            entitiService.entitiLink(task.getId(), entitiLinkDTO);
+        });
+
+        //Check the exceptions to make sure we get the right exception for the right error situtaion.
+        Assert.assertEquals("Parent entity not found", exception1.getReason());
+        Assert.assertEquals("Child subgoal not found", exception2.getReason());
+        Assert.assertEquals("Child subgoal is not in the same group!", exception3.getReason());
+    }
 }
