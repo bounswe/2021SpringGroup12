@@ -20,5 +20,5 @@ public class GoalDetail implements Serializable {
     public List<SubgoalShort> subgoals;
     public String username;
     public boolean isPublished;
-
+    public int download_count;
 }
