@@ -25,12 +25,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter  implements WebMvcConfigurer {
     private final MyUserDetailsService myUserDetailsService;
     private final JwtRequestFilter jwtRequestFilter;
-/*
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("*"); // TODO : change later
+        registry.addMapping("/**").allowedOrigins("*").allowedMethods("*");
     }
-*/
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
        // TODO: change this before final deployment
