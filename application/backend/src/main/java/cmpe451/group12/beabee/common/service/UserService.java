@@ -128,6 +128,9 @@ public class UserService {
         Users targetUser = userRepository.findById(targetUserId)
                 .orElseThrow(EntityNotFoundException::new);
 
+        if(userId == targetUserId){
+            return new MessageResponse("You can't follow yourself!", MessageType.ERROR);
+        }
         if (user.getFollowing().stream().anyMatch(following -> following.getUser_id().equals(targetUser.getUser_id()))) {
             return new MessageResponse("Already following!", MessageType.ERROR);
         }
