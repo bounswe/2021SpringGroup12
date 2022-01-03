@@ -118,7 +118,7 @@ public class GroupGoalController {
 
     /************************************** SUBGOALS *******/
     @ApiOperation(value = "Create a subgoal under a group goal.")
-    @GetMapping("/subgoal")
+    @PostMapping("/subgoal")
     public MessageResponse createSubgoal(@RequestBody @ApiParam(
             value = "A JSON value representing a transaction. An example of the expected schema can be found down here.",
             examples = @Example(value =
@@ -136,7 +136,7 @@ public class GroupGoalController {
     }
 
     @ApiOperation(value = "Get subgoals of a group goal.")
-    @PostMapping("/subgoal/{groupgoal_id}")
+    @GetMapping("/subgoal/{groupgoal_id}")
     public List<SubgoalGetDTO> getSubgoalsOfGroupGoal(@PathVariable @ApiParam(value = "Id of the group goal.", example = "5") Long groupgoal_id) {
         return groupGoalService.getSubgoalsOfGroupGoal(groupgoal_id);
     }
