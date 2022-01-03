@@ -7,22 +7,21 @@ import { Login } from "./pages/Login";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import Home from "./pages/Home";
 import NavBar from "./components/NavBar";
-import {GoalsPage} from "./pages/GoalsPage";
-import {AddGoal} from "./pages/AddGoal";
-import {GoalPage} from "./pages/GoalPage";
-import {EditGoal} from "./pages/EditGoal";
-import {EntityPage} from "./pages/EntityPage";
-import {AddEntity} from "./pages/AddEntity";
-import {EditEntity} from "./pages/EditEntity"
-import {LinkEntity} from "./pages/LinkEntity"
+import { GoalsPage } from "./pages/GoalsPage";
+import { AddGoal } from "./pages/AddGoal";
+import { GoalPage } from "./pages/GoalPage";
+import { EditGoal } from "./pages/EditGoal";
+import { EntityPage } from "./pages/EntityPage";
+import { AddEntity } from "./pages/AddEntity";
+import { EditEntity } from "./pages/EditEntity";
+import { LinkEntity } from "./pages/LinkEntity";
 import { Content } from "antd/lib/layout/layout";
-import {Layout} from "antd";
+import { Layout } from "antd";
 import Sidebar from "./components/Sidebar";
 import { ResourcePage } from "./pages/ResourcePage";
-import {GoalTypes} from "./helpers/GoalTypes";
+import { GoalTypes } from "./helpers/GoalTypes";
 import { CalendarPage } from "./pages/CalendarPage";
-
-
+import { Dashboard } from "./pages/Dashboard";
 
 export interface IAppProps {}
 

@@ -1,6 +1,9 @@
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, Checkbox, Modal } from "antd";
 import axios from "axios";
+import { useState } from "react";
 import { useHistory } from "react-router";
+import { PrivacyPolicy } from "./PrivacyPolicy";
+import { TermsAndConditions } from "./TermsAndConditions";
 
 export type IregisterForm = {
   email: string;
@@ -42,6 +45,8 @@ const tailFormItemLayout = {
 const RegistrationForm = () => {
   const [form] = Form.useForm();
   const history = useHistory();
+  const[visible,setVisible] = useState(false)
+  const[privacyVisible, setPrivacyVisible] = useState(false)
 
   const onFinish = (values: IregisterForm) => {
     axios
@@ -65,99 +70,144 @@ const RegistrationForm = () => {
   };
 
   return (
-    <Form
-      {...formItemLayout}
-      form={form}
-      name="register"
-      onFinish={onFinish}
-      initialValues={{
-        residence: ["zhejiang", "hangzhou", "xihu"],
-        prefix: "86",
-      }}
-      scrollToFirstError
-    >
-      <Form.Item
-        name="username"
-        label="Username"
-        tooltip="What do you want others to call you?"
-        rules={[
-          {
-            required: true,
-            message: "Please input your username!",
-            whitespace: true,
-          },
-        ]}
+    <>
+      <Form
+        {...formItemLayout}
+        form={form}
+        name="register"
+        onFinish={onFinish}
+        initialValues={{
+          residence: ["zhejiang", "hangzhou", "xihu"],
+          prefix: "86",
+        }}
+        scrollToFirstError
       >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        name="email"
-        label="E-mail"
-        rules={[
-          {
-            type: "email",
-            message: "The input is not valid E-mail!",
-          },
-          {
-            required: true,
-            message: "Please input your E-mail!",
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-
-      <Form.Item
-        name="password"
-        label="Password"
-        rules={[
-          {
-            required: true,
-            message: "Please input your password!",
-          },
-        ]}
-        hasFeedback
-      >
-        <Input.Password />
-      </Form.Item>
-
-      <Form.Item
-        name="confirm"
-        label="Confirm Password"
-        dependencies={["password"]}
-        hasFeedback
-        rules={[
-          {
-            required: true,
-            message: "Please confirm your password!",
-          },
-          ({ getFieldValue }) => ({
-            validator(_, value) {
-              if (!value || getFieldValue("password") === value) {
-                return Promise.resolve();
-              }
-
-              return Promise.reject(
-                new Error("The two passwords that you entered do not match!")
-              );
+        <Form.Item
+          name="username"
+          label="Username"
+          tooltip="What do you want others to call you?"
+          rules={[
+            {
+              required: true,
+              message: "Please input your username!",
+              whitespace: true,
             },
-          }),
-        ]}
-      >
-        <Input.Password />
-      </Form.Item>
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name="email"
+          label="E-mail"
+          rules={[
+            {
+              type: "email",
+              message: "The input is not valid E-mail!",
+            },
+            {
+              required: true,
+              message: "Please input your E-mail!",
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
 
-      <Form.Item {...tailFormItemLayout}>
-        <Button type="primary" htmlType="submit">
-          Register
-        </Button>
-      </Form.Item>
-      <Form.Item {...tailFormItemLayout}>
-        <Button type="link" href="/login">
-          Already have an account ?
-        </Button>
-      </Form.Item>
-    </Form>
+        <Form.Item
+          name="password"
+          label="Password"
+          rules={[
+            {
+              required: true,
+              message: "Please input your password!",
+            },
+          ]}
+          hasFeedback
+        >
+          <Input.Password />
+        </Form.Item>
+
+        <Form.Item
+          name="confirm"
+          label="Confirm Password"
+          dependencies={["password"]}
+          hasFeedback
+          rules={[
+            {
+              required: true,
+              message: "Please confirm your password!",
+            },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue("password") === value) {
+                  return Promise.resolve();
+                }
+
+                return Promise.reject(
+                  new Error("The two passwords that you entered do not match!")
+                );
+              },
+            }),
+          ]}
+        >
+          <Input.Password />
+        </Form.Item>
+        <Form.Item
+          name="agreement"
+          valuePropName="checked"
+          rules={[
+            {
+              validator: (_, value) =>
+                value
+                  ? Promise.resolve()
+                  : Promise.reject(new Error("Should accept agreement")),
+            },
+          ]}
+          {...tailFormItemLayout}
+        >
+          <Checkbox>
+            I have read the <a onClick={()=> setVisible(true)}>Terms and Conditions</a>
+          </Checkbox>
+        </Form.Item>
+
+        <Form.Item {...tailFormItemLayout}>
+          <Button type="primary" htmlType="submit">
+            Register
+          </Button>
+        </Form.Item>
+        <Form.Item {...tailFormItemLayout}>
+          <Button type="link" href="/login">
+            Already have an account ?
+          </Button>
+          <Button type="link" onClick={()=> setPrivacyVisible(true)}>
+           Check our privacy policy
+          </Button>
+        </Form.Item>
+        
+      </Form>
+
+      <Modal
+        
+        centered
+        visible={visible}
+        onOk={() => setVisible(false)}
+        onCancel={() => setVisible(false)}
+        width={1000}
+      >
+        <TermsAndConditions/>
+      </Modal>
+
+      <Modal
+        
+        centered
+        visible={privacyVisible}
+        onOk={() => setPrivacyVisible(false)}
+        onCancel={() => setPrivacyVisible(false)}
+        width={1000}
+      >
+        <PrivacyPolicy/>
+      </Modal>
+    </>
   );
 };
 
