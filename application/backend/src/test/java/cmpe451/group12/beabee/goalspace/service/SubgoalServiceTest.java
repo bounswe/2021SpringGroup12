@@ -15,7 +15,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.Before;
 import org.mockito.Mockito;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

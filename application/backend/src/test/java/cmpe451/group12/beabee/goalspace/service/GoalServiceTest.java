@@ -361,17 +361,23 @@ public class GoalServiceTest {
         prototype.setSubgoals(new HashSet<>());
         prototype.setReference_goal_id(1L);
 
-        Goal goal = new Goal();
-        goal.setDownloadCount(5L);
+        Goal ref_goal = new Goal();
+        ref_goal.setDownloadCount(5L);
+        Goal new_goal = new Goal();
+        new_goal.setDownloadCount(0L);
+
+        Users user = new Users();
 
         Mockito.when(goalPrototypeRespository.findById(1L)).thenReturn(Optional.of(prototype));
-        Mockito.when(goalRepository.findById(1L)).thenReturn(Optional.of(goal));
-        Mockito.when(goalRepository.save(goal)).thenReturn(goal);
-        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(null));
+        Mockito.when(goalRepository.findById(1L)).thenReturn(Optional.of(ref_goal));
+        Mockito.when(goalRepository.save(ref_goal)).thenReturn(ref_goal);
+        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        Mockito.when(goalRepository.save(new_goal)).thenReturn(new_goal);
 
-
-
-
+        Assert.assertEquals(new MessageResponse("Prototype copied successfully!", MessageType.SUCCESS), goalService.copyGoalPrototype(1L, 1L));
+        Mockito.verify(goalPrototypeRespository).findById(1L);
+        Mockito.verify(goalRepository).findById(1L);
+        Mockito.verify(userRepository).findById(1L);
 
     }
 
@@ -379,7 +385,7 @@ public class GoalServiceTest {
     public void whenCopyGoalPrototypeCalledWithInvalidParameteres_ItShouldReturnError() {
         Mockito.when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(null));
         Assert.assertThrows(ResponseStatusException.class, () -> {
-            goalService.copyGoalPrototype(1L,1L);
+            goalService.copyGoalPrototype(1L, 1L);
         });
     }
 }
