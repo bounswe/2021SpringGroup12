@@ -13,10 +13,9 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import com.group12.beabee.OnRateSelectedListener;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.ParentType;
+import com.group12.beabee.models.LinkingType;
 import com.group12.beabee.models.requests.ExtendDeadline;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.TaskDetail;
@@ -167,8 +166,8 @@ public class TaskFragment extends BaseEntityLinkableFragment implements DatePick
     }
 
     @Override
-    protected ParentType GetLinkableType() {
-        return ParentType.ENTITY;
+    protected LinkingType GetLinkableType() {
+        return LinkingType.ENTITI;
     }
 
     @Override

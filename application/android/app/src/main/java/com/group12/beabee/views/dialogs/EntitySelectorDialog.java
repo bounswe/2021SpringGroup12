@@ -14,7 +14,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.ParentType;
+import com.group12.beabee.models.LinkingType;
+import com.group12.beabee.models.requests.Link;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.EntityShort;
 import com.group12.beabee.network.BeABeeService;
@@ -43,9 +44,9 @@ public class EntitySelectorDialog extends DialogFragment {
     private int selectedPos = -1;
     private int parentId;
     private String dataType;
-    private ParentType parentType;
+    private LinkingType initialParentType;
 
-    public static EntitySelectorDialog newInstance(int parentId, ArrayList<EntityShort> data, String dataType, ParentType parentType) {
+    public static EntitySelectorDialog newInstance(int parentId, ArrayList<EntityShort> data, String dataType, LinkingType parentType) {
         EntitySelectorDialog f = new EntitySelectorDialog();
 
         Bundle args = new Bundle();
@@ -63,7 +64,7 @@ public class EntitySelectorDialog extends DialogFragment {
         super.onCreate(savedInstanceState);
         data = (List<EntityShort>) getArguments().getSerializable("data");
         parentId = getArguments().getInt("parentId");
-        parentType = ((ParentType) getArguments().getSerializable("parentType"));
+        initialParentType = ((LinkingType) getArguments().getSerializable("parentType"));
         dataType = getArguments().getString("dataType");
         if( data==null){
             data = new ArrayList<>();
@@ -84,7 +85,8 @@ public class EntitySelectorDialog extends DialogFragment {
         for (EntityShort entity : data) {
             items.add(entity.title);
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, items);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, items);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -107,7 +109,10 @@ public class EntitySelectorDialog extends DialogFragment {
             return;
         }
         Utils.showLoading(getParentFragmentManager());
-        BeABeeService.serviceAPI.linkEntities(parentId, data.get(selectedPos).id).enqueue(new Callback<BasicResponse>() {
+        Link link = new Link();
+        link.parentType = initialParentType;
+        link.parentId = data.get(selectedPos).id;
+        BeABeeService.serviceAPI.linkEntities(parentId, link).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
                 Utils.dismissLoading();
@@ -138,19 +143,19 @@ public class EntitySelectorDialog extends DialogFragment {
         switch (dataType){
             case "TASK":
                 dismiss();
-                ((BaseEntityLinkableFragment) getParentFragment()).OpenNewFragment(TaskCreateFragment.newInstance(parentId, parentType));
+                ((BaseEntityLinkableFragment) getParentFragment()).OpenNewFragment(TaskCreateFragment.newInstance(parentId, initialParentType));
                 break;
             case "ROUTINE":
                 dismiss();
-                ((BaseEntityLinkableFragment) getParentFragment()).OpenNewFragment(RoutineCreateFragment.newInstance(parentId, parentType));
+                ((BaseEntityLinkableFragment) getParentFragment()).OpenNewFragment(RoutineCreateFragment.newInstance(parentId, initialParentType));
                 break;
             case "QUESTION":
                 dismiss();
-                ((BaseEntityLinkableFragment) getParentFragment()).OpenNewFragment(QuestionCreateFragment.newInstance(parentId, parentType));
+                ((BaseEntityLinkableFragment) getParentFragment()).OpenNewFragment(QuestionCreateFragment.newInstance(parentId, initialParentType));
                 break;
             case "REFLECTION":
                 dismiss();
-                ((BaseEntityLinkableFragment) getParentFragment()).OpenNewFragment(ReflectionCreateFragment.newInstance(parentId, parentType));
+                ((BaseEntityLinkableFragment) getParentFragment()).OpenNewFragment(ReflectionCreateFragment.newInstance(parentId, initialParentType));
                 break;
         }
     }

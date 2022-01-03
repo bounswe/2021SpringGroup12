@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.ParentType;
+import com.group12.beabee.models.LinkingType;
 import com.group12.beabee.models.responses.EntityShort;
 import com.group12.beabee.network.BeABeeService;
 import com.group12.beabee.views.dialogs.EntitySelectorDialog;
@@ -43,7 +43,7 @@ import retrofit2.Response;
 public class LinkablesFragment extends Fragment implements IOnTaskClickedListener,
         IOnRoutineClickedListener, IOnQuestionClickedListener, IOnReflectionClickedListener {
 
-    private final ParentType parentType;
+    private final LinkingType parentType;
     @BindView(R.id.rv_tasks)
     RecyclerView rvTask;
     @BindView(R.id.rv_questions)
@@ -67,7 +67,7 @@ public class LinkablesFragment extends Fragment implements IOnTaskClickedListene
 
     private BaseEntityLinkableFragment parentFragment;
 
-    public LinkablesFragment(int id, BaseEntityLinkableFragment parentFragment, ParentType parentType){
+    public LinkablesFragment(int id, BaseEntityLinkableFragment parentFragment, LinkingType parentType){
         this.id = id;
         this.parentFragment = parentFragment;
         this.parentType = parentType;

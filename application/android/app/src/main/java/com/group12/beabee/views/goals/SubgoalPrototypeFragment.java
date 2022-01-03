@@ -1,7 +1,6 @@
 package com.group12.beabee.views.goals;
 
 import android.app.DatePickerDialog;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
@@ -9,30 +8,22 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.ParentType;
-import com.group12.beabee.models.requests.ExtendDeadline;
-import com.group12.beabee.models.responses.BasicResponse;
+import com.group12.beabee.models.LinkingType;
 import com.group12.beabee.models.responses.SubgoalDetail;
 import com.group12.beabee.models.responses.SubgoalShort;
 import com.group12.beabee.views.MainStructure.BaseEntityLinkableFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
-import com.group12.beabee.views.entities.DeadlineCalendarFragment;
 import com.group12.beabee.views.entities.IOnTagClickedListener;
 import com.group12.beabee.views.entities.TagCardViewAdapter;
 
-import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.OnClick;
-import butterknife.Optional;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -162,8 +153,8 @@ public class SubgoalPrototypeFragment extends BaseEntityLinkableFragment  implem
     }
 
     @Override
-    protected ParentType GetLinkableType() {
-        return ParentType.SUBGOAL;
+    protected LinkingType GetLinkableType() {
+        return LinkingType.SUBGOAL;
     }
 
     @Override
