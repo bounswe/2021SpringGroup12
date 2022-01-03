@@ -219,6 +219,11 @@ public interface ServiceAPI {
     @GET("/v2/users/{userId}/followings")
     Call<List<UserSearchData>>getFollowings(@Path("userId") int userId);
 
+    @GET("/v2/users/{userId}/followers")
+    Call<List<UserSearchData>>getFollowers(@Path("userId") int userId);
+
+
+
 
 }
 //7YPxFmM3yTaAzaSi3Q61B

@@ -20,6 +20,7 @@ import com.group12.beabee.models.responses.GoalDetail;
 import com.group12.beabee.models.responses.UserSearchData;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
+import com.group12.beabee.views.goals.MemberListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,12 +89,6 @@ public class UserProfileFragment extends BaseInnerFragment {
         return R.layout.fragment_user_profile;
     }
 
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_user_profile, container, false);
-//    }
 
     @Override
     public void onResume() {
@@ -163,6 +158,10 @@ public class UserProfileFragment extends BaseInnerFragment {
         tvUsername.setText(data.userCredentials.username);
         tvFollowersNum.setText(String.valueOf(data.followerCount));
         tvFollowingNum.setText(String.valueOf(data.followingCount));
+        if(userId == BeABeeApplication.userId){
+            btnFollow.setVisibility((View.INVISIBLE));
+            btnUnfollow.setVisibility((View.INVISIBLE));
+        }
     }
 
     @OnClick(R.id.btn_follow)
@@ -217,6 +216,54 @@ public class UserProfileFragment extends BaseInnerFragment {
                 Utils.dismissLoading();
                 Utils.ShowErrorToast(getActivity(), "Something went wrong!");
                 GoBack();
+            }
+        });
+    }
+
+    @OnClick(R.id.tv_followers)
+    @Optional
+    public void OnFollowersClicked(){
+        Utils.showLoading(getChildFragmentManager());
+        service.getFollowers(userId).enqueue(new Callback<List<UserSearchData>>() {
+            @Override
+            public void onResponse(Call<List<UserSearchData>> call, Response<List<UserSearchData>> response) {
+                Utils.dismissLoading();
+                if (response.isSuccessful() && response.body() != null){
+                    OpenNewFragment(UserFollowingList.newInstance((ArrayList<UserSearchData>) response.body()));
+                }else{
+                    Utils.ShowErrorToast(getContext(), "Not found !");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<UserSearchData>> call, Throwable t) {
+                Utils.dismissLoading();
+                Utils.ShowErrorToast(getContext(),"Something went wrong!");
+            }
+        });
+
+    }
+
+    @OnClick(R.id.tv_following)
+    @Optional
+    public void OnFollowingsClicked(){
+        Utils.showLoading(getChildFragmentManager());
+        service.getFollowings(userId).enqueue(new Callback<List<UserSearchData>>() {
+            @Override
+            public void onResponse(Call<List<UserSearchData>> call, Response<List<UserSearchData>> response) {
+                Utils.dismissLoading();
+                if (response.isSuccessful() && response.body() != null){
+                    OpenNewFragment(UserFollowingList.newInstance((ArrayList<UserSearchData>) response.body()));
+
+                }else{
+                    Utils.ShowErrorToast(getContext(), "Not found !");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<UserSearchData>> call, Throwable t) {
+                Utils.dismissLoading();
+                Utils.ShowErrorToast(getContext(),"Something went wrong!");
             }
         });
     }

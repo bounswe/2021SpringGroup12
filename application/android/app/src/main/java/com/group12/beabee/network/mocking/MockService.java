@@ -404,6 +404,12 @@ public class MockService implements ServiceAPI {
         return null;
     }
 
+    @Override
+    public Call<List<UserSearchData>> getFollowers(int userId) {
+
+        return null;
+    }
+
 
 
     private Call<BasicResponse> returnBasicResponse(){
