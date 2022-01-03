@@ -50,4 +50,20 @@ public class GroupGoal extends AllGoal
     @OneToMany(mappedBy = "mainGroupgoal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Subgoal> subgoals;
 
+    @ManyToMany
+    @JoinTable(
+            name = "groupgoal_tag",
+            joinColumns = { @JoinColumn(name = "groupgoal_id") },
+            inverseJoinColumns = { @JoinColumn(name = "tag_id") }
+    )
+    private Set<Tag> tags;
+
+    @ManyToMany
+    @JoinTable(
+            name = "groupgoal_hidden_tag",
+            joinColumns = { @JoinColumn(name = "groupgoal_id") },
+            inverseJoinColumns = { @JoinColumn(name = "tag_id") }
+    )
+    private Set<Tag> hiddentags;
+
 }

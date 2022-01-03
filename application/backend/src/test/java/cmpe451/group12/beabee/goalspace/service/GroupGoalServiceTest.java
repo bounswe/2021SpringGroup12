@@ -7,6 +7,7 @@ import cmpe451.group12.beabee.common.repository.UserRepository;
 import cmpe451.group12.beabee.common.util.UUIDShortener;
 import cmpe451.group12.beabee.goalspace.Repository.goals.GroupGoalRepository;
 import cmpe451.group12.beabee.goalspace.Repository.goals.SubgoalRepository;
+import cmpe451.group12.beabee.goalspace.Repository.goals.TagRepository;
 import cmpe451.group12.beabee.goalspace.dto.goals.GroupGoalDTOShort;
 import cmpe451.group12.beabee.goalspace.dto.goals.GroupGoalGetDto;
 import cmpe451.group12.beabee.goalspace.dto.goals.GroupGoalPostDTO;
@@ -15,6 +16,7 @@ import cmpe451.group12.beabee.goalspace.mapper.entities.EntitiShortMapper;
 import cmpe451.group12.beabee.goalspace.mapper.goals.*;
 import cmpe451.group12.beabee.goalspace.model.goals.GroupGoal;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
+import cmpe451.group12.beabee.goalspace.model.goals.Tag;
 import cmpe451.group12.beabee.login.mapper.UserCredentialsGetMapper;
 import org.junit.Assert;
 import org.junit.Before;
@@ -46,6 +48,9 @@ public class GroupGoalServiceTest
     UUIDShortener uuidShortener;
     SubgoalGetMapper subgoalGetMapper;
 
+    TagRepository tagRepository;
+
+
     @Before
     public void setup()
     {
@@ -62,9 +67,11 @@ public class GroupGoalServiceTest
         activityStreamService = Mockito.mock(ActivityStreamService.class);
         uuidShortener = Mockito.mock(UUIDShortener.class);
         subgoalGetMapper = Mockito.mock(SubgoalGetMapper.class);
+
+        tagRepository = Mockito.mock(TagRepository.class);
         groupGoalService = new GroupGoalService(groupGoalRepository, subgoalRepository, groupGoalPostMapper,
                 subgoalPostMapper, subgoalShortMapper, groupGoalGetMapper, groupGoalShortMapper, userRepository, entitiShortMapper,
-                userCredentialsGetMapper, activityStreamService, uuidShortener, subgoalGetMapper);
+                userCredentialsGetMapper, activityStreamService, uuidShortener, subgoalGetMapper, tagRepository);
     }
 
     private Users getRandomUser()

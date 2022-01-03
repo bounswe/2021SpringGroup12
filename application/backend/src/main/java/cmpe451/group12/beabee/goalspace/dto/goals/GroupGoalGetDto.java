@@ -38,4 +38,6 @@ public class GroupGoalGetDto
     private String token;
 
     private Set<UserCredentialsGetDTO> members;
+
+    private Set<String> tags;
 }
