@@ -33,7 +33,7 @@ public class GroupGoalGetDto
 
     private Set<SubgoalDTOShort> subgoals;
 
-    private Set<EntitiDTOShort> entities;
+    private Set<EntitiDTOShort> linkedEntities;
 
     private String token;
 

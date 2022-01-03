@@ -29,7 +29,7 @@ public class GoalGetDTO {
 
     private Set<SubgoalDTOShort> subgoals;
 
-    private Set<EntitiDTOShort> entities;
+    private Set<EntitiDTOShort> linkedEntities;
     private Set<String> tags;
 
 }

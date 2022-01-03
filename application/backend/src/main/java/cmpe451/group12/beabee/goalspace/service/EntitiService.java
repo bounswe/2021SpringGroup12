@@ -138,6 +138,12 @@ public class EntitiService {
 
                 parentEntiti.getSublinked_subgoals().add(childSubgoal);
                 break;
+            case GOAL:
+            case GROUPGOAL:
+                if(parentEntiti.getIsLinkedToGoal())
+                    return new MessageResponse("Already linked to parent", MessageType.ERROR);
+                parentEntiti.setIsLinkedToGoal(Boolean.TRUE);
+                break;
         }
 
         entitiRepository.save(parentEntiti);
@@ -163,6 +169,12 @@ public class EntitiService {
                 if(!parentEntiti.getSublinked_subgoals().removeIf(e -> e.equals(childSubgoal)))
                     return new MessageResponse("Link does not exist", MessageType.ERROR);
                 break;
+            case GOAL:
+            case GROUPGOAL:
+                if(!parentEntiti.getIsLinkedToGoal())
+                    return new MessageResponse("Link does not exist", MessageType.ERROR);
+                parentEntiti.setIsLinkedToGoal(Boolean.FALSE);
+                break;
         }
         entitiRepository.save(parentEntiti);
         return new MessageResponse("Link deleted is successful.", MessageType.SUCCESS);
@@ -174,6 +186,7 @@ public class EntitiService {
         Reflection new_reflection = reflectionPostMapper.mapToEntity(reflectionPostDTO);
         new_reflection.setEntitiType(EntitiType.REFLECTION);
         new_reflection.setIsDone(Boolean.FALSE);
+        new_reflection.setIsLinkedToGoal(Boolean.TRUE);
 
         switch (reflectionPostDTO.getGoalType()) {
             case GOAL:
@@ -188,7 +201,8 @@ public class EntitiService {
                 break;
         }
 
-        if (reflectionPostDTO.getInitialLinkType() != null) {
+        if (reflectionPostDTO.getInitialLinkType() != null && !(reflectionPostDTO.getInitialParentId() < 0)) {
+            new_reflection.setIsLinkedToGoal(Boolean.FALSE);
             switch (reflectionPostDTO.getInitialLinkType())
             {
                 case ENTITI:
@@ -228,6 +242,7 @@ public class EntitiService {
         new_task.setEntitiType(EntitiType.TASK);
         new_task.setIsDone(Boolean.FALSE);
         new_task.setExtension_count(0L);
+        new_task.setIsLinkedToGoal(Boolean.TRUE);
 
         switch (taskPostDTO.getGoalType()) {
             case GOAL:
@@ -242,7 +257,8 @@ public class EntitiService {
                 break;
         }
 
-        if (taskPostDTO.getInitialLinkType() != null) {
+        if (taskPostDTO.getInitialLinkType() != null && !(taskPostDTO.getInitialParentId() < 0)) {
+            new_task.setIsLinkedToGoal(Boolean.FALSE);
             switch (taskPostDTO.getInitialLinkType())
             {
                 case ENTITI:
@@ -281,6 +297,8 @@ public class EntitiService {
         Question new_question = questionPostMapper.mapToEntity(questionPostDTO);
         new_question.setEntitiType(EntitiType.QUESTION);
         new_question.setIsDone(Boolean.FALSE);
+        new_question.setIsLinkedToGoal(Boolean.TRUE);
+
 
         switch (questionPostDTO.getGoalType()) {
             case GOAL:
@@ -295,7 +313,8 @@ public class EntitiService {
                 break;
         }
 
-        if (questionPostDTO.getInitialLinkType() != null) {
+        if (questionPostDTO.getInitialLinkType() != null && !(questionPostDTO.getInitialParentId() < 0)) {
+            new_question.setIsLinkedToGoal(Boolean.FALSE);
             switch (questionPostDTO.getInitialLinkType())
             {
                 case ENTITI:
@@ -334,6 +353,7 @@ public class EntitiService {
         new_routine.setEntitiType(EntitiType.ROUTINE);
         new_routine.setIsDone(Boolean.FALSE);
         new_routine.setExtension_count(0L);
+        new_routine.setIsLinkedToGoal(Boolean.TRUE);
 
         switch (routinePostDTO.getGoalType()) {
             case GOAL:
@@ -348,7 +368,8 @@ public class EntitiService {
                 break;
         }
 
-        if (routinePostDTO.getInitialLinkType() != null) {
+        if (routinePostDTO.getInitialLinkType() != null && !(routinePostDTO.getInitialParentId() < 0)) {
+            new_routine.setIsLinkedToGoal(Boolean.FALSE);
             switch (routinePostDTO.getInitialLinkType())
             {
                 case ENTITI:
