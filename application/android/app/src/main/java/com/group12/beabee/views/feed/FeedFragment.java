@@ -71,7 +71,7 @@ public class FeedFragment extends BaseInnerFragment implements IOnFeedClickedLis
 
     @Override
     protected PageMode GetPageMode() {
-        return PageMode.OnlyTitle;
+        return PageMode.OnlySearch;
     }
 
     @Override
