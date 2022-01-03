@@ -282,7 +282,7 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
             public void onFailure(Call<BasicResponse> call, Throwable t) {
                 Utils.dismissLoading();
                 Utils.ShowErrorToast(getActivity(), "Something went wrong!");
-                
+
             }
         });
     }

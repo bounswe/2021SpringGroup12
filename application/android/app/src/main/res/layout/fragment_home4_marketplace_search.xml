@@ -27,9 +27,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/no_goal_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:visibility="invisible"
-        app:layout_constraintTop_toBottomOf="@id/search_icon"
+        app:layout_constraintTop_toBottomOf="@id/search_bar"
         android:layout_marginTop="20dp">
         <TextView
             android:id="@+id/tv_no_goal"
