@@ -1,13 +1,14 @@
 package com.group12.beabee.models.requests;
 
-import com.google.gson.annotations.SerializedName;
+import com.group12.beabee.models.LinkingType;
 import com.group12.beabee.models.ParentType;
 
 public class Question {
-    @SerializedName("parent_id")
-    public int parentId;
     public String title;
     public String description;
-    public ParentType parentType;
     public String deadline;
+    public LinkingType initialLinkType;
+    public int initialParentId;
+    public ParentType goalType;
+    public int goalId;
 }

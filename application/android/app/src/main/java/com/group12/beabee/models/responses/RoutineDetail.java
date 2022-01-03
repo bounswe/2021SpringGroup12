@@ -21,6 +21,6 @@ public class RoutineDetail implements Serializable {
     public String createdAt;
     public List <String> deadline;
     public int period;
-    @SerializedName("sublinks")
+    @SerializedName("sublinked_entities")
     public List<EntityShort> entities;
 }

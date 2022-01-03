@@ -60,26 +60,6 @@ public abstract class BaseInnerFragment extends Fragment {
         parentFragment.AddNewFragment(fragmentToOpen);
     }
 
-    protected void CreateLink(int parentId, int childId, Runnable runnable){
-        BeABeeService.serviceAPI.linkEntities(parentId, childId).enqueue(new Callback<BasicResponse>() {
-            @Override
-            public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
-                    Utils.ShowErrorToast(getContext(), "Entity is successfully linked!");
-                    runnable.run();
-                } else if(!response.isSuccessful() || response.body() == null){
-                    Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
-                } else {
-                    Utils.ShowErrorToast(getContext(), response.body().message);
-                }
-            }
-            @Override
-            public void onFailure(Call<BasicResponse> call, Throwable t) {
-                Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
-            }
-        });
-    }
-
     protected void OnBackClicked(){
         GoBack();
     }
