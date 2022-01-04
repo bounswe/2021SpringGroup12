@@ -133,17 +133,12 @@ export function EntityPage() {
 
 
     const completeEntity = (button_type: any) => {
-
-        function ret_func() {
             console.log("he")
             axios.post(`/entities/complete${entitiType.toLowerCase()}/${entity_id}`,
             {
                 headers: { Authorization: `Bearer ${token}`},
                 data: {}
             }).then(() => window.alert(`Entity ${button_type} is successfull`))
-            
-        }
-        return ret_func;
     }
 
 
