@@ -25,6 +25,8 @@ import { Dashboard } from "./pages/Dashboard";
 import {Feed} from "./pages/Feed"
 import {ProfilePage} from "./pages/ProfilePage";
 import { SearchPage } from "./pages/SearchPage";
+import {PrototypePage} from "./pages/PrototypePage";
+import {PrototypeEntityPage} from "./pages/PrototypeEntityPage";
 
 export interface IAppProps {}
 
@@ -112,6 +114,9 @@ export default class App extends React.Component<IAppProps, IAppState> {
                 <Route exact path="/editGoal/:goal_id" children={<EditGoal goalType={GoalTypes.Normal}/>} />
                 <Route exact path="/editSubgoal/:goal_id" children={<EditGoal goalType={GoalTypes.Sub}/>} />
                 <Route exact path="/editGroupgoal/:goal_id" children={<EditGoal goalType={GoalTypes.Group}/>} />
+                <Route exact path="/prototypes/:goal_id" children={<PrototypePage goalType={GoalTypes.Normal}/>} />
+                <Route exact path="/prototypes/subgoals/:goal_id" children={<PrototypePage goalType={GoalTypes.Sub}/>} />
+                <Route path="/prototypes/entiti/:entity_id" children={<PrototypeEntityPage />} />
                 <Route path="/feed" children={<Feed />}/>
                 <Route exact path="/search">
                   <SearchPage />
