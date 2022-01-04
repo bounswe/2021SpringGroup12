@@ -5,9 +5,6 @@ import axios from "axios";
 import {Link} from "react-router-dom";
 import {Button, Form ,Input, Space, Table, Tag,Select,List} from "antd";
 import {GoalTypes} from "../helpers/GoalTypes";
-import { TweenOneGroup } from 'rc-tween-one';
-import { PlusOutlined } from '@ant-design/icons';
-import { WithContext as ReactTags } from 'react-tag-input';
 import { DeleteOutlined } from '@ant-design/icons';
 
 const token = localStorage.getItem("token");
