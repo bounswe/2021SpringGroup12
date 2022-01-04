@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Col, Row } from "antd/lib/grid";
-import { Card, Input, Table, Tag, Tooltip } from "antd";
+import { Button, Card, Input, Space, Table, Tag } from "antd";
 import axios from "axios";
 import Column from "antd/lib/table/Column";
 import { Link } from "react-router-dom";
@@ -125,44 +125,7 @@ export function SearchPage(props: ISearchPageProps) {
                   dataIndex="download_count"
                   key="download_count"
                 />
-                <Column
-                  title="Entities"
-                  dataIndex="entities"
-                  key="entities"
-                  render={(entity: entityType[]) => {
-                    return (
-                      <>
-                        {entity.map((item) => {
-                          <Tooltip title={item.description}>
-                            <Link to={`/entity/${item.entitiType}/${item.id}"`}>
-                              <Tag color="green" key={item.id}>
-                                {item.title.toUpperCase()}
-                              </Tag>
-                            </Link>
-                          </Tooltip>;
-                        })}
-                      </>
-                    );
-                  }}
-                />
-                <Column
-                  title="Sub Goals"
-                  dataIndex="subgoals"
-                  key="subgoals"
-                  render={(subgoal: subGoalType[]) => (
-                    <>
-                      {subgoal.map((item) => {
-                        <Tooltip title={item.description}>
-                          <Link to={`/goals/${item.id}`}>
-                            <Tag color="green" key={item.id}>
-                              {item.title}
-                            </Tag>
-                          </Link>
-                        </Tooltip>;
-                      })}
-                    </>
-                  )}
-                />
+
                 <Column
                   title="Tags"
                   dataIndex="tags"
@@ -175,6 +138,18 @@ export function SearchPage(props: ISearchPageProps) {
                         </Tag>
                       ))}
                     </>
+                  )}
+                />
+                <Column
+                  title="Navigate"
+                  dataIndex="id"
+                  key="title"
+                  render={(text: string) => (
+                    <Space size="middle">
+                      <Link to={`/prototypes/${text}`}>
+                        <Button type="primary"> Go </Button>
+                      </Link>
+                    </Space>
                   )}
                 />
               </Table>
