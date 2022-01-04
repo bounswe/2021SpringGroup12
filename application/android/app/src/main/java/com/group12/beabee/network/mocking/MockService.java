@@ -18,6 +18,7 @@ import com.group12.beabee.models.responses.EntityShort;
 import com.group12.beabee.models.responses.GoalDetail;
 import com.group12.beabee.models.responses.GoalShort;
 import com.group12.beabee.models.responses.GroupGoalShort;
+import com.group12.beabee.models.responses.PrototypeGoalDetail;
 import com.group12.beabee.models.responses.QuestionDetail;
 import com.group12.beabee.models.responses.ReflectionDetail;
 import com.group12.beabee.models.responses.RoutineDetail;
@@ -400,22 +401,12 @@ public class MockService implements ServiceAPI {
     }
 
     @Override
-    public Call<List<GoalDetail>> getMarketPlaceData() {
+    public Call<List<PrototypeGoalDetail>> getMarketPlaceData() {
         return null;
     }
 
     @Override
-    public Call<GoalDetail> getProGoal(int public_goal_id) {
-        return null;
-    }
-
-    @Override
-    public Call<List<EntityShort>> getProEntity(int public_entity_id) {
-        return null;
-    }
-
-    @Override
-    public Call<SubgoalDetail> getProSubgoal(int public_subgoal_id) {
+    public Call<PrototypeGoalDetail> getProGoal(int public_goal_id) {
         return null;
     }
 

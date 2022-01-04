@@ -12,6 +12,7 @@ import com.group12.beabee.R;
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.responses.GoalDetail;
 import com.group12.beabee.models.responses.GoalShort;
+import com.group12.beabee.models.responses.PrototypeGoalDetail;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
 
@@ -42,9 +43,9 @@ public class Home4Fragment extends BaseInnerFragment implements IOnGoalClickedLi
     @Override
     public void onResume() {
         super.onResume();
-            service.getMarketPlaceData().enqueue(new Callback<List<GoalDetail>>() {
+            service.getMarketPlaceData().enqueue(new Callback<List<PrototypeGoalDetail>>() {
             @Override
-            public void onResponse(Call<List<GoalDetail>> call, Response<List<GoalDetail>> response) {
+            public void onResponse(Call<List<PrototypeGoalDetail>> call, Response<List<PrototypeGoalDetail>> response) {
                 if (response.isSuccessful() && response.body() != null){
                     OnGoalsReceived(detailToShort(response.body()));
                 }else{
@@ -53,13 +54,13 @@ public class Home4Fragment extends BaseInnerFragment implements IOnGoalClickedLi
             }
 
             @Override
-            public void onFailure(Call<List<GoalDetail>> call, Throwable t) {
+            public void onFailure(Call<List<PrototypeGoalDetail>> call, Throwable t) {
                 Utils.ShowErrorToast(getContext(),"Something went wrong!");
             }
         });
     }
 
-    private List<GoalShort> detailToShort(List<GoalDetail> goals){
+    private List<GoalShort> detailToShort(List<PrototypeGoalDetail> goals){
         List<GoalShort>newGoals = new ArrayList<GoalShort>();
         for (int i=0;i<goals.size();i++){
             GoalShort goal =new GoalShort();

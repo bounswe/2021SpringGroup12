@@ -1,9 +1,7 @@
 package com.group12.beabee.views.goals;
 
-import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,13 +13,11 @@ import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.ExpandableListItem;
-import com.group12.beabee.models.LinkingType;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.EntityShort;
-import com.group12.beabee.models.responses.GoalDetail;
+import com.group12.beabee.models.responses.PrototypeGoalDetail;
 import com.group12.beabee.models.responses.SubgoalShort;
 import com.group12.beabee.views.BaseInnerFragment;
-import com.group12.beabee.views.MainStructure.BaseEntityLinkableFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
 import com.group12.beabee.views.customview.ExpandableView;
 import com.group12.beabee.views.entities.IOnTagClickedListener;
@@ -71,7 +67,7 @@ public class PrototypeGoalFragment extends BaseInnerFragment implements IOnTagCl
 
     public static int idPro;
 
-    private GoalDetail goalDetail;
+    private PrototypeGoalDetail goalDetail;
 
     private TagCardViewAdapter tagAdapter;
 
@@ -128,9 +124,9 @@ public class PrototypeGoalFragment extends BaseInnerFragment implements IOnTagCl
 
     private void RefreshPage() {
         Utils.showLoading(getChildFragmentManager());
-        service.getProGoal(idPro).enqueue(new Callback<GoalDetail>() {
+        service.getProGoal(idPro).enqueue(new Callback<PrototypeGoalDetail>() {
             @Override
-            public void onResponse(Call<GoalDetail> call, Response<GoalDetail> response) {
+            public void onResponse(Call<PrototypeGoalDetail> call, Response<PrototypeGoalDetail> response) {
                 Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null) {
                     OnGoalDTOReceived(response.body());
@@ -141,7 +137,7 @@ public class PrototypeGoalFragment extends BaseInnerFragment implements IOnTagCl
             }
 
             @Override
-            public void onFailure(Call<GoalDetail> call, Throwable t) {
+            public void onFailure(Call<PrototypeGoalDetail> call, Throwable t) {
                 Utils.dismissLoading();
                 Utils.ShowErrorToast(getActivity(), "Something went wrong!");
                 GoBack();
@@ -163,7 +159,7 @@ public class PrototypeGoalFragment extends BaseInnerFragment implements IOnTagCl
         subgoalList.SetDataList(dataList);
     }
 
-    private void OnGoalDTOReceived(GoalDetail data) {
+    private void OnGoalDTOReceived(PrototypeGoalDetail data) {
         goalDetail = data;
         tvTitle.setText(data.title);
         tvDescription.setText(data.description);
