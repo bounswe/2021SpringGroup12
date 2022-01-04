@@ -22,6 +22,7 @@ import { ResourcePage } from "./pages/ResourcePage";
 import { GoalTypes } from "./helpers/GoalTypes";
 import { CalendarPage } from "./pages/CalendarPage";
 import { Dashboard } from "./pages/Dashboard";
+import {ProfilePage} from "./pages/ProfilePage";
 
 export interface IAppProps {}
 
@@ -102,6 +103,7 @@ export default class App extends React.Component<IAppProps, IAppState> {
                 <Route path="/linkEntityfrom/:entitiType/:entity_id" children={<LinkEntity /> } />
                 <Route path="/entity/:entitiType/:entity_id" children={<EntityPage />} />
                 <Route path="/resources/:resource_id" children={<ResourcePage /> } />
+                <Route path="/profile/:target_id" children={<ProfilePage /> } />
                 <Route exact path="/goals/:goal_id" children={<GoalPage goalType={GoalTypes.Normal}/>} />
                 <Route exact path="/subgoals/:goal_id" children={<GoalPage goalType={GoalTypes.Sub}/>} />
                 <Route exact path="/groupgoals/:goal_id" children={<GoalPage goalType={GoalTypes.Group}/>} />
