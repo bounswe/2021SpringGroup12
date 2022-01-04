@@ -131,6 +131,22 @@ export function EntityPage() {
             
     };
 
+
+    const completeEntity = (button_type: any) => {
+
+        function ret_func() {
+            console.log("he")
+            axios.post(`/entities/complete${entitiType.toLowerCase()}/${entity_id}`,
+            {
+                headers: { Authorization: `Bearer ${token}`},
+                data: {}
+            }).then(() => window.alert(`Entity ${button_type} is successfull`))
+            
+        }
+        return ret_func;
+    }
+
+
     const deleteResource = (resource: { key: any,id:number}) => {
         console.log('Received values of delete: ', resource.id);
         axios.delete(`/resources/${resource.id}`,
@@ -221,6 +237,9 @@ export function EntityPage() {
     return (
         <div>
             <h2>{entitiType}</h2>
+            <Button type="primary" htmlType="submit" onClick={completeEntity}>
+                            Complete {entitiType}!
+                        </Button>      
             <h2>Name: {entity['title']}</h2>
             <h2>Description: {entity['description']}</h2>
             {(entitiType.toLowerCase() == "routine" || entitiType.toLowerCase() == "task") && 
