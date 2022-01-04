@@ -69,6 +69,18 @@ public interface ServiceAPI {
     @PUT("goals")
     Call<BasicResponse> updateGoalOfUser(@Body GoalDetail goalDetail);
 
+    @PUT("goals/{goal_id}/tag")
+    Call<BasicResponse> addTagToGoal(@Path("goal_id") int goalId, @Body List<String> tags);
+
+    @PUT("goals/{goal_id}/removetag/{tag}")
+    Call<BasicResponse> removeTagFromGoal(@Path("goal_id") int goalId, @Path("tag") String tag);
+
+    @PUT("groupgoals/{goal_id}/tag")
+    Call<BasicResponse> addTagToGroupGoal(@Path("goal_id") int goalId, @Body List<String> tags);
+
+    @PUT("groupgoals/{goal_id}/removetag/{tag}")
+    Call<BasicResponse> removeTagFromGroupGoal(@Path("goal_id") int goalId, @Path("tag") String tag);
+
     @GET("entities/user/{user_id}")
     Call<List<EntityShort>> getEntitiesOfUser(@Path("user_id") int userId);
 

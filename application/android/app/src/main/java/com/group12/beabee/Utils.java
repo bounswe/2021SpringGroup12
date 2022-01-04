@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
@@ -48,6 +49,36 @@ public  class Utils {
         dialog.dismiss();
     }
 
+    public static void OpenAddTagDialog(Context context, TagDialogCallback callback)
+    {
+        final Dialog d = new Dialog(context);
+        d.setContentView(R.layout.dialog_add_tag);
+        Button b1 = (Button) d.findViewById(R.id.btn_dismiss);
+        Button b2 = (Button) d.findViewById(R.id.btn_approve);
+        EditText et = d.findViewById(R.id.et_tag);
+
+        b1.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                d.dismiss();
+            }
+        });
+        b2.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                String tag = et.getText().toString().trim();
+                if (!InputValidator.IsTextMinimumLength(tag, 2)) {
+                    ShowErrorToast(context, "Tag should be at least 2 chars long!");
+                    return;
+                }
+                callback.TagCallback(tag);
+                d.dismiss();
+            }
+        });
+        d.show();
+    }
 
     public static void OpenRateDialog(Context context, OnRateSelectedListener onRateSelectedListener)
     {

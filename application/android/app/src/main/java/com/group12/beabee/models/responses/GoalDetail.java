@@ -19,6 +19,7 @@ public class GoalDetail implements Serializable {
     @SerializedName("linkedEntities")
     public List<EntityShort> entities;
     public List<SubgoalShort> subgoals;
+    public List<String> tags;
     public String username;
     public boolean isPublished;
     public int download_count;

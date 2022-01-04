@@ -27,6 +27,7 @@ import com.group12.beabee.views.entities.DeadlineCalendarFragment;
 import com.group12.beabee.views.entities.IOnTagClickedListener;
 import com.group12.beabee.views.entities.TagCardViewAdapter;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -178,8 +179,28 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
     }
 
     @Override
-    public void OnTagClicked(int id) {
-
+    public void OnTagClicked(String tag) {
+        Utils.showLoading(getChildFragmentManager());
+        service.removeTagFromGoal(id, tag).enqueue(new Callback<BasicResponse>() {
+            @Override
+            public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
+                if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
+                    Utils.ShowErrorToast(getContext(), "Tag successfully removed!");
+                    goalDetail.tags.remove(tag);
+                    tagAdapter.setData(goalDetail.tags);
+                } else if(!response.isSuccessful() || response.body() == null){
+                    Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+                } else {
+                    Utils.ShowErrorToast(getContext(), response.body().message);
+                }
+            }
+            @Override
+            public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
+                Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+            }
+        });
     }
 
     @OnClick(R.id.btn_complete)
@@ -223,6 +244,7 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
         }
         SetEntityLinks(data.entities);
         SetSubgoals(data.subgoals);
+        tagAdapter.setData(data.tags);
         if (goalDetail.isPublished)
         {
             btnPublish.setVisibility(View.GONE);
@@ -270,6 +292,37 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
         });
 
     }
+
+    @OnClick(R.id.addTagButton)
+    @Optional
+    public void addTagButton(View view) {
+        Utils.OpenAddTagDialog(getContext(), tag -> {
+            Utils.showLoading(getParentFragmentManager());
+            List<String> tags = new ArrayList<>();
+            tags.add(tag);
+            service.addTagToGoal(id, tags).enqueue(new Callback<BasicResponse>() {
+                @Override
+                public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                    Utils.dismissLoading();
+                    if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
+                        Utils.ShowErrorToast(getContext(), "Tag added successfully!");
+                        goalDetail.tags.add(tag);
+                        tagAdapter.setData(goalDetail.tags);
+                    } else if(!response.isSuccessful() || response.body() == null){
+                        Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+                    } else {
+                        Utils.ShowErrorToast(getContext(), response.body().message);
+                    }
+                }
+                @Override
+                public void onFailure(Call<BasicResponse> call, Throwable t) {
+                    Utils.dismissLoading();
+                    Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+                }
+            });
+        });
+    }
+
 
     @OnClick(R.id.btn_pickDate)
     @Optional

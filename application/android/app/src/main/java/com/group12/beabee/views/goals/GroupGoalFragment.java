@@ -162,9 +162,60 @@ public class GroupGoalFragment extends BaseEntityLinkableFragment implements IOn
     }
 
     @Override
-    public void OnTagClicked(int id) {
-
+    public void OnTagClicked(String tag) {
+        Utils.showLoading(getParentFragmentManager());
+        service.removeTagFromGoal(id, tag).enqueue(new Callback<BasicResponse>() {
+            @Override
+            public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
+                if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
+                    Utils.ShowErrorToast(getContext(), "Tag successfully removed!");
+                    goalDTO.tags.remove(tag);
+                    tagAdapter.setData(goalDTO.tags);
+                } else if(!response.isSuccessful() || response.body() == null){
+                    Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+                } else {
+                    Utils.ShowErrorToast(getContext(), response.body().message);
+                }
+            }
+            @Override
+            public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
+                Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+            }
+        });
     }
+
+    @OnClick(R.id.addTagButton)
+    @Optional
+    public void addTagButton(View view) {
+        Utils.OpenAddTagDialog(getContext(), tag -> {
+            Utils.showLoading(getParentFragmentManager());
+            List<String> tags = new ArrayList<>();
+            tags.add(tag);
+            service.addTagToGoal(id, tags).enqueue(new Callback<BasicResponse>() {
+                @Override
+                public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                    Utils.dismissLoading();
+                    if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
+                        Utils.ShowErrorToast(getContext(), "Tag added successfully!");
+                        goalDTO.tags.add(tag);
+                        tagAdapter.setData(goalDTO.tags);
+                    } else if(!response.isSuccessful() || response.body() == null){
+                        Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+                    } else {
+                        Utils.ShowErrorToast(getContext(), response.body().message);
+                    }
+                }
+                @Override
+                public void onFailure(Call<BasicResponse> call, Throwable t) {
+                    Utils.dismissLoading();
+                    Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+                }
+            });
+        });
+    }
+
 
     private void SetSubgoals(List<SubgoalShort> subgoals) {
         subgoalAdapter.setData(subgoals);
@@ -178,6 +229,7 @@ public class GroupGoalFragment extends BaseEntityLinkableFragment implements IOn
         tvtoken.setText(data.token);
         SetEntityLinks(data.entities);
         SetSubgoals(data.subgoals);
+        tagAdapter.setData(data.tags);
     }
     @OnClick(R.id.btn_copy)
     @Optional
