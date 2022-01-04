@@ -1,6 +1,6 @@
 import * as React from "react";
 import axios from "axios";
-import { List, Typography, Divider, Avatar } from 'antd';
+import { List, Typography, Divider, Avatar, Card } from 'antd';
 import { Link } from "react-router-dom";
 
 export function Feed() {
@@ -44,7 +44,8 @@ export function Feed() {
         actor_name: string,
         url: string,
         target_id: number,
-        target_name:string
+        target_name:string,
+        time:string
     }
 
     const initialFeedData: FeedElement_short[] = []
@@ -69,12 +70,13 @@ export function Feed() {
                     let tmp_Feed_Data = []
 
                     for (let i = 0; i < data.length; i++) {
-                        var tmp_Feed_Datum = { summary: "", actor_name: "", url: "", target_id: -1 ,target_name: ""}
+                        var tmp_Feed_Datum = { summary: "", actor_name: "", url: "", target_id: -1 ,target_name: "",time:""}
                         tmp_Feed_Datum.summary = data[i].summary
                         tmp_Feed_Datum.actor_name = data[i].actor.name
                         tmp_Feed_Datum.url = data[i].objectschema.url
                         tmp_Feed_Datum.target_id = data[i].objectschema.id
                         tmp_Feed_Datum.target_name= data[i].objectschema.type
+                        tmp_Feed_Datum.time= data[i].createdAt
                         tmp_Feed_Data.push(tmp_Feed_Datum)
 
                         /*tmp_actor_names.push(data[i].actor.name)
@@ -104,8 +106,11 @@ export function Feed() {
                         title={<a>{item.actor_name}</a>}
                         description={
                             <div>
+                                <Card>
                                 <b>{item.summary}</b>
+                                <p>{item.time.substring(0,10)} {item.time.substring(11,16)}</p>
                                 <Link to={item.url.substring(3)}>Go to {item.target_name}</Link>
+                                </Card>
                             </div>
                         }
                     />
