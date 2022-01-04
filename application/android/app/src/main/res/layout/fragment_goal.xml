@@ -51,38 +51,38 @@
         app:layout_constraintStart_toStartOf="parent"/>
     <Button
         android:id="@+id/btn_publish"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:translationZ="100dp"
-        android:layout_marginLeft="250dp"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:backgroundTint="@color/yellow_second"
-        android:text="Publish My Goal "
+        android:text="Publish "
         android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
     <Button
         android:id="@+id/btn_republish"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:translationZ="100dp"
-        android:layout_marginLeft="250dp"
         android:visibility="invisible"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:backgroundTint="@color/yellow_second"
-        android:text="Republish My Goal "
+        android:text="Republish"
         android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
     <Button
         android:id="@+id/btn_unpublish"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:translationZ="100dp"
         android:visibility="invisible"
-        android:layout_marginRight="250dp"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:backgroundTint="@color/yellow_second"
-        android:text="Unpublish My Goal "
+        android:text="Unpublish"
         android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <TextView

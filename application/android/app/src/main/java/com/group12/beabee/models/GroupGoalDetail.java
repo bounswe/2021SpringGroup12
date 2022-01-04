@@ -22,4 +22,5 @@ public class GroupGoalDetail implements Serializable {
     @SerializedName("linkedEntities")
     public List<EntityShort> entities;
     public List<SubgoalShort> subgoals;
+    public List<String> tags;
 }

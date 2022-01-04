@@ -53,9 +53,6 @@ public class SubgoalFragment extends BaseEntityLinkableFragment  implements IOnS
     @BindView(R.id.rv_subgoals)
     @Nullable
     RecyclerView rvSubgoal;
-    @BindView(R.id.rv_tags)
-    @Nullable
-    RecyclerView rvTag;
     @BindView(R.id.rating)
     @Nullable
     View ratingView;
@@ -68,7 +65,6 @@ public class SubgoalFragment extends BaseEntityLinkableFragment  implements IOnS
 
     private SubgoalDetail subgoalDetail;
 
-    private TagCardViewAdapter tagAdapter;
     private SubgoalCardViewAdapter subgoalAdapter;
 
     public SubgoalFragment() {
@@ -94,15 +90,12 @@ public class SubgoalFragment extends BaseEntityLinkableFragment  implements IOnS
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         subgoalAdapter = new SubgoalCardViewAdapter();
-        tagAdapter = new TagCardViewAdapter();
 
-        tagAdapter.setItemClickListener(this);
         subgoalAdapter.setItemClickListener(this);
     }
 
     @Override
     public void onReady() {
-        rvTag.setAdapter(tagAdapter);
         rvSubgoal.setAdapter(subgoalAdapter);
     }
 
@@ -215,10 +208,6 @@ public class SubgoalFragment extends BaseEntityLinkableFragment  implements IOnS
         OpenNewFragment(SubgoalFragment.newInstance(id));
     }
 
-    @Override
-    public void OnTagClicked(int id) {
-
-    }
 
     private void SetSubgoals(List<SubgoalShort> subgoals) {
         subgoalAdapter.setData(subgoals);

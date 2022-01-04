@@ -134,6 +134,26 @@ public class MockService implements ServiceAPI {
     }
 
     @Override
+    public Call<BasicResponse> addTagToGoal(int goalId, List<String> tags) {
+        return returnBasicResponse();
+    }
+
+    @Override
+    public Call<BasicResponse> removeTagFromGoal(int goalId, String tag) {
+        return returnBasicResponse();
+    }
+
+    @Override
+    public Call<BasicResponse> addTagToGroupGoal(int goalId, List<String> tags) {
+        return returnBasicResponse();
+    }
+
+    @Override
+    public Call<BasicResponse> removeTagFromGroupGoal(int goalId, String tag) {
+        return returnBasicResponse();
+    }
+
+    @Override
     public Call<List<EntityShort>> getEntitiesOfUser(int userId) {
         List<EntityShort> tempList = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
