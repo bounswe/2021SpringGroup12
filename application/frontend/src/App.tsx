@@ -7,22 +7,22 @@ import { Login } from "./pages/Login";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import Home from "./pages/Home";
 import NavBar from "./components/NavBar";
-import {GoalsPage} from "./pages/GoalsPage";
-import {AddGoal} from "./pages/AddGoal";
-import {GoalPage} from "./pages/GoalPage";
-import {EditGoal} from "./pages/EditGoal";
-import {EntityPage} from "./pages/EntityPage";
-import {AddEntity} from "./pages/AddEntity";
-import {EditEntity} from "./pages/EditEntity"
-import {LinkEntity} from "./pages/LinkEntity"
+import { GoalsPage } from "./pages/GoalsPage";
+import { AddGoal } from "./pages/AddGoal";
+import { GoalPage } from "./pages/GoalPage";
+import { EditGoal } from "./pages/EditGoal";
+import { EntityPage } from "./pages/EntityPage";
+import { AddEntity } from "./pages/AddEntity";
+import { EditEntity } from "./pages/EditEntity";
+import { LinkEntity } from "./pages/LinkEntity";
 import { Content } from "antd/lib/layout/layout";
-import {Layout} from "antd";
+import { Layout } from "antd";
 import Sidebar from "./components/Sidebar";
 import { ResourcePage } from "./pages/ResourcePage";
-import {GoalTypes} from "./helpers/GoalTypes";
+import { GoalTypes } from "./helpers/GoalTypes";
 import { CalendarPage } from "./pages/CalendarPage";
-
-
+import { Dashboard } from "./pages/Dashboard";
+import {ProfilePage} from "./pages/ProfilePage";
 
 export interface IAppProps {}
 
@@ -99,10 +99,11 @@ export default class App extends React.Component<IAppProps, IAppState> {
                   <CalendarPage />
                 </Route>
                 <Route path="/addEntity/:parentType/:entitiType/:parent_id" children={<AddEntity /> } />
-                <Route path="/editEntity/:entitiType/:entity_id" children={<EditEntity /> } />
-                <Route path="/linkEntityfrom/:goal_id/:entity_id" children={<LinkEntity /> } />
+                <Route path="/editEntity/:parentType/:entitiType/:parent_id/:entity_id" children={<EditEntity /> } />
+                <Route path="/linkEntityfrom/:entitiType/:entity_id" children={<LinkEntity /> } />
                 <Route path="/entity/:entitiType/:entity_id" children={<EntityPage />} />
                 <Route path="/resources/:resource_id" children={<ResourcePage /> } />
+                <Route path="/profile/:target_id" children={<ProfilePage /> } />
                 <Route exact path="/goals/:goal_id" children={<GoalPage goalType={GoalTypes.Normal}/>} />
                 <Route exact path="/subgoals/:goal_id" children={<GoalPage goalType={GoalTypes.Sub}/>} />
                 <Route exact path="/groupgoals/:goal_id" children={<GoalPage goalType={GoalTypes.Group}/>} />

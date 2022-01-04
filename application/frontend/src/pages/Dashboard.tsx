@@ -2,52 +2,63 @@ import * as React from "react";
 import { Card, Col, Row, Statistic } from "antd";
 import { AimOutlined, StockOutlined } from "@ant-design/icons";
 import axios from "axios";
+
 import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
+
 
 const user_id = localStorage.getItem("user_id");
 const token = localStorage.getItem("token");
 
 type UserAnalytics = {
   activeGoalCount: number;
-  averageCompletionTimeOfGoalsInMiliseconds: number;
+  averageCompletionTimeOfGoals: number;
   averageExtensionCount: number;
   averageRating: number;
-  bestGoal: {
-    deadline: string;
-    description: string;
-    id: number;
-    title: string;
-  };
   completedGoalCount: number;
+  bestGoal: {
+    description: string;
+    id: number;
+    title: string;
+  } | null;
   longestGoal: {
-    deadline: string;
     description: string;
     id: number;
     title: string;
-  };
+  } | null;
   shortestGoal: {
-    deadline: string;
     description: string;
     id: number;
     title: string;
-  };
+  } | null;
   worstGoal: {
-    deadline: string;
     description: string;
     id: number;
     title: string;
-  };
+  } | null;
+};
+
+const initialAnalytics: UserAnalytics = {
+  activeGoalCount: 0,
+  averageCompletionTimeOfGoals: 0,
+  averageExtensionCount: 0,
+  averageRating: 0,
+  bestGoal: null,
+  completedGoalCount: 0,
+  longestGoal: null,
+  shortestGoal: null,
+  worstGoal: null,
+
 };
 export interface IDashboardProps {}
 
 export function Dashboard(props: IDashboardProps) {
   const { Meta } = Card;
-  const [isLoaded, setIsLoaded] = React.useState(false);
-  const [analytics, setAnalytics] = useState({})
+  const [analyticsData, setAnalyticsData] = React.useState(initialAnalytics);
 
   React.useEffect(() => {
-    const analyticsData = axios
+    axios
+
       .get(`/users/analytics/${user_id}`, {
         headers: { Authorization: `Bearer ${token}` },
         data: {},
@@ -55,26 +66,21 @@ export function Dashboard(props: IDashboardProps) {
       .then((response) => {
         // check for error response
         if (response.status === 200) {
-          setIsLoaded(true);
-          console.log(`dashboard ${JSON.stringify(response)}`);
-          return response.data as UserAnalytics;
+          setAnalyticsData(response.data);
         }
-        throw response;
       })
-      .then(data => {
-        setAnalytics(data)
-    })
-
       .catch((error) => {
         console.error("There was an error!", error);
       });
-  });
+  }, [analyticsData]);
+
   return (
     <div className="site-card-wrapper">
       <Row gutter={[16, 32]}>
         <Col span={24} style={{ textAlign: "center" }}>
           <Card bordered={false} title="Completed Goals">
-            <Statistic value={112893} />
+            <Statistic value={analyticsData.completedGoalCount} />
+
           </Card>
         </Col>
         <Col span={6}>
@@ -82,9 +88,18 @@ export function Dashboard(props: IDashboardProps) {
             <Meta
               avatar={<AimOutlined />}
               title="Best Goal"
-              description="dsnfdjs"
+              description={
+                analyticsData.bestGoal ? (
+                  <div>
+                    <h3>{analyticsData.bestGoal.title}</h3>
+                    <p>{analyticsData.bestGoal.description}</p>
+                  </div>
+                ) : (
+                  "N/A"
+                )
+              }
             />
-             <Link to={"/goal/"}> {} </Link>
+
           </Card>
         </Col>
         <Col span={6}>
@@ -92,7 +107,17 @@ export function Dashboard(props: IDashboardProps) {
             <Meta
               avatar={<AimOutlined />}
               title="Longest Goal"
-              description="This is the description"
+              description={
+                analyticsData.longestGoal ? (
+                  <div>
+                    <h3>{analyticsData.longestGoal.title}</h3>
+                    <p>{analyticsData.longestGoal.description}</p>
+                  </div>
+                ) : (
+                  "N/A"
+                )
+              }
+
             />
           </Card>
         </Col>
@@ -101,7 +126,17 @@ export function Dashboard(props: IDashboardProps) {
             <Meta
               avatar={<AimOutlined />}
               title="Shortest Goal"
-              description="This is the description"
+              description={
+                analyticsData.shortestGoal ? (
+                  <div>
+                    <h3>{analyticsData.shortestGoal.title}</h3>
+                    <p>{analyticsData.shortestGoal.description}</p>
+                  </div>
+                ) : (
+                  "N/A"
+                )
+              }
+
             />
           </Card>
         </Col>
@@ -110,7 +145,17 @@ export function Dashboard(props: IDashboardProps) {
             <Meta
               avatar={<AimOutlined />}
               title="Worst Goal"
-              description="This is the description"
+              description={
+                analyticsData.worstGoal ? (
+                  <div>
+                    <h3>{analyticsData.worstGoal.title}</h3>
+                    <p>{analyticsData.worstGoal.description}</p>
+                  </div>
+                ) : (
+                  "N/A"
+                )
+              }
+
             />
           </Card>
         </Col>
@@ -119,7 +164,8 @@ export function Dashboard(props: IDashboardProps) {
             <Meta
               avatar={<StockOutlined />}
               title="Average Completion Time"
-              description="This is the description"
+              description={analyticsData.averageCompletionTimeOfGoals ? analyticsData.averageCompletionTimeOfGoals : 'N/A'}
+
             />
           </Card>
         </Col>
@@ -128,7 +174,8 @@ export function Dashboard(props: IDashboardProps) {
             <Meta
               avatar={<StockOutlined />}
               title="Active Goals"
-              description="This is the description"
+              description={analyticsData.activeGoalCount ? analyticsData.activeGoalCount : 'N/A'}
+
             />
           </Card>
         </Col>
@@ -137,7 +184,8 @@ export function Dashboard(props: IDashboardProps) {
             <Meta
               avatar={<StockOutlined />}
               title="Average Rating"
-              description="This is the description"
+              description={analyticsData.averageRating ? analyticsData.averageRating : 'N/A'}
+
             />
           </Card>
         </Col>
@@ -146,7 +194,8 @@ export function Dashboard(props: IDashboardProps) {
             <Meta
               avatar={<StockOutlined />}
               title="Average Extension Count"
-              description="This is the description"
+
+              description={analyticsData.averageExtensionCount ? analyticsData.averageExtensionCount : 'N/A'}
             />
           </Card>
         </Col>

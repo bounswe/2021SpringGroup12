@@ -27,13 +27,10 @@ export function GoalPage(params :{goalType: any}) {
         isDone: false,
         assignees: [],
         members: [],
-        entities: [],
+        linkedEntities: [],
         subgoals: [],
         user_id: -1
     })
-    const [entities, setEntities] = useState([])
-    const [subgoals, setSubgoals] = useState([])
-    const [isLoaded, setLoaded] = useState(false)
     const[delete_count,setDeleteCount] =useState(0)
     const [returnLink, setReturnLink] = useState("/goalsPage")
     const [isDeleted, setDeleted] = useState(false)
@@ -56,7 +53,6 @@ export function GoalPage(params :{goalType: any}) {
     }
     editLink += goal_id
 
-    let delete_count_goal=0;
     const deleteEntity = (entity: { key: any, entitiType: string,id:number}) => {
         console.log('Received values of delete: ', goal);
         axios.delete(`/entities/${entity.entitiType.toLowerCase()}/${entity.id}`,
@@ -187,7 +183,7 @@ const columns = [
                             Delete
                         </Button>
                     </Space>
-                    <Link to={"/editEntity/" + entity.entitiType + "/" + entity.id}>
+                    <Link to={"/editEntity/" + goalType.substring(0, goalType.length - 1) +"/" +entity.entitiType + "/" +goal_id+ "/"+ entity.id}>
                         <button type="button">
                             Edit
                         </button>
@@ -214,12 +210,12 @@ useEffect(() => {
             throw response
         })
         .then(goal_info => {
-            console.log(typeof goal_info["entities"])
+            console.log(typeof goal_info["linkedEntities"])
             console.log(goal_info)
             if (goalType === GoalTypes.Sub) {
                 goal_info['subgoals'] = goal_info['sublinks']
             }
-            goal_info['entities'].forEach((entity: any, i: number) => {
+            goal_info['linkedEntities'].forEach((entity: any, i: number) => {
                 entity.key = i
                 if (entity.deadline !== null) {
                     entity.deadline = entity.deadline.substr(0,10)
@@ -417,7 +413,7 @@ const showManageDiv = goalType !== GoalTypes.Group || goal.user_id === Number(us
                     Add SubGoal
                 </button>
             </Link>
-            <Table columns={columns} dataSource={goal.entities} />
+            <Table columns={columns} dataSource={goal.linkedEntities} />
             <Link to={"/addEntity/"+goalType.slice(0, -1) +"/question/" + goal_id}>
                 <button type="button">
                     Add Question
