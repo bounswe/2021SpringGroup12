@@ -37,6 +37,15 @@ services:
         reservations:
           cpus: '0.25'
           memory: 200M
+  beabee-front:
+    image: "beabeeapp/beabee-front"
+    container_name: "beabee-front"
+    ports:
+      - "3000:80"
+    networks:
+      - baebeenw
+    depends_on:
+      - beabee-server
 
 networks:
   beabeenw:
