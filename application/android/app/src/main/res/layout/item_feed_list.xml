@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="10dp"
+    android:layout_margin="5dp"
     android:background="@drawable/bg_rounded_yellow_dark_outline">
 
     <TextView

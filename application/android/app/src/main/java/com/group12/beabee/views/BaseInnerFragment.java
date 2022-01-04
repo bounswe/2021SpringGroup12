@@ -54,6 +54,7 @@ public abstract class BaseInnerFragment extends Fragment {
         parentFragment.SetEditBtnListener(view -> OnEditClicked());
         parentFragment.SetAddBtnListener(view -> OnAddClicked());
         parentFragment.SetSearchBtnListener(view -> OnSearchClicked());
+        parentFragment.SetPPBtnListener(view -> OnPPClicked());
     }
 
     public <T extends BaseInnerFragment> void OpenNewFragment(T fragmentToOpen){
@@ -72,6 +73,9 @@ public abstract class BaseInnerFragment extends Fragment {
     }
 
     protected void OnEditClicked(){
+    }
+
+    protected void OnPPClicked(){
     }
 
     protected void OnAddClicked(){

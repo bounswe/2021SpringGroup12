@@ -17,6 +17,8 @@ import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
 import com.group12.beabee.views.goals.Home4_2Fragment;
 import com.group12.beabee.views.goals.MembersAdapter;
+import com.group12.beabee.views.goals.PrototypeGoalFragment;
+import com.group12.beabee.views.userprofile.UserProfileFragment;
 import com.group12.beabee.views.userprofile.UserSearchFragment;
 
 import java.util.ArrayList;
@@ -74,7 +76,7 @@ public class FeedFragment extends BaseInnerFragment implements IOnFeedClickedLis
 
     @Override
     protected PageMode GetPageMode() {
-        return PageMode.OnlySearch;
+        return PageMode.Feed;
     }
 
     @Override
@@ -88,9 +90,20 @@ public class FeedFragment extends BaseInnerFragment implements IOnFeedClickedLis
     }
 
     @Override
-    public void OnFeedClicked(int id) {
-        
+    public void OnFeedClicked(int id, int type) {
+        switch (type){
+            case 0:
+                OpenNewFragment(UserProfileFragment.newInstance(id));
+                break;
+            case 1:
+                OpenNewFragment(PrototypeGoalFragment.newInstance(id));
+                break;
+        }
+    }
 
+    @Override
+    protected void OnPPClicked() {
+        OpenNewFragment(UserProfileFragment.newInstance(BeABeeApplication.userId));
     }
 
     @Override
