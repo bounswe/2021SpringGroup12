@@ -20,6 +20,6 @@ public class TaskDetail implements Serializable {
     public boolean isDone;
     public String createdAt;
     public String deadline;
-    @SerializedName("sublinks")
+    @SerializedName("sublinked_entities")
     public List<EntityShort> entities;
 }

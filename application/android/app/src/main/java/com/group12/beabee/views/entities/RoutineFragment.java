@@ -16,10 +16,9 @@ import android.widget.TextView;
 
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.ParentType;
+import com.group12.beabee.models.LinkingType;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.requests.ExtendDeadline;
-import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.RoutineDetail;
 import com.group12.beabee.views.MainStructure.BaseEntityLinkableFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
@@ -205,8 +204,8 @@ public class RoutineFragment extends BaseEntityLinkableFragment implements DateP
     }
 
     @Override
-    protected ParentType GetLinkableType() {
-        return ParentType.ENTITY;
+    protected LinkingType GetLinkableType() {
+        return LinkingType.ENTITI;
     }
 
     @Override

@@ -4,6 +4,7 @@ package com.group12.beabee.network.mocking;
 import com.group12.beabee.models.GroupGoalDetail;
 import com.group12.beabee.models.requests.ExtendDeadline;
 import com.group12.beabee.models.requests.Goal;
+import com.group12.beabee.models.requests.Link;
 import com.group12.beabee.models.requests.LoginRequest;
 import com.group12.beabee.models.requests.Question;
 import com.group12.beabee.models.requests.Reflection;
@@ -170,7 +171,27 @@ public class MockService implements ServiceAPI {
     }
 
     @Override
-    public Call<BasicResponse> linkEntities(int id, int childId) {
+    public Call<List<EntityShort>> getEntitiesOfGroupGoal(int groupGoalId) {
+        List<EntityShort> tempList = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            EntityShort temp = new EntityShort();
+            temp.id = i;
+            temp.title = "title"+i;
+            temp.description = "description"+i;
+            temp.entityType = "TASK";
+            temp.deadline = "2021-12-11T16:50:33.578Z";
+            tempList.add(temp);
+        }
+        return new MockCall<List<EntityShort>>() {
+            @Override
+            public void enqueue(Callback<List<EntityShort>> callback) {
+                callback.onResponse(this, Response.success(tempList));
+            }
+        };
+    }
+
+    @Override
+    public Call<BasicResponse> linkEntities(int id, Link link) {
         return returnBasicResponse();
     }
 

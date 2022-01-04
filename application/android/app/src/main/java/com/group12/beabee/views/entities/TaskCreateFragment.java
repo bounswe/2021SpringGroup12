@@ -16,12 +16,15 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
+import com.group12.beabee.models.LinkingType;
 import com.group12.beabee.models.ParentType;
 import com.group12.beabee.models.requests.Task;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.views.BaseInnerFragment;
+import com.group12.beabee.views.MainStructure.MainActivity;
 import com.group12.beabee.views.MainStructure.PageMode;
 
 import java.util.Calendar;
@@ -51,7 +54,7 @@ public class TaskCreateFragment extends BaseInnerFragment implements DatePickerD
     Button btnPickDate;
 
     private int parentId;
-    private ParentType parentType;
+    private LinkingType parentType;
 
     public TaskCreateFragment() {
         // Required empty public constructor
@@ -63,7 +66,7 @@ public class TaskCreateFragment extends BaseInnerFragment implements DatePickerD
      *
      * @return A new instance of fragment TaskEdit.
      */
-    public static TaskCreateFragment newInstance(int parentId, ParentType parentType) {
+    public static TaskCreateFragment newInstance(int parentId, LinkingType parentType) {
         TaskCreateFragment fragment = new TaskCreateFragment();
         Bundle args = new Bundle();
         args.putInt("parentId", parentId);
@@ -76,7 +79,7 @@ public class TaskCreateFragment extends BaseInnerFragment implements DatePickerD
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         parentId = getArguments().getInt("parentId", -1);
-        parentType = ((ParentType) getArguments().getSerializable("parentType"));
+        parentType = ((LinkingType) getArguments().getSerializable("parentType"));
     }
 
 
@@ -92,8 +95,19 @@ public class TaskCreateFragment extends BaseInnerFragment implements DatePickerD
         }
         Task task = new Task();
         task.deadline = tvDeadline.getText().toString();
-        task.parentId = parentId;
-        task.parentType = parentType;
+        task.initialParentId = parentId;
+        task.initialLinkType = parentType;
+        if (getActivity()==null)
+            return;
+        int currentPage = ((MainActivity) getActivity()).GetCurrentPage();
+        if (currentPage==0) {
+            task.goalType = ParentType.GOAL;
+            task.goalId = BeABeeApplication.currentMainGoal;
+        } else if(currentPage==1) {
+            task.goalType = ParentType.GROUPGOAL;
+            task.goalId = BeABeeApplication.currentGroupGoal;
+        }else
+            return;
         task.title = etTitle.getText().toString();
         task.description = etDescription.getText().toString();
         Utils.showLoading(getParentFragmentManager());

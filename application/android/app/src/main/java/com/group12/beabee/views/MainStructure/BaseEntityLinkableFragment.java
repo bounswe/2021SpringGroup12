@@ -14,7 +14,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.ParentType;
+import com.group12.beabee.models.LinkingType;
 import com.group12.beabee.models.responses.EntityShort;
 import com.group12.beabee.views.BaseInnerFragment;
 
@@ -75,7 +75,7 @@ public abstract class BaseEntityLinkableFragment extends BaseInnerFragment {
     @Override
     protected abstract PageMode GetPageMode();
 
-    protected abstract ParentType GetLinkableType();
+    protected abstract LinkingType GetLinkableType();
 
     @Override
     protected abstract String GetPageTitle();

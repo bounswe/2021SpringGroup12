@@ -30,9 +30,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:spinnerMode="dropdown"
         app:layout_constraintTop_toBottomOf="@id/tv_existing"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btn_add_entity"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <Button
         android:id="@+id/btn_add_entity"

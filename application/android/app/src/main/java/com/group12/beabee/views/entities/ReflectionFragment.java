@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment;
 
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.ParentType;
+import com.group12.beabee.models.LinkingType;
 import com.group12.beabee.models.responses.ReflectionDetail;
 import com.group12.beabee.views.MainStructure.BaseEntityLinkableFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
@@ -101,8 +101,8 @@ public class ReflectionFragment extends BaseEntityLinkableFragment {
     }
 
     @Override
-    protected ParentType GetLinkableType() {
-        return ParentType.ENTITY;
+    protected LinkingType GetLinkableType() {
+        return LinkingType.ENTITI;
     }
 
     @Override

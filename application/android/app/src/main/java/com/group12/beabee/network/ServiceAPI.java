@@ -3,6 +3,7 @@ package com.group12.beabee.network;
 import com.group12.beabee.models.requests.ExtendDeadline;
 import com.group12.beabee.models.requests.Goal;
 import com.group12.beabee.models.GroupGoalDetail;
+import com.group12.beabee.models.requests.Link;
 import com.group12.beabee.models.requests.LoginRequest;
 import com.group12.beabee.models.requests.Question;
 import com.group12.beabee.models.requests.Reflection;
@@ -70,9 +71,11 @@ public interface ServiceAPI {
 
     @GET("entities/goal/{goal_id}")
     Call<List<EntityShort>> getEntitiesOfGoal(@Path("goal_id") int goalId);
+    @GET("entities/groupgoal/{goal_id}")
+    Call<List<EntityShort>> getEntitiesOfGroupGoal(@Path("goal_id") int groupGoalId);
 
-    @POST("entities/{id}/link/{child_id}")
-    Call<BasicResponse> linkEntities(@Path("id") int id, @Path("child_id") int childId);
+    @POST("entities/{id}/link")
+    Call<BasicResponse> linkEntities(@Path("id") int id, @Body Link link);
 
     /////
 

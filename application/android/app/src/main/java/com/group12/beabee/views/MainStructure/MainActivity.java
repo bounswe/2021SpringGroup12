@@ -38,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
     private int currentPage;
     private BaseContainerFragment[] containers = new BaseContainerFragment[5];
 
+    public int GetCurrentPage(){
+        return currentPage;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

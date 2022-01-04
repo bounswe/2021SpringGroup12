@@ -16,7 +16,7 @@ import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.GroupGoalDetail;
-import com.group12.beabee.models.ParentType;
+import com.group12.beabee.models.LinkingType;
 import com.group12.beabee.models.User;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.SubgoalShort;
@@ -96,8 +96,8 @@ public class GroupGoalFragment extends BaseEntityLinkableFragment implements IOn
     }
 
     @Override
-    protected ParentType GetLinkableType() {
-        return ParentType.GROUPGOAL;
+    protected LinkingType GetLinkableType() {
+        return LinkingType.GROUPGOAL;
     }
 
     @Override
