@@ -71,7 +71,7 @@ public class GoalsPrototypeAdapter1 extends RecyclerView.Adapter<GoalsPrototypeA
             tvDescription.setText(goalShort.description);
             itemParent.setOnClickListener(v -> onItemClickedListener.OnGoalClicked(goalShort.id));
             tvUsername.setText(goalShort.username);
-            //downloadnum.setText(goalShort.download_count);
+            downloadnum.setText(String.valueOf(goalShort.download_count));
         }
     }
 }
