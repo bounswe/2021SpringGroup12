@@ -115,7 +115,7 @@ public class PrototypeService {
             entitiPrototype.setReference_entiti_id(entiti.getId());
             entitiPrototype.setMainGoal(prototype);
             entitiPrototype.setPeriod(7L);
-            //entitiPrototype.setChildEntities(clearEntities(entiti.getSublinked_entities(), null));
+            entitiPrototype.setChildEntities(clearEntities(entiti.getSublinked_entities(), null));
 
             entitiPrototype.setEntitiType(entiti.getEntitiType());
             entitiPrototypeRepository.save(entitiPrototype);
@@ -131,7 +131,7 @@ public class PrototypeService {
             subgoal1.setTitle(subgoal.getTitle());
             subgoal1.setDescription(subgoal.getDescription());
             subgoal1.setReference_subgoal_id(subgoal.getId());
-            //subgoal1.setChild_subgoals(clearSubgoals(subgoal.getChild_subgoals(), null));
+            subgoal1.setChild_subgoals(clearSubgoals(subgoal.getChild_subgoals(), null));
             subgoal1.setMainGoal(prototype);
             subgoalPrototypeRepository.save(subgoal1);
             subgoals_protos.add(subgoal1);
