@@ -67,7 +67,7 @@ export default class App extends React.Component<IAppProps, IAppState> {
             >
               <Switch>
                 <Route exact path="/dashboard">
-                  Dashboard
+                  <Dashboard/>
                 </Route>
                 <Route exact path="/register">
                   <Register />
