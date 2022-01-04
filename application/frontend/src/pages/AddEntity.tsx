@@ -26,7 +26,6 @@ export function AddEntity() {
             headers: { Authorization: `Bearer ${token}`},
         }).then(() => setSubmitted(true))
     };
-
     
     const form = EntityForm(onFinish)
     let message;
