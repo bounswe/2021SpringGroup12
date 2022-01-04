@@ -1,7 +1,9 @@
 import * as React from "react";
 import { Col, Row } from "antd/lib/grid";
-import { Card, Input, List } from "antd";
+import { Card, Input, Table, Tag, Tooltip } from "antd";
 import axios from "axios";
+import Column from "antd/lib/table/Column";
+import { Link } from "react-router-dom";
 
 export interface ISearchPageProps {}
 
@@ -28,6 +30,19 @@ export type prototypeResponse = {
   tags: [string];
   title: string;
   username: string;
+};
+
+type entityType = {
+  description: string;
+  entitiType: string;
+  id: number;
+  title: string;
+};
+
+type subGoalType = {
+  description: string;
+  id: number;
+  title: string;
 };
 
 export function SearchPage(props: ISearchPageProps) {
@@ -74,7 +89,6 @@ export function SearchPage(props: ISearchPageProps) {
         if (response.status === 200) {
           setSearchResponse(response.data);
           setVisible(true);
-          console.log(searchResponse);
         }
       })
       .catch((error) => {
@@ -97,18 +111,73 @@ export function SearchPage(props: ISearchPageProps) {
       {visible && (
         <Row>
           <Col span={24}>
-            <Card>
-              <List
-                size="large"
-                header={<h2>Search Results</h2>}
-                dataSource={searchResponse}
-                renderItem={(item) => (
-                  <List.Item>
-                    <h3>{item.title}</h3>
-                    <p>{item.description}</p>
-                  </List.Item>
-                )}
-              />
+            <Card title="Search Results">
+              <Table dataSource={searchResponse}>
+                <Column title="Title" dataIndex="title" key="title" />
+                <Column
+                  title="Description"
+                  dataIndex="description"
+                  key="description"
+                />
+
+                <Column
+                  title="Download Count"
+                  dataIndex="download_count"
+                  key="download_count"
+                />
+                <Column
+                  title="Entities"
+                  dataIndex="entities"
+                  key="entities"
+                  render={(entity: entityType[]) => {
+                    return (
+                      <>
+                        {entity.map((item) => {
+                          <Tooltip title={item.description}>
+                            <Link to={`/entity/${item.entitiType}/${item.id}"`}>
+                              <Tag color="green" key={item.id}>
+                                {item.title.toUpperCase()}
+                              </Tag>
+                            </Link>
+                          </Tooltip>;
+                        })}
+                      </>
+                    );
+                  }}
+                />
+                <Column
+                  title="Sub Goals"
+                  dataIndex="subgoals"
+                  key="subgoals"
+                  render={(subgoal: subGoalType[]) => (
+                    <>
+                      {subgoal.map((item) => {
+                        <Tooltip title={item.description}>
+                          <Link to={`/goals/${item.id}`}>
+                            <Tag color="green" key={item.id}>
+                              {item.title}
+                            </Tag>
+                          </Link>
+                        </Tooltip>;
+                      })}
+                    </>
+                  )}
+                />
+                <Column
+                  title="Tags"
+                  dataIndex="tags"
+                  key="tags"
+                  render={(tags: string[]) => (
+                    <>
+                      {tags.map((tag) => (
+                        <Tag color="blue" key={tag}>
+                          {tag}
+                        </Tag>
+                      ))}
+                    </>
+                  )}
+                />
+              </Table>
             </Card>
           </Col>
         </Row>
