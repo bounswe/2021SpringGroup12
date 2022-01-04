@@ -22,6 +22,7 @@ import { ResourcePage } from "./pages/ResourcePage";
 import { GoalTypes } from "./helpers/GoalTypes";
 import { CalendarPage } from "./pages/CalendarPage";
 import { Dashboard } from "./pages/Dashboard";
+import {Feed} from "./pages/Feed"
 
 export interface IAppProps {}
 
@@ -108,6 +109,7 @@ export default class App extends React.Component<IAppProps, IAppState> {
                 <Route exact path="/editGoal/:goal_id" children={<EditGoal goalType={GoalTypes.Normal}/>} />
                 <Route exact path="/editSubgoal/:goal_id" children={<EditGoal goalType={GoalTypes.Sub}/>} />
                 <Route exact path="/editGroupgoal/:goal_id" children={<EditGoal goalType={GoalTypes.Group}/>} />
+                <Route path="/feed" children={<Feed />}/>
               </Switch>
             </Content>
           </Layout>
