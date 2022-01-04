@@ -86,6 +86,29 @@ public class GoalService {
         return sublinks;
     }
 
+    private Set<EntitiDTOShort> extractLinkedEntities(Goal goal) {
+
+        Set<EntitiDTOShort> sublinks = new HashSet<>();
+
+        sublinks.addAll(
+                goal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Question"))
+                        .filter(Entiti::getIsLinkedToGoal)
+                        .map(x -> entitiShortMapper.mapToDto((Question) x)).collect(Collectors.toSet()));
+        sublinks.addAll(
+                goal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Task"))
+                        .filter(Entiti::getIsLinkedToGoal)
+                        .map(x -> entitiShortMapper.mapToDto((Task) x)).collect(Collectors.toSet()));
+        sublinks.addAll(
+                goal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Routine"))
+                        .filter(Entiti::getIsLinkedToGoal)
+                        .map(x -> entitiShortMapper.mapToDto((Routine) x)).collect(Collectors.toSet()));
+        sublinks.addAll(
+                goal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Reflection"))
+                        .filter(Entiti::getIsLinkedToGoal)
+                        .map(x -> entitiShortMapper.mapToDto((Reflection) x)).collect(Collectors.toSet()));
+        return sublinks;
+    }
+
     /********************** SEARCH BEGINS *********************************/
     public List<GoalDTOShort> searchGoalsExact(String query, Optional<Long> user_id) {
         if (user_id.isPresent()) {
@@ -175,7 +198,7 @@ public class GoalService {
         GoalGetDTO goalGetDTO = goalGetMapper.mapToDto(goal_from_db_opt.get());
         goalGetDTO.setUser_id(goal_from_db_opt.get().getCreator().getUser_id());
         goalGetDTO.setSubgoals(subgoalShortMapper.mapToDto(goal_from_db_opt.get().getSubgoals().stream().collect(Collectors.toList())).stream().collect(Collectors.toSet()));
-        goalGetDTO.setEntities(extractEntities(goal_from_db_opt.get()));
+        goalGetDTO.setLinkedEntities(extractLinkedEntities(goal_from_db_opt.get()));
         return goalGetDTO;
     }
 

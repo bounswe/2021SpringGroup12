@@ -76,6 +76,9 @@ public abstract class Entiti {
     @OneToMany(mappedBy = "entiti", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Resource> resources;
 
+    @Column(name = "isLinkedToGoal")
+    private Boolean isLinkedToGoal;
+
     @Override
     public boolean equals(Object obj)
     {

@@ -11,6 +11,7 @@ import cmpe451.group12.beabee.goalspace.Repository.goals.SubgoalRepository;
 import cmpe451.group12.beabee.goalspace.Repository.resources.ResourceRepository;
 import cmpe451.group12.beabee.goalspace.dto.entities.*;
 import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalDTOShort;
+import cmpe451.group12.beabee.goalspace.dto.goals.SubgoalGetDTO;
 import cmpe451.group12.beabee.goalspace.dto.resources.ResourceDTOShort;
 import cmpe451.group12.beabee.goalspace.enums.EntitiType;
 import cmpe451.group12.beabee.goalspace.mapper.entities.*;
@@ -113,34 +114,52 @@ public class EntitiService {
 
     /****************************** LINKING ENTITIES ********************************/
 
+    private Long parentOfSubgoal(Subgoal subgoal) {
+        if (subgoal.getMainGroupgoal() != null)
+            return subgoal.getMainGroupgoal().getId();
+        else if (subgoal.getMainGoal() != null)
+            return subgoal.getMainGoal().getId();
+        return parentOfSubgoal(subgoalRepository.findParentById(subgoal.getId()));
+    }
+
     public MessageResponse entitiLink(Long id, EntitiLinkDTO entitiLinkDTO) {
-        Entiti parentEntiti = entitiRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent entity not found"));
+        Entiti child = entitiRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Child entity not found"));
 
         // Check the type of the object we want to link
         switch (entitiLinkDTO.getChildType()) {
             case ENTITI:
-                Entiti childEntiti = entitiRepository.findById(entitiLinkDTO.getChildId())
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Child entity not found"));
+                Entiti parentEntiti = entitiRepository.findById(entitiLinkDTO.getChildId())
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent entity not found"));
 
-                if(parentEntiti.getGoal() != childEntiti.getGoal() || parentEntiti.getGroupgoal() != childEntiti.getGroupgoal())
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Child entity is not in the same group!");
+                if(child.getGoal() != parentEntiti.getGoal() || child.getGroupgoal() != parentEntiti.getGroupgoal())
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parent entity is not in the same group!");
 
-                parentEntiti.getSublinked_entities().add(childEntiti);
+                parentEntiti.getSublinked_entities().add(child);
+                entitiRepository.save(parentEntiti);
                 break;
 
             case SUBGOAL:
-                Subgoal childSubgoal = subgoalRepository.findById(entitiLinkDTO.getChildId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Child subgoal not found"));
+                Subgoal parentSubgoal = subgoalRepository.findById(entitiLinkDTO.getChildId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent subgoal not found"));
 
-                if(parentEntiti.getGoal() != childSubgoal.getMainGoal() || parentEntiti.getGroupgoal() != childSubgoal.getMainGroupgoal())
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Child subgoal is not in the same group!");
+                if(!child.getGoal().getId().equals(parentOfSubgoal(parentSubgoal)) &&
+                        !child.getGroupgoal().getId().equals(parentOfSubgoal(parentSubgoal)))
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parent subgoal is not in the same group!");
 
-                parentEntiti.getSublinked_subgoals().add(childSubgoal);
+                child.getSublinked_subgoals().add(parentSubgoal);
+                entitiRepository.save(child);
+
+                break;
+            case GOAL:
+            case GROUPGOAL:
+                if(child.getIsLinkedToGoal())
+                    return new MessageResponse("Already linked to parent", MessageType.ERROR);
+                child.setIsLinkedToGoal(Boolean.TRUE);
+                entitiRepository.save(child);
                 break;
         }
 
-        entitiRepository.save(parentEntiti);
         return new MessageResponse("Linking operation is successful.", MessageType.SUCCESS);
     }
 
@@ -163,6 +182,12 @@ public class EntitiService {
                 if(!parentEntiti.getSublinked_subgoals().removeIf(e -> e.equals(childSubgoal)))
                     return new MessageResponse("Link does not exist", MessageType.ERROR);
                 break;
+            case GOAL:
+            case GROUPGOAL:
+                if(!parentEntiti.getIsLinkedToGoal())
+                    return new MessageResponse("Link does not exist", MessageType.ERROR);
+                parentEntiti.setIsLinkedToGoal(Boolean.FALSE);
+                break;
         }
         entitiRepository.save(parentEntiti);
         return new MessageResponse("Link deleted is successful.", MessageType.SUCCESS);
@@ -174,6 +199,9 @@ public class EntitiService {
         Reflection new_reflection = reflectionPostMapper.mapToEntity(reflectionPostDTO);
         new_reflection.setEntitiType(EntitiType.REFLECTION);
         new_reflection.setIsDone(Boolean.FALSE);
+        new_reflection.setIsLinkedToGoal(Boolean.TRUE);
+        new_reflection.setSublinked_entities(new HashSet<>());
+        new_reflection.setSublinked_subgoals(new HashSet<>());
 
         switch (reflectionPostDTO.getGoalType()) {
             case GOAL:
@@ -188,7 +216,7 @@ public class EntitiService {
                 break;
         }
 
-        if (reflectionPostDTO.getInitialLinkType() != null) {
+        if (reflectionPostDTO.getInitialLinkType() != null && !(reflectionPostDTO.getInitialParentId() < 0)) {
             switch (reflectionPostDTO.getInitialLinkType())
             {
                 case ENTITI:
@@ -199,6 +227,7 @@ public class EntitiService {
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parent entity is not in the same group!");
 
                     new_reflection.setCreator(entiti.getCreator());
+                    new_reflection.setIsLinkedToGoal(Boolean.FALSE);
                     Reflection saved_reflection = reflectionRepository.save(new_reflection);
                     entiti.getSublinked_entities().add(saved_reflection);
                     entitiRepository.save(entiti);
@@ -207,11 +236,17 @@ public class EntitiService {
                     Subgoal subgoal = subgoalRepository.findById(reflectionPostDTO.getInitialParentId())
                             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent subgoal not found!"));
 
-                    if(new_reflection.getGoal() != subgoal.getMainGoal() || new_reflection.getGroupgoal() != subgoal.getMainGroupgoal())
+                    if(!new_reflection.getGoal().getId().equals(parentOfSubgoal(subgoal)) &&
+                            !new_reflection.getGroupgoal().getId().equals(parentOfSubgoal(subgoal)))
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parent subgoal is not in the same group!");
 
-                    new_reflection.setSublinked_subgoals(Set.of(subgoal));
+                    new_reflection.setSublinked_subgoals(new HashSet<>(Set.of(subgoal)));
                     new_reflection.setCreator(subgoal.getCreator());
+                    new_reflection.setIsLinkedToGoal(Boolean.FALSE);
+                    reflectionRepository.save(new_reflection);
+                    break;
+                case GOAL:
+                case GROUPGOAL:
                     reflectionRepository.save(new_reflection);
                     break;
             }
@@ -228,6 +263,9 @@ public class EntitiService {
         new_task.setEntitiType(EntitiType.TASK);
         new_task.setIsDone(Boolean.FALSE);
         new_task.setExtension_count(0L);
+        new_task.setIsLinkedToGoal(Boolean.TRUE);
+        new_task.setSublinked_entities(new HashSet<>());
+        new_task.setSublinked_subgoals(new HashSet<>());
 
         switch (taskPostDTO.getGoalType()) {
             case GOAL:
@@ -242,7 +280,7 @@ public class EntitiService {
                 break;
         }
 
-        if (taskPostDTO.getInitialLinkType() != null) {
+        if (taskPostDTO.getInitialLinkType() != null && !(taskPostDTO.getInitialParentId() < 0)) {
             switch (taskPostDTO.getInitialLinkType())
             {
                 case ENTITI:
@@ -253,6 +291,7 @@ public class EntitiService {
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parent entity is not in the same group!");
 
                     new_task.setCreator(entiti.getCreator());
+                    new_task.setIsLinkedToGoal(Boolean.FALSE);
                     Task saved_task = taskRepository.save(new_task);
                     entiti.getSublinked_entities().add(saved_task);
                     entitiRepository.save(entiti);
@@ -261,11 +300,17 @@ public class EntitiService {
                     Subgoal subgoal = subgoalRepository.findById(taskPostDTO.getInitialParentId())
                             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent subgoal not found!"));
 
-                    if(new_task.getGoal() != subgoal.getMainGoal() || new_task.getGroupgoal() != subgoal.getMainGroupgoal())
+                    if(!new_task.getGoal().getId().equals(parentOfSubgoal(subgoal)) &&
+                            !new_task.getGroupgoal().getId().equals(parentOfSubgoal(subgoal)))
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parent subgoal is not in the same group!");
 
-                    new_task.setSublinked_subgoals(Set.of(subgoal));
+                    new_task.setSublinked_subgoals(new HashSet<>(Set.of(subgoal)));
                     new_task.setCreator(subgoal.getCreator());
+                    new_task.setIsLinkedToGoal(Boolean.FALSE);
+                    taskRepository.save(new_task);
+                    break;
+                case GOAL:
+                case GROUPGOAL:
                     taskRepository.save(new_task);
                     break;
             }
@@ -281,6 +326,9 @@ public class EntitiService {
         Question new_question = questionPostMapper.mapToEntity(questionPostDTO);
         new_question.setEntitiType(EntitiType.QUESTION);
         new_question.setIsDone(Boolean.FALSE);
+        new_question.setIsLinkedToGoal(Boolean.TRUE);
+        new_question.setSublinked_entities(new HashSet<>());
+        new_question.setSublinked_subgoals(new HashSet<>());
 
         switch (questionPostDTO.getGoalType()) {
             case GOAL:
@@ -295,7 +343,7 @@ public class EntitiService {
                 break;
         }
 
-        if (questionPostDTO.getInitialLinkType() != null) {
+        if (questionPostDTO.getInitialLinkType() != null && !(questionPostDTO.getInitialParentId() < 0)) {
             switch (questionPostDTO.getInitialLinkType())
             {
                 case ENTITI:
@@ -306,6 +354,7 @@ public class EntitiService {
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parent entity is not in the same group!");
 
                     new_question.setCreator(entiti.getCreator());
+                    new_question.setIsLinkedToGoal(Boolean.FALSE);
                     Question saved_question = questionRepository.save(new_question);
                     entiti.getSublinked_entities().add(saved_question);
                     entitiRepository.save(saved_question);
@@ -314,11 +363,17 @@ public class EntitiService {
                     Subgoal subgoal = subgoalRepository.findById(questionPostDTO.getInitialParentId())
                             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent subgoal not found!"));
 
-                    if(new_question.getGoal() != subgoal.getMainGoal() || new_question.getGroupgoal() != subgoal.getMainGroupgoal())
+                    if(!new_question.getGoal().getId().equals(parentOfSubgoal(subgoal)) &&
+                            !new_question.getGroupgoal().getId().equals(parentOfSubgoal(subgoal)))
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parent subgoal is not in the same group!");
 
-                    new_question.setSublinked_subgoals(Set.of(subgoal));
+                    new_question.setSublinked_subgoals(new HashSet<>(Set.of(subgoal)));
                     new_question.setCreator(subgoal.getCreator());
+                    new_question.setIsLinkedToGoal(Boolean.FALSE);
+                    questionRepository.save(new_question);
+                    break;
+                case GOAL:
+                case GROUPGOAL:
                     questionRepository.save(new_question);
                     break;
             }
@@ -334,6 +389,9 @@ public class EntitiService {
         new_routine.setEntitiType(EntitiType.ROUTINE);
         new_routine.setIsDone(Boolean.FALSE);
         new_routine.setExtension_count(0L);
+        new_routine.setIsLinkedToGoal(Boolean.TRUE);
+        new_routine.setSublinked_entities(new HashSet<>());
+        new_routine.setSublinked_subgoals(new HashSet<>());
 
         switch (routinePostDTO.getGoalType()) {
             case GOAL:
@@ -348,7 +406,7 @@ public class EntitiService {
                 break;
         }
 
-        if (routinePostDTO.getInitialLinkType() != null) {
+        if (routinePostDTO.getInitialLinkType() != null && !(routinePostDTO.getInitialParentId() < 0)) {
             switch (routinePostDTO.getInitialLinkType())
             {
                 case ENTITI:
@@ -359,7 +417,7 @@ public class EntitiService {
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parent entity is not in the same group!");
 
                     new_routine.setCreator(entiti.getCreator());
-                    new_routine.setSublinked_entities(Set.of(entiti));
+                    new_routine.setIsLinkedToGoal(Boolean.FALSE);
                     Routine saved_routine = routineRepository.save(new_routine);
                     entiti.getSublinked_entities().add(saved_routine);
                     entitiRepository.save(entiti);
@@ -368,11 +426,17 @@ public class EntitiService {
                     Subgoal subgoal = subgoalRepository.findById(routinePostDTO.getInitialParentId())
                             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Parent subgoal not found!"));
 
-                    if(new_routine.getGoal() != subgoal.getMainGoal() || new_routine.getGroupgoal() != subgoal.getMainGroupgoal())
+                    if(!new_routine.getGoal().getId().equals(parentOfSubgoal(subgoal)) &&
+                            !new_routine.getGroupgoal().getId().equals(parentOfSubgoal(subgoal)))
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parent subgoal is not in the same group!");
 
-                    new_routine.setSublinked_subgoals(Set.of(subgoal));
+                    new_routine.setSublinked_subgoals(new HashSet<>(Set.of(subgoal)));
                     new_routine.setCreator(subgoal.getCreator());
+                    new_routine.setIsLinkedToGoal(Boolean.FALSE);
+                    routineRepository.save(new_routine);
+                    break;
+                case GOAL:
+                case GROUPGOAL:
                     routineRepository.save(new_routine);
                     break;
             }

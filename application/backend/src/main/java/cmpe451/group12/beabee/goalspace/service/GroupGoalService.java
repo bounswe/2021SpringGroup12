@@ -13,10 +13,7 @@ import cmpe451.group12.beabee.goalspace.dto.goals.*;
 import cmpe451.group12.beabee.goalspace.enums.GoalType;
 import cmpe451.group12.beabee.goalspace.mapper.entities.EntitiShortMapper;
 import cmpe451.group12.beabee.goalspace.mapper.goals.*;
-import cmpe451.group12.beabee.goalspace.model.entities.Question;
-import cmpe451.group12.beabee.goalspace.model.entities.Reflection;
-import cmpe451.group12.beabee.goalspace.model.entities.Routine;
-import cmpe451.group12.beabee.goalspace.model.entities.Task;
+import cmpe451.group12.beabee.goalspace.model.entities.*;
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import cmpe451.group12.beabee.goalspace.model.goals.GroupGoal;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
@@ -82,6 +79,29 @@ public class GroupGoalService
         return sublinks;
     }
 
+    private Set<EntitiDTOShort> extractLinkedEntities(GroupGoal groupGoal){
+
+        Set<EntitiDTOShort> sublinks = new HashSet<>();
+
+        sublinks.addAll(
+                groupGoal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Question"))
+                        .filter(Entiti::getIsLinkedToGoal)
+                        .map(x -> entitiShortMapper.mapToDto((Question) x)).collect(Collectors.toSet()));
+        sublinks.addAll(
+                groupGoal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Task"))
+                        .filter(Entiti::getIsLinkedToGoal)
+                        .map(x -> entitiShortMapper.mapToDto((Task) x)).collect(Collectors.toSet()));
+        sublinks.addAll(
+                groupGoal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Routine"))
+                        .filter(Entiti::getIsLinkedToGoal)
+                        .map(x -> entitiShortMapper.mapToDto((Routine) x)).collect(Collectors.toSet()));
+        sublinks.addAll(
+                groupGoal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Reflection"))
+                        .filter(Entiti::getIsLinkedToGoal)
+                        .map(x -> entitiShortMapper.mapToDto((Reflection) x)).collect(Collectors.toSet()));
+        return sublinks;
+    }
+
     public GroupGoalGetDto getAGroupgoal(Long groupgoal_id) {
         GroupGoal groupGoal = groupGoalRepository.findById(groupgoal_id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group goal not found!")
@@ -89,7 +109,7 @@ public class GroupGoalService
         GroupGoalGetDto groupGoalGetDto = groupGoalGetMapper.mapToDto(groupGoal);
         groupGoalGetDto.setUser_id(groupGoal.getCreator().getUser_id());
         groupGoalGetDto.setSubgoals(new HashSet<>(subgoalShortMapper.mapToDto(new ArrayList<>(groupGoal.getSubgoals()))));
-        groupGoalGetDto.setEntities(extractEntities(groupGoal));
+        groupGoalGetDto.setLinkedEntities(extractLinkedEntities(groupGoal));
         groupGoalGetDto.setTags(groupGoal.getTags().stream().map(Tag::getName).collect(Collectors.toSet()));
         //groupGoalGetDto.setMembers(userCredentialsGetMapper.mapToDto(groupGoal.getMembers().stream().map(x->{x.setPassword("***"); return x;}).collect(Collectors.toList())).stream().collect(Collectors.toSet()));
         return groupGoalGetDto;
