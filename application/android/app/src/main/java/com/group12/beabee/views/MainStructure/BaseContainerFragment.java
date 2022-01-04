@@ -35,6 +35,10 @@ public class BaseContainerFragment extends Fragment {
     ImageButton btnApprove;
     @BindView(R.id.btn_add)
     ImageButton btnAdd;
+    @BindView(R.id.btn_search)
+    ImageButton btnSearch;
+    @BindView(R.id.btn_pp)
+    ImageButton btnPP;
     @BindView(R.id.tv_page_title)
     TextView tvPageTitle;
 
@@ -79,6 +83,14 @@ public class BaseContainerFragment extends Fragment {
         btnAdd.setOnClickListener(listener);
     }
 
+    public void SetSearchBtnListener(View.OnClickListener listener) {
+        btnSearch.setOnClickListener(listener);
+    }
+
+    public void SetPPBtnListener(View.OnClickListener listener) {
+        btnPP.setOnClickListener(listener);
+    }
+
     public void AddNewFragment(BaseInnerFragment fragment) {
         fragmentManager = getChildFragmentManager();
         fragmentManager.beginTransaction()
@@ -105,6 +117,12 @@ public class BaseContainerFragment extends Fragment {
             case OnlyBack:
                 ModeOnlyBack();
                 break;
+            case OnlyTitle:
+                ModeOnlyTitle();
+                break;
+            case OnlySearch:
+                ModeOnlySearch();
+                break;
             case Editable:
                 ModeEditable();
                 break;
@@ -120,6 +138,9 @@ public class BaseContainerFragment extends Fragment {
             case ListWithBack:
                 ModeListWithBack();
                 break;
+            case Feed:
+                ModeFeed();
+                break;
         }
     }
 
@@ -134,6 +155,8 @@ public class BaseContainerFragment extends Fragment {
         btnApprove.setVisibility(View.VISIBLE);
         btnEdit.setVisibility(View.GONE);
         btnAdd.setVisibility(View.GONE);
+        btnSearch.setVisibility(View.GONE);
+        btnPP.setVisibility(View.GONE);
     }
 
     private void ModeEditable() {
@@ -143,6 +166,30 @@ public class BaseContainerFragment extends Fragment {
         btnApprove.setVisibility(View.GONE);
         btnEdit.setVisibility(View.VISIBLE);
         btnAdd.setVisibility(View.GONE);
+        btnSearch.setVisibility(View.GONE);
+        btnPP.setVisibility(View.GONE);
+    }
+
+    private void ModeOnlyTitle() {
+        topbar.setVisibility(View.VISIBLE);
+        btnBack.setVisibility(View.GONE);
+        btnCancel.setVisibility(View.GONE);
+        btnApprove.setVisibility(View.GONE);
+        btnEdit.setVisibility(View.GONE);
+        btnAdd.setVisibility(View.GONE);
+        btnSearch.setVisibility(View.GONE);
+        btnPP.setVisibility(View.GONE);
+    }
+
+    private void ModeOnlySearch() {
+        topbar.setVisibility(View.VISIBLE);
+        btnBack.setVisibility(View.GONE);
+        btnCancel.setVisibility(View.GONE);
+        btnApprove.setVisibility(View.GONE);
+        btnEdit.setVisibility(View.GONE);
+        btnAdd.setVisibility(View.GONE);
+        btnSearch.setVisibility(View.VISIBLE);
+        btnPP.setVisibility(View.GONE);
     }
 
     private void ModeOnlyBack() {
@@ -152,6 +199,8 @@ public class BaseContainerFragment extends Fragment {
         btnApprove.setVisibility(View.GONE);
         btnEdit.setVisibility(View.GONE);
         btnAdd.setVisibility(View.GONE);
+        btnSearch.setVisibility(View.GONE);
+        btnPP.setVisibility(View.GONE);
     }
 
     private void ModeList() {
@@ -161,6 +210,19 @@ public class BaseContainerFragment extends Fragment {
         btnApprove.setVisibility(View.GONE);
         btnEdit.setVisibility(View.GONE);
         btnAdd.setVisibility(View.VISIBLE);
+        btnSearch.setVisibility(View.GONE);
+        btnPP.setVisibility(View.GONE);
+    }
+
+    private void ModeFeed() {
+        topbar.setVisibility(View.VISIBLE);
+        btnBack.setVisibility(View.GONE);
+        btnCancel.setVisibility(View.GONE);
+        btnApprove.setVisibility(View.GONE);
+        btnEdit.setVisibility(View.GONE);
+        btnAdd.setVisibility(View.GONE);
+        btnSearch.setVisibility(View.VISIBLE);
+        btnPP.setVisibility(View.VISIBLE);
     }
 
     private void ModeListWithBack() {
@@ -170,6 +232,8 @@ public class BaseContainerFragment extends Fragment {
         btnApprove.setVisibility(View.GONE);
         btnEdit.setVisibility(View.GONE);
         btnAdd.setVisibility(View.VISIBLE);
+        btnSearch.setVisibility(View.GONE);
+        btnPP.setVisibility(View.GONE);
     }
 
     private void ModeNoTopBar() {

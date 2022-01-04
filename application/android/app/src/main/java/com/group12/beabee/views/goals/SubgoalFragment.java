@@ -14,10 +14,9 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.group12.beabee.OnRateSelectedListener;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.ParentType;
+import com.group12.beabee.models.LinkingType;
 import com.group12.beabee.models.requests.ExtendDeadline;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.SubgoalDetail;
@@ -43,7 +42,7 @@ import retrofit2.Response;
  * Use the {@link SubgoalFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SubgoalFragment extends BaseEntityLinkableFragment  implements IOnSubgoalClickedListener, IOnTagClickedListener, DatePickerDialog.OnDateSetListener {
+public class SubgoalFragment extends BaseEntityLinkableFragment  implements IOnSubgoalClickedListener {
 
     @BindView(R.id.tv_title)
     @Nullable
@@ -51,15 +50,9 @@ public class SubgoalFragment extends BaseEntityLinkableFragment  implements IOnS
     @BindView(R.id.tv_description)
     @Nullable
     TextView tvDescription;
-    @BindView(R.id.tv_dateSelected)
-    @Nullable
-    TextView tvDateSelected;
     @BindView(R.id.rv_subgoals)
     @Nullable
     RecyclerView rvSubgoal;
-    @BindView(R.id.rv_tags)
-    @Nullable
-    RecyclerView rvTag;
     @BindView(R.id.rating)
     @Nullable
     View ratingView;
@@ -72,7 +65,6 @@ public class SubgoalFragment extends BaseEntityLinkableFragment  implements IOnS
 
     private SubgoalDetail subgoalDetail;
 
-    private TagCardViewAdapter tagAdapter;
     private SubgoalCardViewAdapter subgoalAdapter;
 
     public SubgoalFragment() {
@@ -98,15 +90,12 @@ public class SubgoalFragment extends BaseEntityLinkableFragment  implements IOnS
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         subgoalAdapter = new SubgoalCardViewAdapter();
-        tagAdapter = new TagCardViewAdapter();
 
-        tagAdapter.setItemClickListener(this);
         subgoalAdapter.setItemClickListener(this);
     }
 
     @Override
     public void onReady() {
-        rvTag.setAdapter(tagAdapter);
         rvSubgoal.setAdapter(subgoalAdapter);
     }
 
@@ -143,7 +132,6 @@ public class SubgoalFragment extends BaseEntityLinkableFragment  implements IOnS
         subgoalDetail = data;
         tvTitle.setText(data.title);
         tvDescription.setText(data.description);
-        tvDateSelected.setText(data.deadline);
         if (data.isDone) {
             btnComplete.setVisibility(View.GONE);
             ratingView.setVisibility(View.VISIBLE);
@@ -195,8 +183,8 @@ public class SubgoalFragment extends BaseEntityLinkableFragment  implements IOnS
     }
 
     @Override
-    protected ParentType GetLinkableType() {
-        return ParentType.SUBGOAL;
+    protected LinkingType GetLinkableType() {
+        return LinkingType.SUBGOAL;
     }
 
     @Override
@@ -220,55 +208,9 @@ public class SubgoalFragment extends BaseEntityLinkableFragment  implements IOnS
         OpenNewFragment(SubgoalFragment.newInstance(id));
     }
 
-    @Override
-    public void OnTagClicked(int id) {
-
-    }
 
     private void SetSubgoals(List<SubgoalShort> subgoals) {
         subgoalAdapter.setData(subgoals);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.YEAR, year);
-        c.set(Calendar.MONTH, month);
-        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        String dateString = c.toInstant().toString();
-
-        ExtendDeadline extendDeadline = new ExtendDeadline();
-        extendDeadline.newDeadline = dateString;
-        Utils.showLoading(getParentFragmentManager());
-        service.extendSubgoal(id, extendDeadline).enqueue(new Callback<BasicResponse>() {
-            @Override
-            public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
-                Utils.dismissLoading();
-                if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
-                    Utils.ShowErrorToast(getContext(), "Deadline extended succesfully!");
-                    tvDateSelected.setText(dateString);
-                } else if(!response.isSuccessful() || response.body() == null){
-                    Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
-                } else {
-                    Utils.ShowErrorToast(getContext(), response.body().message);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<BasicResponse> call, Throwable t) {
-                Utils.dismissLoading();
-                Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
-            }
-        });
-
-    }
-
-    @OnClick(R.id.btn_pickDate)
-    @Optional
-    public void onClick(View view) {
-
-        DialogFragment datePicker = new DeadlineCalendarFragment(this);
-        datePicker.show(getActivity().getSupportFragmentManager(), "date picker");
-    }
 }

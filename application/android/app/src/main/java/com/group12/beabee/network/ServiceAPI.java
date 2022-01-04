@@ -3,6 +3,7 @@ package com.group12.beabee.network;
 import com.group12.beabee.models.requests.ExtendDeadline;
 import com.group12.beabee.models.requests.Goal;
 import com.group12.beabee.models.GroupGoalDetail;
+import com.group12.beabee.models.requests.Link;
 import com.group12.beabee.models.requests.LoginRequest;
 import com.group12.beabee.models.requests.Question;
 import com.group12.beabee.models.requests.Reflection;
@@ -10,12 +11,14 @@ import com.group12.beabee.models.requests.Routine;
 import com.group12.beabee.models.requests.SignUpRequest;
 import com.group12.beabee.models.requests.Subgoal;
 import com.group12.beabee.models.requests.Task;
+import com.group12.beabee.models.responses.ActivityStream;
 import com.group12.beabee.models.responses.Analytics;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.EntityShort;
 import com.group12.beabee.models.responses.GoalDetail;
 import com.group12.beabee.models.responses.GoalShort;
 import com.group12.beabee.models.responses.GroupGoalShort;
+import com.group12.beabee.models.responses.PrototypeGoalDetail;
 import com.group12.beabee.models.responses.QuestionDetail;
 import com.group12.beabee.models.responses.ReflectionDetail;
 import com.group12.beabee.models.responses.RoutineDetail;
@@ -24,6 +27,7 @@ import com.group12.beabee.models.responses.LoginResponse;
 import com.group12.beabee.models.responses.TaskDetail;
 import com.group12.beabee.models.responses.SignUpResponse;
 import com.group12.beabee.models.responses.UserDTO;
+import com.group12.beabee.models.responses.UserSearchData;
 
 import java.util.List;
 
@@ -59,14 +63,28 @@ public interface ServiceAPI {
     @PUT("goals")
     Call<BasicResponse> updateGoalOfUser(@Body GoalDetail goalDetail);
 
+    @PUT("goals/{goal_id}/tag")
+    Call<BasicResponse> addTagToGoal(@Path("goal_id") int goalId, @Body List<String> tags);
+
+    @PUT("goals/{goal_id}/removetag/{tag}")
+    Call<BasicResponse> removeTagFromGoal(@Path("goal_id") int goalId, @Path("tag") String tag);
+
+    @PUT("groupgoals/{goal_id}/tag")
+    Call<BasicResponse> addTagToGroupGoal(@Path("goal_id") int goalId, @Body List<String> tags);
+
+    @PUT("groupgoals/{goal_id}/removetag/{tag}")
+    Call<BasicResponse> removeTagFromGroupGoal(@Path("goal_id") int goalId, @Path("tag") String tag);
+
     @GET("entities/user/{user_id}")
     Call<List<EntityShort>> getEntitiesOfUser(@Path("user_id") int userId);
 
     @GET("entities/goal/{goal_id}")
     Call<List<EntityShort>> getEntitiesOfGoal(@Path("goal_id") int goalId);
+    @GET("entities/groupgoal/{goal_id}")
+    Call<List<EntityShort>> getEntitiesOfGroupGoal(@Path("goal_id") int groupGoalId);
 
-    @POST("entities/{id}/link/{child_id}")
-    Call<BasicResponse> linkEntities(@Path("id") int id, @Path("child_id") int childId);
+    @POST("entities/{id}/link")
+    Call<BasicResponse> linkEntities(@Path("id") int id, @Body Link link);
 
     /////
 
@@ -200,6 +218,64 @@ public interface ServiceAPI {
     //ANALYTICS
     @GET("users/analytics/{user_id}")
     Call<Analytics>getUserAnalytics(@Path("user_id") int user_id);
+
+
+    //PROTOTYPE-MARKET PLACE
+
+    @GET("/v2/prototypes/")
+    Call<List<PrototypeGoalDetail>> getMarketPlaceData();
+
+    @GET("/v2/prototypes/{id}")
+    Call<PrototypeGoalDetail>getProGoal(@Path("id") int public_goal_id);
+
+    @POST("/v2/prototypes/publish/{id}")
+    Call<BasicResponse> publishGoal(@Path("id") int public_goal_id);
+
+    @POST("/v2/prototypes/republish/{id}")
+    Call<BasicResponse> republishGoal(@Path("id") int public_goal_id);
+
+    @POST("/v2/prototypes/unpublish/{id}")
+    Call<BasicResponse> unpublishGoal(@Path("id") int public_goal_id);
+
+    @POST("/v2/goals/copy_prototype/{user_id}/{prototype_id}")
+    Call<BasicResponse> copyGoal(@Path("user_id") int user_id,@Path("prototype_id") int prototype_id);
+
+    //SEARCH IN MARKET PLACE
+    @GET("/v2/prototypes/search/")
+    Call<List<GoalDetail>>getProGoalSearch(@Query("query") String query);
+
+    @GET("/v2/prototypes/search/{tag}")
+    Call<List<GoalDetail>>getProGoalTagSearch(@Path("tag") String tag);
+
+
+    //FEED
+    @GET("/v2/activitystreams/{userId}")
+    Call<List<ActivityStream>>getActivityStream(@Path("userId") int userId);
+
+
+
+    //SEARCH USER
+
+    @GET("/v2/users/search/{query}")
+    Call<List<UserSearchData>>getUserSearch(@Path("query") String query);
+
+    @GET("/v2/users/get/{id}")
+    Call<UserSearchData>getUser(@Path("id") int id);
+
+    @POST("/v2/users/{userId}/follow/{targetId}")
+    Call<BasicResponse>followUser(@Path("userId") int userId, @Path("targetId") int targetId);
+
+    @POST("/v2/users/{userId}/unfollow/{targetId}")
+    Call<BasicResponse>unfollowUser(@Path("userId") int userId, @Path("targetId") int targetId);
+
+    @GET("/v2/users/{userId}/followings")
+    Call<List<UserSearchData>>getFollowings(@Path("userId") int userId);
+
+    @GET("/v2/users/{userId}/followers")
+    Call<List<UserSearchData>>getFollowers(@Path("userId") int userId);
+
+
+
 
 }
 //7YPxFmM3yTaAzaSi3Q61B

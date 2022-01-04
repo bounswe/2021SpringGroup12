@@ -14,9 +14,8 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.group12.beabee.OnRateSelectedListener;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.ParentType;
+import com.group12.beabee.models.LinkingType;
 import com.group12.beabee.models.requests.ExtendDeadline;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.GoalDetail;
@@ -28,6 +27,7 @@ import com.group12.beabee.views.entities.DeadlineCalendarFragment;
 import com.group12.beabee.views.entities.IOnTagClickedListener;
 import com.group12.beabee.views.entities.TagCardViewAdapter;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -43,16 +43,13 @@ import retrofit2.Response;
  * Use the {@link GoalFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgoalClickedListener, IOnTagClickedListener, DatePickerDialog.OnDateSetListener {
+public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgoalClickedListener, IOnTagClickedListener{
     @BindView(R.id.tv_title)
     @Nullable
     TextView tvTitle;
     @BindView(R.id.tv_description)
     @Nullable
     TextView tvDescription;
-    @BindView(R.id.tv_dateSelected)
-    @Nullable
-    TextView tvDateSelected;
     @BindView(R.id.rv_subgoals)
     @Nullable
     RecyclerView rvSubgoal;
@@ -62,6 +59,15 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
     @BindView(R.id.btn_complete)
     @Nullable
     View btnComplete;
+    @BindView(R.id.btn_unpublish)
+    @Nullable
+    View btnUnpublish;
+    @BindView(R.id.btn_republish)
+    @Nullable
+    View btnRepublish;
+    @BindView(R.id.btn_publish)
+    @Nullable
+    View btnPublish;
 
     private GoalDetail goalDetail;
 
@@ -100,8 +106,8 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
     }
 
     @Override
-    protected ParentType GetLinkableType() {
-        return ParentType.GOAL;
+    protected LinkingType GetLinkableType() {
+        return LinkingType.GOAL;
     }
 
     @Override
@@ -164,17 +170,34 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
         OpenNewFragment(SubgoalCreateFragment.newInstance(goalDetail.id, SubgoalCreateFragment.FROM_GOAL));
     }
 
-    /*    @DELETE("groupgoals/{user_id}/{groupgoal_id}")
-    Call<BasicResponse> leaveGG(@Path("groupgoal_id") int goalId,@Path("user_id") int userId, @Body GroupGoalDTO ggDTO);*/
-
     @Override
     public void OnSubgoalClicked(int id) {
         OpenNewFragment(SubgoalFragment.newInstance(id));
     }
 
     @Override
-    public void OnTagClicked(int id) {
-
+    public void OnTagClicked(String tag) {
+        Utils.showLoading(getChildFragmentManager());
+        service.removeTagFromGoal(id, tag).enqueue(new Callback<BasicResponse>() {
+            @Override
+            public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
+                if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
+                    Utils.ShowErrorToast(getContext(), "Tag successfully removed!");
+                    goalDetail.tags.remove(tag);
+                    tagAdapter.setData(goalDetail.tags);
+                } else if(!response.isSuccessful() || response.body() == null){
+                    Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+                } else {
+                    Utils.ShowErrorToast(getContext(), response.body().message);
+                }
+            }
+            @Override
+            public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
+                Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+            }
+        });
     }
 
     @OnClick(R.id.btn_complete)
@@ -210,7 +233,6 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
         goalDetail = data;
         tvTitle.setText(data.title);
         tvDescription.setText(data.description);
-        tvDateSelected.setText(data.deadline);
         if (data.isDone) {
             btnComplete.setVisibility(View.GONE);
         }else{
@@ -218,48 +240,124 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
         }
         SetEntityLinks(data.entities);
         SetSubgoals(data.subgoals);
+        tagAdapter.setData(data.tags);
+        if (goalDetail.isPublished)
+        {
+            btnPublish.setVisibility(View.GONE);
+            btnRepublish.setVisibility(View.VISIBLE);
+            btnUnpublish.setVisibility(View.VISIBLE);
+
+        }else{
+            btnPublish.setVisibility(View.VISIBLE);
+            btnRepublish.setVisibility(View.GONE);
+            btnUnpublish.setVisibility(View.GONE);
+        }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.YEAR, year);
-        c.set(Calendar.MONTH, month);
-        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        String dateString = c.toInstant().toString();
 
-        ExtendDeadline extendDeadline = new ExtendDeadline();
-        extendDeadline.newDeadline = dateString;
+    @OnClick(R.id.addTagButton)
+    @Optional
+    public void addTagButton(View view) {
+        Utils.OpenAddTagDialog(getContext(), tag -> {
+            Utils.showLoading(getParentFragmentManager());
+            List<String> tags = new ArrayList<>();
+            tags.add(tag);
+            service.addTagToGoal(id, tags).enqueue(new Callback<BasicResponse>() {
+                @Override
+                public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                    Utils.dismissLoading();
+                    if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
+                        Utils.ShowErrorToast(getContext(), "Tag added successfully!");
+                        goalDetail.tags.add(tag);
+                        tagAdapter.setData(goalDetail.tags);
+                    } else if(!response.isSuccessful() || response.body() == null){
+                        Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+                    } else {
+                        Utils.ShowErrorToast(getContext(), response.body().message);
+                    }
+                }
+                @Override
+                public void onFailure(Call<BasicResponse> call, Throwable t) {
+                    Utils.dismissLoading();
+                    Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+                }
+            });
+        });
+    }
+
+
+
+    @OnClick(R.id.btn_publish)
+    @Optional
+    public void publishGoal(View view) {
         Utils.showLoading(getParentFragmentManager());
-        service.extendGoal(id, extendDeadline).enqueue(new Callback<BasicResponse>() {
+        service.publishGoal(id).enqueue(new Callback<BasicResponse>() {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
                 Utils.dismissLoading();
-                if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
-                    Utils.ShowErrorToast(getContext(), "Deadline extended succesfully!");
-                    tvDateSelected.setText(dateString);
-                } else if(!response.isSuccessful() || response.body() == null){
-                    Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+                if (response.isSuccessful() && response.body() != null) {
+                    Utils.ShowErrorToast(getActivity(), "You published your goal!");
+                    btnPublish.setVisibility(View.GONE);
+                    btnRepublish.setVisibility(View.VISIBLE);
+                    btnUnpublish.setVisibility(View.VISIBLE);
                 } else {
-                    Utils.ShowErrorToast(getContext(), response.body().message);
+                    Utils.ShowErrorToast(getActivity(), "Something went wrong!");
                 }
             }
 
             @Override
             public void onFailure(Call<BasicResponse> call, Throwable t) {
                 Utils.dismissLoading();
-                Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
+                Utils.ShowErrorToast(getActivity(), "Something went wrong!");
             }
         });
-
     }
-
-    @OnClick(R.id.btn_pickDate)
+    @OnClick(R.id.btn_republish)
     @Optional
-    public void onClick(View view) {
+    public void republishGoal(View view) {
+        Utils.showLoading(getParentFragmentManager());
+        service.republishGoal(id).enqueue(new Callback<BasicResponse>() {
+            @Override
+            public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
+                if (response.isSuccessful() && response.body() != null) {
+                    Utils.ShowErrorToast(getActivity(), "You republished your goal!");
+                } else {
+                    Utils.ShowErrorToast(getActivity(), "Something went wrong!");
+                }
+            }
 
-        DialogFragment datePicker = new DeadlineCalendarFragment(this);
-        datePicker.show(getActivity().getSupportFragmentManager(), "date picker");
+            @Override
+            public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
+                Utils.ShowErrorToast(getActivity(), "Something went wrong!");
+            }
+        });
+    }
+    @OnClick(R.id.btn_unpublish)
+    @Optional
+    public void unpublishGoal(View view) {
+        Utils.showLoading(getParentFragmentManager());
+        service.unpublishGoal(id).enqueue(new Callback<BasicResponse>() {
+            @Override
+            public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
+                if (response.isSuccessful() && response.body() != null) {
+                    Utils.ShowErrorToast(getActivity(), "You unpublished your goal!");
+                    btnPublish.setVisibility(View.VISIBLE);
+                    btnRepublish.setVisibility(View.GONE);
+                    btnUnpublish.setVisibility(View.GONE);
+
+                } else {
+                    Utils.ShowErrorToast(getActivity(), "Something went wrong!");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
+                Utils.ShowErrorToast(getActivity(), "Something went wrong!");
+            }
+        });
     }
 }

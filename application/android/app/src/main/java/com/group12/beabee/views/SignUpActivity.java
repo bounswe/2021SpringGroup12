@@ -1,5 +1,6 @@
 package com.group12.beabee.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -25,6 +26,10 @@ public class SignUpActivity extends AppCompatActivity {
 
     @BindView(R.id.et_name)
     EditText etUsername;
+    @BindView(R.id.et_just_name)
+    EditText etName;
+    @BindView(R.id.et_surname)
+    EditText etSurname;
     @BindView(R.id.et_password)
     EditText etPassword;
     @BindView(R.id.et_password_repeat)
@@ -42,6 +47,24 @@ public class SignUpActivity extends AppCompatActivity {
         serviceAPI = BeABeeService.serviceAPI;
     }
 
+    @OnClick(R.id.tv_terms)
+    public void OnTermsClicked(){
+        Intent intent = new Intent(this, StringDisplayActivity.class);
+        Bundle b = new Bundle();
+        b.putInt("key", 0); //Your id
+        intent.putExtras(b); //Put your id to your next Intent
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.tv_privacy)
+    public void OnPrivacyClicked(){
+        Intent intent = new Intent(this, StringDisplayActivity.class);
+        Bundle b = new Bundle();
+        b.putInt("key", 1); //Your id
+        intent.putExtras(b); //Put your id to your next Intent
+        startActivity(intent);
+    }
+
     @OnClick(R.id.btn_signup)
     public void OnClickSignUp(){
         String password = etPassword.getText().toString();
@@ -55,6 +78,8 @@ public class SignUpActivity extends AppCompatActivity {
         signUpRequest.username = etUsername.getText().toString();
         signUpRequest.email = etEmail.getText().toString();
         signUpRequest.password = password;
+        signUpRequest.name=etName.getText().toString();
+        signUpRequest.surname=etSurname.getText().toString();
 
         if (!InputValidator.IsTextNonEmpty(signUpRequest.username)){
             Utils.ShowErrorToast(this, "Username must not be empty!!");

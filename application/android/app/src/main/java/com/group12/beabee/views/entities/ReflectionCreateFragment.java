@@ -9,12 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
+import com.group12.beabee.models.LinkingType;
 import com.group12.beabee.models.ParentType;
 import com.group12.beabee.models.requests.Reflection;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.views.BaseInnerFragment;
+import com.group12.beabee.views.MainStructure.MainActivity;
 import com.group12.beabee.views.MainStructure.PageMode;
 
 import butterknife.BindView;
@@ -38,7 +41,7 @@ public class ReflectionCreateFragment extends BaseInnerFragment {
 
     private Reflection reflection;
     private int parentId;
-    private ParentType parentType;
+    private LinkingType parentType;
 
     public ReflectionCreateFragment() {
         // Required empty public constructor
@@ -50,7 +53,7 @@ public class ReflectionCreateFragment extends BaseInnerFragment {
      *
      * @return A new instance of fragment TaskEdit.
      */
-    public static ReflectionCreateFragment newInstance(int parentId, ParentType parentType) {
+    public static ReflectionCreateFragment newInstance(int parentId, LinkingType parentType) {
         ReflectionCreateFragment fragment = new ReflectionCreateFragment();
         Bundle args = new Bundle();
         args.putInt("parentId", parentId);
@@ -63,7 +66,7 @@ public class ReflectionCreateFragment extends BaseInnerFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         parentId = getArguments().getInt("parentId", -1);
-        parentType = ((ParentType) getArguments().getSerializable("parentType"));
+        parentType = ((LinkingType) getArguments().getSerializable("parentType"));
     }
 
     @Override
@@ -79,8 +82,19 @@ public class ReflectionCreateFragment extends BaseInnerFragment {
         reflection = new Reflection();
         reflection.title = etTitle.getText().toString();
         reflection.description = etDescription.getText().toString();
-        reflection.parentId = parentId;
-        reflection.parentType = parentType;
+        reflection.initialParentId = parentId;
+        reflection.initialLinkType = parentType;
+        if (getActivity()==null)
+            return;
+        int currentPage = ((MainActivity) getActivity()).GetCurrentPage();
+        if (currentPage==0) {
+            reflection.goalType = ParentType.GOAL;
+            reflection.goalId = BeABeeApplication.currentMainGoal;
+        } else if(currentPage==1) {
+            reflection.goalType = ParentType.GROUPGOAL;
+            reflection.goalId = BeABeeApplication.currentGroupGoal;
+        }else
+            return;
         Utils.showLoading(getParentFragmentManager());
         service.createReflection(reflection).enqueue(new Callback<BasicResponse>() {
             @Override

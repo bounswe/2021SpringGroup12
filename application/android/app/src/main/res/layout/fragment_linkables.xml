@@ -1,180 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingStart="20dp"
-    android:paddingEnd="20dp">
-
-    <TextView
-        android:id="@+id/tv_tasks"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Tasks"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/addTaskButton"
-        android:layout_width="46dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="10dp"
-        android:src="@drawable/ic_action_name"
-        android:background="@drawable/bg_rounded_yellow_outline"
-        android:tint="@color/yellow_third"
-        app:layout_constraintBottom_toBottomOf="@id/tv_tasks"
-        app:layout_constraintStart_toEndOf="@+id/tv_tasks"
-        app:layout_constraintTop_toTopOf="@id/tv_tasks" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_tasks"
+    android:layout_height="wrap_content">
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_tasks"
-        tools:listitem="@layout/item_task_cardview" />
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
 
-    <View
-        android:id="@+id/view2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="10dp"
-        android:background="#777777"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rv_tasks" />
+        <TextView
+            android:id="@+id/tv_tasks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Tasks"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageButton
+            android:id="@+id/addTaskButton"
+            android:layout_width="46dp"
+            android:layout_height="37dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/bg_rounded_yellow_outline"
+            android:src="@drawable/ic_action_name"
+            android:tint="@color/yellow_third"
+            app:layout_constraintBottom_toBottomOf="@id/tv_tasks"
+            app:layout_constraintStart_toEndOf="@+id/tv_tasks"
+            app:layout_constraintTop_toTopOf="@id/tv_tasks" />
 
-    <TextView
-        android:id="@+id/tv_routines"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Routines"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_tasks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_tasks"
+            tools:listitem="@layout/item_task_cardview" />
 
-    <ImageButton
-        android:id="@+id/addRoutineButton"
-        android:layout_width="46dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="10dp"
-        android:src="@drawable/ic_action_name"
-        android:background="@drawable/bg_rounded_yellow_outline"
-        android:tint="@color/yellow_third"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_routines"
-        app:layout_constraintStart_toEndOf="@+id/tv_routines"
-        app:layout_constraintTop_toTopOf="@+id/tv_routines" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_routines"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@+id/tv_routines"
-        tools:listitem="@layout/item_routine_cardview" />
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="10dp"
-        android:background="#777777"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rv_routines" />
+        <View
+            android:id="@+id/view2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="#777777"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_tasks" />
 
 
-    <TextView
-        android:id="@+id/tv_questions"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Questions"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+        <TextView
+            android:id="@+id/tv_routines"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Routines"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view2" />
 
-    <ImageButton
-        android:id="@+id/addQuestionButton"
-        android:layout_width="46dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="10dp"
-        android:src="@drawable/ic_action_name"
-        android:background="@drawable/bg_rounded_yellow_outline"
-        android:tint="@color/yellow_third"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_questions"
-        app:layout_constraintStart_toEndOf="@+id/tv_questions"
-        app:layout_constraintTop_toTopOf="@+id/tv_questions" />
+        <ImageButton
+            android:id="@+id/addRoutineButton"
+            android:layout_width="46dp"
+            android:layout_height="37dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/bg_rounded_yellow_outline"
+            android:src="@drawable/ic_action_name"
+            android:tint="@color/yellow_third"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_routines"
+            app:layout_constraintStart_toEndOf="@+id/tv_routines"
+            app:layout_constraintTop_toTopOf="@+id/tv_routines" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_routines"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@+id/tv_routines"
+            tools:listitem="@layout/item_routine_cardview" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_questions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_questions"
-        tools:listitem="@layout/item_question_cardview" />
-
-    <View
-        android:id="@+id/view3"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="10dp"
-        android:background="#777777"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rv_questions" />
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="#777777"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_routines" />
 
 
-    <TextView
-        android:id="@+id/tv_reflections"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Reflections"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view3" />
+        <TextView
+            android:id="@+id/tv_questions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Questions"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view" />
 
-    <ImageButton
-        android:id="@+id/addReflectionButton"
-        android:layout_width="46dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="10dp"
-        android:src="@drawable/ic_action_name"
-        android:background="@drawable/bg_rounded_yellow_outline"
-        android:tint="@color/yellow_third"
-        app:layout_constraintBottom_toBottomOf="@id/tv_reflections"
-        app:layout_constraintStart_toEndOf="@+id/tv_reflections"
-        app:layout_constraintTop_toTopOf="@id/tv_reflections" />
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_reflections"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_reflections"
-        tools:listitem="@layout/item_reflection_cardview" />
+        <ImageButton
+            android:id="@+id/addQuestionButton"
+            android:layout_width="46dp"
+            android:layout_height="37dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/bg_rounded_yellow_outline"
+            android:src="@drawable/ic_action_name"
+            android:tint="@color/yellow_third"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_questions"
+            app:layout_constraintStart_toEndOf="@+id/tv_questions"
+            app:layout_constraintTop_toTopOf="@+id/tv_questions" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_questions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_questions"
+            tools:listitem="@layout/item_question_cardview" />
+
+        <View
+            android:id="@+id/view3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="#777777"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_questions" />
+
+
+        <TextView
+            android:id="@+id/tv_reflections"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Reflections"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view3" />
+
+        <ImageButton
+            android:id="@+id/addReflectionButton"
+            android:layout_width="46dp"
+            android:layout_height="37dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/bg_rounded_yellow_outline"
+            android:src="@drawable/ic_action_name"
+            android:tint="@color/yellow_third"
+            app:layout_constraintBottom_toBottomOf="@id/tv_reflections"
+            app:layout_constraintStart_toEndOf="@+id/tv_reflections"
+            app:layout_constraintTop_toTopOf="@id/tv_reflections" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_reflections"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_reflections"
+            tools:listitem="@layout/item_reflection_cardview" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

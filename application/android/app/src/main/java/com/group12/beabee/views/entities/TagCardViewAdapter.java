@@ -19,11 +19,11 @@ import butterknife.ButterKnife;
 public class TagCardViewAdapter extends RecyclerView.Adapter<TagCardViewAdapter.ViewHolder> {
 
 
-    private List<TagShort> tagShortList;
+    private List<String> tagShortList;
     private IOnTagClickedListener onItemClickedListener;
 
-    public void setData(List<TagShort> tagShorts){
-        tagShortList = tagShorts;
+    public void setData(List<String> tags){
+        tagShortList = tags;
         notifyDataSetChanged();
     }
 
@@ -64,9 +64,9 @@ public class TagCardViewAdapter extends RecyclerView.Adapter<TagCardViewAdapter.
 
         }
 
-        public void BindData(TagShort tagShort){
-            tvtitle.setText(tagShort.title);
-            itemParent.setOnClickListener(v -> onItemClickedListener.OnTagClicked(tagShort.id));
+        public void BindData(String tagShort){
+            tvtitle.setText(tagShort);
+            itemParent.setOnClickListener(v -> onItemClickedListener.OnTagClicked(tagShort));
         }
 
     }

@@ -14,9 +14,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.group12.beabee.R;
 import com.group12.beabee.network.BeABeeService;
 import com.group12.beabee.network.ServiceAPI;
+import com.group12.beabee.views.feed.FeedFragment;
 import com.group12.beabee.views.goals.GoalFragment;
 import com.group12.beabee.views.goals.Home2Fragment;
 import com.group12.beabee.views.goals.Home3Fragment;
+import com.group12.beabee.views.goals.Home4Fragment;
 import com.group12.beabee.views.goals.HomeFragment;
 import com.group12.beabee.views.goals.SubgoalFragment;
 
@@ -36,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
     private boolean onSelectLoop = false;
     private int currentPage;
     private BaseContainerFragment[] containers = new BaseContainerFragment[5];
+
+    public int GetCurrentPage(){
+        return currentPage;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,11 +92,11 @@ public class MainActivity extends AppCompatActivity {
                     baseContainerFragment = fragmentActivity.containers[2];
                     break;
                 case 3:
-                    fragmentActivity.containers[3] = new BaseContainerFragment(new HomeFragment());
+                    fragmentActivity.containers[3] = new BaseContainerFragment(new Home4Fragment());
                     baseContainerFragment = fragmentActivity.containers[3];
                     break;
                 case 4:
-                    fragmentActivity.containers[4] = new BaseContainerFragment(new HomeFragment());
+                    fragmentActivity.containers[4] = new BaseContainerFragment(new FeedFragment());
                     baseContainerFragment = fragmentActivity.containers[4];
                     break;
                 default:

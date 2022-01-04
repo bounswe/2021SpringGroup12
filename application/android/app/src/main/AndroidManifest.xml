@@ -10,17 +10,24 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:usesCleartextTraffic="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.BeaBee">
-
+        android:theme="@style/Theme.BeaBee"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".views.StringDisplayActivity"
+            android:exported="false" />
         <activity
             android:name=".views.MainStructure.MainActivity"
             android:exported="false" />
-
         <activity
             android:name=".views.SignUpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.LoginActivityForgotPage"
+            android:exported="false" />
+        <activity
+            android:name=".views.LoginActivityTokenPage"
             android:exported="false" />
 
         <activity

@@ -35,14 +35,12 @@ import retrofit2.Response;
  * Use the {@link GoalEditFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GoalEditFragment extends BaseInnerFragment implements DatePickerDialog.OnDateSetListener {
+public class GoalEditFragment extends BaseInnerFragment {
 
     @BindView(R.id.et_title)
     EditText etTitle;
     @BindView(R.id.et_description)
     EditText etDescription;
-    @BindView(R.id.tv_deadline)
-    TextView tvDeadline;
 
     private GoalDetail goal;
 
@@ -77,7 +75,6 @@ public class GoalEditFragment extends BaseInnerFragment implements DatePickerDia
         }
         etTitle.setText(goal.title);
         etDescription.setText(goal.description);
-        tvDeadline.setText(goal.deadline);
     }
 
     @Override
@@ -93,7 +90,6 @@ public class GoalEditFragment extends BaseInnerFragment implements DatePickerDia
 
         goal.title = etTitle.getText().toString();
         goal.description = etDescription.getText().toString();
-        goal.deadline = tvDeadline.getText().toString();
         Utils.showLoading(getChildFragmentManager());
         service.updateGoalOfUser(goal).enqueue(new Callback<BasicResponse>() {
             @Override
@@ -129,24 +125,5 @@ public class GoalEditFragment extends BaseInnerFragment implements DatePickerDia
     @Override
     protected int GetLayoutId() {
         return R.layout.fragment_goal_edit;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.YEAR, year);
-        c.set(Calendar.MONTH, month);
-        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        String dateString = c.toInstant().toString();
-        tvDeadline.setText(dateString);
-
-    }
-
-    @OnClick(R.id.btn_pickDate)
-    public void onClick(View view) {
-
-        DialogFragment datePicker = new DeadlineCalendarFragment(this);
-        datePicker.show(getActivity().getSupportFragmentManager(), "date picker");
     }
 }

@@ -4,6 +4,7 @@ package com.group12.beabee.network.mocking;
 import com.group12.beabee.models.GroupGoalDetail;
 import com.group12.beabee.models.requests.ExtendDeadline;
 import com.group12.beabee.models.requests.Goal;
+import com.group12.beabee.models.requests.Link;
 import com.group12.beabee.models.requests.LoginRequest;
 import com.group12.beabee.models.requests.Question;
 import com.group12.beabee.models.requests.Reflection;
@@ -11,12 +12,14 @@ import com.group12.beabee.models.requests.Routine;
 import com.group12.beabee.models.requests.SignUpRequest;
 import com.group12.beabee.models.requests.Subgoal;
 import com.group12.beabee.models.requests.Task;
+import com.group12.beabee.models.responses.ActivityStream;
 import com.group12.beabee.models.responses.Analytics;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.EntityShort;
 import com.group12.beabee.models.responses.GoalDetail;
 import com.group12.beabee.models.responses.GoalShort;
 import com.group12.beabee.models.responses.GroupGoalShort;
+import com.group12.beabee.models.responses.PrototypeGoalDetail;
 import com.group12.beabee.models.responses.QuestionDetail;
 import com.group12.beabee.models.responses.ReflectionDetail;
 import com.group12.beabee.models.responses.RoutineDetail;
@@ -25,6 +28,7 @@ import com.group12.beabee.models.responses.LoginResponse;
 import com.group12.beabee.models.responses.TaskDetail;
 import com.group12.beabee.models.responses.SignUpResponse;
 import com.group12.beabee.models.responses.UserDTO;
+import com.group12.beabee.models.responses.UserSearchData;
 import com.group12.beabee.network.ServiceAPI;
 
 import java.util.ArrayList;
@@ -120,6 +124,26 @@ public class MockService implements ServiceAPI {
     }
 
     @Override
+    public Call<BasicResponse> addTagToGoal(int goalId, List<String> tags) {
+        return returnBasicResponse();
+    }
+
+    @Override
+    public Call<BasicResponse> removeTagFromGoal(int goalId, String tag) {
+        return returnBasicResponse();
+    }
+
+    @Override
+    public Call<BasicResponse> addTagToGroupGoal(int goalId, List<String> tags) {
+        return returnBasicResponse();
+    }
+
+    @Override
+    public Call<BasicResponse> removeTagFromGroupGoal(int goalId, String tag) {
+        return returnBasicResponse();
+    }
+
+    @Override
     public Call<List<EntityShort>> getEntitiesOfUser(int userId) {
         List<EntityShort> tempList = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -160,7 +184,27 @@ public class MockService implements ServiceAPI {
     }
 
     @Override
-    public Call<BasicResponse> linkEntities(int id, int childId) {
+    public Call<List<EntityShort>> getEntitiesOfGroupGoal(int groupGoalId) {
+        List<EntityShort> tempList = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            EntityShort temp = new EntityShort();
+            temp.id = i;
+            temp.title = "title"+i;
+            temp.description = "description"+i;
+            temp.entityType = "TASK";
+            temp.deadline = "2021-12-11T16:50:33.578Z";
+            tempList.add(temp);
+        }
+        return new MockCall<List<EntityShort>>() {
+            @Override
+            public void enqueue(Callback<List<EntityShort>> callback) {
+                callback.onResponse(this, Response.success(tempList));
+            }
+        };
+    }
+
+    @Override
+    public Call<BasicResponse> linkEntities(int id, Link link) {
         return returnBasicResponse();
     }
 
@@ -367,6 +411,89 @@ public class MockService implements ServiceAPI {
     public Call<Analytics> getUserAnalytics(int user_id) {
         return null;
     }
+
+    @Override
+    public Call<List<PrototypeGoalDetail>> getMarketPlaceData() {
+        return null;
+    }
+
+    @Override
+    public Call<PrototypeGoalDetail> getProGoal(int public_goal_id) {
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> publishGoal(int public_goal_id) {
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> republishGoal(int public_goal_id) {
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> unpublishGoal(int public_goal_id) {
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> copyGoal(int user_id, int prototype_id) {
+        return null;
+    }
+
+    @Override
+    public Call<List<GoalDetail>> getProGoalSearch(String query) {
+        return null;
+    }
+
+    @Override
+    public Call<List<GoalDetail>> getProGoalTagSearch(String tag) {
+        return null;
+    }
+
+    @Override
+    public Call<List<ActivityStream>> getActivityStream(int userId) {
+        return null;
+    }
+
+    @Override
+    public Call<List<UserSearchData>> getUserSearch(String query) {
+
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> followUser(int userId, int targetId) {
+
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> unfollowUser(int userId, int targetId) {
+
+        return null;
+    }
+
+    @Override
+    public Call<UserSearchData> getUser(int id) {
+
+        return null;
+    }
+
+    @Override
+    public Call<List<UserSearchData>> getFollowings(int userId) {
+
+        return null;
+    }
+
+    @Override
+    public Call<List<UserSearchData>> getFollowers(int userId) {
+
+        return null;
+    }
+
+
 
     private Call<BasicResponse> returnBasicResponse(){
         return new MockCall<BasicResponse>() {

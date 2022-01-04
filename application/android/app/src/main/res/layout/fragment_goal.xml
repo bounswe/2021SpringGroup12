@@ -41,50 +41,49 @@
         app:layout_constraintStart_toEndOf="@+id/tv_descriptionTitle"
         app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
-
-    <TextView
-        android:id="@+id/tv_dateTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Deadline: "
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_description" />
-
-
-    <TextView
-        android:id="@+id/tv_dateSelected"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="12.12.2021"
-        android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/tv_dateTitle"
-        app:layout_constraintTop_toBottomOf="@+id/tv_description" />
-
-    <Button
-        android:id="@+id/btn_pickDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:enabled="true"
-        android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:text="extend deadline"
-        android:textColor="@android:color/white"
-        android:textSize="10sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_dateSelected" />
-
     <Button
         android:id="@+id/btn_complete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="COMPLETE"
         android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/btn_pickDate"
+        app:layout_constraintTop_toBottomOf="@id/tv_descriptionTitle"
         app:layout_constraintStart_toStartOf="parent"/>
+    <Button
+        android:id="@+id/btn_publish"
+        android:layout_width="wrap_content"
+        android:translationZ="100dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:backgroundTint="@color/yellow_second"
+        android:text="Publish "
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    <Button
+        android:id="@+id/btn_republish"
+        android:layout_width="wrap_content"
+        android:translationZ="100dp"
+        android:visibility="invisible"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:backgroundTint="@color/yellow_second"
+        android:text="Republish"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    <Button
+        android:id="@+id/btn_unpublish"
+        android:layout_width="wrap_content"
+        android:translationZ="100dp"
+        android:visibility="invisible"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:backgroundTint="@color/yellow_second"
+        android:text="Unpublish"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <TextView
         android:id="@+id/tv_tags_title"
