@@ -25,6 +25,7 @@ export function GoalPage(params :{goalType: any}) {
         description: "Loading",
         token: "Loading",
         isDone: false,
+        isPublished: false,
         assignees: [],
         members: [],
         linkedEntities: [],
@@ -125,6 +126,15 @@ export function GoalPage(params :{goalType: any}) {
             axios.post(`/subgoals/${goal_id}/assignees?${user_ids}`, {}, {
                 headers: { Authorization: `Bearer ${token}`},
             }).then(() => window.alert("I Hope added!"))
+        }
+
+        const publish = (button_type: any) => {
+            function ret_func() {
+                axios.post(`/prototypes/${button_type}/${goal_id}/`, {}, {
+                    headers: { Authorization: `Bearer ${token}`},
+                }).then(() => window.alert(`Goal ${button_type} is successfull`))
+            }
+            return ret_func;
         }
     
     const subgoal_columns =  [
@@ -280,10 +290,14 @@ useEffect(() => {
 const showManageDiv = goalType !== GoalTypes.Group || goal.user_id === Number(user_id)
     const showAssignees = goal['assignees'] !== undefined && goal['assignees'].length > 0
     let addSubgoalLink = ""
+    let showPublish = false
+    let showUnpublish = false
     if (goalType === GoalTypes.Sub) {
         addSubgoalLink = "/addSubToSub/"
     } else if (goalType === GoalTypes.Normal) {
         addSubgoalLink = "/addSubToNormal/"
+        showPublish = !goal.isPublished
+        showUnpublish = goal.isPublished
     } else if (goalType === GoalTypes.Group) {
         addSubgoalLink = "/addSubToGroup/"
     }
@@ -381,6 +395,29 @@ const showManageDiv = goalType !== GoalTypes.Group || goal.user_id === Number(us
                 >
                     Complete Goal!
                 </Button>}
+                {showPublish &&
+                <Button
+                    type="primary"
+                    onClick={publish('publish')}
+                >
+                    Publish Goal!
+                </Button>}
+                {showUnpublish &&
+                    <div>
+                        <Button
+                            type="primary"
+                            onClick={publish('republish')}
+                        >
+                            Republish Goal!
+                        </Button>
+                        <Button
+                            type="primary"
+                            onClick={publish('unpublish')}
+                        >
+                            Unpublish Goal!
+                        </Button>
+                    </div>
+                }
             </div>}
 
             {goal['isDone'] &&
