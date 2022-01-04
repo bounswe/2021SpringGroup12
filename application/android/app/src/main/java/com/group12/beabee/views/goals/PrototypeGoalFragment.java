@@ -146,7 +146,7 @@ public class PrototypeGoalFragment extends BaseInnerFragment implements IOnTagCl
     }
 
     @Override
-    public void OnTagClicked(int id) {
+    public void OnTagClicked(String id) {
 
     }
 
@@ -165,6 +165,7 @@ public class PrototypeGoalFragment extends BaseInnerFragment implements IOnTagCl
         tvDescription.setText(data.description);
         SetSubgoals(data.subgoals);
         SetEntity(data.entities);
+        tagAdapter.setData(data.tags);
     }
 
     private void SetEntity(List<EntityShort> entities) {
