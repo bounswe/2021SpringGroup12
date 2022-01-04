@@ -52,7 +52,10 @@ public class PrototypeService {
     public List<GoalPrototypeDTO> getPrototypes() {
         List<GoalPrototypeDTO> result = new ArrayList<>();
         goalPrototypeRespository.findAll().stream().map(prototype -> prototype.getId()).forEach(id -> {
-            result.add(getAPrototype(id));
+            GoalPrototypeDTO dto = getAPrototype(id);
+            if (dto != null && dto.getDownload_count() != null) {
+                result.add(dto);
+            }
         });
         return result.stream().sorted((i1, i2) -> i2.getDownload_count().compareTo(i1.getDownload_count())).collect(Collectors.toList());
     }
@@ -62,9 +65,7 @@ public class PrototypeService {
         List<GoalPrototypeDTO> result = new ArrayList<>();
         goalPrototypeRespository.findAll().stream().map(prototype -> prototype.getId()).forEach(id -> {
             GoalPrototypeDTO dto = getAPrototype(id);
-            if (dto == null) {
-
-            } else {
+            if (dto != null && dto.getDownload_count() != null) {
                 result.add(dto);
             }
         });
