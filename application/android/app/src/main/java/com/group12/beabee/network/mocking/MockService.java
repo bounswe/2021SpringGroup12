@@ -28,6 +28,7 @@ import com.group12.beabee.models.responses.LoginResponse;
 import com.group12.beabee.models.responses.TaskDetail;
 import com.group12.beabee.models.responses.SignUpResponse;
 import com.group12.beabee.models.responses.UserDTO;
+import com.group12.beabee.models.responses.UserSearchData;
 import com.group12.beabee.network.ServiceAPI;
 
 import java.util.ArrayList;
@@ -445,6 +446,44 @@ public class MockService implements ServiceAPI {
     public Call<List<ActivityStream>> getActivityStream(int userId) {
         return null;
     }
+
+    @Override
+    public Call<List<UserSearchData>> getUserSearch(String query) {
+
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> followUser(int userId, int targetId) {
+
+        return null;
+    }
+
+    @Override
+    public Call<BasicResponse> unfollowUser(int userId, int targetId) {
+
+        return null;
+    }
+
+    @Override
+    public Call<UserSearchData> getUser(int id) {
+
+        return null;
+    }
+
+    @Override
+    public Call<List<UserSearchData>> getFollowings(int userId) {
+
+        return null;
+    }
+
+    @Override
+    public Call<List<UserSearchData>> getFollowers(int userId) {
+
+        return null;
+    }
+
+
 
     private Call<BasicResponse> returnBasicResponse(){
         return new MockCall<BasicResponse>() {

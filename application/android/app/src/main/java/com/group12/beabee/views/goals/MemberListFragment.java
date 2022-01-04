@@ -11,6 +11,7 @@ import com.group12.beabee.R;
 import com.group12.beabee.models.User;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
+import com.group12.beabee.views.userprofile.UserProfileFragment;
 
 import java.util.ArrayList;
 
@@ -60,6 +61,6 @@ public class MemberListFragment extends BaseInnerFragment implements IOnMemberLi
 
     @Override
     public void OnMemberListClicked(int id) {
-        return;
+        OpenNewFragment(UserProfileFragment.newInstance(id));
     }
 }

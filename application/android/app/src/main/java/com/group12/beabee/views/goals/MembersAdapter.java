@@ -52,6 +52,8 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
 
         @BindView(R.id.tv_member_name)
         TextView tvMember;
+        @BindView(R.id.item_parent)
+        View itemParent;
 
 
 
@@ -62,7 +64,9 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
 
 
         public void BindData(User goalShort) {
+
             tvMember.setText(goalShort.username);
+            itemParent.setOnClickListener(v -> onItemClickedListener.OnMemberListClicked(goalShort.user_id));
         }
     }
 }

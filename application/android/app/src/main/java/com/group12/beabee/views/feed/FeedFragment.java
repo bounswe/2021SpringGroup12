@@ -15,12 +15,15 @@ import com.group12.beabee.models.responses.ActivityStream;
 import com.group12.beabee.models.responses.GoalShort;
 import com.group12.beabee.views.BaseInnerFragment;
 import com.group12.beabee.views.MainStructure.PageMode;
+import com.group12.beabee.views.goals.Home4_2Fragment;
 import com.group12.beabee.views.goals.MembersAdapter;
+import com.group12.beabee.views.userprofile.UserSearchFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -88,6 +91,11 @@ public class FeedFragment extends BaseInnerFragment implements IOnFeedClickedLis
     public void OnFeedClicked(int id) {
         
 
+    }
+
+    @Override
+    protected void OnSearchClicked(){
+        OpenNewFragment((new UserSearchFragment()));
     }
 
 }

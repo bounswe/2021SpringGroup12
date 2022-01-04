@@ -27,6 +27,7 @@ import com.group12.beabee.models.responses.LoginResponse;
 import com.group12.beabee.models.responses.TaskDetail;
 import com.group12.beabee.models.responses.SignUpResponse;
 import com.group12.beabee.models.responses.UserDTO;
+import com.group12.beabee.models.responses.UserSearchData;
 
 import java.util.List;
 
@@ -244,6 +245,29 @@ public interface ServiceAPI {
     //FEED
     @GET("/v2/activitystreams/{userId}")
     Call<List<ActivityStream>>getActivityStream(@Path("userId") int userId);
+
+
+
+    //SEARCH USER
+
+    @GET("/v2/users/search/{query}")
+    Call<List<UserSearchData>>getUserSearch(@Path("query") String query);
+
+    @GET("/v2/users/get/{id}")
+    Call<UserSearchData>getUser(@Path("id") int id);
+
+    @POST("/v2/users/{userId}/follow/{targetId}")
+    Call<BasicResponse>followUser(@Path("userId") int userId, @Path("targetId") int targetId);
+
+    @POST("/v2/users/{userId}/unfollow/{targetId}")
+    Call<BasicResponse>unfollowUser(@Path("userId") int userId, @Path("targetId") int targetId);
+
+    @GET("/v2/users/{userId}/followings")
+    Call<List<UserSearchData>>getFollowings(@Path("userId") int userId);
+
+    @GET("/v2/users/{userId}/followers")
+    Call<List<UserSearchData>>getFollowers(@Path("userId") int userId);
+
 
 
 
