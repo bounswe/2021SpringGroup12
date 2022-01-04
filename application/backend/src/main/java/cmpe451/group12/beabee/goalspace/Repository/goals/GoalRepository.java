@@ -1,6 +1,7 @@
 package cmpe451.group12.beabee.goalspace.Repository.goals;
 
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
+import cmpe451.group12.beabee.goalspace.model.goals.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,6 +11,7 @@ import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface GoalRepository extends JpaRepository<Goal, Long> {
     Optional<Goal> findById(Long ID);
@@ -20,6 +22,10 @@ public interface GoalRepository extends JpaRepository<Goal, Long> {
     @Query(value = "select max(id) from goal", nativeQuery = true)
     Long lastId();
 
+    List<Goal> findAllByDescriptionContainsOrTitleContains(String query, String query2);
+
+    List<Goal> findAllByTagsIsContaining(Tag tag1);
+    Set<Goal> findAllByHiddentagsIsContaining(Tag tag1);
 
     @Modifying
     @Transactional

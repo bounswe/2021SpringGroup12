@@ -1,14 +1,17 @@
 package cmpe451.group12.beabee.login.dto;
 
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+import javax.persistence.Access;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserCredentialsGetDTO {
 
     private Long user_id;

@@ -28,7 +28,7 @@ public class ResourceService {
 
     private final ResourceRepository resourceRepository;
     private final EntitiRepository entitiRepository;
-
+    private final ActivityStreamService activityStreamService;
 
     @Transactional
     public ResponseEntity<String> save(MultipartFile resource,Long entiti_id) throws IOException {
@@ -60,6 +60,7 @@ public class ResourceService {
         try {
             entitiRepository.save(entiti_opt.get());
             //resourceRepository.save(resourceEntity);
+            activityStreamService.addResource(entiti_opt.get().getCreator(),entiti_opt.get().getGoal(),resourceEntity);
             return ResponseEntity.status(HttpStatus.OK)
                     .body(String.format("Resource uploaded successfully: %s", resource.getOriginalFilename()));
         } catch (Exception e) {

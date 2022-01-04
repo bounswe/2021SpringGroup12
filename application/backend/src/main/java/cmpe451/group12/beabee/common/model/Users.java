@@ -5,9 +5,7 @@ import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import cmpe451.group12.beabee.goalspace.model.goals.GroupGoal;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -16,6 +14,9 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString
 public class Users{
 
@@ -30,13 +31,8 @@ public class Users{
     private String username;
     @Column(name = "password")
     private String password;
-
-
-    @Column(name = "name")
     private String name;
-    @Column(name = "surname")
     private String surname;
-
 
     @Column(name = "password_reset_token")
     private String password_reset_token;
@@ -44,15 +40,15 @@ public class Users{
     private Date password_reset_token_expiration_date;
 
     @JsonIgnoreProperties({"creator"})
-    @OneToMany(mappedBy = "creator")
+    @OneToMany(mappedBy = "creator",cascade = CascadeType.REMOVE, orphanRemoval=true)
     private Set<Goal> goals;
 
     @JsonIgnoreProperties({"creator"})
-    @OneToMany(mappedBy = "creator")
+    @OneToMany(mappedBy = "creator",cascade = CascadeType.PERSIST)
     private Set<Goal> subgoals;
 
     @JsonIgnoreProperties({"creator"})
-    @OneToMany(mappedBy = "creator")
+    @OneToMany(mappedBy = "creator",orphanRemoval=true)
     private Set<GroupGoal> groupgoals;
 
     @JsonIgnoreProperties({"members"})
@@ -64,21 +60,52 @@ public class Users{
     private Set<Subgoal> assigned;
 
 
+
     @JsonIgnoreProperties({"creator"})
-    @OneToMany(mappedBy = "creator")
+    @OneToMany(mappedBy = "creator",orphanRemoval=true)
     private Set<Entiti> entities;
 
-    /*
+
     @JsonIgnoreProperties({"id"})
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name="Person_Followers")
+    @Column(name = "follower_id")
     private Set<Users> followers;
 
     @JsonIgnoreProperties({"id"})
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name="Person_Followings")
+    @Column(name = "following_id")
     private Set<Users> following;
-
+/*
     private Analytics analytic_report;
 */
+
+    @Override
+    public boolean equals(Object obj)
+    {
+
+        // checking if both the object references are
+        // referring to the same object.
+        if(this == obj)
+            return true;
+
+        // it checks if the argument is of the
+        // type Geek by comparing the classes
+        // of the passed argument and this object.
+        // if(!(obj instanceof Geek)) return false; ---> avoid.
+        if(obj == null || obj.getClass()!= this.getClass())
+            return false;
+
+        // type casting of the argument.
+        Users geek = (Users) obj;
+
+        // comparing the state of argument with
+        // the state of 'this' Object.
+        return (geek.user_id == this.user_id);
+    }
+    @Override
+    public String toString() {
+        return  "User_id: " + this.user_id;
+    }
 }

@@ -47,4 +47,4 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         filterChain.doFilter(httpServletRequest,httpServletResponse);
     }
 }
-//TODO : https://www.youtube.com/watch?v=X80nJ5T7YpE 'dan alındı.
+//NOTE : https://www.youtube.com/watch?v=X80nJ5T7YpE 'dan alındı.

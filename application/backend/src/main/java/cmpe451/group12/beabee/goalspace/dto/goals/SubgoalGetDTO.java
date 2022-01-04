@@ -26,11 +26,10 @@ public class SubgoalGetDTO {
     private String description;
     private Date createdAt;
     private Boolean isDone;
-    private Date deadline;
     private Double rating;
 
     private Set<SubgoalDTOShort> sublinks;
-    private Set<EntitiDTOShort> entities;
+    private Set<EntitiDTOShort> sublinked_entities;
     private Set<Long> assignees;
 
 }

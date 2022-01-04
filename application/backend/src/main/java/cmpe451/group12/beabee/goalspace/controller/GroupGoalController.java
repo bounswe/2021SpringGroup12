@@ -9,10 +9,13 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Example;
 import io.swagger.annotations.ExampleProperty;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.parser.ParseException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 @CrossOrigin(origins = "http://localhost:8085")
 @RestController
@@ -95,7 +98,7 @@ public class GroupGoalController {
     @PostMapping("/{user_id}/join")
     public GroupGoalDTOShort joinWithToken(
             @PathVariable @ApiParam(value = "Id of the user", example = "5") Long user_id,
-            @RequestParam(value = "token") @ApiParam(value = "Token of the group", example = "5wbwf6yUxVBcr48AMbz9cb") String token){
+            @RequestParam(value = "token") @ApiParam(value = "Token of the group", example = "5wbwf6") String token){
         return groupGoalService.joinWithToken(user_id, token);
     }
 
@@ -134,4 +137,28 @@ public class GroupGoalController {
     ) SubgoalPostDTO subgoal_dto) {
         return groupGoalService.createSubgoal(subgoal_dto);
     }
+
+
+    @ApiOperation(value = "Get subgoals of a group goal.")
+    @GetMapping("/subgoal/{groupgoal_id}")
+    public List<SubgoalGetDTO> getSubgoalsOfGroupGoal(@PathVariable @ApiParam(value = "Id of the group goal.", example = "5") Long groupgoal_id) {
+        return groupGoalService.getSubgoalsOfGroupGoal(groupgoal_id);
+    }
+
+    @ApiOperation(value = "Add tags to a groupgoal.")
+    @PutMapping("/{groupgoal_id}/tag")
+    public MessageResponse addTags(@PathVariable @ApiParam(value = "Id of the groupgoal.", example = "5") Long groupgoal_id,
+                                   @RequestBody @ApiParam(value = "Set of tags as list.", example = "['tag1','tag2']") Set<String> tags) throws IOException, ParseException
+    {
+        return groupGoalService.addTags(groupgoal_id, tags);
+    }
+
+    @ApiOperation(value = "Remove tags from a groupgoal.")
+    @PutMapping("/{groupgoal_id}/removetag/{tag}")
+    public MessageResponse removeTags(@PathVariable @ApiParam(value = "Id of the groupgoal.", example = "5") Long groupgoal_id,
+                                      @PathVariable @ApiParam(value = "Name of the tag.", example = "5") String tag) throws IOException, ParseException {
+        return groupGoalService.removeTag(groupgoal_id, tag);
+    }
+
+
 }

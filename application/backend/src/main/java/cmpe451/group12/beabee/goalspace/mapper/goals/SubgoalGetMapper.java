@@ -27,7 +27,6 @@ public class SubgoalGetMapper {
             subgoalGetDTO.setDescription(subgoal.getDescription());
             subgoalGetDTO.setCreatedAt(subgoal.getCreatedAt());
             subgoalGetDTO.setIsDone(subgoal.getIsDone());
-            subgoalGetDTO.setDeadline(subgoal.getDeadline());
             subgoalGetDTO.setRating(subgoal.getRating());
             return subgoalGetDTO;
         }
@@ -43,7 +42,6 @@ public class SubgoalGetMapper {
             subgoal.setIsDone(subgoalGetDTO.getIsDone());
             subgoal.setDescription(subgoalGetDTO.getDescription());
             subgoal.setCreatedAt(subgoalGetDTO.getCreatedAt());
-            subgoal.setDeadline(subgoalGetDTO.getDeadline());
             subgoal.setRating(subgoalGetDTO.getRating());
             return subgoal;
         }

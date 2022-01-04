@@ -22,12 +22,14 @@ public class GoalGetDTO {
     private Boolean isDone;
 
     private String description;
+    private Boolean isPublished;
 
-    private Date deadline;
 
     private Date createdAt;
 
     private Set<SubgoalDTOShort> subgoals;
 
-    private Set<EntitiDTOShort> entities;
+    private Set<EntitiDTOShort> linkedEntities;
+    private Set<String> tags;
+
 }
