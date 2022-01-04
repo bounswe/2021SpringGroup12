@@ -3,6 +3,10 @@ import { Card, Col, Row, Statistic } from "antd";
 import { AimOutlined, StockOutlined } from "@ant-design/icons";
 import axios from "axios";
 
+import {Link} from "react-router-dom";
+import {useEffect, useState} from "react";
+
+
 const user_id = localStorage.getItem("user_id");
 const token = localStorage.getItem("token");
 
@@ -44,6 +48,7 @@ const initialAnalytics: UserAnalytics = {
   longestGoal: null,
   shortestGoal: null,
   worstGoal: null,
+
 };
 export interface IDashboardProps {}
 
@@ -53,6 +58,7 @@ export function Dashboard(props: IDashboardProps) {
 
   React.useEffect(() => {
     axios
+
       .get(`/users/analytics/${user_id}`, {
         headers: { Authorization: `Bearer ${token}` },
         data: {},
@@ -67,12 +73,14 @@ export function Dashboard(props: IDashboardProps) {
         console.error("There was an error!", error);
       });
   }, [analyticsData]);
+
   return (
     <div className="site-card-wrapper">
       <Row gutter={[16, 32]}>
         <Col span={24} style={{ textAlign: "center" }}>
           <Card bordered={false} title="Completed Goals">
             <Statistic value={analyticsData.completedGoalCount} />
+
           </Card>
         </Col>
         <Col span={6}>
@@ -91,6 +99,7 @@ export function Dashboard(props: IDashboardProps) {
                 )
               }
             />
+
           </Card>
         </Col>
         <Col span={6}>
@@ -108,6 +117,7 @@ export function Dashboard(props: IDashboardProps) {
                   "N/A"
                 )
               }
+
             />
           </Card>
         </Col>
@@ -126,6 +136,7 @@ export function Dashboard(props: IDashboardProps) {
                   "N/A"
                 )
               }
+
             />
           </Card>
         </Col>
@@ -144,6 +155,7 @@ export function Dashboard(props: IDashboardProps) {
                   "N/A"
                 )
               }
+
             />
           </Card>
         </Col>
@@ -153,6 +165,7 @@ export function Dashboard(props: IDashboardProps) {
               avatar={<StockOutlined />}
               title="Average Completion Time"
               description={analyticsData.averageCompletionTimeOfGoals ? analyticsData.averageCompletionTimeOfGoals : 'N/A'}
+
             />
           </Card>
         </Col>
@@ -162,6 +175,7 @@ export function Dashboard(props: IDashboardProps) {
               avatar={<StockOutlined />}
               title="Active Goals"
               description={analyticsData.activeGoalCount ? analyticsData.activeGoalCount : 'N/A'}
+
             />
           </Card>
         </Col>
@@ -171,6 +185,7 @@ export function Dashboard(props: IDashboardProps) {
               avatar={<StockOutlined />}
               title="Average Rating"
               description={analyticsData.averageRating ? analyticsData.averageRating : 'N/A'}
+
             />
           </Card>
         </Col>
@@ -179,6 +194,7 @@ export function Dashboard(props: IDashboardProps) {
             <Meta
               avatar={<StockOutlined />}
               title="Average Extension Count"
+
               description={analyticsData.averageExtensionCount ? analyticsData.averageExtensionCount : 'N/A'}
             />
           </Card>

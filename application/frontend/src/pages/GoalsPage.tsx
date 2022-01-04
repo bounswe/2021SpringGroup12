@@ -31,7 +31,10 @@ export class GoalsPage extends React.Component {
     console.log("Received values of delete: ", goal);
     axios
       .delete(`/${GoalTypes.Normal}/${goal.key}`, {
-        headers: { Authorization: `Bearer ${this.token}` },
+        headers: { Authorization: `Bearer ${this.token}`,
+        'Access-Control-Allow-Origin': '*',
+        "Access-Control-Allow-Methods": "*"
+       },
         data: {},
       })
       .then(() => this.getGoals());
@@ -44,7 +47,9 @@ export class GoalsPage extends React.Component {
         `/${GoalTypes.Group}/${this.user_id}/join`,
         {},
         {
-          headers: { Authorization: `Bearer ${this.token}` },
+          headers: { Authorization: `Bearer ${this.token}` ,
+          'Access-Control-Allow-Origin': '*',
+          "Access-Control-Allow-Methods": "*"},
           params: {
             token: token,
           },

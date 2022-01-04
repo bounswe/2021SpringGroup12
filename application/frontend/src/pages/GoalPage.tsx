@@ -5,6 +5,10 @@ import axios from "axios";
 import {Link} from "react-router-dom";
 import {Button, Form ,Input, Space, Table, Tag,Select,List} from "antd";
 import {GoalTypes} from "../helpers/GoalTypes";
+import { TweenOneGroup } from 'rc-tween-one';
+import { PlusOutlined } from '@ant-design/icons';
+import { WithContext as ReactTags } from 'react-tag-input';
+import { DeleteOutlined } from '@ant-design/icons';
 
 const token = localStorage.getItem("token");
 const user_id = localStorage.getItem("user_id")
@@ -32,6 +36,10 @@ export function GoalPage(params :{goalType: any}) {
     const [isDeleted, setDeleted] = useState(false)
     const [assignables, setAssignabels] = useState([])
     const [toAssignee, setToAssignee] = useState([])
+    const [tagData, setTagData] =useState([""]);
+    const[tagAdded,setTagAdded] = useState(0)
+
+
     // @ts-ignore
     const {goal_id} = useParams();
 
@@ -117,12 +125,8 @@ export function GoalPage(params :{goalType: any}) {
             axios.post(`/subgoals/${goal_id}/assignees?${user_ids}`, {}, {
                 headers: { Authorization: `Bearer ${token}`},
             }).then(() => window.alert("I Hope added!"))
-    
         }
     
-
-    
-
     const subgoal_columns =  [
         {
             title: 'Title',
@@ -190,6 +194,8 @@ const columns = [
     },
 ];
 
+
+
 useEffect(() => {
     axios.get(`/${goalType}/${goal_id}`,
         {
@@ -225,6 +231,9 @@ useEffect(() => {
             console.log("goal", goal)
             console.log("received", goal_info)
             setGoal(goal_info)
+            if(goal_info.tags !== null){
+                setTagData(goal_info.tags)
+            }
 
             if (goal_info.main_groupgoal_id != null) {
                 axios.get(`/${GoalTypes.Group}/${goal_info.main_groupgoal_id}`,
@@ -267,6 +276,7 @@ useEffect(() => {
         });
 }, [goal_id]);
 
+
 const showManageDiv = goalType !== GoalTypes.Group || goal.user_id === Number(user_id)
     const showAssignees = goal['assignees'] !== undefined && goal['assignees'].length > 0
     let addSubgoalLink = ""
@@ -286,8 +296,32 @@ const showManageDiv = goalType !== GoalTypes.Group || goal.user_id === Number(us
             </button>
         </Link>
     }
+    
+    //TAGS
+    const removeTagData = (indexToRemove: number) => {
+        axios.put(`/${goalType}/${goal_id}/removetag/${tagData[indexToRemove]}`, {
+            headers: { Authorization: `Bearer ${token}`},
+        })
+      };
+      
+      const addTagData = (event:any) => {
+        if (event.target.value !== '') {
+          let tempArr = tagData
+          tempArr.push(event.target.value)
+          setTagData(tempArr);
+          console.log("event data: " + event.target.value)
+          console.log("tags: "+tagData)
+          axios.put(`/${goalType}/${goal_id}/tag`, tagData, {
+            headers: { Authorization: `Bearer ${token}`},
+        }
+        )
+          event.target.value = '';    
+          setTagAdded(tagAdded+1)
+        }
 
-    console.log(assignables)
+      };
+
+
     return (
         <div>
             {showManageDiv &&
@@ -400,7 +434,34 @@ const showManageDiv = goalType !== GoalTypes.Group || goal.user_id === Number(us
                     Add Task
                 </button>
             </Link>
+        
+         <div className="tag-input">
+      <ul className="tags">
+        {tagData.map((tag, index) => (
+          <li key={index} className="tag">
+            <Button type="dashed" > {tag} </Button>
+            <span
+              className="tag-close-icon"
+              onClick={() => removeTagData(index)} 
+            >
+            </span> &nbsp; &nbsp;
+            <Button type="primary" onClick={() => removeTagData(index)} shape="circle" icon={<DeleteOutlined />} />
+          </li>
+        ))}
+      </ul>
+      <input
+        type="text"
+        onKeyUp={event => (event.key === 'Enter' ? addTagData(event) : null)}
+        placeholder="Press enter to add a tag"
+      />
+    </div>
+
+
         </div>)
+
+              
+
+
 }
 
 
