@@ -58,12 +58,12 @@ public class PrototypeService {
     }
 
     public List<GoalPrototypeDTO> getPrototypesOfAUser(Long user_id) {
-        Users users = userRepository.findById(user_id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found"));
+        Users users = userRepository.findById(user_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         List<GoalPrototypeDTO> result = new ArrayList<>();
         goalPrototypeRespository.findAll().stream().map(prototype -> prototype.getId()).forEach(id -> {
             result.add(getAPrototype(id));
         });
-        return result.stream().filter(x ->x.getUsername().equals(users.getUsername())).sorted((i1, i2) -> i2.getDownload_count().compareTo(i1.getDownload_count())).collect(Collectors.toList());
+        return result.stream().filter(x -> x.getUsername().equals(users.getUsername())).sorted((i1, i2) -> i2.getDownload_count().compareTo(i1.getDownload_count())).collect(Collectors.toList());
     }
 
     private static Stream<SubgoalPrototype> flatMapRecursiveSubgoal(SubgoalPrototype item) {
@@ -94,7 +94,7 @@ public class PrototypeService {
         return prototypeDTO;
     }
 
-/***** PUBLISH A GOAL******/
+    /***** PUBLISH A GOAL******/
     private Set<EntitiPrototype> clearEntities(Set<Entiti> entities, GoalPrototype prototype) {
         Set<EntitiPrototype> entitiPrototypes = new HashSet<>();
         entities.stream().forEach(entiti -> {
@@ -104,7 +104,7 @@ public class PrototypeService {
             entitiPrototype.setReference_entiti_id(entiti.getId());
             entitiPrototype.setMainGoal(prototype);
             entitiPrototype.setPeriod(7L);
-            entitiPrototype.setChildEntities(clearEntities(entiti.getSublinked_entities(),null));
+            entitiPrototype.setChildEntities(clearEntities(entiti.getSublinked_entities(), null));
 
             entitiPrototype.setEntitiType(entiti.getEntitiType());
             entitiPrototypeRepository.save(entitiPrototype);
@@ -162,10 +162,10 @@ public class PrototypeService {
         goalPrototypeRespository.save(prototype);
         goal_from_db.setIsPublished(Boolean.TRUE);
         goalRepository.save(goal_from_db);
-        if(is_republish){
-            activityStreamService.republishGoalSchema(goal_from_db.getCreator(),prototype);
-        }else{
-            activityStreamService.publishGoalSchema(goal_from_db.getCreator(),prototype);
+        if (is_republish) {
+            activityStreamService.republishGoalSchema(goal_from_db.getCreator(), prototype);
+        } else {
+            activityStreamService.publishGoalSchema(goal_from_db.getCreator(), prototype);
         }
         return new MessageResponse("Goal published successfully!", MessageType.SUCCESS);
     }
@@ -208,28 +208,31 @@ public class PrototypeService {
         all_prototypes.addAll(goalPrototypeRespository.findAllByDescriptionContainsOrTitleContains(query, query));
         List<GoalPrototypeDTO> result = new ArrayList<>();
         all_prototypes.stream().forEach(prototype -> {
-            GoalPrototypeDTO goalPrototypeDTO= new GoalPrototypeDTO();
+            GoalPrototypeDTO goalPrototypeDTO = new GoalPrototypeDTO();
             Optional<Goal> ref_goal = goalRepository.findById(prototype.getReference_goal_id());
-            if(ref_goal.isPresent()){
+            if (ref_goal.isPresent()) {
+                goalPrototypeDTO.setDownload_count(ref_goal.get().getDownloadCount());
+                goalPrototypeDTO.setId(prototype.getId());
+                Set<EntitiPrototype> entities = prototype.getEntities().stream()
+                        .flatMap(PrototypeService::flatMapRecursiveEntiti).collect(Collectors.toSet());
+                Set<SubgoalPrototype> subgoals = prototype.getSubgoals().stream()
+                        .flatMap(PrototypeService::flatMapRecursiveSubgoal).collect(Collectors.toSet());
+                goalPrototypeDTO.setEntities(entitiPrototypeShortMapper.mapToDto(entities));
+                goalPrototypeDTO.setSubgoals(subgoalPrototypeShortMapper.mapToDto(subgoals));
 
-            goalPrototypeDTO.setDownload_count(ref_goal.get().getDownloadCount());
-            goalPrototypeDTO.setId(prototype.getId());
-            Set<EntitiPrototype> entities = prototype.getEntities().stream()
-                    .flatMap(PrototypeService::flatMapRecursiveEntiti).collect(Collectors.toSet());
-            Set<SubgoalPrototype> subgoals = prototype.getSubgoals().stream()
-                    .flatMap(PrototypeService::flatMapRecursiveSubgoal).collect(Collectors.toSet());
-            goalPrototypeDTO.setEntities(entitiPrototypeShortMapper.mapToDto(entities));
-            goalPrototypeDTO.setSubgoals(subgoalPrototypeShortMapper.mapToDto(subgoals));
-
-            goalPrototypeDTO.setReference_goal_id(prototype.getReference_goal_id());
-            goalPrototypeDTO.setTitle(prototype.getTitle());
-            goalPrototypeDTO.setDescription(prototype.getDescription());
-            Set<Tag> set2 = prototype.getTags();
-            if (set2 != null) {
-                goalPrototypeDTO.setTags(set2.stream().map(x->x.getName()).collect(Collectors.toSet()));
-            }
-            goalPrototypeDTO.setUsername(goalRepository.getById(prototype.getReference_goal_id()).getCreator().getUsername());
-            result.add(goalPrototypeDTO);
+                goalPrototypeDTO.setReference_goal_id(prototype.getReference_goal_id());
+                goalPrototypeDTO.setTitle(prototype.getTitle());
+                goalPrototypeDTO.setDescription(prototype.getDescription());
+                Set<Tag> set2 = prototype.getTags();
+                if (set2 != null) {
+                    goalPrototypeDTO.setTags(set2.stream().map(x -> x.getName()).collect(Collectors.toSet()));
+                }
+                try {
+                    goalPrototypeDTO.setUsername(goalRepository.getById(prototype.getReference_goal_id()).getCreator().getUsername());
+                    result.add(goalPrototypeDTO);
+                }catch (Exception e){
+                    System.out.println(e);
+                }
             }
         });
         return result.stream().sorted((i1, i2) -> i2.getDownload_count().compareTo(i1.getDownload_count())).collect(Collectors.toList());
@@ -253,21 +256,22 @@ public class PrototypeService {
         });
         List<GoalPrototypeDTO> prototypeDTOS = goalPrototypeMapper.mapToDto(all_prototypes.stream().collect(Collectors.toList()));
         prototypeDTOS.stream().forEach(prototypeDTO -> {
-            Goal goal = goalRepository.getById(prototypeDTO.getReference_goal_id());
-            GoalPrototype prototype = goalPrototypeRespository.getById(prototypeDTO.getId());
-            Set<EntitiPrototype> entities = prototype.getEntities().stream()
-                    .flatMap(PrototypeService::flatMapRecursiveEntiti).collect(Collectors.toSet());
-            Set<SubgoalPrototype> subgoals = prototype.getSubgoals().stream()
-                    .flatMap(PrototypeService::flatMapRecursiveSubgoal).collect(Collectors.toSet());
-            prototypeDTO.setEntities(entitiPrototypeShortMapper.mapToDto(entities));
-            prototypeDTO.setSubgoals(subgoalPrototypeShortMapper.mapToDto(subgoals));
-            prototypeDTO.setDownload_count(goal.getDownloadCount());
-            prototypeDTO.setUsername(goal.getCreator().getUsername());
+            Optional<Goal> goal = goalRepository.findById(prototypeDTO.getReference_goal_id());
+            if (goal.isPresent()) {
+                GoalPrototype prototype = goalPrototypeRespository.getById(prototypeDTO.getId());
+                Set<EntitiPrototype> entities = prototype.getEntities().stream()
+                        .flatMap(PrototypeService::flatMapRecursiveEntiti).collect(Collectors.toSet());
+                Set<SubgoalPrototype> subgoals = prototype.getSubgoals().stream()
+                        .flatMap(PrototypeService::flatMapRecursiveSubgoal).collect(Collectors.toSet());
+                prototypeDTO.setEntities(entitiPrototypeShortMapper.mapToDto(entities));
+                prototypeDTO.setSubgoals(subgoalPrototypeShortMapper.mapToDto(subgoals));
+                prototypeDTO.setDownload_count(goal.get().getDownloadCount());
+                prototypeDTO.setUsername(goal.get().getCreator().getUsername());
+            }
         });
         return prototypeDTOS.stream().sorted((i1, i2) -> i2.getDownload_count().compareTo(i1.getDownload_count())).collect(Collectors.toList());
 
     }
-
 
 
 }
