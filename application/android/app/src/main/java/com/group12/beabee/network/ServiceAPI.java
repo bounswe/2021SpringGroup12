@@ -17,6 +17,7 @@ import com.group12.beabee.models.responses.EntityShort;
 import com.group12.beabee.models.responses.GoalDetail;
 import com.group12.beabee.models.responses.GoalShort;
 import com.group12.beabee.models.responses.GroupGoalShort;
+import com.group12.beabee.models.responses.PrototypeGoalDetail;
 import com.group12.beabee.models.responses.QuestionDetail;
 import com.group12.beabee.models.responses.ReflectionDetail;
 import com.group12.beabee.models.responses.RoutineDetail;
@@ -214,19 +215,19 @@ public interface ServiceAPI {
     //PROTOTYPE-MARKET PLACE
 
     @GET("/v2/prototypes/")
-    Call<List<GoalDetail>> getMarketPlaceData();
+    Call<List<PrototypeGoalDetail>> getMarketPlaceData();
 
     @GET("/v2/prototypes/{id}")
-    Call<GoalDetail>getProGoal(@Path("id") int public_goal_id);
-
-    @GET("/v2/prototypes/entiti/{id}")
-    Call<List<EntityShort>>getProEntity(@Path("id") int public_entity_id);
-
-    @GET("/v2/prototypes/subgoal/{id}")
-    Call<SubgoalDetail>getProSubgoal(@Path("id") int public_subgoal_id);
+    Call<PrototypeGoalDetail>getProGoal(@Path("id") int public_goal_id);
 
     @POST("/v2/prototypes/publish/{id}")
     Call<BasicResponse> publishGoal(@Path("id") int public_goal_id);
+
+    @POST("/v2/prototypes/republish/{id}")
+    Call<BasicResponse> republishGoal(@Path("id") int public_goal_id);
+
+    @POST("/v2/prototypes/unpublish/{id}")
+    Call<BasicResponse> unpublishGoal(@Path("id") int public_goal_id);
 
     @POST("/v2/goals/copy_prototype/{user_id}/{prototype_id}")
     Call<BasicResponse> copyGoal(@Path("user_id") int user_id,@Path("prototype_id") int prototype_id);

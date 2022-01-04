@@ -61,6 +61,15 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
     @BindView(R.id.btn_complete)
     @Nullable
     View btnComplete;
+    @BindView(R.id.btn_unpublish)
+    @Nullable
+    View btnUnpublish;
+    @BindView(R.id.btn_republish)
+    @Nullable
+    View btnRepublish;
+    @BindView(R.id.btn_publish)
+    @Nullable
+    View btnPublish;
 
     private GoalDetail goalDetail;
 
@@ -163,9 +172,6 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
         OpenNewFragment(SubgoalCreateFragment.newInstance(goalDetail.id, SubgoalCreateFragment.FROM_GOAL));
     }
 
-    /*    @DELETE("groupgoals/{user_id}/{groupgoal_id}")
-    Call<BasicResponse> leaveGG(@Path("groupgoal_id") int goalId,@Path("user_id") int userId, @Body GroupGoalDTO ggDTO);*/
-
     @Override
     public void OnSubgoalClicked(int id) {
         OpenNewFragment(SubgoalFragment.newInstance(id));
@@ -217,6 +223,17 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
         }
         SetEntityLinks(data.entities);
         SetSubgoals(data.subgoals);
+        if (goalDetail.isPublished)
+        {
+            btnPublish.setVisibility(View.GONE);
+            btnRepublish.setVisibility(View.VISIBLE);
+            btnUnpublish.setVisibility(View.VISIBLE);
+
+        }else{
+            btnPublish.setVisibility(View.VISIBLE);
+            btnRepublish.setVisibility(View.GONE);
+            btnUnpublish.setVisibility(View.GONE);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -271,6 +288,9 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
                 Utils.dismissLoading();
                 if (response.isSuccessful() && response.body() != null) {
                     Utils.ShowErrorToast(getActivity(), "You published your goal!");
+                    btnPublish.setVisibility(View.GONE);
+                    btnRepublish.setVisibility(View.VISIBLE);
+                    btnUnpublish.setVisibility(View.VISIBLE);
                 } else {
                     Utils.ShowErrorToast(getActivity(), "Something went wrong!");
                 }
@@ -280,7 +300,54 @@ public class GoalFragment extends BaseEntityLinkableFragment implements IOnSubgo
             public void onFailure(Call<BasicResponse> call, Throwable t) {
                 Utils.dismissLoading();
                 Utils.ShowErrorToast(getActivity(), "Something went wrong!");
+            }
+        });
+    }
+    @OnClick(R.id.btn_republish)
+    @Optional
+    public void republishGoal(View view) {
+        Utils.showLoading(getParentFragmentManager());
+        service.republishGoal(id).enqueue(new Callback<BasicResponse>() {
+            @Override
+            public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
+                if (response.isSuccessful() && response.body() != null) {
+                    Utils.ShowErrorToast(getActivity(), "You republished your goal!");
+                } else {
+                    Utils.ShowErrorToast(getActivity(), "Something went wrong!");
+                }
+            }
 
+            @Override
+            public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
+                Utils.ShowErrorToast(getActivity(), "Something went wrong!");
+            }
+        });
+    }
+    @OnClick(R.id.btn_unpublish)
+    @Optional
+    public void unpublishGoal(View view) {
+        Utils.showLoading(getParentFragmentManager());
+        service.unpublishGoal(id).enqueue(new Callback<BasicResponse>() {
+            @Override
+            public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                Utils.dismissLoading();
+                if (response.isSuccessful() && response.body() != null) {
+                    Utils.ShowErrorToast(getActivity(), "You unpublished your goal!");
+                    btnPublish.setVisibility(View.VISIBLE);
+                    btnRepublish.setVisibility(View.GONE);
+                    btnUnpublish.setVisibility(View.GONE);
+
+                } else {
+                    Utils.ShowErrorToast(getActivity(), "Something went wrong!");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BasicResponse> call, Throwable t) {
+                Utils.dismissLoading();
+                Utils.ShowErrorToast(getActivity(), "Something went wrong!");
             }
         });
     }
