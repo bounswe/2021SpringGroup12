@@ -42,7 +42,7 @@ import retrofit2.Response;
  * Use the {@link SubgoalFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SubgoalFragment extends BaseEntityLinkableFragment  implements IOnSubgoalClickedListener, IOnTagClickedListener {
+public class SubgoalFragment extends BaseEntityLinkableFragment  implements IOnSubgoalClickedListener {
 
     @BindView(R.id.tv_title)
     @Nullable
