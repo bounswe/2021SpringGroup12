@@ -31,7 +31,8 @@ public class Users{
     private String username;
     @Column(name = "password")
     private String password;
-
+    private String name;
+    private String surname;
 
     @Column(name = "password_reset_token")
     private String password_reset_token;
@@ -57,6 +58,7 @@ public class Users{
     @JsonIgnoreProperties({"assignees"})
     @ManyToMany(mappedBy = "assignees")
     private Set<Subgoal> assigned;
+
 
 
     @JsonIgnoreProperties({"creator"})
@@ -104,6 +106,6 @@ public class Users{
     }
     @Override
     public String toString() {
-        return  "Goal_id: " + this.user_id;
+        return  "User_id: " + this.user_id;
     }
 }

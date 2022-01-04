@@ -19,4 +19,7 @@ public class UserCredentialsPostDTO {
     @NotBlank(message ="E-mail cannot be blank!")
     @Email(message = "E-mail must be valid!")
     private String email;
+
+    private String name;
+    private String surname;
 }

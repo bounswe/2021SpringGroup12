@@ -32,6 +32,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -40,12 +41,8 @@ public class EntitiService {
     private final GoalRepository goalRepository;
     private final GroupGoalRepository groupGoalRepository;
     private final UserRepository userRepository;
-
-    private final EntitiMapper entitiMapper;
     private final EntitiShortMapper entitiShortMapper;
     private final EntitiRepository entitiRepository;
-
-    private final SubgoalGetMapper subgoalGetMapper;
     private final SubgoalShortMapper subgoalShortMapper;
     private final SubgoalRepository subgoalRepository;
     private final TaskRepository taskRepository;
@@ -78,6 +75,27 @@ public class EntitiService {
         result.addAll(all_entities.stream().filter(x -> x.getClass().getSimpleName().equals("Routine")).map(x -> entitiShortMapper.mapToDto((Routine) x)).collect(Collectors.toList()));
         return  result;
     }
+
+
+    public List<EntitiDTOShort> getEntitiesOfAGroupgoal(Long groupgoal_id) {
+        GroupGoal groupGoal = groupGoalRepository.findById(groupgoal_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!"));
+        List<Entiti> all_entities = new ArrayList<>(groupGoal.getEntities());
+
+        List<EntitiDTOShort> result = new ArrayList<>();
+        result.addAll(all_entities.stream().filter(x -> x.getClass().getSimpleName().equals("Question")).map(x -> entitiShortMapper.mapToDto((Question) x)).collect(Collectors.toList()));
+        result.addAll(all_entities.stream().filter(x -> x.getClass().getSimpleName().equals("Task")).map(x -> entitiShortMapper.mapToDto((Task) x)).collect(Collectors.toList()));
+        result.addAll(all_entities.stream().filter(x -> x.getClass().getSimpleName().equals("Reflection")).map(x -> entitiShortMapper.mapToDto((Reflection) x)).collect(Collectors.toList()));
+        result.addAll(all_entities.stream().filter(x -> x.getClass().getSimpleName().equals("Routine")).map(x -> entitiShortMapper.mapToDto((Routine) x)).collect(Collectors.toList()));
+        return  result;
+    }
+
+    private static Stream<Subgoal> recursiveSubgoals(Subgoal item) {
+        return Stream.concat(Stream.of(item), Optional.ofNullable(item.getChild_subgoals())
+                .orElseGet(Collections::emptySet)
+                .stream()
+                .flatMap(EntitiService::recursiveSubgoals));
+    }
+
 
     public List<EntitiDTOShort> getEntitiesOfAUser(Long user_id) {
         if (!userRepository.existsById(user_id)) {
@@ -712,7 +730,7 @@ public class EntitiService {
         task_from_db.setCompletedAt(new Date(System.currentTimeMillis()));
         task_from_db.setIsDone(Boolean.TRUE);
         taskRepository.save(task_from_db);
-        return new MessageResponse("Task completed !",MessageType.SUCCESS);
+        return new MessageResponse("Task completed!",MessageType.SUCCESS);
     }
     /********************************** ROUTINE COMPLETE *****************/
     public MessageResponse completeRoutine(Long routine_id, Long rating){
@@ -724,7 +742,7 @@ public class EntitiService {
         routine_from_db.setCompletedAt(new Date(System.currentTimeMillis()));
         routineRepository.save(routine_from_db);
 
-        return new MessageResponse("This deadline evaluated successfully, move on to next deadline!",MessageType.SUCCESS);
+        return new MessageResponse("Routine completed!",MessageType.SUCCESS);
     }
 
     public MessageResponse completeQuestion(Long question_id) {
@@ -732,7 +750,7 @@ public class EntitiService {
         question_from_db.setCompletedAt(new Date(System.currentTimeMillis()));
         question_from_db.setIsDone(Boolean.TRUE);
         questionRepository.save(question_from_db);
-        return new MessageResponse("Question completed !",MessageType.SUCCESS);
+        return new MessageResponse("Question completed!",MessageType.SUCCESS);
 
     }
 
@@ -741,5 +759,5 @@ public class EntitiService {
         reflection_from_db.setCompletedAt(new Date(System.currentTimeMillis()));
         reflection_from_db.setIsDone(Boolean.TRUE);
         reflectionRepository.save(reflection_from_db);
-        return new MessageResponse("Reflection completed !",MessageType.SUCCESS);}
+        return new MessageResponse("Reflection completed!",MessageType.SUCCESS);}
 }

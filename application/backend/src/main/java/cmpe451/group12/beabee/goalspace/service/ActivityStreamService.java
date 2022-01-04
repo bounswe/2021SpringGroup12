@@ -26,13 +26,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ActivityStreamService {
 
-    //private final CreateSchemaRepository createSchemaRepository;
     private final ObjectSchemaRepository objectSchemaRepository;
     private final ActorSchemaRepository actorSchemaRepository;
-    //private final DeleteSchemaRepository deleteSchemaRepository;
     private final OriginSchemaRepository originSchemaRepository;
     private final ActivitySchemaRepository activitySchemaRepository;
-
     // For filtering Activity Schemas by User Id
     private final UserRepository userRepository;
 
@@ -324,14 +321,13 @@ public class ActivityStreamService {
     }
 
     public List<ActivitySchema> getSchemasOfAUser(Long userId) {
-        String username = userRepository.findById(userId)
-                .orElseThrow(EntityNotFoundException::new)
-                .getUsername();
+        Users user = userRepository.findById(userId)
+                .orElseThrow(EntityNotFoundException::new);
 
         return activitySchemaRepository.findAll().stream()
-                .filter(activitySchema -> activitySchema.getActor().getName().equals(username))
+                .filter(activitySchema -> user.getFollowing().stream().map(x->x.getUsername()).collect(Collectors.toSet())
+                        .contains(activitySchema.getActor().getName()) || user.getUsername().equals(activitySchema.getActor().getName()))
                 .sorted((i1, i2) -> i2.getCreatedAt().compareTo(i1.getCreatedAt()))
                 .collect(Collectors.toList());
-
     }
 }

@@ -12,6 +12,7 @@ import cmpe451.group12.beabee.goalspace.dto.entities.EntitiLinkDTO;
 import cmpe451.group12.beabee.goalspace.dto.entities.LinkType;
 import cmpe451.group12.beabee.goalspace.dto.entities.RoutineGetDTO;
 import cmpe451.group12.beabee.goalspace.dto.entities.TaskGetDTO;
+import cmpe451.group12.beabee.goalspace.enums.EntitiType;
 import cmpe451.group12.beabee.goalspace.mapper.entities.*;
 import cmpe451.group12.beabee.goalspace.mapper.goals.SubgoalGetMapper;
 import cmpe451.group12.beabee.goalspace.mapper.goals.SubgoalShortMapper;
@@ -22,6 +23,9 @@ import cmpe451.group12.beabee.goalspace.model.entities.Routine;
 import cmpe451.group12.beabee.goalspace.model.entities.Task;
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
+import cmpe451.group12.beabee.goalspace.mapper.goals.SubgoalShortMapper;
+import cmpe451.group12.beabee.goalspace.mapper.resources.ResourceShortMapper;
+import cmpe451.group12.beabee.goalspace.model.entities.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,14 +37,35 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class EntitiServiceTest {
 
-    GoalRepository goalRepository;
-    GroupGoalRepository groupGoalRepository;
-    UserRepository userRepository;
+
+    private GoalRepository goalRepository;
+    private GroupGoalRepository groupGoalRepository;
+    private UserRepository userRepository;
+    private EntitiShortMapper entitiShortMapper;
+    private EntitiRepository entitiRepository;
+    private SubgoalShortMapper subgoalShortMapper;
+    private SubgoalRepository subgoalRepository;
+    private TaskRepository taskRepository;
+    private TaskGetMapper taskGetMapper;
+    private ReflectionRepository reflectionRepository;
+    private ReflectionGetMapper reflectionGetMapper;
+    private ReflectionPostMapper reflectionPostMapper;
+    private TaskPostMapper taskPostMapper;
+    private QuestionPostMapper questionPostMapper;
+    private RoutinePostMapper routinePostMapper;
+    private RoutineRepository routineRepository;
+    private RoutineGetMapper routineGetMapper;
+    private QuestionRepository questionRepository;
+    private QuestionGetMapper questionGetMapper;
+    private ResourceRepository resourceRepository;
+    private ResourceShortMapper resourceShortMapper;
+    private EntitiService entitiService;
 
     EntitiMapper entitiMapper;
     EntitiShortMapper entitiShortMapper;
@@ -67,14 +92,14 @@ public class EntitiServiceTest {
 
     EntitiService entitiService;
     @Before
-    public void setUp() throws Exception {
+    public void setUp(){
         goalRepository = Mockito.mock(GoalRepository.class);
         groupGoalRepository = Mockito.mock(GroupGoalRepository.class);
         userRepository = Mockito.mock(UserRepository.class);
-        entitiMapper = Mockito.mock(EntitiMapper.class);
         entitiShortMapper = Mockito.mock(EntitiShortMapper.class);
         entitiRepository = Mockito.mock(EntitiRepository.class);
         subgoalGetMapper = Mockito.mock(SubgoalGetMapper.class);
+
         subgoalShortMapper = Mockito.mock(SubgoalShortMapper.class);
         subgoalRepository = Mockito.mock(SubgoalRepository.class);
         taskRepository = Mockito.mock(TaskRepository.class);
@@ -92,30 +117,10 @@ public class EntitiServiceTest {
         resourceRepository = Mockito.mock(ResourceRepository.class);
         resourceShortMapper = Mockito.mock(ResourceShortMapper.class);
 
-
-        entitiService = new EntitiService(goalRepository,
-                groupGoalRepository,
-                userRepository,
-                entitiMapper,
-                entitiShortMapper,
-                entitiRepository,
-                subgoalGetMapper,
-                subgoalShortMapper,
-                subgoalRepository,
-                taskRepository,
-                taskGetMapper,
-                reflectionRepository,
-                reflectionGetMapper,
-                reflectionPostMapper,
-                taskPostMapper,
-                questionPostMapper,
-                routinePostMapper,
-                routineRepository,
-                routineGetMapper,
-                questionRepository,
-                questionGetMapper,
-                resourceRepository,
-                resourceShortMapper);
+        entitiService = new EntitiService(goalRepository,groupGoalRepository,userRepository,entitiShortMapper,entitiRepository,
+                subgoalShortMapper,subgoalRepository,taskRepository,taskGetMapper,reflectionRepository,
+                reflectionGetMapper,reflectionPostMapper,taskPostMapper,questionPostMapper,routinePostMapper,
+                routineRepository,routineGetMapper,questionRepository,questionGetMapper,resourceRepository,resourceShortMapper);
     }
 
     @Test
@@ -467,6 +472,63 @@ public class EntitiServiceTest {
 
         //Check if there is as call to entiti repo to save the new parent with deleted child in the sublinks list
         Mockito.verify(entitiRepository, Mockito.times(1)).save(task);
+    public void whenExtendEntitiCalledWithValidParameters_ItShouldReturnSuccess(){
+        Task entiti = new Task();
+        entiti.setId(1L);
+        entiti.setEntitiType(EntitiType.TASK);
+        entiti.setDeadline(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(2)));
+        entiti.setExtension_count(3L);
+
+        Date new_deadline = new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(5));//5 days later
+
+        Mockito.when(entitiRepository.findById(1L)).thenReturn(Optional.of(entiti));
+        Mockito.when(entitiRepository.save(entiti)).thenReturn(entiti);
+
+        MessageResponse expected = new MessageResponse("Entity extended successfully!", MessageType.SUCCESS);
+        MessageResponse actual = entitiService.extendEntiti(1L,new_deadline);
+        Assert.assertEquals(expected,actual);
+        Assert.assertEquals(new_deadline,entiti.getDeadline());
+        Assert.assertTrue(4L == entiti.getExtension_count());
+        Mockito.verify(entitiRepository).findById(1L);
+        Mockito.verify(entitiRepository).save(entiti);
+
+    }
+
+    @Test
+    public void whenExtendEntitiCalledWithInvalidParameters_ItShouldReturnError(){
+        Routine entiti = new Routine();
+        entiti.setId(1L);
+        entiti.setEntitiType(EntitiType.ROUTINE);
+        entiti.setDeadline(Stream.of(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(2))).collect(Collectors.toList()));
+        entiti.setExtension_count(3L);
+
+        Date new_deadline = new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1));//5 days later
+
+        Mockito.when(entitiRepository.findById(1L)).thenReturn(Optional.of(entiti));
+
+        MessageResponse expected = new MessageResponse("New deadline must be later than current deadline!", MessageType.ERROR);
+        MessageResponse actual = entitiService.extendEntiti(1L,new_deadline);
+        Assert.assertEquals(expected,actual);
+
+        Mockito.verify(entitiRepository).findById(1L);
+
+    }
+
+    @Test
+    public void whenCompleteReflectionCalledWithValidParameters_ItShouldReturnSuccess(){
+        Reflection reflection = new Reflection();
+        reflection.setId(1L);
+        reflection.setCompletedAt(null);
+        reflection.setIsDone(Boolean.FALSE);
+
+        Mockito.when(reflectionRepository.findById(1L)).thenReturn(Optional.of(reflection));
+        Mockito.when(reflectionRepository.save(reflection)).thenReturn(reflection);
+
+        Assert.assertEquals(new MessageResponse("Reflection completed!",MessageType.SUCCESS),entitiService.completeRefection(1L));
+        Assert.assertEquals(Boolean.TRUE,reflection.getIsDone());
+
+        Mockito.verify(reflectionRepository).findById(1L);
+        Mockito.verify(reflectionRepository).save(reflection);
 
     }
 
@@ -520,6 +582,10 @@ public class EntitiServiceTest {
 
         //Case for non-existing link
         Assert.assertEquals(new MessageResponse("Link does not exist", MessageType.ERROR), entitiService.entitiDeleteLink(task.getId(), entitiLinkDTO));
+    public void whenCompleteQuestionCalledWithInvalidParameters_ItShouldReturnError(){
+        Mockito.when(questionRepository.findById(2L)).thenReturn(Optional.ofNullable(null));
+        Assert.assertThrows(ResponseStatusException.class, ()-> {entitiService.completeQuestion(2L);});
+        Mockito.verify(questionRepository).findById(2L);
 
     }
 }
