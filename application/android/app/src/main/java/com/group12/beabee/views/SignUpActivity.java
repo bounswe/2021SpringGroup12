@@ -1,5 +1,6 @@
 package com.group12.beabee.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,6 +46,24 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
         ButterKnife.bind(this);
         serviceAPI = BeABeeService.serviceAPI;
+    }
+
+    @OnClick(R.id.tv_terms)
+    public void OnTermsClicked(){
+        Intent intent = new Intent(this, StringDisplayActivity.class);
+        Bundle b = new Bundle();
+        b.putInt("key", 0); //Your id
+        intent.putExtras(b); //Put your id to your next Intent
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.tv_privacy)
+    public void OnPrivacyClicked(){
+        Intent intent = new Intent(this, StringDisplayActivity.class);
+        Bundle b = new Bundle();
+        b.putInt("key", 1); //Your id
+        intent.putExtras(b); //Put your id to your next Intent
+        startActivity(intent);
     }
 
     @OnClick(R.id.btn_signup)
