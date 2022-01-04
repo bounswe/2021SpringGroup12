@@ -8,7 +8,6 @@ import cmpe451.group12.beabee.goalspace.Repository.activitistreams.ObjectSchemaR
 import cmpe451.group12.beabee.goalspace.Repository.activitistreams.OriginSchemaRepository;
 import cmpe451.group12.beabee.goalspace.model.activitystreams.ActivitySchema;
 import cmpe451.group12.beabee.goalspace.model.activitystreams.ActorSchema;
-import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -94,7 +93,6 @@ public class ActivityStreamTest {
         Assert.assertEquals(expected, actual);
 
     }
-
 
 
 }

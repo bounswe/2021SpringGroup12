@@ -106,6 +106,6 @@ public class Users{
     }
     @Override
     public String toString() {
-        return  "Goal_id: " + this.user_id;
+        return  "User_id: " + this.user_id;
     }
 }

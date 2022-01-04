@@ -209,7 +209,10 @@ public class PrototypeService {
         List<GoalPrototypeDTO> result = new ArrayList<>();
         all_prototypes.stream().forEach(prototype -> {
             GoalPrototypeDTO goalPrototypeDTO= new GoalPrototypeDTO();
-            goalPrototypeDTO.setDownload_count(goalRepository.getById(prototype.getReference_goal_id()).getDownloadCount());
+            Optional<Goal> ref_goal = goalRepository.findById(prototype.getReference_goal_id());
+            if(ref_goal.isPresent()){
+
+            goalPrototypeDTO.setDownload_count(ref_goal.get().getDownloadCount());
             goalPrototypeDTO.setId(prototype.getId());
             Set<EntitiPrototype> entities = prototype.getEntities().stream()
                     .flatMap(PrototypeService::flatMapRecursiveEntiti).collect(Collectors.toSet());
@@ -227,6 +230,7 @@ public class PrototypeService {
             }
             goalPrototypeDTO.setUsername(goalRepository.getById(prototype.getReference_goal_id()).getCreator().getUsername());
             result.add(goalPrototypeDTO);
+            }
         });
         return result.stream().sorted((i1, i2) -> i2.getDownload_count().compareTo(i1.getDownload_count())).collect(Collectors.toList());
     }
