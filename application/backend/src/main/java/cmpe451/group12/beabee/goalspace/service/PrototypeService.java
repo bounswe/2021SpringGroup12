@@ -61,7 +61,12 @@ public class PrototypeService {
         Users users = userRepository.findById(user_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         List<GoalPrototypeDTO> result = new ArrayList<>();
         goalPrototypeRespository.findAll().stream().map(prototype -> prototype.getId()).forEach(id -> {
-            result.add(getAPrototype(id));
+            GoalPrototypeDTO dto = getAPrototype(id);
+            if (dto == null) {
+
+            } else {
+                result.add(dto);
+            }
         });
         return result.stream().filter(x -> x.getUsername().equals(users.getUsername())).sorted((i1, i2) -> i2.getDownload_count().compareTo(i1.getDownload_count())).collect(Collectors.toList());
     }
@@ -89,7 +94,12 @@ public class PrototypeService {
                 .flatMap(PrototypeService::flatMapRecursiveSubgoal).collect(Collectors.toSet());
         prototypeDTO.setEntities(entitiPrototypeShortMapper.mapToDto(entities));
         prototypeDTO.setSubgoals(subgoalPrototypeShortMapper.mapToDto(subgoals));
-        prototypeDTO.setUsername(goalRepository.findById(prototype.getReference_goal_id()).get().getCreator().getUsername());
+        try {
+            prototypeDTO.setUsername(goalRepository.findById(prototype.getReference_goal_id()).get().getCreator().getUsername());
+        } catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
         prototypeDTO.setDownload_count(goalRepository.findById(prototype.getReference_goal_id()).get().getDownloadCount());
         return prototypeDTO;
     }
@@ -230,7 +240,7 @@ public class PrototypeService {
                 try {
                     goalPrototypeDTO.setUsername(goalRepository.getById(prototype.getReference_goal_id()).getCreator().getUsername());
                     result.add(goalPrototypeDTO);
-                }catch (Exception e){
+                } catch (Exception e) {
                     System.out.println(e);
                 }
             }
