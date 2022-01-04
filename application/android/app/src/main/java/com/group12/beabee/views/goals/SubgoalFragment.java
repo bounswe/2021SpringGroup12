@@ -14,10 +14,9 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.group12.beabee.OnRateSelectedListener;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
-import com.group12.beabee.models.ParentType;
+import com.group12.beabee.models.LinkingType;
 import com.group12.beabee.models.requests.ExtendDeadline;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.SubgoalDetail;
@@ -195,8 +194,8 @@ public class SubgoalFragment extends BaseEntityLinkableFragment  implements IOnS
     }
 
     @Override
-    protected ParentType GetLinkableType() {
-        return ParentType.SUBGOAL;
+    protected LinkingType GetLinkableType() {
+        return LinkingType.SUBGOAL;
     }
 
     @Override

@@ -53,30 +53,11 @@ public abstract class BaseInnerFragment extends Fragment {
         parentFragment.SetApproveBtnListener(view -> OnApproveClicked());
         parentFragment.SetEditBtnListener(view -> OnEditClicked());
         parentFragment.SetAddBtnListener(view -> OnAddClicked());
+        parentFragment.SetSearchBtnListener(view -> OnSearchClicked());
     }
 
     public <T extends BaseInnerFragment> void OpenNewFragment(T fragmentToOpen){
         parentFragment.AddNewFragment(fragmentToOpen);
-    }
-
-    protected void CreateLink(int parentId, int childId, Runnable runnable){
-        BeABeeService.serviceAPI.linkEntities(parentId, childId).enqueue(new Callback<BasicResponse>() {
-            @Override
-            public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().messageType.equals("SUCCESS")) {
-                    Utils.ShowErrorToast(getContext(), "Entity is successfully linked!");
-                    runnable.run();
-                } else if(!response.isSuccessful() || response.body() == null){
-                    Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
-                } else {
-                    Utils.ShowErrorToast(getContext(), response.body().message);
-                }
-            }
-            @Override
-            public void onFailure(Call<BasicResponse> call, Throwable t) {
-                Utils.ShowErrorToast(getContext(), "Something wrong happened please try again later!");
-            }
-        });
     }
 
     protected void OnBackClicked(){
@@ -94,6 +75,9 @@ public abstract class BaseInnerFragment extends Fragment {
     }
 
     protected void OnAddClicked(){
+    }
+
+    protected void OnSearchClicked(){
     }
 
     protected void GoBack(){

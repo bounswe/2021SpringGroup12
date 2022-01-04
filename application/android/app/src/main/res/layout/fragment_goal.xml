@@ -85,6 +85,41 @@
         android:layout_marginTop="10dp"
         app:layout_constraintTop_toBottomOf="@id/btn_pickDate"
         app:layout_constraintStart_toStartOf="parent"/>
+    <Button
+        android:id="@+id/btn_publish"
+        android:layout_width="match_parent"
+        android:translationZ="100dp"
+        android:layout_marginLeft="250dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:backgroundTint="@color/yellow_second"
+        android:text="Publish My Goal "
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    <Button
+        android:id="@+id/btn_republish"
+        android:layout_width="match_parent"
+        android:translationZ="100dp"
+        android:layout_marginLeft="250dp"
+        android:visibility="invisible"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:backgroundTint="@color/yellow_second"
+        android:text="Republish My Goal "
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    <Button
+        android:id="@+id/btn_unpublish"
+        android:layout_width="match_parent"
+        android:translationZ="100dp"
+        android:visibility="invisible"
+        android:layout_marginRight="250dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:backgroundTint="@color/yellow_second"
+        android:text="Unpublish My Goal "
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <TextView
         android:id="@+id/tv_tags_title"

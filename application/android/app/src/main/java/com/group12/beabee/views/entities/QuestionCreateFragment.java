@@ -9,12 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.group12.beabee.BeABeeApplication;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
+import com.group12.beabee.models.LinkingType;
 import com.group12.beabee.models.ParentType;
 import com.group12.beabee.models.requests.Question;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.views.BaseInnerFragment;
+import com.group12.beabee.views.MainStructure.MainActivity;
 import com.group12.beabee.views.MainStructure.PageMode;
 
 import butterknife.BindView;
@@ -38,7 +41,7 @@ public class QuestionCreateFragment extends BaseInnerFragment {
 
     private Question question;
     private int parentId;
-    private ParentType parentType;
+    private LinkingType parentType;
 
     public QuestionCreateFragment() {
         // Required empty public constructor
@@ -50,7 +53,7 @@ public class QuestionCreateFragment extends BaseInnerFragment {
      *
      * @return A new instance of fragment TaskEdit.
      */
-    public static QuestionCreateFragment newInstance(int parentId, ParentType parentType) {
+    public static QuestionCreateFragment newInstance(int parentId, LinkingType parentType) {
         QuestionCreateFragment fragment = new QuestionCreateFragment();
         Bundle args = new Bundle();
         args.putInt("parentId", parentId);
@@ -63,7 +66,7 @@ public class QuestionCreateFragment extends BaseInnerFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         parentId = getArguments().getInt("parentId", -1);
-        parentType = ((ParentType) getArguments().getSerializable("parentType"));
+        parentType = ((LinkingType) getArguments().getSerializable("parentType"));
     }
 
 
@@ -80,8 +83,19 @@ public class QuestionCreateFragment extends BaseInnerFragment {
         question = new Question();
         question.title = etTitle.getText().toString();
         question.description = etDescription.getText().toString();
-        question.parentId = parentId;
-        question.parentType = parentType;
+        question.initialParentId = parentId;
+        question.initialLinkType = parentType;
+        if (getActivity()==null)
+            return;
+        int currentPage = ((MainActivity) getActivity()).GetCurrentPage();
+        if (currentPage==0) {
+            question.goalType = ParentType.GOAL;
+            question.goalId = BeABeeApplication.currentMainGoal;
+        } else if(currentPage==1) {
+            question.goalType = ParentType.GROUPGOAL;
+            question.goalId = BeABeeApplication.currentGroupGoal;
+        }else
+            return;
         question.deadline = "";
         Utils.showLoading(getParentFragmentManager());
         service.createQuestion(question).enqueue(new Callback<BasicResponse>() {

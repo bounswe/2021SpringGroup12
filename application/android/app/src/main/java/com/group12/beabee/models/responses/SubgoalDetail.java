@@ -19,6 +19,7 @@ public class SubgoalDetail implements Serializable {
     public boolean isDone;
     public String createdAt;
     public String deadline;
+    @SerializedName("sublinked_entities")
     public List<EntityShort> entities;
     public List<SubgoalShort> sublinks;
 }

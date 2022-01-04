@@ -12,6 +12,7 @@ import com.group12.beabee.InputValidator;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.requests.LoginRequest;
+import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.LoginResponse;
 import com.group12.beabee.network.BeABeeService;
 import com.group12.beabee.network.ServiceAPI;
@@ -20,6 +21,7 @@ import com.group12.beabee.views.MainStructure.MainActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Optional;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -32,6 +34,10 @@ public class LoginActivity extends AppCompatActivity {
     EditText etPassword;
     @BindView(R.id.et_email)
     EditText etEmail;
+    @BindView(R.id.et_just_name)
+    EditText etName;
+    @BindView(R.id.et_surname)
+    EditText etSurname;
 
     private ServiceAPI serviceAPI;
 
@@ -49,6 +55,8 @@ public class LoginActivity extends AppCompatActivity {
         loginRequest.username = etUsername.getText().toString();
         loginRequest.email = etEmail.getText().toString();
         loginRequest.password = etPassword.getText().toString();
+        loginRequest.name=etName.getText().toString();
+        loginRequest.surname=etSurname.getText().toString();
 
         if (!InputValidator.IsTextNonEmpty(loginRequest.username) && !InputValidator.IsTextEmailFormat(loginRequest.email)) {
             Utils.ShowErrorToast(this, "Either username or a valid email should be provided!");
@@ -69,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }else{
-                    Toast.makeText(LoginActivity.this, "Something is wrong please try again later!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this,  response.body().message, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -84,6 +92,13 @@ public class LoginActivity extends AppCompatActivity {
     @OnClick(R.id.btn_go_sign)
     public void GoToSignUpPage(){
         Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.btn_forgot)
+    @Optional
+    public void OnForgot(){
+        Intent intent = new Intent(this, LoginActivityForgotPage.class);
         startActivity(intent);
     }
 }
