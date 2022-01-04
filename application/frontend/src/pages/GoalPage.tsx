@@ -3,16 +3,12 @@ import {useParams} from "react-router";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {Link} from "react-router-dom";
-import {Button, Form ,Input, Space, Table, Tag,Select,List} from "antd";
+import {Button, Form, Space, Table,Select,List} from "antd";
 import {GoalTypes} from "../helpers/GoalTypes";
-import { TweenOneGroup } from 'rc-tween-one';
-import { PlusOutlined } from '@ant-design/icons';
-import { WithContext as ReactTags } from 'react-tag-input';
 import { DeleteOutlined } from '@ant-design/icons';
 
 const token = localStorage.getItem("token");
 const user_id = localStorage.getItem("user_id")
-const { Option } = Select;
 
 
 export function GoalPage(params :{goalType: any}) {
@@ -224,6 +220,7 @@ useEffect(() => {
             console.log(goal_info)
             if (goalType === GoalTypes.Sub) {
                 goal_info['subgoals'] = goal_info['sublinks']
+                goal_info['linkedEntities'] = goal_info['sublinked_entities']
             }
             goal_info['linkedEntities'].forEach((entity: any, i: number) => {
                 entity.key = i
@@ -241,7 +238,7 @@ useEffect(() => {
             console.log("goal", goal)
             console.log("received", goal_info)
             setGoal(goal_info)
-            if(goal_info.tags !== null){
+            if(goal_info.tags !== undefined && goal_info.tags !== null){
                 setTagData(goal_info.tags)
             }
 
@@ -471,27 +468,29 @@ const showManageDiv = goalType !== GoalTypes.Group || goal.user_id === Number(us
                     Add Task
                 </button>
             </Link>
-        
-         <div className="tag-input">
-      <ul className="tags">
-        {tagData.map((tag, index) => (
-          <li key={index} className="tag">
-            <Button type="dashed" > {tag} </Button>
-            <span
-              className="tag-close-icon"
-              onClick={() => removeTagData(index)} 
-            >
+
+            {goalType !== GoalTypes.Sub &&
+                <div className="tag-input">
+                    <ul className="tags">
+                        {tagData.map((tag, index) => (
+                            <li key={index} className="tag">
+                                <Button type="dashed" > {tag} </Button>
+                                <span
+                                    className="tag-close-icon"
+                                    onClick={() => removeTagData(index)}
+                                >
             </span> &nbsp; &nbsp;
-            <Button type="primary" onClick={() => removeTagData(index)} shape="circle" icon={<DeleteOutlined />} />
-          </li>
-        ))}
-      </ul>
-      <input
-        type="text"
-        onKeyUp={event => (event.key === 'Enter' ? addTagData(event) : null)}
-        placeholder="Press enter to add a tag"
-      />
-    </div>
+                                <Button type="primary" onClick={() => removeTagData(index)} shape="circle" icon={<DeleteOutlined />} />
+                            </li>
+                        ))}
+                    </ul>
+                    <input
+                        type="text"
+                        onKeyUp={event => (event.key === 'Enter' ? addTagData(event) : null)}
+                        placeholder="Press enter to add a tag"
+                    />
+                </div>
+            }
 
 
         </div>)
