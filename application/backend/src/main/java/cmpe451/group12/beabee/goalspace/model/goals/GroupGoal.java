@@ -3,6 +3,8 @@ package cmpe451.group12.beabee.goalspace.model.goals;
 import cmpe451.group12.beabee.common.model.Users;
 import cmpe451.group12.beabee.goalspace.model.entities.Entiti;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +14,8 @@ import java.util.Set;
 @Data
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "GROUP_GOAL")
 public class GroupGoal extends AllGoal
 {
@@ -45,5 +49,21 @@ public class GroupGoal extends AllGoal
     @JsonIgnoreProperties({"mainGroupgoal", "goal"})
     @OneToMany(mappedBy = "mainGroupgoal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Subgoal> subgoals;
+
+    @ManyToMany
+    @JoinTable(
+            name = "groupgoal_tag",
+            joinColumns = { @JoinColumn(name = "groupgoal_id") },
+            inverseJoinColumns = { @JoinColumn(name = "tag_id") }
+    )
+    private Set<Tag> tags;
+
+    @ManyToMany
+    @JoinTable(
+            name = "groupgoal_hidden_tag",
+            joinColumns = { @JoinColumn(name = "groupgoal_id") },
+            inverseJoinColumns = { @JoinColumn(name = "tag_id") }
+    )
+    private Set<Tag> hiddentags;
 
 }

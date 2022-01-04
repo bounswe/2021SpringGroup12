@@ -4,9 +4,11 @@ import cmpe451.group12.beabee.common.dto.MessageResponse;
 import cmpe451.group12.beabee.common.enums.MessageType;
 import cmpe451.group12.beabee.common.model.Users;
 import cmpe451.group12.beabee.common.repository.UserRepository;
-import cmpe451.group12.beabee.goalspace.Repository.entities.EntitiRepository;
+import cmpe451.group12.beabee.goalspace.Repository.entities.*;
 import cmpe451.group12.beabee.goalspace.Repository.goals.GoalRepository;
 import cmpe451.group12.beabee.goalspace.Repository.goals.SubgoalRepository;
+import cmpe451.group12.beabee.goalspace.Repository.goals.TagRepository;
+import cmpe451.group12.beabee.goalspace.Repository.prototypes.GoalPrototypeRespository;
 import cmpe451.group12.beabee.goalspace.dto.analytics.GoalAnalyticsDTO;
 import cmpe451.group12.beabee.goalspace.dto.goals.GoalDTOShort;
 import cmpe451.group12.beabee.goalspace.dto.goals.GoalGetDTO;
@@ -15,6 +17,7 @@ import cmpe451.group12.beabee.goalspace.mapper.entities.EntitiShortMapper;
 import cmpe451.group12.beabee.goalspace.mapper.goals.*;
 import cmpe451.group12.beabee.goalspace.model.goals.Goal;
 import cmpe451.group12.beabee.goalspace.model.goals.Subgoal;
+import cmpe451.group12.beabee.goalspace.model.prototypes.GoalPrototype;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,9 +43,17 @@ public class GoalServiceTest {
     private UserRepository userRepository;
     private EntitiShortMapper entitiShortMapper;
     private EntitiRepository entitiRepository;
-    private SubgoalService subgoalService;
+    private RoutineRepository routineRepository;
+    private ReflectionRepository reflectionRepository;
+    private TaskRepository taskRepository;
+    private QuestionRepository questionRepository;
+    private TagRepository tagRepository;
+    private GoalPrototypeRespository goalPrototypeRespository;
+    private ActivityStreamService activityStreamService;
+    private SubgoalGetMapper subgoalGetMapper;
+
     @Before
-    public void setUp(){
+    public void setUp() {
         goalRepository = Mockito.mock(GoalRepository.class);
         subgoalRepository = Mockito.mock(SubgoalRepository.class);
         goalPostMapper = Mockito.mock(GoalPostMapper.class);
@@ -52,84 +63,90 @@ public class GoalServiceTest {
         goalShortMapper = Mockito.mock(GoalShortMapper.class);
         userRepository = Mockito.mock(UserRepository.class);
         entitiShortMapper = Mockito.mock(EntitiShortMapper.class);
-        entitiRepository= Mockito.mock(EntitiRepository.class);
-        subgoalService =Mockito.mock(SubgoalService.class);
+        entitiRepository = Mockito.mock(EntitiRepository.class);
+        routineRepository = Mockito.mock(RoutineRepository.class);
+        reflectionRepository = Mockito.mock(ReflectionRepository.class);
+        taskRepository = Mockito.mock(TaskRepository.class);
+        questionRepository = Mockito.mock(QuestionRepository.class);
+        tagRepository = Mockito.mock(TagRepository.class);
+        goalPrototypeRespository = Mockito.mock(GoalPrototypeRespository.class);
+        activityStreamService = Mockito.mock(ActivityStreamService.class);
+        subgoalGetMapper = Mockito.mock(SubgoalGetMapper.class);
 
         goalService = new GoalService(goalRepository, subgoalRepository, goalPostMapper,
                 subgoalPostMapper, subgoalShortMapper, goalGetMapper, goalShortMapper,
-                userRepository, entitiShortMapper,entitiRepository,subgoalService);
+                userRepository, entitiShortMapper, entitiRepository, routineRepository,
+                reflectionRepository, taskRepository, questionRepository, tagRepository, goalPrototypeRespository,
+                activityStreamService, subgoalGetMapper);
     }
 
+    /* NO LONGER NEEDED SINCE WE REMOVED DEADLINES ***
+     @Test public void whenExtendGoalCalledWithValidRequest_ItShouldReturnSuccess() {
+     //parameters
+     Long goal_id = 1L;
+     Date five_days_later = new Date(System.currentTimeMillis() + 5 * 24 * 3600 * 1000);//5 days later than today
+     Long prevExtensionCount = 5L;
+     Date one_day_later = new Date(System.currentTimeMillis() + 1 * 24 * 3600 * 1000);
+
+     Goal goal1 = new Goal();
+     goal1.setTitle("goal 1");
+     goal1.setDescription("description 1");
+     goal1.setId(goal_id);
+     goal1.setIsDone(Boolean.FALSE);
+     goal1.setExtension_count(prevExtensionCount);
+
+     Goal goal1_updated = new Goal();
+     goal1_updated.setTitle("goal 1");
+     goal1_updated.setDescription("description 1");
+     goal1_updated.setId(goal_id);
+     goal1_updated.setIsDone(Boolean.FALSE);
+     goal1_updated.setExtension_count(prevExtensionCount + 1);
+
+     // mock other classes
+     Mockito.when(goalRepository.findById(goal_id)).thenReturn(java.util.Optional.of(goal1));
+     Mockito.when(goalRepository.save(goal1)).thenReturn(goal1_updated);
+     //verify actual and expected results
+     MessageResponse result = goalService.extendGoal(goal_id, five_days_later);
+
+     Assert.assertEquals(new MessageResponse("Goal extended successfully!", MessageType.SUCCESS), result);
+     Mockito.verify(goalRepository).findById(goal_id);
+     Mockito.verify(goalRepository).save(goal1);
+     }
+
+     @Test public void whenExtendGoalCalledWithInvalidRequest_ItShouldReturnError() {
+     //parameters
+     Long goal_id = 1L;
+     Date five_days_later = new Date(System.currentTimeMillis() + 5 * 24 * 3600 * 1000);// 5 days later than today
+     Long prevExtensionCount = 5L;
+     Date one_day_later = new Date(System.currentTimeMillis() + 1 * 24 * 3600 * 1000);// 1 day later than today
+
+     Goal goal1 = new Goal();
+     goal1.setTitle("goal 1");
+     goal1.setDescription("description 1");
+     goal1.setId(goal_id);
+     goal1.setIsDone(Boolean.FALSE);
+     goal1.setExtension_count(prevExtensionCount);
+     goal1.setDeadline(five_days_later);
+
+     Goal goal1_updated = new Goal();
+     goal1_updated.setTitle("goal 1");
+     goal1_updated.setDescription("description 1");
+     goal1_updated.setId(goal_id);
+     goal1_updated.setIsDone(Boolean.FALSE);
+     goal1_updated.setExtension_count(prevExtensionCount + 1);
+     goal1_updated.setDeadline(one_day_later);
+
+     // mock other classes
+     Mockito.when(goalRepository.findById(goal_id)).thenReturn(java.util.Optional.of(goal1));
+     //verify actual and expected results
+     MessageResponse result = goalService.extendGoal(goal_id, five_days_later);
+
+     Assert.assertEquals(new MessageResponse("New deadline must be later than current deadline!", MessageType.ERROR), result);
+     Mockito.verify(goalRepository).findById(goal_id);
+     }
+     */
     @Test
-    public void whenExtendGoalCalledWithValidRequest_ItShouldReturnSuccess() {
-        //parameters
-        Long goal_id = 1L;
-        Date five_days_later = new Date(System.currentTimeMillis() + 5 * 24 * 3600 * 1000);//5 days later than today
-        Long prevExtensionCount = 5L;
-        Date one_day_later = new Date(System.currentTimeMillis() + 1 * 24 * 3600 * 1000);
-
-        Goal goal1 = new Goal();
-        goal1.setTitle("goal 1");
-        goal1.setDescription("description 1");
-        goal1.setId(goal_id);
-        goal1.setIsDone(Boolean.FALSE);
-        goal1.setExtension_count(prevExtensionCount);
-        goal1.setDeadline(one_day_later); // 1 days later than today
-
-        Goal goal1_updated = new Goal();
-        goal1_updated.setTitle("goal 1");
-        goal1_updated.setDescription("description 1");
-        goal1_updated.setId(goal_id);
-        goal1_updated.setIsDone(Boolean.FALSE);
-        goal1_updated.setExtension_count(prevExtensionCount + 1);
-        goal1_updated.setDeadline(five_days_later); // 5 days later than today
-
-        // mock other classes
-        Mockito.when(goalRepository.findById(goal_id)).thenReturn(java.util.Optional.of(goal1));
-        Mockito.when(goalRepository.save(goal1)).thenReturn(goal1_updated);
-        //verify actual and expected results
-        MessageResponse result = goalService.extendGoal(goal_id, five_days_later);
-
-        Assert.assertEquals(new MessageResponse("Goal extended successfully!", MessageType.SUCCESS), result);
-        Mockito.verify(goalRepository).findById(goal_id);
-        Mockito.verify(goalRepository).save(goal1);
-    }
-
-    @Test
-    public void whenExtendGoalCalledWithInvalidRequest_ItShouldReturnError() {
-        //parameters
-        Long goal_id = 1L;
-        Date five_days_later = new Date(System.currentTimeMillis() + 5 * 24 * 3600 * 1000);// 5 days later than today
-        Long prevExtensionCount = 5L;
-        Date one_day_later = new Date(System.currentTimeMillis() + 1 * 24 * 3600 * 1000);// 1 day later than today
-
-        Goal goal1 = new Goal();
-        goal1.setTitle("goal 1");
-        goal1.setDescription("description 1");
-        goal1.setId(goal_id);
-        goal1.setIsDone(Boolean.FALSE);
-        goal1.setExtension_count(prevExtensionCount);
-        goal1.setDeadline(five_days_later);
-
-        Goal goal1_updated = new Goal();
-        goal1_updated.setTitle("goal 1");
-        goal1_updated.setDescription("description 1");
-        goal1_updated.setId(goal_id);
-        goal1_updated.setIsDone(Boolean.FALSE);
-        goal1_updated.setExtension_count(prevExtensionCount + 1);
-        goal1_updated.setDeadline(one_day_later);
-
-        // mock other classes
-        Mockito.when(goalRepository.findById(goal_id)).thenReturn(java.util.Optional.of(goal1));
-        //verify actual and expected results
-        MessageResponse result = goalService.extendGoal(goal_id, five_days_later);
-
-        Assert.assertEquals(new MessageResponse("New deadline must be later than current deadline!", MessageType.ERROR), result);
-        Mockito.verify(goalRepository).findById(goal_id);
-    }
-
-    @Test
-    public void whenCompleteGoalCalledWithUncompletedGoals_ItShouldReturnError(){
+    public void whenCompleteGoalCalledWithUncompletedGoals_ItShouldReturnError() {
         Long goal_id = 1L;
 
         Goal goal1 = new Goal();
@@ -160,22 +177,22 @@ public class GoalServiceTest {
         subgoal2_completed.setRating(3D);
         subgoal2_completed.setIsDone(Boolean.TRUE);
 
-        goal1.setSubgoals(Stream.of(subgoal1,subgoal2).collect(Collectors.toSet()));
-        goal1_completed.setSubgoals(Stream.of(subgoal1,subgoal2_completed).collect(Collectors.toSet()));
+        goal1.setSubgoals(Stream.of(subgoal1, subgoal2).collect(Collectors.toSet()));
+        goal1_completed.setSubgoals(Stream.of(subgoal1, subgoal2_completed).collect(Collectors.toSet()));
 
         Mockito.when(goalRepository.findById(goal_id)).thenReturn(java.util.Optional.of(goal1));
         Mockito.when(subgoalRepository.saveAll(goal1.getSubgoals())).thenReturn(goal1_completed.getSubgoals().stream().collect(Collectors.toList()));
         Mockito.when(goalRepository.save(goal1)).thenReturn(goal1_completed);// key part: returns completed goal. So, updates were successful.
 
         MessageResponse result = goalService.completeGoal(goal_id);
-        Assert.assertEquals(new MessageResponse("This goal has some subgoals that are uncompleted! Finish those first!" , MessageType.ERROR), result);
+        Assert.assertEquals(new MessageResponse("This goal has some subgoals that are uncompleted! Finish those first!", MessageType.ERROR), result);
 
         Mockito.verify(goalRepository).findById(goal_id);
 
     }
 
     @Test
-    public void whenCompleteGoalCalledWithInvalidRequest_ItShouldReturnError(){
+    public void whenCompleteGoalCalledWithInvalidRequest_ItShouldReturnError() {
         Long goal_id = 1L;
 
         Goal goal1 = new Goal();
@@ -193,7 +210,7 @@ public class GoalServiceTest {
     }
 
     @Test
-    public void whenGetAnalyticsCalledWithNoSubgoal_ItShouldReturnNullForManyFields(){
+    public void whenGetAnalyticsCalledWithNoSubgoal_ItShouldReturnNullForManyFields() {
         Goal goal = new Goal();
         goal.setId(1L);
         goal.setIsDone(Boolean.FALSE);
@@ -211,18 +228,18 @@ public class GoalServiceTest {
 
         GoalAnalyticsDTO result = goalService.getAnalytics(1L);
 
-        Assert.assertEquals(goalAnalyticsDTO.getGoal_id(),result.getGoal_id());
-        Assert.assertEquals(goalAnalyticsDTO.getStatus(),result.getStatus());
-        Assert.assertEquals(goalAnalyticsDTO.getShortestSubgoal(),result.getShortestSubgoal());
-        Assert.assertEquals(goalAnalyticsDTO.getLongestSubgoal(),result.getLongestSubgoal());
-        Assert.assertEquals(goalAnalyticsDTO.getBestSubgoal(),result.getBestSubgoal());
-        Assert.assertEquals(goalAnalyticsDTO.getWorstSubgoal(),result.getWorstSubgoal());
+        Assert.assertEquals(goalAnalyticsDTO.getGoal_id(), result.getGoal_id());
+        Assert.assertEquals(goalAnalyticsDTO.getStatus(), result.getStatus());
+        Assert.assertEquals(goalAnalyticsDTO.getShortestSubgoal(), result.getShortestSubgoal());
+        Assert.assertEquals(goalAnalyticsDTO.getLongestSubgoal(), result.getLongestSubgoal());
+        Assert.assertEquals(goalAnalyticsDTO.getBestSubgoal(), result.getBestSubgoal());
+        Assert.assertEquals(goalAnalyticsDTO.getWorstSubgoal(), result.getWorstSubgoal());
 
         Mockito.verify(goalRepository).findById(1L);
     }
 
     @Test
-    public void whenGetAnalyticsCalled_ItShouldClassifySubgoalsCorrectly(){
+    public void whenGetAnalyticsCalled_ItShouldClassifySubgoalsCorrectly() {
         Goal goal = new Goal();
         goal.setId(1L);
         goal.setIsDone(Boolean.TRUE);
@@ -253,7 +270,7 @@ public class GoalServiceTest {
         best.setMainGoal(goal);
         best.setRating(5D);
 
-        goal.setSubgoals(Stream.of(shortest,longest_and_worst,best).collect(Collectors.toSet()));
+        goal.setSubgoals(Stream.of(shortest, longest_and_worst, best).collect(Collectors.toSet()));
 
         SubgoalDTOShort longest_and_worst_dto = new SubgoalDTOShort();
         longest_and_worst_dto.setId(2L);
@@ -279,25 +296,27 @@ public class GoalServiceTest {
 
         GoalAnalyticsDTO result = goalService.getAnalytics(1L);
 
-        Assert.assertEquals(goalAnalyticsDTO.getGoal_id(),result.getGoal_id());
-        Assert.assertEquals(goalAnalyticsDTO.getStatus(),result.getStatus());
-        Assert.assertEquals(goalAnalyticsDTO.getShortestSubgoal(),result.getShortestSubgoal());
-        Assert.assertEquals(goalAnalyticsDTO.getLongestSubgoal(),result.getLongestSubgoal());
-        Assert.assertEquals(goalAnalyticsDTO.getBestSubgoal(),result.getBestSubgoal());
-        Assert.assertEquals(goalAnalyticsDTO.getWorstSubgoal(),result.getWorstSubgoal());
+        Assert.assertEquals(goalAnalyticsDTO.getGoal_id(), result.getGoal_id());
+        Assert.assertEquals(goalAnalyticsDTO.getStatus(), result.getStatus());
+        Assert.assertEquals(goalAnalyticsDTO.getShortestSubgoal(), result.getShortestSubgoal());
+        Assert.assertEquals(goalAnalyticsDTO.getLongestSubgoal(), result.getLongestSubgoal());
+        Assert.assertEquals(goalAnalyticsDTO.getBestSubgoal(), result.getBestSubgoal());
+        Assert.assertEquals(goalAnalyticsDTO.getWorstSubgoal(), result.getWorstSubgoal());
 
         Mockito.verify(goalRepository).findById(1L);
     }
 
     @Test
-    public void whenGetAGoalCalledWithInvalidId_ItShouldReturnNotFoundError(){
+    public void whenGetAGoalCalledWithInvalidId_ItShouldReturnNotFoundError() {
         Long goal_id = -1L;
         Mockito.when(goalRepository.findById(goal_id)).thenReturn(Optional.empty());
-        Assert.assertThrows(ResponseStatusException.class, ()-> {goalService.getAGoal(goal_id);});
+        Assert.assertThrows(ResponseStatusException.class, () -> {
+            goalService.getAGoal(goal_id);
+        });
     }
 
     @Test
-    public void whenGetGoalsOfAUserCalledWithValidId_ItShouldReturnGoalsOfUser(){
+    public void whenGetGoalsOfAUserCalledWithValidId_ItShouldReturnGoalsOfUser() {
         Users user1 = new Users();
         user1.setUser_id(1L);
         Users user2 = new Users();
@@ -321,17 +340,55 @@ public class GoalServiceTest {
         GoalDTOShort goal2short = new GoalDTOShort();
         goal2short.setId(2L);
 
-        Mockito.when(goalRepository.findAllByUserId(1L)).thenReturn(Stream.of(goal1,goal2).collect(Collectors.toList()));
-        Mockito.when(goalShortMapper.mapToDto(Stream.of(goal1,goal2).collect(Collectors.toList()))).thenReturn(Stream.of(goal1short,goal2short).collect(Collectors.toList()));
+        Mockito.when(goalRepository.findAllByUserId(1L)).thenReturn(Stream.of(goal1, goal2).collect(Collectors.toList()));
+        Mockito.when(goalShortMapper.mapToDto(Stream.of(goal1, goal2).collect(Collectors.toList()))).thenReturn(Stream.of(goal1short, goal2short).collect(Collectors.toList()));
 
         List<GoalDTOShort> result = goalService.getGoalsOfAUser(1L);
 
-        Assert.assertEquals(Stream.of(goal1short,goal2short).collect(Collectors.toList()),result);
+        Assert.assertEquals(Stream.of(goal1short, goal2short).collect(Collectors.toList()), result);
 
         Mockito.verify(goalRepository).findAllByUserId(1L);
-        Mockito.verify(goalShortMapper).mapToDto(Stream.of(goal1,goal2).collect(Collectors.toList()));
+        Mockito.verify(goalShortMapper).mapToDto(Stream.of(goal1, goal2).collect(Collectors.toList()));
 
 
     }
 
+    @Test
+    public void whenCopyGoalPrototypeCalledWithValidParameteres_ItShouldReturnSuccess() {
+
+        GoalPrototype prototype = new GoalPrototype();
+        prototype.setId(1L);
+        prototype.setEntities(new HashSet<>());
+        prototype.setTags(new HashSet<>());
+        prototype.setHiddentags(new HashSet<>());
+        prototype.setSubgoals(new HashSet<>());
+        prototype.setReference_goal_id(1L);
+
+        Goal ref_goal = new Goal();
+        ref_goal.setDownloadCount(5L);
+        Goal new_goal = new Goal();
+        new_goal.setDownloadCount(0L);
+
+        Users user = new Users();
+
+        Mockito.when(goalPrototypeRespository.findById(1L)).thenReturn(Optional.of(prototype));
+        Mockito.when(goalRepository.findById(1L)).thenReturn(Optional.of(ref_goal));
+        Mockito.when(goalRepository.save(ref_goal)).thenReturn(ref_goal);
+        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        Mockito.when(goalRepository.save(new_goal)).thenReturn(new_goal);
+
+        Assert.assertEquals(new MessageResponse("Prototype copied successfully!", MessageType.SUCCESS), goalService.copyGoalPrototype(1L, 1L));
+        Mockito.verify(goalPrototypeRespository).findById(1L);
+        Mockito.verify(goalRepository).findById(1L);
+        Mockito.verify(userRepository).findById(1L);
+
+    }
+
+    @Test
+    public void whenCopyGoalPrototypeCalledWithInvalidParameteres_ItShouldReturnError() {
+        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(null));
+        Assert.assertThrows(ResponseStatusException.class, () -> {
+            goalService.copyGoalPrototype(1L, 1L);
+        });
+    }
 }

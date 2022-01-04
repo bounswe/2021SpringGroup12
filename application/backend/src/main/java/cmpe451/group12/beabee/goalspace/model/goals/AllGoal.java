@@ -15,6 +15,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 
 @MappedSuperclass
@@ -22,7 +23,6 @@ import java.util.List;
 @Setter
 @EntityListeners(AuditingEntityListener.class)
 public abstract class AllGoal  {
-
 
     //@Column(name = "goalType")
     private GoalType goalType;
@@ -40,13 +40,9 @@ public abstract class AllGoal  {
     @Column(name = "completedAt")
     private Date completedAt;
 
-    @Column(name = "deadline")
-    private Date deadline;
-
     @Column(name = "extension_count")
     private Long extension_count;
-    //@Column(name = "tags")
-    //private Set<String> tags;
+
 
 
 }

@@ -57,7 +57,6 @@ public class SubgoalService {
         // initialize fields of new subgoal
         new_subgoal.setIsDone(Boolean.FALSE);
         new_subgoal.setRating(0D);
-        new_subgoal.setExtension_count(0L);
         // Add this subgoal to parent subgoal
         Set<Subgoal> subgoals_of_parent = parent_subgoal_opt.get().getChild_subgoals();
         subgoals_of_parent.add(new_subgoal);
@@ -74,16 +73,16 @@ public class SubgoalService {
         Set<EntitiDTOShort> sublinks = new HashSet<>();
 
         sublinks.addAll(
-                subgoal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Question"))
+                subgoal.getSublinked_entities().stream().filter(x -> x.getClass().getSimpleName().equals("Question"))
                         .map(x -> entitiShortMapper.mapToDto((Question) x)).collect(Collectors.toSet()));
         sublinks.addAll(
-                subgoal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Task"))
+                subgoal.getSublinked_entities().stream().filter(x -> x.getClass().getSimpleName().equals("Task"))
                         .map(x -> entitiShortMapper.mapToDto((Task) x)).collect(Collectors.toSet()));
         sublinks.addAll(
-                subgoal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Routine"))
+                subgoal.getSublinked_entities().stream().filter(x -> x.getClass().getSimpleName().equals("Routine"))
                         .map(x -> entitiShortMapper.mapToDto((Routine) x)).collect(Collectors.toSet()));
         sublinks.addAll(
-                subgoal.getEntities().stream().filter(x -> x.getClass().getSimpleName().equals("Reflection"))
+                subgoal.getSublinked_entities().stream().filter(x -> x.getClass().getSimpleName().equals("Reflection"))
                         .map(x -> entitiShortMapper.mapToDto((Reflection) x)).collect(Collectors.toSet()));
         return sublinks;
     }
@@ -102,22 +101,12 @@ public class SubgoalService {
             subgoalGetDTO.setParent_subgoal_id(subgoalRepository.findParentById(id).getId());
         }
         subgoalGetDTO.setSublinks(new HashSet<>(subgoalShortMapper.mapToDto(new ArrayList<>(subgoal_from_db_opt.get().getChild_subgoals()))));
-        subgoalGetDTO.setEntities(extractEntities(subgoal_from_db_opt.get()));
+        subgoalGetDTO.setSublinked_entities(extractEntities(subgoal_from_db_opt.get()));
         subgoalGetDTO.setAssignees(subgoal_from_db_opt.get().getAssignees().stream().map(Users::getUser_id).collect(Collectors.toSet()));
         return subgoalGetDTO;
     }
 
     /********************* EXTEND AND COMPLETE start *************/
-    public MessageResponse extendSubgoal(Long subgoal_id, Date newDeadline) {
-        Subgoal subgoal_from_db = subgoalRepository.findById(subgoal_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Subgoal not found!"));
-        if (newDeadline.compareTo(subgoal_from_db.getDeadline()) <= 0) {
-            return new MessageResponse("New deadline must be later than current deadline!", MessageType.ERROR);
-        }
-        subgoal_from_db.setDeadline(newDeadline);
-        subgoal_from_db.setExtension_count(subgoal_from_db.getExtension_count() + 1);
-        subgoalRepository.save(subgoal_from_db);
-        return new MessageResponse("Subgoal extended successfully!", MessageType.SUCCESS);
-    }
 
     public MessageResponse completeSubgoal(Long subgoal_id, Long rating) {
         Subgoal subgoal_from_db = subgoalRepository.findById(subgoal_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Subgoal not found!"));
@@ -242,8 +231,6 @@ public class SubgoalService {
         }
         if (subgoal_dto.getRating() != null)
             subgoal_from_db_opt.get().setRating(subgoal_dto.getRating());
-        if (subgoal_dto.getDeadline() != null)
-            subgoal_from_db_opt.get().setDeadline(subgoal_dto.getDeadline());
         if (subgoal_dto.getDescription() != null)
             subgoal_from_db_opt.get().setDescription(subgoal_dto.getDescription());
         if (subgoal_dto.getTitle() != null)
@@ -256,7 +243,6 @@ public class SubgoalService {
     }
 
     /****************** EXXTEND - COMPLETE ************/
-
 
     public MessageResponse addAssignees(long subgoal_id, List<Long> user_ids) {
         Subgoal subgoal = subgoalRepository.findById(subgoal_id).orElseThrow(
@@ -315,7 +301,6 @@ public class SubgoalService {
         SubgoalAnalyticsDTO subgoalAnalyticsDTO = new SubgoalAnalyticsDTO();
 
         subgoalAnalyticsDTO.setSubgoal_id(subgoal_id);
-        subgoalAnalyticsDTO.setExtensionCount(subgoal_from_db.getExtension_count());
         subgoalAnalyticsDTO.setStartTime(subgoal_from_db.getCreatedAt());
         if (subgoal_from_db.getIsDone()) {
             subgoalAnalyticsDTO.setStatus(SubgoalAnalyticsDTO.Status.COMPLETED);

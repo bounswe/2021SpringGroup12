@@ -76,7 +76,7 @@ public class UserCredentialsService {
                             .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                             .toString();
                     user.get().setPassword_reset_token(new_reset_token);
-
+                    user.get().setPassword_reset_token_expiration_date(new Date(new Date(System.currentTimeMillis()).getTime()+ TimeUnit.MINUTES.toMillis(5)));
                     userRepository.save(user.get());
                     return new MessageResponse("Token expired!", MessageType.ERROR);
                 } else {//all good

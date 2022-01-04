@@ -28,7 +28,6 @@ public class GroupGoalGetMapper {
             groupgoalGetDTO.setTitle(groupGoal.getTitle());
             groupgoalGetDTO.setIsDone(groupGoal.getIsDone());
             groupgoalGetDTO.setDescription(groupGoal.getDescription());
-            groupgoalGetDTO.setDeadline(groupGoal.getDeadline());
             groupgoalGetDTO.setCreatedAt(groupGoal.getCreatedAt());
             groupgoalGetDTO.setSubgoals(this.subgoalSetToSubgoalDTOShortSet(groupGoal.getSubgoals()));
             groupgoalGetDTO.setToken(groupGoal.getToken());
@@ -70,7 +69,6 @@ public class GroupGoalGetMapper {
             subgoalDTOShort.setId(subgoal.getId());
             subgoalDTOShort.setTitle(subgoal.getTitle());
             subgoalDTOShort.setDescription(subgoal.getDescription());
-            subgoalDTOShort.setDeadline(subgoal.getDeadline());
             return subgoalDTOShort;
         }
     }
@@ -99,7 +97,6 @@ public class GroupGoalGetMapper {
             subgoal.setId(subgoalDTOShort.getId());
             subgoal.setTitle(subgoalDTOShort.getTitle());
             subgoal.setDescription(subgoalDTOShort.getDescription());
-            subgoal.setDeadline(subgoalDTOShort.getDeadline());
             return subgoal;
         }
     }
