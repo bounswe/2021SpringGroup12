@@ -11,6 +11,7 @@ import com.group12.beabee.models.requests.Routine;
 import com.group12.beabee.models.requests.SignUpRequest;
 import com.group12.beabee.models.requests.Subgoal;
 import com.group12.beabee.models.requests.Task;
+import com.group12.beabee.models.responses.ActivityStream;
 import com.group12.beabee.models.responses.Analytics;
 import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.EntityShort;
@@ -238,6 +239,12 @@ public interface ServiceAPI {
 
     @GET("/v2/prototypes/search/{tag}")
     Call<List<GoalDetail>>getProGoalTagSearch(@Path("tag") String tag);
+
+
+    //FEED
+    @GET("/v2/activitystreams/{userId}")
+    Call<List<ActivityStream>>getActivityStream(@Path("userId") int userId);
+
 
 
 }
