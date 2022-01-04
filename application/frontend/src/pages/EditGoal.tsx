@@ -25,7 +25,6 @@ export function EditGoal(params :{goalType: any}) {
         for (let property in values) {
             put_obj[property] = values[property]
         }
-        console.log(values["deadline"])
         console.log('Received values of form: ', values);
         console.log('Sending object of form: ', put_obj);
         axios.put(`/${goalType}/`, put_obj, {
@@ -49,9 +48,6 @@ export function EditGoal(params :{goalType: any}) {
                 throw response
             })
             .then(goal_info => {
-                if (goal_info.deadline !== null) {
-                    goal_info.deadline = goal_info.deadline.substr(0,10)
-                }
                 setForm(GoalForm(onFinish, goal_info))
                 setGoal(goal_info)
                 if (goal_info.main_goal_id != null) {
