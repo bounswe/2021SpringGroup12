@@ -36,14 +36,12 @@ import retrofit2.Response;
  * Use the {@link SubgoalCreateFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SubgoalCreateFragment extends BaseInnerFragment implements DatePickerDialog.OnDateSetListener{
+public class SubgoalCreateFragment extends BaseInnerFragment {
 
     @BindView(R.id.et_title)
     EditText etTitle;
     @BindView(R.id.et_description)
     EditText etDescription;
-    @BindView(R.id.tv_deadline)
-    TextView tvDeadline;
 
     public static final int FROM_GOAL = 0;
     public static final int FROM_SUBGOAL = 1;
@@ -92,7 +90,6 @@ public class SubgoalCreateFragment extends BaseInnerFragment implements DatePick
         subgoal = new Subgoal();
         subgoal.title = etTitle.getText().toString();
         subgoal.description = etDescription.getText().toString();
-        subgoal.deadline = tvDeadline.getText().toString();
         subgoal.mainGoalId = -1;
         subgoal.mainGroupGoalId = -1;
         subgoal.parentSubgoalId = -1;
@@ -147,24 +144,5 @@ public class SubgoalCreateFragment extends BaseInnerFragment implements DatePick
     @Override
     protected int GetLayoutId() {
         return R.layout.fragment_subgoal_edit;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.YEAR, year);
-        c.set(Calendar.MONTH, month);
-        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        String dateString = c.toInstant().toString();
-        tvDeadline.setText(dateString);
-
-    }
-
-    @OnClick(R.id.btn_pickDate)
-    public void onClick(View view) {
-
-        DialogFragment datePicker = new DeadlineCalendarFragment(this);
-        datePicker.show(getActivity().getSupportFragmentManager(), "date picker");
     }
 }
