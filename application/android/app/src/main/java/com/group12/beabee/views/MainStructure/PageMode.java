@@ -8,5 +8,6 @@ public enum PageMode {
     Edit,
     List,
     ListWithBack,
+    Feed,
     NoTopBar
 }

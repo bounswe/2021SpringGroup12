@@ -54,17 +54,44 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
         @BindView(R.id.tv_feedSummary)
         TextView tvFeedSummary;
-
+        @BindView(R.id.arrow_icon)
+        View icArrow;
+        @BindView(R.id.item_parent)
+        View itemParent;
+        private int id;
+        private int type;
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemParent.setOnClickListener(view -> {
+                if(type < 0)
+                    return;
+
+                onItemClickedListener.OnFeedClicked(id, type);
+            });
         }
 
 
         public void BindData(ActivityStream feed) {
             tvFeedSummary.setText(feed.summary);
+            if (feed.type.trim().equals("FOLLOW")) {
+                String url = feed.objectschema.url;
+                int indexOf = url.lastIndexOf('/');
+                id = Integer.parseInt(url.substring(indexOf+1));
+                type = 0;
+                icArrow.setVisibility(View.VISIBLE);
+            }else if (feed.type.trim().equals("ADD") || feed.type.trim().equals("UPDATE")) {
+                String url = feed.objectschema.url;
+                int indexOf = url.lastIndexOf('/');
+                id = Integer.parseInt(url.substring(indexOf+1));
+                type = 1;
+                icArrow.setVisibility(View.VISIBLE);
+            }else {
+                type = -1;
+                icArrow.setVisibility(View.INVISIBLE);
+            }
         }
     }
 }
