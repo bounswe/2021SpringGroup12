@@ -12,7 +12,6 @@ import com.group12.beabee.InputValidator;
 import com.group12.beabee.R;
 import com.group12.beabee.Utils;
 import com.group12.beabee.models.requests.LoginRequest;
-import com.group12.beabee.models.responses.BasicResponse;
 import com.group12.beabee.models.responses.LoginResponse;
 import com.group12.beabee.network.BeABeeService;
 import com.group12.beabee.network.ServiceAPI;
@@ -21,7 +20,6 @@ import com.group12.beabee.views.MainStructure.MainActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Optional;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -92,13 +90,6 @@ public class LoginActivity extends AppCompatActivity {
     @OnClick(R.id.btn_go_sign)
     public void GoToSignUpPage(){
         Intent intent = new Intent(this, SignUpActivity.class);
-        startActivity(intent);
-    }
-
-    @OnClick(R.id.btn_forgot)
-    @Optional
-    public void OnForgot(){
-        Intent intent = new Intent(this, LoginActivityForgotPage.class);
         startActivity(intent);
     }
 }

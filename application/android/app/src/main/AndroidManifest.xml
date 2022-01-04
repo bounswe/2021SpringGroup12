@@ -29,6 +29,7 @@
         <activity
             android:name=".views.LoginActivityTokenPage"
             android:exported="false" />
+
         <activity
             android:name=".views.LoginActivity"
             android:exported="true"

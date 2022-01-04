@@ -72,16 +72,6 @@ public class MockService implements ServiceAPI {
     }
 
     @Override
-    public Call<BasicResponse> postMailToken(String token, LoginRequest loginRequest) {
-        return null;
-    }
-
-    @Override
-    public Call<BasicResponse> getForgotpassword(String username_mail) {
-        return null;
-    }
-
-    @Override
     public Call<List<GoalShort>> getGoalsOfUser(int userId) {
         List<GoalShort> tempList = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
