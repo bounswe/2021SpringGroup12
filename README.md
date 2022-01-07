@@ -115,3 +115,65 @@ docker-compose up -d beaabee-front
 ```
 This will run frontend application, backend application and database in the same Docker network.<br />
 However since frontend application depends on the backend application, you need to create the backend application's image first. 
+
+
+## Using `docker-compose` and loading up the database dump
+
+After creating Docker Images for Backend and Frontend application. We can use `docker-compose` software run them together in the same network to connect them both smoothly. To use `docker-compose` you need:
+
+- Docker
+
+- docker-compose
+
+both installed in your system.
+
+To use compose navigate to `application/` folder, which contains project directories for backend, frontend and android alongside a `docker-compose.yml` file. This file contains all the configuration and enviromental variables for the images we are using. It also runs them in the same network it created to connect them all. With this file we can run our newly created  images.
+
+- To run all the services:
+
+```bash
+docker-compose up -d
+```
+
+- To  run database:
+
+```bash
+docker-compose up -d db-server
+```
+
+
+
+- To run the backend service alone:
+
+```bash
+docker-compose up -d beabee-server
+```
+
+This will also run the db-server since backend server also depends on the database service.
+
+
+
+- And we can run the frontend  service with:
+
+```bash
+docker-compose up -d beabee-front
+```
+
+However since frontend depends on backend server this will cause all services  to be up along with the frontend server.
+
+After running  both of our services you can navigate to `localhost:3000` for our frondend and `localhost:8085` for backend server.
+
+
+
+## Restoring the Database Dump
+
+After running database service via `docker-compose` you can restore the database dump we've created. To do this navigate to `application/` directory and run:
+
+```bash
+cat backup_dump.sql | docker exec -i db-server psql -U postgres
+```
+
+This will load up the data to database, and then you can access the data or use  it in our application.
+* Note: `backup_dump.sql` will be supplied to the customer via mail. If you need it please contact [vturgut68@gmail.com](mailto:vturgut68@gmail.com)
+
+
