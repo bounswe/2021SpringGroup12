@@ -1,50 +1,43 @@
-# Getting Started with Create React App
+## System Requirements
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+- Minimum npm version: 8.0.0
+- One of web browsers: Chrome, firefox, safari
+- Devices need Internet connection to connect the frontend
 
-## Available Scripts
+***
 
-In the project directory, you can install node modules:
+## Installation Instructions
+Since the backend URL is hardcoded in the project files, first we need to clone the repository. Locate the index.tsx file. In that file change 
 
-### `npm install`
+```
+axios.defaults.baseURL = "http://3.144.201.198:8085/v2";
+```
+to
+```
+axios.defaults.baseURL = "http://'backend-ip-address':'port'/v2";
+```
 
-Then you can run:
+To create a Docker Image of the Web Application, we need to build the project via react build script in our machine first. To achieve this we install dependencies.
 
-### `npm start`
+- To install dependencies in the frontend project's root directory run 
+```
+npm install
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- To build the project in the frontend project's root directory run
+```
+npm run build
+```
+This uses the build script coming from `react-scripts` dependency to build a product ready build of the application.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- To create the Docker Image, again in the root directory run:
+```
+docker build . -t beabeeapp/beabee-front
+```
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- And then you can run this Docker Image you've created via `docker-compose` file in the parent directory of the project run.
+```
+docker-compose up -d beaabee-front
+```
+This will run frontend application, backend application and database in the same Docker network.<br />
+However since frontend application depends on the backend application, you need to create the backend application's image first. 
